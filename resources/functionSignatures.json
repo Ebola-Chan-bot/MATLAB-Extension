@@ -1,0 +1,284 @@
+{
+	"MATLAB.Addons.GetRequirements": {
+		"inputs": [
+			{
+				"name": "PackageName",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"string"
+				],
+				"purpose": "要查看依赖信息的包名",
+				"default": "MATLAB"
+			}
+		],
+		"outputs": [
+			{
+				"name": "RequirementTable",
+				"type": [
+					"size=:,2",
+					"table"
+				]
+			}
+		]
+	},
+	"MATLAB.Addons.PublishRequirements": {
+		"inputs": [
+			{
+				"name": "PackageName",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"string"
+				],
+				"purpose": "要发布的包名"
+			}
+		],
+		"outputs": [
+			{
+				"name": "RequirementTable",
+				"type": [
+					"size=:,2",
+					"table"
+				]
+			}
+		]
+	},
+	"MATLAB.DataFun.MaxSubs": {
+		"inputs": [
+			{
+				"name": "Data",
+				"kind": "required",
+				"type": "numeric",
+				"purpose": "要寻找最大值的多维数组"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Value",
+				"type": [
+					"scalar",
+					"numeric"
+				]
+			},
+			{
+				"name": "Subs",
+				"type": [
+					"positive",
+					"integer"
+				],
+				"repeating": true
+			}
+		]
+	},
+	"MATLAB.DataTypes.ArrayBuilder": {
+		"inputs": [
+			{
+				"name": "BuildDimension",
+				"kind": "required",
+				"type": [
+					"positive",
+					"scalar"
+				],
+				"purpose": "累加维度",
+				"default": 1
+			}
+		],
+		"outputs": [
+			{
+				"name": "obj",
+				"type": [
+					"scalar",
+					"ArrayBuilder"
+				]
+			}
+		]
+	},
+	"MATLAB.DataTypes.ArrayBuilder.Append": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"ArrayBuilder"
+				]
+			},
+			{
+				"name": "New",
+				"kind": "required",
+				"purpose": "累加内容。所有累加内容在累加维度上尺寸可以不一致，但在其它维度上必须一致。"
+			}
+		]
+	},
+	"MATLAB.DataTypes.ArrayBuilder.Harvest": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"ArrayBuilder"
+				]
+			}
+		],
+		"outputs": [
+			{
+				"name": "Array"
+			}
+		]
+	},
+	"MATLAB.DataTypes.ArrayBuilder.Clear": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"ArrayBuilder"
+				]
+			}
+		]
+	},
+	"MATLAB.IOFun.MatVariableRename": {
+		"inputs": [
+			{
+				"name": "OldNames",
+				"kind": "required",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "要修改的原变量名"
+			},
+			{
+				"name": "NewNames",
+				"kind": "required",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "要改为的新变量名"
+			},
+			{
+				"name": "MatPaths",
+				"kind": "ordered",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "要重命名的.mat路径"
+			}
+		]
+	},
+	"MATLAB.UITools.OpenFileDialog": {
+		"inputs": [
+			{
+				"name": "Filter",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"string"
+				],
+				"purpose": "文件名筛选器"
+			},
+			{
+				"name": "InitialDirectory",
+				"kind": "namevalue",
+				"type": [
+					"folder"
+				],
+				"purpose": "文件对话框中显示的初始目录"
+			},
+			{
+				"name": "Multiselect",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "是否允许选择多个文件"
+			},
+			{
+				"name": "Title",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"string"
+				],
+				"purpose": "文件对话框标题"
+			}
+		],
+		"outputs": [
+			{
+				"name": "FilePaths",
+				"type": [
+					"row",
+					"string"
+				]
+			}
+		],
+		"platforms": "win64"
+	},
+	"MatlabShared.SupportPkg.ClearCache": {
+		"inputs": [
+			{
+				"name": "CacheDirectory",
+				"kind": "ordered",
+				"type": "folder",
+				"purpose": "默认为本函数所在目录下的Cache子目录"
+			}
+		]
+	},
+	"MatlabShared.SupportPkg.InstallSupportPackages": {
+		"inputs": [
+			{
+				"name": "ArchivesDirectory",
+				"kind": "ordered",
+				"type": "folder",
+				"purpose": "支持包安装文件所在路径"
+			},
+			{
+				"name": "MatlabRoot",
+				"kind": "namevalue",
+				"type": "folder",
+				"purpose": "MATLAB安装目录"
+			}
+		]
+	},
+	"MatlabShared.SupportPkg.SupportPackageDownloader": {
+		"inputs": [
+			{
+				"name": "RunAfterDownload",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "下载后是否立即执行下载器",
+				"default": true
+			},
+			{
+				"name": "CacheDirectory",
+				"kind": "ordered",
+				"type": "folder",
+				"purpose": "下载位置"
+			},
+			{
+				"name": "ComputerArch",
+				"kind": "ordered",
+				"type": "choices={'win64','glnxa64','maci64'}",
+				"purpose": "目标操作系统架构"
+			},
+			{
+				"name": "VersionRelease",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"string"
+				],
+				"purpose": "目标MATLAB发行版本"
+			}
+		]
+	}
+}
