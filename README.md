@@ -67,7 +67,7 @@ V.G.Me="1.3.0";
 MATLAB自带的max函数只能返回多维数组最大值的线性索引。本函数一口气返回最大值以及多维坐标，方便易用
 ```MATLAB
 %对于有多个最大值的数组，返回线性索引最小的那个位置的坐标：
-[M,S1,S2]=MATLAB.datafun.MaxSubs([9 9 1;1 4 4;9 8 9])
+[M,S1,S2]=MATLAB.DataFun.MaxSubs([9 9 1;1 4 4;9 8 9])
 %{
 M =
 
@@ -84,7 +84,7 @@ S2 =
      1
 %}
 %还可以指定运算维度。如将一个3维数组的后两维求最大值和下标，则返回的最大值和下标都是沿第1维的向量，且只返回最大值在后两维的下标
-[M,S2,S3]=MATLAB.datafun.MaxSubs(rand(3,3,3),[2 3]);
+[M,S2,S3]=MATLAB.DataFun.MaxSubs(rand(3,3,3),[2 3]);
 ```
 
 **位置参数**
@@ -105,7 +105,7 @@ Value(1,1)，最大值
 将数据向内存中积累时，经常遇到需要不断累加数组的问题，MATLAB会提示预分配内存。但如果读取之前无法得知将会有多少项，预分配就会变成一个十分麻烦的动态任务。本类建立一个增长维度，在此维度上可以不断累加一个内置的数组。用户只需不断Append即可，无需考虑内存分配的问题，本类会自动进行优化的内存管理。
 ```MATLAB
 %构造一个沿第1维度累加的数组
-Ab=ArrayBuilder(1);
+Ab=MATLAB.DataTypes.ArrayBuilder(1);
 %重复累加
 for a=1:3
   Ab.Append(randi([0 9],randi([0 3]),3));
@@ -168,7 +168,7 @@ BuildDimension(1,1)uint8，累加维度
 批量重命名.mat文件中的变量
 ```MATLAB
 %使用文件选择对话框选择所有要重命名变量的.mat文件，将其中所有具有OldNamesRow字符串行向量中任一字符串名称的变量，重命名为NewNamesRow字符串行向量中对应位置的字符串
-MatVariableRename(OldNamesRow,NewNamesRow);
+MATLAB.IOFun.MatVariableRename(OldNamesRow,NewNamesRow);
 ```
 
 **位置参数**
@@ -187,8 +187,8 @@ MATLAB自带的uigetfile只能将初始目录设为当前目录，且下次打�
 function [Filename,fps,Name,nrd_c,raw_data,raw_tag] = MTRM_Rdc3(TagThreshold,options)
 arguments
 	TagThreshold(1,1)uint16=550
-	options.MTPaths(:,1)string=OpenFileDialog(Filter="MetaTags文件|*.MetaTags.mat",Title="选择MetaTags文件",Multiselect=true)
-	options.RMPaths(:,1)string=OpenFileDialog(Filter="Measurements文件|*.Measurements.mat",Title="选择Measurements文件",Multiselect=true)
+	options.MTPaths(:,1)string=MATLAB.UITools.OpenFileDialog(Filter="MetaTags文件|*.MetaTags.mat",Title="选择MetaTags文件",Multiselect=true)
+	options.RMPaths(:,1)string=MATLAB.UITools.OpenFileDialog(Filter="Measurements文件|*.Measurements.mat",Title="选择Measurements文件",Multiselect=true)
 end
 %函数体……
 ```
@@ -254,9 +254,9 @@ MatlabRoot(1,1)string=matlabroot，名称-值对组参数，MATLAB安装目录�
 MATLAB支持包需要先下载一个独立下载器才能下载。本函数根据平台和版本下载对应的下载器并可选执行下载。
 ```MATLAB
 %为本机下载，无需指定任何参数
-SupportPackageDownloader;
+MatlabShared.SupportPkg.SupportPackageDownloader;
 %为不同系统架构、不同MATLAB发行版本下载，需要指定目标架构、发行版本等。例如为Linux上的R2020b下载：
-SupportPackageDownloader(false,"D:\SupportPackageDownloader","glnxa64",VersionRelease="2021b");
+MatlabShared.SupportPkg.SupportPackageDownloader(false,"D:\SupportPackageDownloader","glnxa64",VersionRelease="2021b");
 ```
 **可选位置参数**
 
