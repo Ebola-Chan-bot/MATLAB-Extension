@@ -4,22 +4,23 @@
 # 目录
 本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
 - [+MATLAB](#+MATLAB)
-	- [+Addons](#+Addons)
-		- [GetRequirements](#GetRequirements)
-		- [PublishRequirements](#PublishRequirements)
+	- [+Addons](#+Addons) 本包用于开发人员管理发布包，以及用户查询包依赖项。
+		- [GetRequirements](#GetRequirements) 获取包中包含的依赖项列表
+		- [PublishRequirements](#PublishRequirements) 在包目录下生成一个依赖项.mat文件
 	- [+DataFun](#+DataFun)
-		- [MaxSubs](#MaxSubs)
+		- [MaxSubs](#MaxSubs) 返回数组的最大值以及所在的坐标。
 	- [+DataTypes](#+DataTypes)
-		- [ArrayBuilder](#ArrayBuilder)
+		- [@ArrayBuilder](#@ArrayBuilder) 数组累加器类
+		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
 	- [+IOFun](#+IOFun)
-		- [MatVariableRename](#MatVariableRename)
+		- [MatVariableRename](#MatVariableRename) 批量重命名.mat文件中的变量
 	- [+UITools](#+UITools)
-		- [OpenFileDialog](#OpenFileDialog)
+		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框
 - [+MatlabShared](#+MatlabShared)
-	- [+SupportPkg](#+SupportPkg)
-		- [ClearCache](#ClearCache)
-		- [InstallSupportPackages](#InstallSupportPackages)
-		- [SupportPackageDownloader](#SupportPackageDownloader)
+	- [+SupportPkg](#+SupportPkg) 一键获取MATLAB硬件支持包
+		- [ClearCache](#ClearCache) 清除缓存的下载器文件
+		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
+		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器
 # +MATLAB
 ## +Addons
 本包用于开发人员管理发布包，以及用户查询包依赖项。
@@ -99,8 +100,8 @@ Value(1,1)，最大值
 
 [S1,S2, …, Sn]，最大值所在的位置中，线性索引最小的那个位置的坐标。每个返回值依次代表各维度的坐标。只包含Dimensions维度的坐标。
 ## +DataTypes
-### ArrayBuilder
-数组累加器
+### @ArrayBuilder
+数组累加器类
 
 将数据向内存中积累时，经常遇到需要不断累加数组的问题，MATLAB会提示预分配内存。但如果读取之前无法得知将会有多少项，预分配就会变成一个十分麻烦的动态任务。本类建立一个增长维度，在此维度上可以不断累加一个内置的数组。用户只需不断Append即可，无需考虑内存分配的问题，本类会自动进行优化的内存管理。
 ```MATLAB
@@ -163,6 +164,38 @@ BuildDimension(1,1)uint8，累加维度
 *Clear*
 
 清空储藏，从零开始重新累加，而不必新建对象重新分配内存，具有较高的性能。
+### RepeatingFun
+重复多次调用函数，为每个重复参数生成一个返回值
+```MATLAB
+[One,Two,Three]=MATLAB.DataTypes.RepeatingFun(@zeros,1,2,3)
+%{
+One =
+
+     0
+
+
+Two =
+
+     0     0
+     0     0
+
+
+Three =
+
+     0     0     0
+     0     0     0
+     0     0     0
+%}
+```
+**输入参数**
+
+Function(1,1)function_handle，必需，要调用的函数句柄
+
+Arguments，重复，每次调用的输入参数
+
+**返回值**
+
+varargout，每个重复输入的参数按顺序生成的返回值
 ## +IOFun
 ### MatVariableRename
 批量重命名.mat文件中的变量

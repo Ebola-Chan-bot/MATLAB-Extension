@@ -140,6 +140,22 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.RepeatingFun":{
+		"inputs": [
+			{
+				"name": "Function",
+				"kind": "required",
+				"type": "function_handle",
+				"purpose": "要调用的函数句柄"
+			},
+			{
+				"name": "Arguments",
+				"kind": "ordered",
+				"repeating": true,
+				"purpose": "每次调用的输入参数"
+			}
+		]
+	},
 	"MATLAB.IOFun.MatVariableRename": {
 		"inputs": [
 			{
