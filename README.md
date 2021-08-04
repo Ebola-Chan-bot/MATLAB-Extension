@@ -3,21 +3,21 @@
 本项目的发布版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
 # 目录
 本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
-- [+MATLAB](#+MATLAB)
-	- [+Addons](#+Addons) 本包用于开发人员管理发布包，以及用户查询包依赖项。
+- [+MATLAB](#MATLAB)
+	- [+Addons](#Addons) 本包用于开发人员管理发布包，以及用户查询包依赖项。
 		- [GetRequirements](#GetRequirements) 获取包中包含的依赖项列表
 		- [PublishRequirements](#PublishRequirements) 在包目录下生成一个依赖项.mat文件
-	- [+DataFun](#+DataFun)
+	- [+DataFun](#DataFun)
 		- [MaxSubs](#MaxSubs) 返回数组的最大值以及所在的坐标。
-	- [+DataTypes](#+DataTypes)
-		- [@ArrayBuilder](#@ArrayBuilder) 数组累加器类
+	- [+DataTypes](#DataTypes)
+		- [@ArrayBuilder](#ArrayBuilder) 数组累加器类
 		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
-	- [+IOFun](#+IOFun)
+	- [+IOFun](#IOFun)
 		- [MatVariableRename](#MatVariableRename) 批量重命名.mat文件中的变量
-	- [+UITools](#+UITools)
+	- [+UITools](#UITools)
 		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框
-- [+MatlabShared](#+MatlabShared)
-	- [+SupportPkg](#+SupportPkg) 一键获取MATLAB硬件支持包
+- [+MatlabShared](#MatlabShared)
+	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
 		- [ClearCache](#ClearCache) 清除缓存的下载器文件
 		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
 		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器
