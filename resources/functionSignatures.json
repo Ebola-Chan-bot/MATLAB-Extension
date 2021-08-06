@@ -140,7 +140,7 @@
 			}
 		]
 	},
-	"MATLAB.DataTypes.RepeatingFun":{
+	"MATLAB.DataTypes.RepeatingFun": {
 		"inputs": [
 			{
 				"name": "Function",
@@ -153,6 +153,549 @@
 				"kind": "ordered",
 				"repeating": true,
 				"purpose": "每次调用的输入参数"
+			}
+		]
+	},
+	"MATLAB.ElMat.OrderedDimensionSize2IndexArray": {
+		"inputs": [
+			{
+				"name": "DimensionSize",
+				"kind": "required",
+				"type": [
+					"vector",
+					"real"
+				],
+				"purpose": "各维度尺寸"
+			},
+			{
+				"name": "DSOrderArbitrary",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "DimonsionSize的排列顺序是否是任意指定的",
+				"default": true
+			},
+			{
+				"name": "ActualOrder",
+				"kind": "namevalue",
+				"type": "vector",
+				"purpose": "源数组实际的维度顺序"
+			},
+			{
+				"name": "ArbitraryOrder",
+				"kind": "namevalue",
+				"type": "vector",
+				"purpose": "希望得到的索引矩阵的维度顺序"
+			}
+		],
+		"outputs": [
+			{
+				"name": "ActualIndexArrayByWantSubs",
+				"type": "uint32"
+			}
+		]
+	},
+	"MATLAB.ElMat.OrderedDimensionSize2SubsVectors": {
+		"inputs": [
+			{
+				"name": "DimensionSize",
+				"kind": "required",
+				"type": [
+					"vector",
+					"real"
+				],
+				"purpose": "各维度尺寸"
+			},
+			{
+				"name": "DSOrderArbitrary",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "DimonsionSize的排列顺序是否是任意指定的",
+				"default": true
+			},
+			{
+				"name": "ActualOrder",
+				"kind": "namevalue",
+				"type": "vector",
+				"purpose": "源数组实际的维度顺序"
+			},
+			{
+				"name": "ArbitraryOrder",
+				"kind": "namevalue",
+				"type": "vector",
+				"purpose": "希望得到的索引矩阵的维度顺序"
+			}
+		]
+	},
+	"MATLAB.General.StaticJavaPath": {
+		"inputs": [
+			{
+				"name": "Path",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"string"
+				],
+				"purpose": "要确认的Java路径"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Exist",
+				"type": [
+					"scalar",
+					"logical"
+				]
+			}
+		]
+	},
+	"MATLAB.ImageSci.OmeTiff": {
+		"inputs": [
+			{
+				"name": "filename",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"matlabpathfile=*.tif,*.tiff"
+					],
+					[
+						"char"
+					]
+				],
+				"purpose": "OmeTiff文件路径"
+			},
+			{
+				"name": "mode",
+				"kind": "ordered",
+				"type": "choices={'r','w','w8','a','r+'}",
+				"purpose": "采用何种模式打开文件"
+			}
+		],
+		"outputs": [
+			{
+				"name": "obj",
+				"type": [
+					"scalar",
+					"MATLAB.ImageSci.OmeTiff"
+				]
+			}
+		]
+	},
+	"MATLAB.ImageSci.OmeTiff.Concatenate": {
+		"inputs": [
+			{
+				"name": "OutputFile",
+				"kind": "required",
+				"type": [
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"row",
+						"char"
+					],
+					[
+						"file=*.tif"
+					],
+					[
+						"matlabpathfile=*.tif"
+					]
+				],
+				"purpose": "输出文件的路径"
+			},
+			{
+				"name": "Dimension",
+				"kind": "required",
+				"type": [
+					[
+						"scalar",
+						"positive"
+					],
+					[
+						"scalar",
+						"char"
+					],
+					[
+						"scalar",
+						"string"
+					]
+				],
+				"purpose": "串联维度"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "InputFile",
+							"kind": "required",
+							"type": [
+								[
+									"vector",
+									"string"
+								],
+								[
+									"vector",
+									"cell"
+								],
+								[
+									"file=*.tif"
+								],
+								[
+									"matlabpathfile=*.tif"
+								]
+							],
+							"purpose": "所有要串联的文件路径"
+						}
+					],
+					[
+						{
+							"name": "InputFile",
+							"kind": "ordered",
+							"type": [
+								[
+									"scalar",
+									"string"
+								],
+								[
+									"row",
+									"char"
+								],
+								[
+									"file=*.tif"
+								],
+								[
+									"matlabpathfile=*.tif"
+								]
+							],
+							"repeating": true,
+							"purpose": "依次输入所有要串联的文件路径"
+						}
+					]
+				]
+			}
+		]
+	},
+	"MATLAB.ImageSci.OmeTiff.Read5D": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"MATLAB.ImageSci.OmeTiff"
+				],
+				"purpose": "类对象"
+			},
+			{
+				"name": "X",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "X轴截取范围。若不指定，则不作裁剪全部读取。"
+			},
+			{
+				"name": "Y",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "Y轴截取范围。若不指定，则不作裁剪全部读取。"
+			},
+			{
+				"name": "C",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "C轴截取范围。若不指定，则不作裁剪全部读取。"
+			},
+			{
+				"name": "T",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "T轴截取范围。若不指定，则不作裁剪全部读取。"
+			},
+			{
+				"name": "Z",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "Z轴截取范围。若不指定，则不作裁剪全部读取。"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Image",
+				"type": [
+					"real",
+					"size=:,:,:,:,:"
+				]
+			}
+		]
+	},
+	"MATLAB.ImageSci.OmeTiff.setTag": {
+		"inputs": [
+			{
+				"name": "tiffobj",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"MATLAB.ImageSci.OmeTiff"
+				],
+				"purpose": "类对象"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "tagId",
+							"kind": "required",
+							"type": [
+								[
+									"numeric"
+								],
+								[
+									"char",
+									"choices=Tiff.getTagNames"
+								]
+							],
+							"purpose": "标签ID，可以是字符、数字或Tiff.getTagNames枚举项"
+						},
+						{
+							"name": "tagValue",
+							"kind": "required",
+							"purpose": "标签值"
+						}
+					],
+					[
+						{
+							"name": "tagStruct",
+							"kind": "required",
+							"type": [
+								"struct"
+							],
+							"purpose": "标签结构体。可通过GetDefaultTagStruct取得。"
+						}
+					]
+				]
+			}
+		]
+	},
+	"MATLAB.ImageSci.OmeTiff.Transcode": {
+		"inputs": [
+			{
+				"name": "FromDimensionOrder",
+				"kind": "required",
+				"type": [
+					[
+						"char",
+						"size=1,3"
+					],
+					[
+						"string"
+					]
+				],
+				"purpose": "源文件的维度顺序"
+			},
+			{
+				"name": "From",
+				"kind": "ordered",
+				"type": [
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"row",
+						"char"
+					],
+					[
+						"file=*.tif"
+					],
+					[
+						"matlabpathfile=*.tif"
+					]
+				],
+				"purpose": "源文件的路径"
+			},
+			{
+				"name": "ToDimensionOrder",
+				"kind": "namevalue",
+				"type": [
+					[
+						"char",
+						"size=1,3"
+					],
+					[
+						"string"
+					]
+				],
+				"purpose": "转码后的维度顺序",
+				"default": "'CTZ'"
+			},
+			{
+				"name": "To",
+				"kind": "namevalue",
+				"type": [
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"row",
+						"char"
+					],
+					[
+						"file=*.tif"
+					],
+					[
+						"matlabpathfile=*.tif"
+					]
+				],
+				"purpose": "目标文件的路径",
+				"default": "From"
+			},
+			{
+				"name": "SizeC",
+				"kind": "namevalue",
+				"type": [
+					"positive",
+					"scalar"
+				],
+				"purpose": "颜色通道数"
+			},
+			{
+				"name": "SizeT",
+				"kind": "namevalue",
+				"type": [
+					"positive",
+					"scalar"
+				],
+				"purpose": "采样时点数"
+			},
+			{
+				"name": "SizeT",
+				"kind": "namevalue",
+				"type": [
+					"positive",
+					"scalar"
+				],
+				"purpose": "图像纵深"
+			}
+		]
+	},
+	"MATLAB.ImageSci.OmeTiff.Write5D": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"MATLAB.ImageSci.OmeTiff"
+				],
+				"purpose": "类对象"
+			},
+			{
+				"name": "Image",
+				"kind": "required",
+				"type": [
+					"real",
+					"size=:,:,:,:,:"
+				],
+				"purpose": "要写入的图像数据。维度顺序总是YXCTZ，无论文件中定义的顺序为何"
+			},
+			{
+				"name": "TagStruct",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"struct"
+				],
+				"purpose": "Tiff标签结构体，一般无需设置，保持默认即可"
+			},
+			{
+				"name": "X",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "X轴写入位置。此向量长度必须等于Image第2维长度"
+			},
+			{
+				"name": "Y",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "Y轴写入位置。此向量长度必须等于Image第1维长度"
+			},
+			{
+				"name": "C",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "C轴写入位置。此向量长度必须等于Image第3维长度"
+			},
+			{
+				"name": "T",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "T轴写入位置。此向量长度必须等于Image第4维长度"
+			},
+			{
+				"name": "Z",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "Z轴写入位置。此向量长度必须等于Image第5维长度"
+			}
+		]
+	},
+	"MATLAB.ImageSci.SetLastDirectory": {
+		"inputs": [
+			{
+				"name": "TiffClient",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"Tiff"
+				]
+			}
+		],
+		"outputs": [
+			{
+				"name": "LastDirectory",
+				"type": [
+					"scalar",
+					"double"
+				]
 			}
 		]
 	},
@@ -184,6 +727,50 @@
 					"vector"
 				],
 				"purpose": "要重命名的.mat路径"
+			}
+		]
+	},
+	"MATLAB.IOFun.XmlDom2String": {
+		"inputs": [
+			{
+				"name": "XmlDom",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"org.w3c.dom.Document"
+				],
+				"purpose": "XML文档对象模型"
+			}
+		],
+		"outputs": [
+			{
+				"name": "XmlString",
+				"type": [
+					"scalar",
+					"string"
+				]
+			}
+		]
+	},
+	"MATLAB.IOFun.XmlString2Dom": {
+		"inputs": [
+			{
+				"name": "XmlString",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"string"
+				],
+				"purpose": "XML文本"
+			}
+		],
+		"outputs": [
+			{
+				"name": "XmlDom",
+				"type": [
+					"scalar",
+					"org.w3c.dom.Document"
+				]
 			}
 		]
 	},
