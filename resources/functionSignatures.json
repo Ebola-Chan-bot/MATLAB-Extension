@@ -433,6 +433,32 @@
 				"type": "choices={'r','w','w8','r+'}",
 				"purpose": "采用何种模式打开文件",
 				"default": "r"
+			},
+			{
+				"name": "Mode",
+				"kind": "namevalue",
+				"type": "choices={'r','w','w8','r+'}",
+				"purpose": "采用何种模式打开文件",
+				"default": "r"
+			},
+			{
+				"name": "ImageDescription",
+				"kind": "namevalue",
+				"type": [
+					[
+						"scalar",
+						"org.w3c.dom.Document"
+					],
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
+				"purpose": "OmeXml元数据"
 			}
 		],
 		"outputs": [
