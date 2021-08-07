@@ -26,6 +26,7 @@
           - [XmlString2Dom](#XmlString2Dom) 将XML字符串解析为org.w3c.dom.Document类型
 	- [+UITools](#UITools)
 		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框
+          - [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框
 - [+MatlabShared](#MatlabShared)
 	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
 		- [ClearCache](#ClearCache) 清除缓存的下载器文件
@@ -580,7 +581,7 @@ end
 %函数体……
 ```
 
-**名称-值对组参数**
+**名称值参数**
 
 *Filter*
 
@@ -612,6 +613,45 @@ Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*
 **返回值**
 
 FilePaths(1,:)string，包含对话框中所有选定文件的绝对路径。如果未选择任何文件，则返回一个1×0字符串数组。
+### SaveFileDialog
+可以设置初始目录，以及保存上次所在目录的文件保存对话框
+
+MATLAB自带的uiputfile只能将初始目录设为当前目录，且下次打开时不能自动恢复到上次打开的目录，十分不便。本函数调用System.Windows.Forms.SaveFileDialog解决了这一问题。一个常见用法，就是将需要输入文件路径的函数的默认值设为该函数的返回值：
+```MATLAB
+function StripBackground(options)
+arguments
+	options.InputPath(1,1)string=MATLAB.UITools.OpenFileDialog("Title","选择图像文件")
+	options.BackgroundColor(1,1,3)=cat(3,255,255,255)
+	options.OutputPath(1,1)string=MATLAB.UITools.SaveFileDialog("Title","选择保存位置","Filter","PNG图像|*.png")
+end
+```
+**名称值参数**
+
+*Filter*
+
+(1,1)string，文件名筛选器。
+
+对于每个筛选选项，筛选器字符串都包含筛选器的说明，后跟竖线和筛选器模式。 不同筛选选项的字符串用竖线分隔。
+
+下面是筛选器字符串的示例：
+```
+Text files (*.txt)|*.txt|All files (*.*)|*.*
+```
+可以通过用分号分隔文件类型将多个筛选模式添加到筛选器，例如：
+```
+Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files (*.*)|*.*
+```
+*InitialDirectory*
+
+(1,1)string，文件对话框中显示的初始目录
+
+*Title*
+
+(1,1)string，文件对话框标题。该字符串放置在对话框的标题栏中。 如果标题为空字符串，则系统将使用默认标题，即 "另存为" 或 "打开"。
+
+**返回值**
+
+FilePath(1,1)string，对话框中选定文件的绝对路径。如果未选择任何文件，则返回1×0字符串数组
 # +MatlabShared
 ## +SupportPkg
 一键获取MATLAB硬件支持包。最简单的使用方法：`edit MATLAB.SupportPkg.Demo`，按照提示一节一节运行，即可完成安装。
