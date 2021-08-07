@@ -12,24 +12,24 @@
 	- [+DataTypes](#DataTypes)
 		- [@ArrayBuilder](#ArrayBuilder) 数组累加器类
 		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
-     - [+ElMat](#ElMat)
-          - [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
-          - [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
-     - [+General](#General)
-          - [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
-          - [SHFileCopy](#SHFileCopy)：调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。
-          - [SHFileDelete](#SHFileDelete)：调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。
-          - [SHFileMove](#SHFileMove)：调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
-     - [+ImageSci](#ImageSci)
-          - [@OmeTiff](#OmeTiff) 支持XYCTZ五维索引的OME标准Tiff增强库
-          - [SetLastDirectory](#SetLastDirectory) 跳转到最后一个IFD，并且返回该IFD的序号。
+	- [+ElMat](#ElMat)
+		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
+		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
+	- [+General](#General)
+		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
+		- [SHFileCopy](#SHFileCopy)：调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+		- [SHFileDelete](#SHFileDelete)：调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+		- [SHFileMove](#SHFileMove)：调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+	- [+ImageSci](#ImageSci)
+		- [@OmeTiff](#OmeTiff) 支持XYCTZ五维索引的OME标准Tiff增强库
+		- [SetLastDirectory](#SetLastDirectory) 跳转到最后一个IFD，并且返回该IFD的序号。
 	- [+IOFun](#IOFun)
 		- [MatVariableRename](#MatVariableRename) 批量重命名.mat文件中的变量
-          - [XmlDom2String](#XmlDom2String) 将org.w3c.dom.Document导出为XML文本
-          - [XmlString2Dom](#XmlString2Dom) 将XML字符串解析为org.w3c.dom.Document类型
+		- [XmlDom2String](#XmlDom2String) 将org.w3c.dom.Document导出为XML文本
+		- [XmlString2Dom](#XmlString2Dom) 将XML字符串解析为org.w3c.dom.Document类型
 	- [+UITools](#UITools)
 		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框
-          - [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框
+		- [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框
 - [+MatlabShared](#MatlabShared)
 	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
 		- [ClearCache](#ClearCache) 清除缓存的下载器文件
@@ -86,17 +86,17 @@ MATLAB自带的max函数只能返回多维数组最大值的线性索引。本�
 %{
 M =
 
-     9
+	9
 
 
 S1 =
 
-     1
+	1
 
 
 S2 =
 
-     1
+	1
 %}
 %还可以指定运算维度。如将一个3维数组的后两维求最大值和下标，则返回的最大值和下标都是沿第1维的向量，且只返回最大值在后两维的下标
 [M,S2,S3]=MATLAB.DataFun.MaxSubs(rand(3,3,3),[2 3]);
@@ -134,24 +134,24 @@ Ab.Harvest
 %{
 ans =
 
-     8     3     4
-     8     2     9
-     0     8     1
-     1     1     8
-     5     8     3
-     1     6     5
+	8     3     4
+	8     2     9
+	0     8     1
+	1     1     8
+	5     8     3
+	1     6     5
 
 
 ans =
 
-     8     3     4
-     8     2     9
-     0     8     1
-     1     1     8
-     5     8     3
-     1     6     5
-     0     2     1
-     //数据随机生成，每次运行可能不同
+	8     3     4
+	8     2     9
+	0     8     1
+	1     1     8
+	5     8     3
+	1     6     5
+	0     2     1
+	//数据随机生成，每次运行可能不同
 %}
 ```
 
@@ -185,20 +185,20 @@ BuildDimension(1,1)uint8，累加维度
 %{
 One =
 
-     0
+	0
 
 
 Two =
 
-     0     0
-     0     0
+	0     0
+	0     0
 
 
 Three =
 
-     0     0     0
-     0     0     0
-     0     0     0
+	0     0     0
+	0     0     0
+	0     0     0
 %}
 ```
 **输入参数**
