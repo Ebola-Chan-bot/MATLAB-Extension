@@ -1,16 +1,21 @@
 classdef OmeTiff<Tiff
-    % 支持XYCTZ五维索引的OME标准Tiff增强库，继承于Tiff基类。请先参阅Tiff基类的文档。
+	% 支持XYCTZ五维索引的OME标准Tiff增强库，继承于Tiff基类。请先参阅Tiff基类的文档。
 	% 五个维度的实际意义是：X，图像宽度；Y，图像高度；C，颜色通道；T，采样时点；Z，图像纵深
 	properties(Access=private)
-		ImageDescriptionDom(1,1)
 		Image(1,1)
 		Pixels(1,1)
 		UUID(1,:)char
-		IFDProjection(:,:,:)uint16
+		IFDProjection(:,:,:)double
 		IPNeedUpdate(1,1)logical=true
 		DimensionNeedUpdate(1,1)logical=false
 		Name(1,1)string
 		TDTemplate(1,1)
+	end
+	properties(SetAccess=private)
+		% 存储图像元数据的org.w3c.dom.Document对象。
+		% 除非您需要访问未列在依赖属性中的特殊元数据，否则应当直接访问依赖属性而不是访问它。
+		% 另一个应用场景是，您可能需要将该图像的元数据完整拷贝到新文件中。此时您可以将该属性作为新文件构造函数的ImageDescription参数输入。
+		ImageDescription(1,1)
 	end
 	properties(Dependent)
 		%图像宽度
@@ -31,35 +36,70 @@ classdef OmeTiff<Tiff
 	end
 	methods(Access=private)
 		function ResetID(obj)
-			obj.ImageDescriptionDom=MATLAB.IOFun.XmlString2Dom(obj.getTag('ImageDescription'));
-			obj.UUID=obj.OME.getAttribute('UUID');
-			obj.Image=obj.OME.getElementsByTagName('Image').item(0);
+			obj.ImageDescription=MATLAB.IOFun.XmlString2Dom(obj.getTag('ImageDescription'));
+			OME=obj.ImageDescription.getElementsByTagName('OME').item(0);
+			obj.UUID=OME.getAttribute('UUID');
+			obj.Image=OME.getElementsByTagName('Image').item(0);
 			obj.Pixels=obj.Image.getElementsByTagName('Pixels').item(0);
 			obj.IPNeedUpdate=true;
 		end
 	end
 	methods
-		function obj = OmeTiff(varargin)
-			%构造函数的参数列表和基类Tiff完全相同，请参考基类Tiff的构造函数文档。
-			[~,Filename,Extension]=fileparts(varargin{1});
-			FileExist=exist(Filename,'file');
-			obj@Tiff(varargin{:});
+		function obj = OmeTiff(FilePath,Mode,options)
+			% 构造函数，不完全兼容基类
+			%% 可选位置参数
+			% FilePath(1,1)string，文件路径。默认打开文件选择对话框要求用户手动选择。请注意，如果要读取现有文件，只能读取OmeTiff文件，不能读取一般的Tiff文件。但反过来，基类Tiff可以正确识别OmeTiff，仅仅是丢失高维度信息而已。对于一般Tiff，可以通过本类下的Transcode静态方法转换为OmeTiff。
+			% Mode(1,1)string="r"，打开模式。"r"：只读；"w"：写入不大于4㎇的数据；"w8"：写入大于4㎇的数据；"r+"：读写现有数据。注意，基类Tiff还支持"a"选项，但OmeTiff不支持，因为OmeTiff格式要求在文件头包含文件尾信息，因此不可能在不修改文件头的情况下追加数据。
+			%% 名称值参数
+			% Mode(1,1)string，同可选位置参数Mode。当您不想指定FilePath但需要指定Mode时，可以使用此名称值参数。如果同时指定位置参数和名称值参数的Mode，将以名称值参数为准。
+			% ImageDescription，OmeXml元数据。可以指定为org.w3c.dom.Document对象，也可以是XML文本。仅当Mode指定为"w"或"w8"时才有效。该元数据将被直接写入文件。通常用于将其它文件中的元数据拷贝到新文件。文件名信息将会自动更正。
+			arguments
+				FilePath(1,1)string=MATLAB.UITools.OpenFileDialog(Filter='OmeTiff文件|*.tif',Title='选择要打开的OmeTiff')
+				Mode(1,1)string="r"
+				options.Mode(1,1)string
+				options.ImageDescription
+			end
+			if isfield(options,'Mode')
+				Mode=options.Mode;
+			end
+			[~,Filename,Extension]=fileparts(FilePath);
+			obj@Tiff(FilePath,Mode);
 			obj.Name=Filename+Extension;
-			if FileExist
-				obj.ResetID;
-			else
-				obj.ImageDescriptionDom=MATLAB.IOFun.XmlString2Dom(fileread(fullfile(fileparts(mfilename("fullpath")),'初始ID.xml')));
-				OME=obj.ImageDescriptionDom.getElementsByTagName('OME').item(0);
+			if ismember(Mode,["w" "w8"])
+				if isfield(options,'ImageDescription')
+					if isa(options.ImageDescription,'org.w3c.dom.Document')
+						obj.ImageDescription=options.ImageDescription;
+					else
+						obj.ImageDescription=MATLAB.IOFun.XmlString2Dom(options.ImageDescription);
+					end
+				else
+					obj.ImageDescription=xmlread(fullfile(fileparts(mfilename("fullpath")),'初始ID.xml'));
+				end
+				OME=obj.ImageDescription.getElementsByTagName('OME').item(0);
 				obj.UUID=['urn:uuid:' char(java.util.UUID.randomUUID)];
 				OME.setAttribute('UUID',obj.UUID);
-				Image=OME.getElementsByTagName('Image').item(0);
-				obj.Image=Image;
-				Image.setAttribute('Name',obj.Name);
-				obj.Pixels=Image.getElementsByTagName('Pixels').item(0);
+				obj.Image=OME.getElementsByTagName('Image').item(0);
+				obj.Image.setAttribute('Name',obj.Name);
+				obj.Pixels=obj.Image.getElementsByTagName('Pixels').item(0);
+				UUIDs=obj.Pixels.getElementsByTagName('UUID');
+				for a=0:UUIDs.getLength-1
+					Node=UUIDs.item(a);
+					Node.setAttribute('FileName',obj.Name);
+					Node.setTextContent(obj.UUID);
+				end
+			else
+				obj.ResetID;
+				Sample=obj.read;
+				if obj.Pixels.getAttribute('SizeX').isEmpty
+					obj.SizeX=size(Sample,2);
+				end
+				if obj.Pixels.getAttribute('SizeY').isEmpty
+					obj.SizeY=size(Sample,1);
+				end
 			end
-			TD=obj.ImageDescriptionDom.createElement('TiffData');
-			TD.setAttribute('PlaneCount',1);
-			U=obj.ImageDescriptionDom.createElement('UUID');
+			TD=obj.ImageDescription.createElement('TiffData');
+			TD.setAttribute('PlaneCount','1');
+			U=obj.ImageDescription.createElement('UUID');
 			U.setAttribute('FileName',obj.Name);
 			U.setTextContent(obj.UUID);
 			TD.appendChild(U);
@@ -92,30 +132,30 @@ classdef OmeTiff<Tiff
 			SizeZ=str2double(obj.Pixels.getAttribute('SizeZ'));
 		end
 		function DimensionOrder=get.DimensionOrder(obj)
-			DimensionOrder=obj.Pixels.getAttribute('DimensionOrder');
+			DimensionOrder=char(obj.Pixels.getAttribute('DimensionOrder'));
 			DimensionOrder=DimensionOrder(3:5);
 		end
 		function Type=get.PixelType(obj)
-			Type=obj.Pixels.getAttribute('Type');
+			Type=char(obj.Pixels.getAttribute('Type'));
 		end
 		function set.SizeX(obj,SizeX)
-			obj.Pixels.setAttribute('SizeX',SizeX);
+			obj.Pixels.setAttribute('SizeX',string(SizeX));
 		end
 		function set.SizeY(obj,SizeY)
-			obj.Pixels.setAttribute('SizeY',SizeY);
+			obj.Pixels.setAttribute('SizeY',string(SizeY));
 		end
 		function set.SizeC(obj,SizeC)
-			obj.Pixels.setAttribute('SizeC',SizeC);
+			obj.Pixels.setAttribute('SizeC',string(SizeC));
 			obj.IPNeedUpdate=true;
 			obj.DimensionNeedUpdate=true;
 		end
 		function set.SizeT(obj,SizeT)
-			obj.Pixels.setAttribute('SizeT',SizeT);
+			obj.Pixels.setAttribute('SizeT',string(SizeT));
 			obj.IPNeedUpdate=true;
 			obj.DimensionNeedUpdate=true;
 		end
 		function set.SizeZ(obj,SizeZ)
-			obj.Pixels.setAttribute('SizeZ',SizeZ);
+			obj.Pixels.setAttribute('SizeZ',string(SizeZ));
 			obj.IPNeedUpdate=true;
 			obj.DimensionNeedUpdate=true;
 		end
@@ -140,7 +180,8 @@ classdef OmeTiff<Tiff
 		end
 	end
 	methods(Static)
-		Concatenate(OutputFile,Dimension,InputFile)
+		Concatenate(OutputFile,Dimension,varargin)
 		Transcode(From,FromDimensionOrder,options)
+		Rename(From,To)
 	end
 end

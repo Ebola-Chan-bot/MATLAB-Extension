@@ -17,12 +17,15 @@
           - [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
      - [+General](#General)
           - [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
+          - [SHFileCopy](#SHFileCopy)：调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+          - [SHFileDelete](#SHFileDelete)：调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+          - [SHFileMove](#SHFileMove)：调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
      - [+ImageSci](#ImageSci)
           - [@OmeTiff](#OmeTiff) 支持XYCTZ五维索引的OME标准Tiff增强库
           - [SetLastDirectory](#SetLastDirectory) 跳转到最后一个IFD，并且返回该IFD的序号。
 	- [+IOFun](#IOFun)
 		- [MatVariableRename](#MatVariableRename) 批量重命名.mat文件中的变量
-          - [XmlDom2String](#XmlDom2String) 将org.w3c.dom.Document导出为XML字符串
+          - [XmlDom2String](#XmlDom2String) 将org.w3c.dom.Document导出为XML文本
           - [XmlString2Dom](#XmlString2Dom) 将XML字符串解析为org.w3c.dom.Document类型
 	- [+UITools](#UITools)
 		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框
@@ -313,11 +316,137 @@ ArbitraryOrder(1,:)=1:numel(DimensionSize)，希望得到的索引矩阵的维�
 输入参数：Path(1,1)string，要确认的Java路径
 
 返回值：Exist(1,1)logical，Java路径是否在调用本函数之前就已存在于静态列表中。注意，存在于静态列表中并不意味着MATLAB已经加载了它。例如运行本函数两次，第2次必定返回true，但新添加的路径仍然必须重启MATLAB才能生效。
+### SHFileCopy
+调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+
+MATLAB自带的copyfile功能十分简陋，一次只能操作一个或具有通配符的一系列文件；不能显示进度；复制后无法撤销；覆盖文件也没有确认对话框等。本函数调用Windows文件资源管理器的强大功能实现完善的文件、目录复制操作。
+```MATLAB
+import MATLAB.General.*
+%如下代码将5个文件分别复制到5个不同的文件夹并各自重命名，一次性批量完成操作。
+From=["D:\OneDrive - 翁悸会\壁纸\(1).png"
+"D:\OneDrive - 翁悸会\壁纸\(2).png"
+"D:\OneDrive - 翁悸会\壁纸\(3).png"
+"D:\OneDrive - 翁悸会\壁纸\(4).png"
+"D:\OneDrive - 翁悸会\壁纸\(5).png"];
+To=["C:\Users\vhtmf\Pictures\1\1.png"
+"C:\Users\vhtmf\Pictures\2\2.png"
+"C:\Users\vhtmf\Pictures\3\3.png"
+"C:\Users\vhtmf\Pictures\4\4.png"
+"C:\Users\vhtmf\Pictures\5\5.png"];
+%使用bitor组合不同的旗帜。这里指定了撤销功能和多目的地功能。
+%因为5个目标文件夹不存在，将会弹出对话框询问用户是否要创建这些文件夹。如果用户都选了是，则操作成功。
+[ErrorCode,AnyOperationsAborted] = SHFileCopy(From,To,bitor(FILEOP_FLAGS.FOF_ALLOWUNDO,FILEOP_FLAGS.FOF_MULTIDESTFILES))
+%收集返回值，ErrorCode为0说明操作成功，AnyOperationsAborted为false说明用户没有通过对话框取消操作。
+%虽然文件被复制到了各不相同的目录下，但仍可以在文件资源管理器中右击呼出上下文菜单，撤销本次复制操作。
+%撤销以后，再尝试执行如下代码：
+To="C:\Users\vhtmf\Pictures";
+[ErrorCode,AnyOperationsAborted] = SHFileCopy(From,To)
+%所有文件都被复制到了同一个目录下，且没有被重命名。虽然没有指定旗帜，该操作仍然可以在文件资源管理器中撤销，因为本函数在调用方不指定旗帜时默认允许撤销。如果不允许撤销，请将旗帜设为0。
+%撤销以后，再尝试执行如下代码：
+From="D:\OneDrive - 翁悸会\壁纸";
+[ErrorCode,AnyOperationsAborted] = SHFileCopy(From,To)
+%整个目录都被复制了。
+```
+**输入参数**
+
+From(:,1)string，必需，所有要复制的源文件、目录。可以同时指定多个文件或目录，不需要在同一个目录下，并且可以使用通配符。
+
+To(:,1)string，必需，复制的目标。如果指定为标量，将把所有文件、目录复制到该字符串所指定的目录下；若目录不存在，可以自动创建。如果指定为向量，则必须和From具有相同的尺寸，每个文件、目录进行一一对应的复制；并且需要指定MATLAB.General.FILEOP_FLAGS.FOF_MULTIDESTFILES旗帜。
+
+Flags(1,1)uint16=MATLAB.General.FILEOP_FLAGS.FOF_ALLOWUNDO，可选，功能旗帜。[FILEOP_FLAGS](+MATLAB/+General/FILEOP_FLAGS.m)中定义了可选的附加功能。这些功能可以通过bitor进行组合，同时启用。如果不希望指定任何附加功能，请将该值显式设为0。
+
+**返回值**
+
+ErrorCode(1,1)int32，错误代码。如果操作成功，返回0；否则返回一个特定的代码。代码对应的错误说明，请查阅[winerror.h](+MATLAB/+General/winerror.h)。
+
+AnyOperationsAborted(1,1)logical，指示是否有操作被用户取消。
+### SHFileDelete
+调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+
+MATLAB自带的delete和rmdir功能十分简陋，一次只能操作一个或具有通配符的一系列目标；delete只能删文件，rmdir只能删目录；不能显示进度；只能永久删除，不能送进回收站，无法撤销，误操作后果难以挽回；永久删除也没有确认对话框等。本函数调用Windows文件资源管理器的强大功能实现完善的文件、目录删除操作。
+```MATLAB
+import MATLAB.General.SHFileDelete
+%如下代码一口气同时删除2个目录和2个文件
+From=["C:\Users\vhtmf\Pictures\1"
+"C:\Users\vhtmf\Pictures\2"
+"C:\Users\vhtmf\Pictures\986e34d724621831601658c5b8cb89.png"
+"C:\Users\vhtmf\Pictures\Konachan.com%20-%20326560%20berryverrine%20breasts%20chinese_clothes%20chinese_dress%20cleavage%20dress%20glasses%20horns%20original%20polychromatic%20purple_hair%20red_hair.jpg"];
+[ErrorCode,AnyOperationsAborted] = SHFileDelete(From)
+%收集返回值，ErrorCode为0说明操作成功，AnyOperationsAborted为false说明用户没有通过对话框取消操作。
+%虽然文件被删除，但并非永久，可以在回收站中恢复，也可以在文件资源管理器中右击呼出上下文菜单，撤销本次删除操作。
+%显式指定Flags为0，会将目录和文件永久删除无法恢复，请谨慎使用：
+[ErrorCode,AnyOperationsAborted] = SHFileDelete(From,0)
+```
+**输入参数**
+
+From(:,1)string，必需，所有要删除的文件、目录。可以同时指定多个文件或目录，不需要在同一个目录下，并且可以使用通配符。
+
+Flags(1,1)uint16=MATLAB.General.FILEOP_FLAGS.FOF_ALLOWUNDO，可选，功能旗帜。[FILEOP_FLAGS](+MATLAB/+General/FILEOP_FLAGS.m)中定义了可选的附加功能。这些功能可以通过bitor进行组合，同时启用。如果不希望指定任何附加功能，请将该值显式设为0。
+
+**返回值**
+
+ErrorCode(1,1)int32，错误代码。如果操作成功，返回0；否则返回一个特定的代码。代码对应的错误说明，请查阅[winerror.h](+MATLAB/+General/winerror.h)。
+
+AnyOperationsAborted(1,1)logical，指示是否有操作被用户取消。
+### SHFileMove
+调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+
+MATLAB自带的movefile功能十分简陋，一次只能操作一个或具有通配符的一系列文件；不能操作目录；不能显示进度；移动后无法撤销；覆盖文件也没有确认对话框等。本函数调用Windows文件资源管理器的强大功能实现完善的文件、目录移动操作。
+```MATLAB
+import MATLAB.General.*
+%如下代码将5个文件分别移动到5个不同的文件夹并各自重命名，一次性批量完成操作。
+From=["D:\OneDrive - 翁悸会\壁纸\(1).png"
+"D:\OneDrive - 翁悸会\壁纸\(2).png"
+"D:\OneDrive - 翁悸会\壁纸\(3).png"
+"D:\OneDrive - 翁悸会\壁纸\(4).png"
+"D:\OneDrive - 翁悸会\壁纸\(5).png"];
+To=["C:\Users\vhtmf\Pictures\1\1.png"
+"C:\Users\vhtmf\Pictures\2\2.png"
+"C:\Users\vhtmf\Pictures\3\3.png"
+"C:\Users\vhtmf\Pictures\4\4.png"
+"C:\Users\vhtmf\Pictures\5\5.png"];
+%使用bitor组合不同的旗帜。这里指定了撤销功能和多目的地功能。
+%因为5个目标文件夹不存在，将会弹出对话框询问用户是否要创建这些文件夹。如果用户都选了是，则操作成功。
+[ErrorCode,AnyOperationsAborted] = SHFileMove(From,To,bitor(FILEOP_FLAGS.FOF_ALLOWUNDO,FILEOP_FLAGS.FOF_MULTIDESTFILES))
+%收集返回值，ErrorCode为0说明操作成功，AnyOperationsAborted为false说明用户没有通过对话框取消操作。
+%虽然文件被移动到了各不相同的目录下，但仍可以在文件资源管理器中右击呼出上下文菜单，撤销本次移动操作。
+%撤销以后，再尝试执行如下代码：
+To="C:\Users\vhtmf\Pictures";
+[ErrorCode,AnyOperationsAborted] = SHFileMove(From,To)
+%所有文件都被移动到了同一个目录下，且没有被重命名。虽然没有指定旗帜，该操作仍然可以在文件资源管理器中撤销，因为本函数在调用方不指定旗帜时默认允许撤销。如果不允许撤销，请将旗帜设为0。
+%撤销以后，再尝试执行如下代码：
+From="D:\OneDrive - 翁悸会\壁纸";
+[ErrorCode,AnyOperationsAborted] = SHFileMove(From,To)
+%整个目录都被移动了。
+```
+**输入参数**
+
+From(:,1)string，必需，所有要移动的源文件、目录。可以同时指定多个文件或目录，不需要在同一个目录下，并且可以使用通配符。
+
+To(:,1)string，必需，移动的目标。如果指定为标量，将把所有文件、目录移动到该字符串所指定的目录下；若目录不存在，可以自动创建。如果指定为向量，则必须和From具有相同的尺寸，每个文件、目录进行一一对应的移动；并且需要指定MATLAB.General.FILEOP_FLAGS.FOF_MULTIDESTFILES旗帜。
+
+Flags(1,1)uint16=MATLAB.General.FILEOP_FLAGS.FOF_ALLOWUNDO，可选，功能旗帜。[FILEOP_FLAGS](+MATLAB/+General/FILEOP_FLAGS.m)中定义了可选的附加功能。这些功能可以通过bitor进行组合，同时启用。如果不希望指定任何附加功能，请将该值显式设为0。
+
+**返回值**
+
+ErrorCode(1,1)int32，错误代码。如果操作成功，返回0；否则返回一个特定的代码。代码对应的错误说明，请查阅[winerror.h](+MATLAB/+General/winerror.h)。
+
+AnyOperationsAborted(1,1)logical，指示是否有操作被用户取消。
 ## +ImageSci
 ### @OmeTiff
 支持XYCTZ五维索引的OME标准Tiff增强库，继承于Tiff基类。请先参阅Tiff基类的文档`doc Tiff`。此处只列出本类新增的方法以及重写的方法。
 
 五个维度的实际意义是：X，图像宽度；Y，图像高度；C，颜色通道；T，采样时点；Z，图像纵深
+
+**只读属性**
+
+*ImageDescription*
+
+(1,1)org.w3c.dom.Document。存储图像元数据的对象。
+
+除非您需要访问未列在依赖属性中的特殊元数据，否则应当直接访问依赖属性而不是访问它。
+
+另一个应用场景是，您可能需要将该图像的元数据完整拷贝到新文件中。此时您可以将该属性作为新文件构造函数的ImageDescription参数输入。
 
 **依赖属性**
 
@@ -339,13 +468,25 @@ PixelType(1,:)char，像素值的数据类型，默认'uint16'
 
 **构造函数**
 
-构造函数的参数列表和基类Tiff完全相同，请参考基类Tiff的构造函数文档。但需注意，如果要读取现有文件，只能读取OmeTiff文件，不能读取一般的Tiff文件。但反过来，基类Tiff可以正确识别OmeTiff，仅仅是丢失高维度信息而已。对于一般Tiff，可以通过本类下的`Transcode`静态方法转换为OmeTiff。
+构造函数，不完全兼容基类
+
+*可选位置参数*
+
+FilePath(1,1)string，文件路径。默认打开文件选择对话框要求用户手动选择。请注意，如果要读取现有文件，只能读取OmeTiff文件，不能读取一般的Tiff文件。但反过来，基类Tiff可以正确识别OmeTiff，仅仅是丢失高维度信息而已。对于一般Tiff，可以通过本类下的Transcode静态方法转换为OmeTiff。
+
+Mode(1,1)string="r"，打开模式。"r"：只读；"w"：写入不大于4㎇的数据；"w8"：写入大于4㎇的数据；"r+"：读写现有数据。注意，基类Tiff还支持"a"选项，但OmeTiff不支持，因为OmeTiff格式要求在文件头包含文件尾信息，因此不可能在不修改文件头的情况下追加数据。
+
+*名称值参数*
+
+Mode(1,1)string，同可选位置参数Mode。当您不想指定FilePath但需要指定Mode时，可以使用此名称值参数。如果同时指定位置参数和名称值参数的Mode，将以名称值参数为准。
+
+ImageDescription，OmeXml元数据。可以指定为org.w3c.dom.Document对象，也可以是XML文本。仅当Mode指定为"w"或"w8"时才有效。该元数据将被直接写入文件。通常用于将其它文件中的元数据拷贝到新文件。文件名信息将会自动更正。
 
 **成员方法**
 
 `close`
 
-此方法重写基类，但参数列表完全相同，功能也基本一样，请参阅`doc Tiff.close`。如果您修改了OmeTiff文件，请务必使用此函数正确关闭，否则可能导致文件损坏。
+此方法重写基类，但参数列表完全相同，功能也基本一样，请参阅`doc Tiff.close`。如果是函数局部变量，不必调用此函数关闭。MATLAB会自动关闭文件。
 
 `GetDefaultTagStruct`
 
@@ -481,6 +622,24 @@ Dimension(1,1)，必需，串联维度，可以是维度编号（按照YXCTZ的�
 
 InputFile，依次输入所有要串联的文件路径，或者把它们组合成数组。第1个文件将决定输出文件的维度顺序。
 
+`Rename`
+
+重命名OmeTiff文件或ImageDescription
+
+OmeTiff文件的一大特点是，ImageDescription还保存了文件名信息。因此，不能直接通过Windows文件资源管理器来重命名OmeTiff文件，必须同时修改其ImageDescription。本函数提供了方便的方法一键完成。
+
+本函数的文件移动操作调用的是[MATLAB.General.SHFileMove](#SHFileMove)。虽然支持撤销操作，但是对ImageDescription的修改显然无法撤销。此外，您也可以将ImageDescription的[org.w3c.dom.Document](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html)或是文本交给本函数，修改其中的文件名字段。
+
+*必需参数*
+
+From(1,1)，可以是文件路径或ImageDescription的org.w3c.dom.Document或文本。
+
+To(1,1)string，要修改到的文件名。请确保仅提供文件名，不支持移动到其它目录。
+
+*返回值*
+
+RenamedDom(1,1)org.w3c.dom.Document，仅当From参数为文本时才有返回值。将返回修改了文件名后的ImageDescription。
+
 `Transcode`
 
 将一般Tiff文件转码为OmeTiff，或者强制修改原OmeTiff的维度信息
@@ -547,7 +706,7 @@ NewNames(1,:)string，必需，要改为的变量名。不能少于OldNames，�
 
 MatPaths(1,:)string，可选，要重命名的.mat文件路径。默认打开文件选择对话框要求用户手动选择。
 ### XmlDom2String
-将org.w3c.dom.Document导出为XML字符串
+将org.w3c.dom.Document导出为XML文本
 
 MATLAB自带xmlwrite函数只能将XML写出到文件，而不能生成内存中的XML文本，本函数弥补了这项功能缺陷。要求的输入org.w3c.dom.Document是一个Java对象，可以轻松实现对XML的增删改查，详见[Java文档](https://docs.oracle.com/javase/8/docs/api/org/w3c/dom/Document.html)。
 
@@ -555,7 +714,7 @@ MATLAB自带xmlwrite函数只能将XML写出到文件，而不能生成内存中
 
 输入参数：XmlDom(1,1)org.w3c.dom.Document，XML文档对象模型
 
-返回值：XmlString(1,1)string，XML文本
+返回值：XmlString(1,1)java.lang.String，XML文本。大部分接受字符串输入的函数也都支持强制转换java.lang.String到MATLAB字符串，但也可能有些函数仅支持string或char，因此此处保留原始类型返回，由调用方按需转换。
 ### XmlString2Dom
 将XML字符串解析为org.w3c.dom.Document类型
 

@@ -232,6 +232,156 @@
 			}
 		]
 	},
+	"MATLAB.General.SHFileCopy": {
+		"inputs": [
+			{
+				"name": "From",
+				"kind": "required",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "所有要复制的源文件、目录"
+			},
+			{
+				"name": "To",
+				"kind": "required",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "复制的目标"
+			},
+			{
+				"name": "Flags",
+				"kind": "ordered",
+				"type": [
+					[
+						"FILEOP_FLAGS"
+					],
+					[
+						"uint16"
+					]
+				],
+				"purpose": "功能旗帜",
+				"default": 64
+			}
+		],
+		"outputs": [
+			{
+				"name": "ErrorCode",
+				"type": [
+					"scalar",
+					"int32"
+				]
+			},
+			{
+				"name": "AnyOperationsAborted",
+				"type": [
+					"scalar",
+					"logical"
+				]
+			}
+		],
+		"platforms": "win64"
+	},
+	"MATLAB.General.SHFileDelete": {
+		"inputs": [
+			{
+				"name": "From",
+				"kind": "required",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "所有要删除的文件、目录"
+			},
+			{
+				"name": "Flags",
+				"kind": "ordered",
+				"type": [
+					[
+						"FILEOP_FLAGS"
+					],
+					[
+						"uint16"
+					]
+				],
+				"purpose": "功能旗帜",
+				"default": 64
+			}
+		],
+		"outputs": [
+			{
+				"name": "ErrorCode",
+				"type": [
+					"scalar",
+					"int32"
+				]
+			},
+			{
+				"name": "AnyOperationsAborted",
+				"type": [
+					"scalar",
+					"logical"
+				]
+			}
+		],
+		"platforms": "win64"
+	},
+	"MATLAB.General.SHFileMove": {
+		"inputs": [
+			{
+				"name": "From",
+				"kind": "required",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "所有要移动的源文件、目录"
+			},
+			{
+				"name": "To",
+				"kind": "required",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "移动的目标"
+			},
+			{
+				"name": "Flags",
+				"kind": "ordered",
+				"type": [
+					[
+						"FILEOP_FLAGS"
+					],
+					[
+						"uint16"
+					]
+				],
+				"purpose": "功能旗帜",
+				"default": 64
+			}
+		],
+		"outputs": [
+			{
+				"name": "ErrorCode",
+				"type": [
+					"scalar",
+					"int32"
+				]
+			},
+			{
+				"name": "AnyOperationsAborted",
+				"type": [
+					"scalar",
+					"logical"
+				]
+			}
+		],
+		"platforms": "win64"
+	},
 	"MATLAB.General.StaticJavaPath": {
 		"inputs": [
 			{
@@ -257,8 +407,8 @@
 	"MATLAB.ImageSci.OmeTiff": {
 		"inputs": [
 			{
-				"name": "filename",
-				"kind": "required",
+				"name": "FilePath",
+				"kind": "ordered",
 				"type": [
 					[
 						"file"
@@ -267,16 +417,22 @@
 						"matlabpathfile=*.tif,*.tiff"
 					],
 					[
-						"char"
+						"char",
+						"vector"
+					],
+					[
+						"scalar",
+						"string"
 					]
 				],
 				"purpose": "OmeTiff文件路径"
 			},
 			{
-				"name": "mode",
+				"name": "Mode",
 				"kind": "ordered",
-				"type": "choices={'r','w','w8','a','r+'}",
-				"purpose": "采用何种模式打开文件"
+				"type": "choices={'r','w','w8','r+'}",
+				"purpose": "采用何种模式打开文件",
+				"default": "r"
 			}
 		],
 		"outputs": [
@@ -447,6 +603,56 @@
 				"type": [
 					"real",
 					"size=:,:,:,:,:"
+				]
+			}
+		]
+	},
+	"MATLAB.ImageSci.OmeTiff.Rename": {
+		"inputs": [
+			{
+				"name": "From",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"file=*.tif"
+					],
+					[
+						"scalar",
+						"org.w3c.dom.Document"
+					]
+				],
+				"purpose": "可以是文件路径或ImageDescription的org.w3c.dom.Document或文本。"
+			},
+			{
+				"name": "To",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
+				"purpose": "要修改到的文件名"
+			}
+		],
+		"outputs": [
+			{
+				"name": "RenamedDom",
+				"type": [
+					"scalar",
+					"org.w3c.dom.Document"
 				]
 			}
 		]
@@ -747,7 +953,7 @@
 				"name": "XmlString",
 				"type": [
 					"scalar",
-					"string"
+					"java.lang.String"
 				]
 			}
 		]
