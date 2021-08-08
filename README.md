@@ -27,6 +27,8 @@
 		- [MatVariableRename](#MatVariableRename) 批量重命名.mat文件中的变量
 		- [XmlDom2String](#XmlDom2String) 将org.w3c.dom.Document导出为XML文本
 		- [XmlString2Dom](#XmlString2Dom) 将XML字符串解析为org.w3c.dom.Document类型
+	- [+Parallel](#Parallel)
+		- [@MmfSemaphore](#MmfSemaphore) 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
 	- [+UITools](#UITools)
 		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框
 		- [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框
@@ -725,6 +727,48 @@ MATLAB自带xmlread函数只能读取XML文件，而不能解析内存中的字�
 输入参数：XmlString(1,1)string，XML文本
 
 返回值：XmlDom(1,1)org.w3c.dom.Document，XML解析结果
+## +Parallel
+### MmfSemaphore
+使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
+
+Windows的命名信号量十分坑爹，一旦设定好，重启系统之前都无法修改，因此退而求其次采用MATLAB内存映射文件实现跨进程资源分配。
+
+如下示例，并行使用GPU计算时，因为显存有限，且过多进程同时使用GPU反而导致性能下降，所以需要进行信号量分配。
+
+首先，在启动进程中，规定信号量总数，即允许同时使用GPU的进程个数为2：
+```MATLAB
+GpuMmf=MATLAB.Parallel.MmfSemaphore;
+GpuMmf.Fill(2);
+%然后可以启动分进程
+```
+然后，在分进程代码中，先检查GPU是否空闲，再决定使用GPU还是CPU运算：
+```MATLAB
+if GpuMmf.RequestOne
+	%GPU空闲，执行占用GPU的代码，用完后要记得归还
+	GpuMmf.ReturnOne;
+else
+	%GPU忙碌，执行占用CPU的代码
+end
+```
+本类暂未实现线程安全，所以可能存在争用问题，导致分配出错。但至多导致多分或少分，不会中断程序。如果精确分配十分重要，请不要使用本类。
+
+**构造方法**
+
+输入参数：FilePath(1,1)string，可选，内存映射文件路径。如果指定文件不存在，将创建该文件，写入一个字节0，表示当前无资源可供分配。
+
+**成员方法**
+
+*Fill*
+
+填充信号量中的资源。输入参数：Number(1,1)uint8，填充资源数量
+
+*RequestOne*
+
+求取一个资源配额。返回值：Success(1,1)logical，求取是否成功
+
+*ReturnOne*
+
+归还一个资源配额。将直接导致资源数量+1，不会检查是否超出Fill的量。
 ## +UITools
 ### OpenFileDialog
 可以设置初始目录，以及保存上次所在目录的文件打开对话框

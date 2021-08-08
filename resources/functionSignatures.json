@@ -1006,6 +1006,91 @@
 			}
 		]
 	},
+	"MATLAB.Parallel.MmfSemaphore": {
+		"inputs": [
+			{
+				"name": "FilePath",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
+				"purpose": "内存映射文件路径"
+			}
+		],
+		"outputs": [
+			{
+				"name": "obj",
+				"type": [
+					"scalar",
+					"MATLAB.Parallel.MmfSemaphore"
+				]
+			}
+		]
+	},
+	"MATLAB.Parallel.MmfSemaphore.Fill": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"MATLAB.Parallel.MmfSemaphore"
+				]
+			},
+			{
+				"name": "Number",
+				"kind": "required",
+				"type": [
+					"scalar",
+					">=0"
+				],
+				"purpose": "填充资源数量"
+			}
+		]
+	},
+	"MATLAB.Parallel.MmfSemaphore.RequestOne": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"MATLAB.Parallel.MmfSemaphore"
+				]
+			}
+		],
+		"outputs": [
+			{
+				"name": "Success",
+				"type": [
+					"scalar",
+					"logical"
+				]
+			}
+		]
+	},
+	"MATLAB.Parallel.MmfSemaphore.ReturnOne": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"MATLAB.Parallel.MmfSemaphore"
+				]
+			}
+		]
+	},
 	"MATLAB.UITools.OpenFileDialog": {
 		"inputs": [
 			{
