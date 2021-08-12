@@ -71,6 +71,66 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.Rescale": {
+		"inputs": [
+			{
+				"name": "Array",
+				"kind": "required",
+				"type": "real",
+				"purpose": "要缩放的数组"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Dimension",
+							"kind": "ordered",
+							"type": [
+								"real",
+								"vector"
+							],
+							"purpose": "拆分维度"
+						}
+					],
+					[
+						{
+							"name": "LowerBound",
+							"kind": "required",
+							"type": [
+								"real",
+								"scalar"
+							],
+							"purpose": "缩放下界"
+						},
+						{
+							"name": "UpperBound",
+							"kind": "required",
+							"type": [
+								"real",
+								"scalar"
+							],
+							"purpose": "缩放上界"
+						},
+						{
+							"name": "Dimension",
+							"kind": "ordered",
+							"type": [
+								"real",
+								"vector"
+							],
+							"purpose": "拆分维度"
+						}
+					]
+				]
+			}
+		],
+		"outputs": [
+			{
+				"name": "Array",
+				"type": "real"
+			}
+		]
+	},
 	"MATLAB.DataTypes.ArrayBuilder": {
 		"inputs": [
 			{

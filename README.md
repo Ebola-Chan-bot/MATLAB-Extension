@@ -1,4 +1,4 @@
-埃博拉酱的MATLAB数据操纵工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能
+埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能
 
 本项目的发布版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
 # 目录
@@ -9,6 +9,7 @@
 		- [PublishRequirements](#PublishRequirements) 在包目录下生成一个依赖项.mat文件
 	- [+DataFun](#DataFun)
 		- [MaxSubs](#MaxSubs) 返回数组的最大值以及所在的坐标。
+		- [Rescale](#Rescale) 数组元素沿指定维度的缩放范围
 	- [+DataTypes](#DataTypes)
 		- [@ArrayBuilder](#ArrayBuilder) 数组累加器类
 		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
@@ -117,6 +118,40 @@ Dimensions(1,:)uint8，可选，要取最大值的维度。返回值在这些维
 Value(1,1)，最大值
 
 [S1,S2, …, Sn]，最大值所在的位置中，线性索引最小的那个位置的坐标。每个返回值依次代表各维度的坐标。只包含Dimensions维度的坐标，并按照Dimension指定的顺序排列输出。
+### Rescale
+数组元素沿指定维度的缩放范围
+
+MATLAB内置rescale函数不能指定维度，只能在整个数组范围内缩放。本函数解决该问题，允许指定Dimensions参数为运算维度。
+```MATLAB
+import MATLAB.DataFun.Rescale
+%将整个数组缩放到[0,1]范围
+Data=rand(4,4,4,4)*10;
+%指定拆分维度。拆分维度[2 4]意味着，以4×1×4×1数组为单位，在这1×4×1×4个数组内部分别进行缩放。
+Rescale(Data,[2 4]);
+%指定缩放范围[2,3]
+Rescale(Data,2,3);
+%同时指定缩放范围和拆分维度
+Rescale(Data*10,2,3,[2 4]);
+```
+**用法**
+```MATLAB
+import MATLAB.DataFun.Rescale
+Rescale(Array);
+Rescale(Array,Dimensions);
+Rescale(Array,LowerBound,UpperBound);
+Rescale(Array,LowerBound,UpperBound,Dimensions);
+```
+Array，必需，数值数组
+
+LowerBound(1,1)，缩放下界
+
+UpperBound(1,1)，缩放上界
+
+Dimensions(1,:)，拆分维度
+
+**返回值**
+
+Array，缩放后的数组
 ## +DataTypes
 ### @ArrayBuilder
 数组累加器类
