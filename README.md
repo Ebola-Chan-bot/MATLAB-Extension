@@ -28,6 +28,8 @@
 		- [MatVariableRename](#MatVariableRename) 批量重命名.mat文件中的变量
 		- [XmlDom2String](#XmlDom2String) 将org.w3c.dom.Document导出为XML文本
 		- [XmlString2Dom](#XmlString2Dom) 将XML字符串解析为org.w3c.dom.Document类型
+	- [+Lang](#Lang)
+		- [DistributeVararginByValidation](#DistributeVararginByValidation) 根据验证函数将输入的Varargin分发到输出变量
 	- [+Parallel](#Parallel)
 		- [@MmfSemaphore](#MmfSemaphore) 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
 	- [+UITools](#UITools)
@@ -764,6 +766,37 @@ MATLAB自带xmlread函数只能读取XML文件，而不能解析内存中的字�
 输入参数：XmlString(1,1)string，XML文本
 
 返回值：XmlDom(1,1)org.w3c.dom.Document，XML解析结果
+## +Lang
+### DistributeVararginByValidation
+根据验证函数将输入的Varargin分发到输出变量
+```MATLAB
+%%示例脚本
+[A,B,C]=Sample(7,{4},"d")
+%返回A="d",B=7,C={4}
+[A,B,C]=Sample
+%返回A="a",B=1,C={}
+%%
+function [A,B,C]=Sample(varargin)
+%本函数需要将varargin解析为A, B, C三个参数，分别是字符串、数值和元胞，默认值分别为"a", 1, {}。但是允许调用方按照任意顺序输入这三个参数。
+[A,B,C]=MATLAB.Lang.DistributeVararginByValidation(varargin,@isstring,@()"a",@isnumeric,@()1,@iscell,@(){});
+%无论调用方使用何种顺序输入这三个参数，都将得到正确的A, B, C。如果调用方未提供某些参数，也将赋予默认值。
+end
+```
+使用本函数让开发者能够允许调用方以任意顺序、可缺省地输入一系列类型不同的参数，分配到正确的变量中。
+
+**必需参数**
+
+Varargin(1,:)cell，调用方提供的varargin参数
+
+**重复参数**
+
+ValidationFun(1,1)function_handle，接受单一输入、输出逻辑标量的函数句柄，作为验证该参数的函数。若调用方提供的参数输入该函数返回true，则应用该参数；无论是返回false还是出错，都会将参数否决掉。
+
+DefaultFun(1,1)function_handle，接受无输入、单一输出的函数句柄，用于取得该参数的默认值。如果缺少通过验证的某参数，将调用该函数取得默认值；如果有通过验证的参数，该函数将不会被调用。
+
+**返回值**
+
+varargout，按照重复参数重复的顺序排列输出实际得到的各个参数
 ## +Parallel
 ### MmfSemaphore
 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。

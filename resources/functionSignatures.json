@@ -1066,6 +1066,38 @@
 			}
 		]
 	},
+	"MATLAB.Lang.DistributeVararginByValidation":{
+		"inputs":[
+			{
+				"name":"Varargin",
+				"kind":"required",
+				"type":["cell","vector"],
+				"purpose":"调用方提供的varargin参数"
+			},
+			{
+				"kind":"required",
+				"repeating":true,
+				"tuple":[
+					{
+						"name":"ValidationFun",
+						"type":"function_handle",
+						"purpose":"验证该参数的函数"						
+					},
+					{
+						"name":"DefaultFun",
+						"type":"function_handle",
+						"purpose":"用于取得该参数的默认值"
+					}
+				]
+			}
+		],
+		"outputs":[
+			{
+				"name":"varargout",
+				"multiplicity":"append"
+			}
+		]
+	},
 	"MATLAB.Parallel.MmfSemaphore": {
 		"inputs": [
 			{
