@@ -1066,35 +1066,38 @@
 			}
 		]
 	},
-	"MATLAB.Lang.DistributeVararginByValidation":{
-		"inputs":[
+	"MATLAB.Lang.DistributeVararginByValidation": {
+		"inputs": [
 			{
-				"name":"Varargin",
-				"kind":"required",
-				"type":["cell","vector"],
-				"purpose":"调用方提供的varargin参数"
+				"name": "Varargin",
+				"kind": "required",
+				"type": [
+					"cell",
+					"vector"
+				],
+				"purpose": "调用方提供的varargin参数"
 			},
 			{
-				"kind":"required",
-				"repeating":true,
-				"tuple":[
+				"kind": "required",
+				"repeating": true,
+				"tuple": [
 					{
-						"name":"ValidationFun",
-						"type":"function_handle",
-						"purpose":"验证该参数的函数"						
+						"name": "ValidationFun",
+						"type": "function_handle",
+						"purpose": "验证该参数的函数"
 					},
 					{
-						"name":"DefaultFun",
-						"type":"function_handle",
-						"purpose":"用于取得该参数的默认值"
+						"name": "DefaultFun",
+						"type": "function_handle",
+						"purpose": "用于取得该参数的默认值"
 					}
 				]
 			}
 		],
-		"outputs":[
+		"outputs": [
 			{
-				"name":"varargout",
-				"multiplicity":"append"
+				"name": "varargout",
+				"multiplicity": "append"
 			}
 		]
 	},
@@ -1189,8 +1192,14 @@
 				"name": "Filter",
 				"kind": "namevalue",
 				"type": [
-					"scalar",
-					"string"
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"char",
+						"vector"
+					]
 				],
 				"purpose": "文件名筛选器"
 			},
@@ -1215,8 +1224,14 @@
 				"name": "Title",
 				"kind": "namevalue",
 				"type": [
-					"scalar",
-					"string"
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"char",
+						"vector"
+					]
 				],
 				"purpose": "文件对话框标题"
 			}
@@ -1227,8 +1242,14 @@
 					"name": "Filter",
 					"kind": "namevalue",
 					"type": [
-						"scalar",
-						"string"
+						[
+							"scalar",
+							"string"
+						],
+						[
+							"char",
+							"vector"
+						]
 					],
 					"purpose": "文件名筛选器"
 				},
@@ -1244,8 +1265,14 @@
 					"name": "Title",
 					"kind": "namevalue",
 					"type": [
-						"scalar",
-						"string"
+						[
+							"scalar",
+							"string"
+						],
+						[
+							"char",
+							"vector"
+						]
 					],
 					"purpose": "文件对话框标题"
 				}
