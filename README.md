@@ -17,10 +17,11 @@
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 	- [+General](#General)
+		- [Save](#Save) 内置save函数的强化版
+		- [SHFileCopy](#SHFileCopy) 调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+		- [SHFileDelete](#SHFileDelete) 调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+		- [SHFileMove](#SHFileMove) 调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
 		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
-		- [SHFileCopy](#SHFileCopy)：调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。
-		- [SHFileDelete](#SHFileDelete)：调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。
-		- [SHFileMove](#SHFileMove)：调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
 	- [+ImageSci](#ImageSci)
 		- [@OmeTiff](#OmeTiff) 支持XYCTZ五维索引的OME标准Tiff增强库
 		- [SetLastDirectory](#SetLastDirectory) 跳转到最后一个IFD，并且返回该IFD的序号。
@@ -347,16 +348,26 @@ ArbitraryOrder(1,:)=1:numel(DimensionSize)，希望得到的索引矩阵的维�
 
 \[S1,S2,S3, …\]\(1,:\)uint32，下标向量。例如Sk向量在位置I处的值，表示线性索引I对应的第k维下标。
 ## +General
-### StaticJavaPath
-确认Java路径已添加到静态路径列表
+### Save
+内置save函数的强化版
 
-内置javaaddpath只能将Java路径添加到动态列表，因此每次运行程序都要重新添加。本函数能够遍历静态Java路径列表，检查是否存在指定的Java路径；若不存在，则添加之。
+内置save函数只能保存工作区变量，且输入的是变量名称字符串，不能保存临时计算值，而且还有限制不能在parfor循环中使用。本函数取消这些限制，允许你使用最直观的方法保存变量！
+```MATLAB
+%如下代码生成4个.mat文件，每个文件内保存两个变量：No，表示该文件的编号；Rand，一个随机数
+parfor No=1:4
+	NoS=No+1;
+	MATLAB.General.Save(No,NoS,'Rand',rand,'No',No);
+	%将parfor索引作为文件名，保存工作区变量NoS，一个随机数保存为Rand，以及索引变量No本身。注意工作区变量NoS无需前置变量名，但parfor索引必须前置变量名
+end
+%注意到，本函数允许你直接输入工作区变量进行保存，而不是变量名字符串；对于计算得到的临时值，也可以在前面指定一个字符串作为它的变量名
+%但是，parfor索引是个重要的例外：它的变量名在运行时会被优化掉，所以必须手动指定
+```
 
-注意，静态添加的Java路径必须重启MATLAB以后才能生效
+*输入参数*
 
-输入参数：Path(1,1)string，要确认的Java路径
+MatPath(1,1)string，必需，保存到的文件路径
 
-返回值：Exist(1,1)logical，Java路径是否在调用本函数之前就已存在于静态列表中。注意，存在于静态列表中并不意味着MATLAB已经加载了它。例如运行本函数两次，第2次必定返回true，但新添加的路径仍然必须重启MATLAB才能生效。
+Variable，重复，要保存的变量。如果是工作区变量，可以直接输入变量本身，无需提供变量名字符串，程序会自动检测；如果是计算临时生成的变量或parfor索引，则必须输入为变量名字符串-变量值对组。
 ### SHFileCopy
 调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。
 
@@ -473,6 +484,16 @@ Flags(1,1)uint16=MATLAB.General.FILEOP_FLAGS.FOF_ALLOWUNDO，可选，功能旗�
 ErrorCode(1,1)int32，错误代码。如果操作成功，返回0；否则返回一个特定的代码。代码对应的错误说明，请查阅[winerror.h](+MATLAB/+General/winerror.h)。
 
 AnyOperationsAborted(1,1)logical，指示是否有操作被用户取消。
+### StaticJavaPath
+确认Java路径已添加到静态路径列表
+
+内置javaaddpath只能将Java路径添加到动态列表，因此每次运行程序都要重新添加。本函数能够遍历静态Java路径列表，检查是否存在指定的Java路径；若不存在，则添加之。
+
+注意，静态添加的Java路径必须重启MATLAB以后才能生效
+
+输入参数：Path(1,1)string，要确认的Java路径
+
+返回值：Exist(1,1)logical，Java路径是否在调用本函数之前就已存在于静态列表中。注意，存在于静态列表中并不意味着MATLAB已经加载了它。例如运行本函数两次，第2次必定返回true，但新添加的路径仍然必须重启MATLAB才能生效。
 ## +ImageSci
 ### @OmeTiff
 支持XYCTZ五维索引的OME标准Tiff增强库，继承于Tiff基类。请先参阅Tiff基类的文档`doc Tiff`。此处只列出本类新增的方法以及重写的方法。

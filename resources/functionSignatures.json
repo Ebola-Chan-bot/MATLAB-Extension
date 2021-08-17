@@ -292,6 +292,34 @@
 			}
 		]
 	},
+	"MATLAB.General.Save": {
+		"inputs": [
+			{
+				"name": "MatPath",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"file=*.mat"
+					]
+				],
+				"purpose": "保存到的文件路径"
+			},
+			{
+				"name": "Variable",
+				"kind": "required",
+				"purpose": "要保存的变量",
+				"repeating": true
+			}
+		]
+	},
 	"MATLAB.General.SHFileCopy": {
 		"inputs": [
 			{
