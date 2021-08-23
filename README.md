@@ -9,9 +9,14 @@
 		- [PublishRequirements](#PublishRequirements) 在包目录下生成一个依赖项.mat文件
 	- [+DataFun](#DataFun)
 		- [MaxSubs](#MaxSubs) 返回数组的最大值以及所在的坐标。
+		- [MeanSem](#MeanSem) 一次性高效算出数据沿维度的平均值和标准误
+		- [MinSubs](#MinSubs) 返回数组的最小值以及所在的坐标。
 		- [Rescale](#Rescale) 数组元素沿指定维度的缩放范围
 	- [+DataTypes](#DataTypes)
 		- [@ArrayBuilder](#ArrayBuilder) 数组累加器类
+		- [Cell2Mat](#Cell2Mat) cell2mat的升级版
+		- [DimensionFun](#DimensionFun) 对数组按维度执行函数，支持单一维度隐式扩展和返回数组自动拼接
+		- [FolderFun](#FolderFun) 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数
 		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
 	- [+ElMat](#ElMat)
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
@@ -22,10 +27,18 @@
 		- [SHFileDelete](#SHFileDelete) 调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。
 		- [SHFileMove](#SHFileMove) 调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
 		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
+	- [+Graph2D](#Graph2D)
+		- [LegendMultiShadowedLines](#LegendMultiShadowedLines) 带图例的多条误差阴影线图
+		- [ShadowedLine](#ShadowedLine) 将平均值±误差曲线，通过中间一条均线、两边误差边界阴影的形式作图出来。
+	- [+Graph3D](#Graph3D)
+		- [ColorAllocate](#ColorAllocate) 为白色背景下的作图分配合适的颜色。
+	- [+Graphics](#Graphics)
+		- [FigureAspectRatio](#FigureAspectRatio) 设置当前图窗的纵横比
 	- [+ImageSci](#ImageSci)
 		- [@OmeTiff](#OmeTiff) 支持XYCTZ五维索引的OME标准Tiff增强库
 		- [SetLastDirectory](#SetLastDirectory) 跳转到最后一个IFD，并且返回该IFD的序号。
 	- [+IOFun](#IOFun)
+		- [DelimitedStrings2Table](#DelimitedStrings2Table) 将一列分隔符字符串的前几个字段读出为表格或时间表
 		- [MatVariableRename](#MatVariableRename) 批量重命名.mat文件中的变量
 		- [XmlDom2String](#XmlDom2String) 将org.w3c.dom.Document导出为XML文本
 		- [XmlString2Dom](#XmlString2Dom) 将XML字符串解析为org.w3c.dom.Document类型
@@ -121,6 +134,86 @@ Dimensions(1,:)uint8，可选，要取最大值的维度。返回值在这些维
 Value(1,1)，最大值
 
 [S1,S2, …, Sn]，最大值所在的位置中，线性索引最小的那个位置的坐标。每个返回值依次代表各维度的坐标。只包含Dimensions维度的坐标，并按照Dimension指定的顺序排列输出。
+### MeanSem
+一次性高效算出数据沿维度的平均值和标准误。
+
+具体算法：
+$$S=\sum x$$
+$$Mean=\frac{S}{N}$$
+$$SEM=\frac{\sqrt{\sum{x^2}-S\cdot Mean}}{N}$$
+```MATLAB
+[Mean,SEM]=MeanSem([0 6 3;8 7 6;9 7 1],1)
+%{
+Mean =
+
+    5.6667    6.6667    3.3333
+
+
+SEM =
+
+    2.3254    0.2722    1.1863
+%}
+[Mean,SEM]=MeanSem([0 6 3;8 7 6;9 7 1])
+%{
+Mean =
+
+    5.2222
+
+
+SEM =
+
+    0.9910
+%}
+```
+**输入参数**
+
+Data，数据数组
+
+Dimensions，可选，聚合维度。输出的Mean和SEM，其Dimensions维度上长度为1，其它维度上长度与Data相同。默认所有维度，此时Mean和SEM为全局平均数和标准误标量。
+
+**返回值**
+
+Mean double，沿维度的平均值
+
+SEM double，沿维度的标准误
+### MinSubs
+返回数组的最小值以及所在的坐标。
+
+MATLAB自带的min函数只能返回多维数组最小值的线性索引。本函数一口气返回最小值以及多维坐标，方便易用
+```MATLAB
+%对于有多个最小值的数组，返回线性索引最小的那个位置的坐标：
+[M,S1,S2]=MATLAB.DataFun.MinSubs([9 9 1;1 4 4;9 8 9])
+%{
+M =
+
+     1
+
+
+S1 =
+
+     2
+
+
+S2 =
+
+     1
+%}
+%还可以指定运算维度。如将一个3维数组的后两维求最小值和下标，则返回的最小值和下标都是沿第1维的向量，且只返回最小值在后两维的下标
+[M,S2,S3]=MATLAB.DataFun.MinSubs(rand(3,3,3),[2 3])
+%坐标维度输出顺序与输入的指定Dimension有关
+[M,S3,S2]=MATLAB.DataFun.MinSubs(rand(3,3,3),[3 2])
+```
+**位置参数**
+
+Data，必需，要寻找最小值的多维数组
+
+Dimensions(1,:)uint8，可选，要取最小值的维度。返回值在这些维度上长度将为1，在其它维度上排列最小值。默认所有维度都参与运算，即返回单一标量作为整个数组的最小值，并按顺序返回该最小值各个维度的坐标。
+
+**返回值**
+
+Value(1,1)，最小值
+
+[S1,S2, …, Sn]，最小值所在的位置中，线性索引最小的那个位置的坐标。每个返回值依次代表各维度的坐标。只包含Dimensions维度的坐标，并按照Dimension指定的顺序排列输出。
 ### Rescale
 数组元素沿指定维度的缩放范围
 
@@ -220,6 +313,119 @@ BuildDimension(1,1)uint8，累加维度
 `Clear`
 
 清空储藏，从零开始重新累加，而不必新建对象重新分配内存，具有较高的性能。
+### Cell2Mat
+cell2mat的升级版
+
+本函数是cell2mat的升级版，使用前请先参阅cell2mat函数文档，了解其功能和局限性。
+
+cell2mat是一个功能十分强大的MATLAB函数，可以将元胞数组内的数组提取出来，拼成一个大数组，而且这些数组的尺寸不必完全相同，例如可以支持以下拼接：
+
+![](+MATLAB/+DataTypes/cell2mat.gif)
+
+但它也存在局限性。首先，只支持数值、逻辑、结构体、字符的拼接，其它常见数据类型（字符串、元胞、类对象）都无法使用。其次。对于以下结构，虽然尺寸恰好合适，但也无法拼接：
+
+![](+MATLAB/+DataTypes/Cell2Mat.png)
+
+这是因为cell2mat默认先拼第1维，自然会遇到尺寸不匹配的问题。但我们可以看到，只要先拼第2维，就可以得到1×3和2×3两个矩阵，然后第1维就可以拼接了。本函数不仅支持各种数据类型，还会自动尝试从不同的维度进行拼接，因此支持更多复杂的结构。
+
+输入参数：Cells cell，要拼接的元胞数组，各元胞内含有数据类型一致的数组，且各维尺寸上恰好可以拼接成一个大数组，维度不限。
+
+返回值：拼接好的大数组
+### DimensionFun
+对数组按维度执行函数，支持单一维度隐式扩展和返回数组自动拼接
+
+对数组进行批处理是十分常用的操作。但是arrayfun和cellfun只能进行按元素运算，不能按行、按列甚至按平面运算，而且不支持单一维度隐式扩展，如果返回值不是标量还不能自动拼接。采用本函数可以实现按任意维度运算，且支持单一维度隐式扩展，返回数组自动拼接。
+```MATLAB
+import MATLAB.DataTypes.DimensionFun
+import MATLAB.DataTypes.CatMode
+%% 图像拼接-1
+%本示例将一系列宽度相同的图片纵向拼接成一张长图。假设ImagePaths是一个包含了待拼接图像路径的列向量
+imshow(DimensionFun(@imread,ImagePaths,CatMode=CatMode.Linear));
+%由于ImagePaths是向量，且imread返回uint8数值类型，因此以下写法也是等效的：
+imshow(DimensionFun(@imread,ImagePaths,CatMode=CatMode.Linear));
+%% 图像拼接-2
+%同样是拼接图象，如果ImagePaths是一个待拼接的子图路径的矩阵呢？同样可以按照这个矩阵对这些图像自动进行二维拼接！
+imshow(DimensionFun(@imread,ImagePaths,CatMode=CatMode.CanCat));
+%% 异形数组拼接
+A={1 [2 3]
+[4 5] 6}
+%此元胞数组直接使用cell2mat拼接会报错，但可以使用本函数拼接：
+C=DimensionFun(@cell2mat,A);
+%此示例仅用于展示DimensionFun的拼接功能，实际上可以直接使用SuperCell2Mat(A)一步到位。本函数实际上也是调用该函数实现的。
+%% 序列采样-拆分打包与隐式扩展的相互作用展示
+Sequence=1:10;
+Start=(1:5)';
+End=(6:10)';
+disp(DimensionFun(@(Sequence,Start,End)Sequence(Start:End),Sequence,Start,End,SplitDimensions=1,CatMode=CatMode.Linear));
+%输出
+%     1     2     3     4     5     6
+%     2     3     4     5     6     7
+%     3     4     5     6     7     8
+%     4     5     6     7     8     9
+%     5     6     7     8     9    10
+%注意，由于SplitDimensions仅为第1维，因此具有单一第1维的Sequence发生了隐式扩展，而具有单一第2维的Start和End未发生隐式扩展，而是直接打包交付给Function运算。
+```
+**位置参数**
+
+Function(1,1)function_handle，必需，要执行的函数。必须接受等同于Arguments重复次数的参数
+
+Arguments，重复，输入参数数组。输入的数组个数必须等于Function所能接受的输入值个数。所有数组各维度尺寸要么相等，要么为1，不允许各不相同的维度尺寸。不允许输入表格或其它非MATLAB标准数组，请始终先转化为MATLAB数组或元胞数组。
+
+**名称值参数**
+
+*以下两个参数只能选择其中一个进行指定*
+
+另一个将会自动计算得出。如果两个参数都不指定，将把第一个Arguments所有非单一维度视为SplitDimensions，其它维度作为PackDimensions。
+
+PackDimensions(1,:)uint8，将每个Arguments数组的指定维度打包，在其它维度（即SplitDimensions）上拆分，分别交付给Function执行
+
+SplitDimensions(1,:)uint8，在每个Arguments数组的指定维度上拆分，将其它维度（即PackDimensions）打包，分别交付给Function执行
+
+注意，拆分-打包步骤在隐式扩展之前。也就是说，由于PackDimensions指定的维度被包入了同一个元胞当中，尺寸恒为1，即使不同数组间这些维度具有不同的尺寸，也不会进行隐式扩展。隐式扩展仅在SplitDimensions中进行。
+
+*以下两个参数可任意指定或不指定*
+
+CatMode(1,1)MATLAB.DataTypes.CatMode=MATLAB.DataTypes.CatMode.CanCat，返回值拼接选项，根据Function的返回值设定，必须为以下四者之一：
+- Scalar，Function的返回值为标量，将调用arrayfun完成拼接。
+- Linear，SplitDimensions为标量，且Function的返回值为类型、PackDimensions维度上尺寸均相同的数组。将调用cat完成拼接。
+- EsNlcs，Function的返回值为数值、逻辑、字符或字段相同的结构体数组，且尺寸完全相同。将调用cell2mat完成拼接。
+- CanCat，Function的返回值为数组，允许尺寸不同，但最终可以拼接成一整个大数组。将调用MATLAB.DataTypes.Cell2Mat完成拼接。
+- DontCat，不符合上述任何条件，或返回值为函数句柄。将不会拼接，返回元胞数组。
+
+无论何种情况，都可以设为DontCat；其它选项都必须满足特定条件（对Function的每个返回值）。此外若Function的任何一个返回值是函数句柄，都只能选择DontCat。对于任何可拼接的情况，选择CanCat都能完成拼接，但性能最低。如果您确定您的函数返回值可以满足更苛刻的条件，应尽量优先选择Scalar>Linear>EsNlcs>CanCat。
+
+Warning(1,1)logical=true，如果输入参数只有一个且为空，Function将不会被调用，因而无法获知返回值的数据类型，可能会与输入参数不为空的情况出现不一致的情形。该参数指定这种情况下是否要显示警告。
+
+**返回值**
+
+返回值为由Function的返回值按其所对应的参数在数组中的位置拼接成的数组。如果Function具有多个返回值，则每个返回值各自拼接成数组，作为本函数的多个返回值。根据CatMode不同：
+- Scalar，返回数组，尺寸与每个Arguments在SplitDimensions上隐式扩展后的尺寸相同，PackDimensions上尺寸为1
+- Linear & EsNlcs & CanCat，返回数组，该数组由返回值在SplitDimensions维度上的拼接得到
+- DontCat，返回元胞数组，尺寸与每个Arguments在SplitDimensions上隐式扩展后的尺寸相同，元胞里是对应位置的Arguments输入Function产生的返回值。PackDimensions上尺寸为1。
+### FolderFun
+取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数
+```MATLAB
+import MATLAB.DataTypes.FolderFun
+%显示当前文件夹下所有文件
+FolderFun(@disp);
+%显示用户选取的文件夹下所有.mlx文件
+All=FolderFun(@deal,uigetdir,Filename="*.mlx")
+```
+**位置参数**
+
+Function(1,1)function_handle，必需，要执行的函数句柄。必须接受1个文件路径作为输入参数。
+
+Directory(1,1)string=""，可选，要遍历的文件夹路径，默认当前目录。如果不指定或设为空字符串，交给Function的路径参数将是相对于当前目录的相对路径；否则将是绝对路径。
+
+**名称值参数**
+
+Filename(1,1)string="*"，要筛选出的文件名模式，默认所有文件
+
+UniformOutput(1,1)logical=true，是否将输出值直接拼接成向量。若false，则将每个输出值套上一层元胞以后再拼接成向量。如果Function返回的不是标量，必须设为false。
+
+**返回值**
+
+每个文件路径执行函数后的返回值列向量。如果Function有多个返回值，则返回同样多个列向量，每个元素对应位置都是对一个文件调用Function产生的返回值。根据UniformOutput的设定，这些元素有可能还会套在一层元胞里。
 ### RepeatingFun
 重复多次调用函数，为每个重复参数生成一个返回值
 ```MATLAB
@@ -494,6 +700,180 @@ AnyOperationsAborted(1,1)logical，指示是否有操作被用户取消。
 输入参数：Path(1,1)string，要确认的Java路径
 
 返回值：Exist(1,1)logical，Java路径是否在调用本函数之前就已存在于静态列表中。注意，存在于静态列表中并不意味着MATLAB已经加载了它。例如运行本函数两次，第2次必定返回true，但新添加的路径仍然必须重启MATLAB才能生效。
+## +Graph2D
+### LegendMultiShadowedLines
+带图例的多条误差阴影线图
+```MATLAB
+load("+MATLAB\+Graph2D\LMSL示例数据.mat");
+figure;
+MATLAB.Graphics.FigureAspectRatio(3,2,"Narrow");
+TL=tiledlayout('flow','TileSpacing','tight','Padding','tight');
+NoCells=size(Mean,3);
+NoSamples=width(Sem);
+Xs=(1:NoSamples)/30-1;
+Axes=cell(NoCells,1);
+for C=1:NoCells
+	Axes{C}=nexttile;
+	Lines=MATLAB.Graph2D.LegendMultiShadowedLines(Mean(:,:,C),Sem(:,:,C),"Xs",Xs);
+end
+Legend=legend(Lines,Experiments);
+Legend.Layout.Tile=NoCells+1;
+title(TL,"PV average activity curve per day for individual neurons");
+xlabel(TL,"Time from stimulus (s)");
+ylabel(TL,"ΔF/F_0");
+YLim=cell2mat(cellfun(@ylim,Axes,"UniformOutput",false));
+YLim=[min(YLim(:,1)) max(YLim(:,2))];
+for C=1:NoCells
+	Ax=Axes{C};
+	ylim(Ax,YLim);
+	Ax.YTickLabels=round(2.^str2double(Ax.YTickLabels)-1,1,"significant");
+end
+```
+![](+MATLAB/+Graph2D/LMSL示例图.svg)
+**位置参数**
+
+MeanLines，必需，所有均值线。如果是数值矩阵，第1维是不同的对比组，第2维是Trial；如果是元胞列向量，则每个元胞里是一条均值线行向量。
+
+ErrorShadows，可选，对应均值线的误差阴影高度。如果是数值矩阵，第1维是不同的对比组，第2维是Trial；如果是元胞列向量，则每个元胞里是一条误差高度行向量。
+
+**名称值参数**
+
+Legends(:,1)string，每条线的图例文本，默认不显示图例
+
+LineStyles(:,1)cell，每条线的样式。每个元胞里应当是一个元胞数组，包含将要传递给plot的其它参数。默认自动分配高对比颜色。
+
+ShadowStyles(:,1)cell，每块误差阴影的样式。每个元胞里应当是一个元胞数组，包含将要传递给fill的其它参数。默认自动分20%Alpha的默认图线颜色
+
+LegendStyle(1,:)cell，图例的样式，包含将要传递给legend的其它参数。
+
+Ax(1,1)matlab.graphics.axis.Axes，要绘图的坐标区，默认gca。
+
+Xs(1,:)，X轴数值，默认为数值的序号。
+
+**返回值**
+
+Lines(:,1)matlab.graphics.chart.primitive.Line，平均线，plot函数返回的图线对象
+
+Shadows(:,1)matlab.graphics.primitive.Patch，误差阴影，fill函数返回的填充对象
+
+Legends(1,1)matlab.graphics.illustration.Legend，图例，legend函数返回的图例对象
+### ShadowedLine
+将平均值±误差曲线，通过中间一条均线、两边误差边界阴影的形式作图出来。
+```MATLAB
+import MATLAB.Graph2D.ShadowedLine
+tiledlayout("flow");
+%% 基本用法
+nexttile;
+%生成一些随机数据
+Data=rand(10,10);
+%求平均值
+Mean=mean(Data,1);
+%求误差（此处使用SEM）
+Error=std(Data,0,1)/sqrt(10);
+%作图
+ShadowedLine(Mean,Error);
+%% 自定义样式
+nexttile;
+%横轴在0~1之间
+Xs=linspace(0,1,10);
+%阴影区为半透明红色
+FillStyle={"r","FaceAlpha",0.1,"LineStyle","none"};
+%图线为虚线
+PlotStyle={"--"};
+ShadowedLine(Mean,Error,Xs=Xs,ShadowStyle=FillStyle,LineStyle=PlotStyle);
+```
+![](+MATLAB/+Graph2D/ShadowedLine.svg)
+**位置参数**
+
+LineYs(1,:)，必需，平均值折线Y值，将用plot函数作出
+
+ShadowHeights(1,:)，可选，误差范围阴影高度，将用fill函数作出
+
+**名称值参数**
+
+Xs(1,:)=1:numel(LineYs)，X轴对应数值向量
+
+LineStyle(1,:)cell={'k'}，均值折线的样式，将传递给plot函数实现
+
+ShadowStyle(1,:)cell={"k","FaceAlpha",0.2,"LineStyle","none"}，误差阴影的样式，将传递给fill函数实现
+
+Ax(1,1)matlab.graphics.axis.Axes=gca，作图的坐标区，默认当前坐标区
+
+**参数互限**
+
+LineYs ShadowHeights Xs，这三个向量应当具有相同的长度
+
+**返回值**
+
+Line(1,1)matlab.graphics.chart.primitive.Line，平均线，plot函数返回的图线对象
+
+Shadow(1,1)matlab.graphics.primitive.Patch，误差阴影，fill函数返回的填充对象
+## +Graph3D
+### ColorAllocate
+为白色背景下的作图分配合适的颜色。
+
+作图时不知道使用什么颜色最显眼、最有区分度？本函数生成白色背景下的最优化配色方案。如果背景是黑色，用255减去分配出的颜色即可。
+
+本函数会自动保存以前的计算结果，可以重复利用加快计算。
+```MATLAB
+import MATLAB.Graph3D.ColorAllocate
+Data=rand(9,9);
+tic;
+Colors=ColorAllocate(9)
+toc
+figure;
+hold on;
+for a=1:9
+	plot(Data(a,:),"Color",Colors(a,:));
+end
+%再次调用速度加快，因为保存了之前的结果
+tic;
+Colors=ColorAllocate(9)
+toc
+```
+**输入参数**
+
+NoColors(1,1)uint8，必需参数，要分配的颜色个数
+
+TryCount(1,1)uint8，可选位置参数，尝试优化的次数。一般来说次数越多优化效果越好，但更消耗时间。默认如果找到了保存的计算结果就不再尝试优化，否则优化1次。
+
+**返回值**
+
+Colors(:,3)，每一行代表一个颜色的RGB值
+## +Graphics
+### FigureAspectRatio
+设置当前图窗的纵横比
+
+在MATLAB之外对图窗进行不维持纵横比的拉伸，往往会导致字符也被扭曲。为了避免这种情况，建议在导出之前在MATLAB内部设置好图窗的纵横比。
+```MATLAB
+import MATLAB.Graphics.FigureAspectRatio
+%假设当前图窗的尺寸为：宽度×高度=400×300
+FigureAspectRatio(3,2);
+%图窗面积仍为120000，但尺寸变为424×283，即3:2
+FigureAspectRatio(2,1,"Amplify");
+%相对于2:1的比例要求来说，283的高度是较大的，424的宽度是较小的，因此拉宽到566×283
+FigureAspectRatio(1,1,"Narrow");
+%相对于1:1的比例要求来说，283的高度是较小的，566的宽度是较大的，因此压扁到283×283
+FigureAspectRatio(1,2,2);
+%当前面积283×283=80089，放大2²=4倍变成320356，分配宽度1、高度2的比例，则得到400×800
+```
+**输入参数**
+
+HorizontalProportion(1,1)，必需，宽度比值。例如如果你希望图窗为4:3，则此值给4
+
+VerticalProportion(1,1)，必需，高度比值。例如如果你希望图窗为4:3，则此值给3
+
+Scale=1，可选，放大倍数。
+- 若为1，表示缩放后的图跟原图面积相等
+- 若为某值k，则缩放后的面积变成缩放前的k²倍
+- 若为"Amplify"，则保持当前比值相对较大的一边长度不变，仅拉长另一边到给定比值
+- 若为"Narrow"，则保持当前比值较小的一边长度不变，仅压缩另一边到给定比值
+
+Fig(1,1)matlab.ui.Figure=gcf，名称值，图窗对象。如果指定该参数，将对指定的图窗进行操作，而不一定是当前图窗。
+
+**返回值**
+
+Fig(1,1)matlab.ui.Figure，如果制定了Fig参数，则返回该参数；否则返回当前图窗对象。
 ## +ImageSci
 ### @OmeTiff
 支持XYCTZ五维索引的OME标准Tiff增强库，继承于Tiff基类。请先参阅Tiff基类的文档`doc Tiff`。此处只列出本类新增的方法以及重写的方法。
@@ -753,6 +1133,57 @@ SizeC SizeT SizeZ，至少指定其中两个，第三个可以自动计算得出
 
 返回值：LastDirectory(1,1)double，最后一个IFD的序号
 ## +IOFun
+### DelimitedStrings2Table
+将一列分隔符字符串的前几个字段读出为表格或时间表
+
+分隔符字符串列如下形式：
+```
+4003.20210204.BlueBase.All.10%400V_0002.Registered.Measurements.mat
+4003.20210204.BlueBase.PV.10%400V_0002.Registered.Measurements.mat
+4003.20210204.GreenRef.All.10%400V_0005.Registered.Measurements.mat
+4003.20210204.GreenRef.PV.10%400V_0005.Registered.Measurements.mat
+```
+每行一个字符串，字符串用特定的符号分割成了一系列字段。如果前几个字段有固定的意义且在所有字符串中都存在，则可以将它们读出成表。如果某个字段是时间，还可以读出成时间表。
+```MATLAB
+Strings=["4003.20210204.BlueBase.All.10%400V._0002.Registered.Measurements.mat"
+"4003.Registered.Measurements.20210204.BlueBase.PV.10%400V._0002.mat"
+"4003.20210204.Measurements.GreenRef.All.10%400V._0005.Registered.mat"
+"Measurements.4003.Registered.20210204.GreenRef.PV.10%400V._0005.mat"];
+%忽略"Registered"和"Measurements"两个无关关键词后，第2个字段始终是日期，其他字段分别具有各自的意义：
+Table=MATLAB.IOFun.DelimitedStrings2Table(Strings,["Mouse" "Experiment" "CellGroup" "Condition" "TrialNumber"],".",TimeField=2,IgnoreKeywords=["Registered" "Measurements"])
+%{
+Table =
+
+  4×5 timetable
+
+       Time       Mouse     Experiment    CellGroup    Condition    TrialNumber
+    __________    ______    __________    _________    _________    ___________
+
+    2021-02-04    "4003"    "BlueBase"      "All"      "10%400V"      "_0002"  
+    2021-02-04    "4003"    "BlueBase"      "PV"       "10%400V"      "_0002"  
+    2021-02-04    "4003"    "GreenRef"      "All"      "10%400V"      "_0005"  
+    2021-02-04    "4003"    "GreenRef"      "PV"       "10%400V"      "_0005"  
+%}
+```
+**必需参数**
+
+Strings(:,1)string，分隔符字符串列
+
+FieldNames(1,:)string，从头开始按顺序排列每个字段的名称。如果有时间字段或被忽略的关键字段，直接跳过，不要在FieldNames里指示，也不要留空，而是直接将后面的字段提前上来。
+
+Delimiter(1,1)string，分隔符，将传递给split用于分隔。
+
+**名称值参数**
+
+TimeField(1,1)uint8=0，时间字段在字符串中是第几个字段，被忽略的字段不计入该序号。如果设为0，则没有时间字段，返回普通表；否则返回时间表。
+
+DatetimeFormat(1,:)char='yyyyMMddHHmmss'，日期时间格式。不支持含有分隔符的日期时间格式，时间字段字符串必须全为日期时间数字，如"20210306", "202103061723"等。如果实际的字段长度不足，将会自动截短格式字符串以匹配之。将作为datetime函数的InputFormat参数。时间字段在所有字符串之间不需要长度相同。如果TimeField为0，将忽略该参数。
+
+IgnoreKeywords(1,:)string，如果分隔出的字段正好是某些关键词，忽略它们，不会被读出为字段，也不计入位置编号。如果时间字段出现在被忽略的字段之后，每有一个忽略字段，TimeField都应当-1。
+
+**返回值**
+
+Table(:,:)，如果TimeField为0，返回table，否则返回timetable。
 ### MatVariableRename
 批量重命名.mat文件中的变量
 ```MATLAB

@@ -183,5 +183,10 @@ classdef OmeTiff<Tiff
 		Concatenate(OutputFile,Dimension,varargin)
 		Transcode(From,FromDimensionOrder,options)
 		Rename(From,To)
+		function Image5D=ReadAll(TiffPath)
+			TiffPath=MATLAB.ImageSci.OmeTiff(TiffPath);
+			Image5D=TiffPath.Read5D;
+			TiffPath.close;
+		end
 	end
 end

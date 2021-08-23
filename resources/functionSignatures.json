@@ -49,8 +49,14 @@
 			{
 				"name": "Data",
 				"kind": "required",
-				"type": "numeric",
+				"type": "real",
 				"purpose": "要寻找最大值的多维数组"
+			},
+			{
+				"name":"Dimensions",
+				"kind":"ordered",
+				"type":["real","vector"],
+				"purpose":"要取最大值的维度"
 			}
 		],
 		"outputs": [
@@ -67,7 +73,69 @@
 					"positive",
 					"integer"
 				],
-				"repeating": true
+				"multiplicity":"append"
+			}
+		]
+	},
+	"MATLAB.DataFun.MeanSem": {
+		"inputs": [
+			{
+				"name": "Data",
+				"kind": "required",
+				"type": "numeric",
+				"purpose": "数据数组"
+			},
+			{
+				"name": "Dimensions",
+				"kind": "ordered",
+				"type": [
+					"vector",
+					"numeric"
+				],
+				"purpose": "聚合维度"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Mean",
+				"type": "double"
+			},
+			{
+				"name": "SEM",
+				"type": "double"
+			}
+		]
+	},
+	"MATLAB.DataFun.MinSubs": {
+		"inputs": [
+			{
+				"name": "Data",
+				"kind": "required",
+				"type": "real",
+				"purpose": "要寻找最小值的多维数组"
+			},
+			{
+				"name":"Dimensions",
+				"kind":"ordered",
+				"type":["real","vector"],
+				"purpose":"要取最小值的维度"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Value",
+				"type": [
+					"scalar",
+					"numeric"
+				]
+			},
+			{
+				"name": "Subs",
+				"type": [
+					"positive",
+					"integer"
+				],
+				"multiplicity":"append"
 			}
 		]
 	},
@@ -197,6 +265,136 @@
 					"scalar",
 					"ArrayBuilder"
 				]
+			}
+		]
+	},
+	"MATLAB.DataTypes.Cell2Mat": {
+		"inputs": [
+			{
+				"name": "Cells",
+				"kind": "required",
+				"type": "cell",
+				"purpose": "要拼接的元胞数组"
+			}
+		]
+	},
+	"MATLAB.DataTypes.DimensionFun": {
+		"inputs": [
+			{
+				"name": "Function",
+				"kind": "required",
+				"type": "function_handle",
+				"purpose": "要执行的函数。必须接受等同于Arguments重复次数的参数"
+			},
+			{
+				"name": "Arguments",
+				"kind": "ordered",
+				"repeating": true,
+				"purpose": "输入参数数组"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "PackDimensions",
+							"kind": "namevalue",
+							"type": [
+								"numeric",
+								"vector"
+							],
+							"purpose": "将每个Arguments数组的指定维度打包"
+						},
+						{
+							"name": "CatMode",
+							"kind": "namevalue",
+							"type": ["MATLAB.DataTypes.CatMode","scalar"],
+							"purpose": "返回值拼接选项",
+							"default": "MATLAB.DataTypes.CatMode.CanCat"
+						},
+						{
+							"name": "Warning",
+							"kind": "namevalue",
+							"type": [
+								"logical",
+								"scalar"
+							],
+							"purpose": "如果输入参数只有一个且为空，是否显示警告",
+							"default": true
+						}
+					],
+					[
+						{
+							"name": "SplitDimensions",
+							"kind": "namevalue",
+							"type": [
+								"numeric",
+								"vector"
+							],
+							"purpose": "在每个Arguments数组的指定维度上拆分"
+						},
+						{
+							"name": "CatMode",
+							"kind": "namevalue",
+							"type": ["MATLAB.DataTypes.CatMode","scalar"],
+							"purpose": "返回值拼接选项",
+							"default": "MATLAB.DataTypes.CatMode.CanCat"
+						},
+						{
+							"name": "Warning",
+							"kind": "namevalue",
+							"type": [
+								"logical",
+								"scalar"
+							],
+							"purpose": "如果输入参数只有一个且为空，是否显示警告",
+							"default": true
+						}
+					]
+				]
+			}
+		]
+	},
+	"MATLAB.DataTypes.FolderFun": {
+		"inputs": [
+			{
+				"name": "Function",
+				"kind": "required",
+				"type": "function_handle",
+				"purpose": "要执行的函数句柄"
+			},
+			{
+				"name": "Directory",
+				"kind": "ordered",
+				"type": [["folder"],["char","vector"],["string","scalar"]],
+				"purpose": "要遍历的文件夹路径",
+				"default": "''"
+			},
+			{
+				"name": "Filename",
+				"kind": "namevalue",
+				"type": [[
+					"scalar",
+					"string"
+				],["char","vector"]],
+				"purpose": "要筛选出的文件名模式",
+				"default": "*"
+			},
+			{
+				"name": "UniformOutput",
+				"kind": "namevalue",
+				"type": [
+					"logical",
+					"scalar"
+				],
+				"purpose": "是否将输出值直接拼接成向量",
+				"default": true
+			}
+		],
+		"outputs": [
+			{
+				"name": "varargout",
+				"type": "column",
+				"multiplicity":"append"
 			}
 		]
 	},
@@ -488,6 +686,249 @@
 				"type": [
 					"scalar",
 					"logical"
+				]
+			}
+		]
+	},
+	"MATLAB.Graph2D.LegendMultiShadowedLines": {
+		"inputs": [
+			{
+				"name": "MeanLines",
+				"kind": "required",
+				"purpose": "所有均值线"
+			},
+			{
+				"name": "ErrorShadows",
+				"kind": "ordered",
+				"purpose": "对应均值线的误差阴影高度"
+			},
+			{
+				"name": "Legends",
+				"kind": "namevalue",
+				"type": [
+					"column",
+					"string"
+				],
+				"purpose": "每条线的图例文本"
+			},
+			{
+				"name": "LineStyles",
+				"kind": "namevalue",
+				"type": [
+					"column",
+					"cell"
+				],
+				"purpose": "每条线的样式。每个元胞里应当是一个元胞数组，包含将要传递给plot的其它参数"
+			},
+			{
+				"name": "ShadowStyles",
+				"kind": "namevalue",
+				"type": [
+					"column",
+					"cell"
+				],
+				"purpose": "每块误差阴影的样式。每个元胞里应当是一个元胞数组，包含将要传递给fill的其它参数"
+			},
+			{
+				"name": "LegendStyle",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"cell"
+				],
+				"purpose": "图例的样式，包含将要传递给legend的其它参数"
+			},
+			{
+				"name": "Ax",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"matlab.graphics.axis.Axes"
+				],
+				"purpose": "要绘图的坐标区，默认gca。"
+			},
+			{
+				"name": "Xs",
+				"kind": "namevalue",
+				"type": [
+					"vector",
+					"numeric"
+				],
+				"purpose": "X轴数值，默认为数值的序号"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Lines",
+				"type": [
+					"column",
+					"matlab.graphics.chart.primitive.Line"
+				]
+			},
+			{
+				"name": "Shadows",
+				"type": [
+					"column",
+					"matlab.graphics.primitive.Patch"
+				]
+			},
+			{
+				"name": "Legends",
+				"type": [
+					"scalar",
+					"matlab.graphics.illustration.Legend"
+				]
+			}
+		]
+	},
+	"MATLAB.Graph2D.ShadowedLine": {
+		"inputs": [
+			{
+				"name": "LineYs",
+				"kind": "required",
+				"type": [
+					"row",
+					"numeric"
+				],
+				"purpose": "平均值折线Y值，将用plot函数作出"
+			},
+			{
+				"name": "ShadowHeights",
+				"kind": "ordered",
+				"type": [
+					"row",
+					"numeric"
+				],
+				"purpose": "误差范围阴影高度，将用fill函数作出"
+			},
+			{
+				"name": "Xs",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"numeric"
+				],
+				"purpose": "X轴对应数值向量"
+			},
+			{
+				"name": "LineStyle",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"cell"
+				],
+				"purpose": "均值折线的样式，将传递给plot函数实现"
+			},
+			{
+				"name": "ShadowStyle",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"cell"
+				],
+				"purpose": "误差阴影的样式，将传递给fill函数实现"
+			},
+			{
+				"name": "Ax",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"matlab.graphics.axis.Axes"
+				],
+				"purpose": "作图的坐标区"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Line",
+				"type": [
+					"scalar",
+					"matlab.graphics.chart.primitive.Line"
+				]
+			},
+			{
+				"name": "Shadow",
+				"type": [
+					"scalar",
+					"matlab.graphics.primitive.Patch"
+				]
+			}
+		]
+	},
+	"MATLAB.Graph3D.ColorAllocate": {
+		"inputs": [
+			{
+				"name": "NoColors",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要分配的颜色个数"
+			},
+			{
+				"name": "TryCount",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "尝试优化的次数"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Colors",
+				"type": [
+					"size=:,3"
+				]
+			}
+		]
+	},
+	"MATLAB.Graphics.FigureAspectRatio": {
+		"inputs": [
+			{
+				"name": "HorizontalProportion",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "宽度比值。例如如果你希望图窗为4:3，则此值给4"
+			},
+			{
+				"name": "VerticalProportion",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "高度比值。例如如果你希望图窗为4:3，则此值给3"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "ScaleFactor",
+							"kind": "ordered",
+							"type": "positive",
+							"purpose": "缩放倍率"
+						}
+					],
+					[
+						{
+							"name": "ScaleMode",
+							"kind": "ordered",
+							"type": "choices={'Amplify','Narrow'}",
+							"purpose": "缩放模式"
+						}
+					]
+				]
+			},
+			{
+				"name": "Fig",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"matlab.ui.Figure"
+				],
+				"purpose": "图窗对象。如果指定该参数，将对指定的图窗进行操作，而不一定是当前图窗"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Fig",
+				"type": [
+					"scalar",
+					"matlab.ui.Figure"
 				]
 			}
 		]
@@ -1016,6 +1457,69 @@
 					"scalar",
 					"double"
 				]
+			}
+		]
+	},
+	"MATLAB.IOFun.DelimitedStrings2Table": {
+		"inputs": [
+			{
+				"name": "Strings",
+				"kind": "required",
+				"type": [
+					"column",
+					"string"
+				],
+				"purpose": "分隔符字符串列"
+			},
+			{
+				"name": "FieldNames",
+				"kind": "required",
+				"type": [
+					"row",
+					"string"
+				],
+				"purpose": "从头开始按顺序排列每个字段的名称。"
+			},
+			{
+				"name": "Delimiter",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"string"
+				],
+				"purpose": "分隔符，将传递给split用于分隔"
+			},
+			{
+				"name": "TimeField",
+				"kind": "namevalue",
+				"type": ">=0",
+				"purpose": "时间字段在字符串中是第几个字段",
+				"default": 0
+			},
+			{
+				"name": "DatetimeFormat",
+				"kind": "namevalue",
+				"type": [
+					"row",
+					"char"
+				],
+				"purpose": "日期时间格式",
+				"default": "'yyyyMMddHHmmss'"
+			},
+			{
+				"name": "IgnoreKeywords",
+				"kind": "namevalue",
+				"type": [
+					"vector",
+					"string"
+				],
+				"purpose": "如果分隔出的字段正好是某些关键词，忽略它们"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Table",
+				"type": "tabular"
 			}
 		]
 	},
