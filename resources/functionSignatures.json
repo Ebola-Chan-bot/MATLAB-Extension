@@ -396,7 +396,8 @@
 				"type": "column",
 				"multiplicity":"append"
 			}
-		]
+		],
+		"platforms": "win64"
 	},
 	"MATLAB.DataTypes.RepeatingFun": {
 		"inputs": [
