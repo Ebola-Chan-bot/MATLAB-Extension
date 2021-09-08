@@ -4,8 +4,6 @@ classdef ArrayBuilder<handle
 	properties(Access=private)
 		Storage(:,1)cell
 		Capacity(1,1)uint32=0
-	end
-	properties(SetAccess=private)
 		%当前在累加维度上的累加数
 		Stock(1,1)uint32=0
 	end

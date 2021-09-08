@@ -53,10 +53,13 @@
 				"purpose": "要寻找最大值的多维数组"
 			},
 			{
-				"name":"Dimensions",
-				"kind":"ordered",
-				"type":["real","vector"],
-				"purpose":"要取最大值的维度"
+				"name": "Dimensions",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "要取最大值的维度"
 			}
 		],
 		"outputs": [
@@ -73,7 +76,7 @@
 					"positive",
 					"integer"
 				],
-				"multiplicity":"append"
+				"multiplicity": "append"
 			}
 		]
 	},
@@ -115,10 +118,13 @@
 				"purpose": "要寻找最小值的多维数组"
 			},
 			{
-				"name":"Dimensions",
-				"kind":"ordered",
-				"type":["real","vector"],
-				"purpose":"要取最小值的维度"
+				"name": "Dimensions",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "要取最小值的维度"
 			}
 		],
 		"outputs": [
@@ -135,7 +141,7 @@
 					"positive",
 					"integer"
 				],
-				"multiplicity":"append"
+				"multiplicity": "append"
 			}
 		]
 	},
@@ -307,7 +313,10 @@
 						{
 							"name": "CatMode",
 							"kind": "namevalue",
-							"type": ["MATLAB.DataTypes.CatMode","scalar"],
+							"type": [
+								"MATLAB.DataTypes.CatMode",
+								"scalar"
+							],
 							"purpose": "返回值拼接选项",
 							"default": "MATLAB.DataTypes.CatMode.CanCat"
 						},
@@ -335,7 +344,10 @@
 						{
 							"name": "CatMode",
 							"kind": "namevalue",
-							"type": ["MATLAB.DataTypes.CatMode","scalar"],
+							"type": [
+								"MATLAB.DataTypes.CatMode",
+								"scalar"
+							],
 							"purpose": "返回值拼接选项",
 							"default": "MATLAB.DataTypes.CatMode.CanCat"
 						},
@@ -365,17 +377,35 @@
 			{
 				"name": "Directory",
 				"kind": "ordered",
-				"type": [["folder"],["char","vector"],["string","scalar"]],
+				"type": [
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
 				"purpose": "要遍历的文件夹路径",
 				"default": "''"
 			},
 			{
 				"name": "Filename",
 				"kind": "namevalue",
-				"type": [[
-					"scalar",
-					"string"
-				],["char","vector"]],
+				"type": [
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
 				"purpose": "要筛选出的文件名模式",
 				"default": "*"
 			},
@@ -394,7 +424,7 @@
 			{
 				"name": "varargout",
 				"type": "column",
-				"multiplicity":"append"
+				"multiplicity": "append"
 			}
 		],
 		"platforms": "win64"
@@ -691,32 +721,40 @@
 			}
 		]
 	},
-	"MATLAB.Graph2D.LegendMultiShadowedLines": {
+	"MATLAB.Graph2D.MultiShadowedLines": {
 		"inputs": [
 			{
 				"name": "MeanLines",
 				"kind": "required",
+				"type": [
+					"real",
+					"2d"
+				],
 				"purpose": "所有均值线"
 			},
 			{
-				"name": "ErrorShadows",
+				"name": "Xs",
 				"kind": "ordered",
-				"purpose": "对应均值线的误差阴影高度"
+				"type": [
+					"vector",
+					"numeric"
+				],
+				"purpose": "X轴数值，默认为数值的序号"
 			},
 			{
-				"name": "Legends",
-				"kind": "namevalue",
+				"name": "ErrorShadows",
 				"type": [
-					"column",
-					"string"
+					"real",
+					"2d"
 				],
-				"purpose": "每条线的图例文本"
+				"kind": "namevalue",
+				"purpose": "对应均值线的误差阴影高度"
 			},
 			{
 				"name": "LineStyles",
 				"kind": "namevalue",
 				"type": [
-					"column",
+					"vector",
 					"cell"
 				],
 				"purpose": "每条线的样式。每个元胞里应当是一个元胞数组，包含将要传递给plot的其它参数"
@@ -725,37 +763,10 @@
 				"name": "ShadowStyles",
 				"kind": "namevalue",
 				"type": [
-					"column",
+					"vector",
 					"cell"
 				],
 				"purpose": "每块误差阴影的样式。每个元胞里应当是一个元胞数组，包含将要传递给fill的其它参数"
-			},
-			{
-				"name": "LegendStyle",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"cell"
-				],
-				"purpose": "图例的样式，包含将要传递给legend的其它参数"
-			},
-			{
-				"name": "Ax",
-				"kind": "namevalue",
-				"type": [
-					"scalar",
-					"matlab.graphics.axis.Axes"
-				],
-				"purpose": "要绘图的坐标区，默认gca。"
-			},
-			{
-				"name": "Xs",
-				"kind": "namevalue",
-				"type": [
-					"vector",
-					"numeric"
-				],
-				"purpose": "X轴数值，默认为数值的序号"
 			}
 		],
 		"outputs": [
@@ -764,94 +775,6 @@
 				"type": [
 					"column",
 					"matlab.graphics.chart.primitive.Line"
-				]
-			},
-			{
-				"name": "Shadows",
-				"type": [
-					"column",
-					"matlab.graphics.primitive.Patch"
-				]
-			},
-			{
-				"name": "Legends",
-				"type": [
-					"scalar",
-					"matlab.graphics.illustration.Legend"
-				]
-			}
-		]
-	},
-	"MATLAB.Graph2D.ShadowedLine": {
-		"inputs": [
-			{
-				"name": "LineYs",
-				"kind": "required",
-				"type": [
-					"row",
-					"numeric"
-				],
-				"purpose": "平均值折线Y值，将用plot函数作出"
-			},
-			{
-				"name": "ShadowHeights",
-				"kind": "ordered",
-				"type": [
-					"row",
-					"numeric"
-				],
-				"purpose": "误差范围阴影高度，将用fill函数作出"
-			},
-			{
-				"name": "Xs",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"numeric"
-				],
-				"purpose": "X轴对应数值向量"
-			},
-			{
-				"name": "LineStyle",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"cell"
-				],
-				"purpose": "均值折线的样式，将传递给plot函数实现"
-			},
-			{
-				"name": "ShadowStyle",
-				"kind": "namevalue",
-				"type": [
-					"row",
-					"cell"
-				],
-				"purpose": "误差阴影的样式，将传递给fill函数实现"
-			},
-			{
-				"name": "Ax",
-				"kind": "namevalue",
-				"type": [
-					"scalar",
-					"matlab.graphics.axis.Axes"
-				],
-				"purpose": "作图的坐标区"
-			}
-		],
-		"outputs": [
-			{
-				"name": "Line",
-				"type": [
-					"scalar",
-					"matlab.graphics.chart.primitive.Line"
-				]
-			},
-			{
-				"name": "Shadow",
-				"type": [
-					"scalar",
-					"matlab.graphics.primitive.Patch"
 				]
 			}
 		]
@@ -1004,27 +927,6 @@
 	"MATLAB.ImageSci.OmeTiff.Concatenate": {
 		"inputs": [
 			{
-				"name": "OutputFile",
-				"kind": "required",
-				"type": [
-					[
-						"scalar",
-						"string"
-					],
-					[
-						"row",
-						"char"
-					],
-					[
-						"file=*.tif"
-					],
-					[
-						"matlabpathfile=*.tif"
-					]
-				],
-				"purpose": "输出文件的路径"
-			},
-			{
 				"name": "Dimension",
 				"kind": "required",
 				"type": [
@@ -1044,6 +946,24 @@
 				"purpose": "串联维度"
 			},
 			{
+				"name": "OutputFile",
+				"kind": "ordered",
+				"type": [
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"row",
+						"char"
+					],
+					[
+						"file=*.tif"
+					]
+				],
+				"purpose": "输出文件的路径"
+			},
+			{
 				"mutuallyExclusiveGroup": [
 					[
 						{
@@ -1060,9 +980,6 @@
 								],
 								[
 									"file=*.tif"
-								],
-								[
-									"matlabpathfile=*.tif"
 								]
 							],
 							"purpose": "所有要串联的文件路径"
@@ -1083,9 +1000,6 @@
 								],
 								[
 									"file=*.tif"
-								],
-								[
-									"matlabpathfile=*.tif"
 								]
 							],
 							"repeating": true,
@@ -1264,20 +1178,6 @@
 	"MATLAB.ImageSci.OmeTiff.Transcode": {
 		"inputs": [
 			{
-				"name": "FromDimensionOrder",
-				"kind": "required",
-				"type": [
-					[
-						"char",
-						"size=1,3"
-					],
-					[
-						"string"
-					]
-				],
-				"purpose": "源文件的维度顺序"
-			},
-			{
 				"name": "From",
 				"kind": "ordered",
 				"type": [
@@ -1297,6 +1197,21 @@
 					]
 				],
 				"purpose": "源文件的路径"
+			},
+			{
+				"name": "FromDimensionOrder",
+				"kind": "namevalue",
+				"type": [
+					[
+						"char",
+						"size=1,3"
+					],
+					[
+						"string"
+					]
+				],
+				"purpose": "源文件的维度顺序",
+				"default": "'CTZ'"
 			},
 			{
 				"name": "ToDimensionOrder",
@@ -1332,8 +1247,7 @@
 						"matlabpathfile=*.tif"
 					]
 				],
-				"purpose": "目标文件的路径",
-				"default": "From"
+				"purpose": "目标文件的路径"
 			},
 			{
 				"name": "SizeC",
@@ -1354,7 +1268,7 @@
 				"purpose": "采样时点数"
 			},
 			{
-				"name": "SizeT",
+				"name": "SizeZ",
 				"kind": "namevalue",
 				"type": [
 					"positive",
@@ -1634,6 +1548,93 @@
 			}
 		]
 	},
+	"MATLAB.Lang.GetNthOutputs": {
+		"inputs": [
+			{
+				"name": "Function",
+				"kind": "required",
+				"type": "function_handle",
+				"purpose": "要调用的函数句柄"
+			},
+			{
+				"name": "OutputIndices",
+				"kind": "required",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "要获取的返回值序号"
+			}
+		]
+	},
+	"MATLAB.Ops.IsMember": {
+		"inputs": [
+			{
+				"name": "A",
+				"kind": "required",
+				"purpose": "要寻找的目标集合"
+			},
+			{
+				"name": "B",
+				"kind": "required",
+				"purpose": "要在其中寻找的范围集合"
+			},
+			{
+				"name": "RowByRow",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "是否把A、B的各行作为一个整体对象",
+				"default": false
+			}
+		],
+		"outputs": [
+			{
+				"name": "Location",
+				"type": "double"
+			}
+		]
+	},
+	"MATLAB.Ops.Unique": {
+		"inputs": [
+			{
+				"name": "A",
+				"kind": "required",
+				"purpose": "要查找唯一值的集合"
+			},
+			{
+				"name": "RowByRow",
+				"kind": "ordered",
+				"type": [
+					"logical",
+					"scalar"
+				],
+				"purpose": "是否把A的各行作为一个整体对象",
+				"default": false
+			}
+		],
+		"outputs": [
+			{
+				"name": "C"
+			},
+			{
+				"name": "ia",
+				"type": [
+					"double",
+					"column"
+				]
+			},
+			{
+				"name": "ic",
+				"type": [
+					"double",
+					"column"
+				]
+			}
+		]
+	},
 	"MATLAB.Parallel.MmfSemaphore": {
 		"inputs": [
 			{
@@ -1715,6 +1716,25 @@
 				"type": [
 					"scalar",
 					"MATLAB.Parallel.MmfSemaphore"
+				]
+			}
+		]
+	},
+	"MATLAB.SpecFun.LogicalExhaustion": {
+		"inputs": [
+			{
+				"name": "Length",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要穷举的逻辑向量长度"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Exhaustion",
+				"type": [
+					"logical",
+					"2d"
 				]
 			}
 		]

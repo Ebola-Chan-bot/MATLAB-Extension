@@ -28,8 +28,7 @@
 		- [SHFileMove](#SHFileMove) 调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
 		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
 	- [+Graph2D](#Graph2D)
-		- [LegendMultiShadowedLines](#LegendMultiShadowedLines) 带图例的多条误差阴影线图
-		- [ShadowedLine](#ShadowedLine) 将平均值±误差曲线，通过中间一条均线、两边误差边界阴影的形式作图出来。
+		- [MultiShadowedLines](#MultiShadowedLines) 带图例的多条误差阴影线图
 	- [+Graph3D](#Graph3D)
 		- [ColorAllocate](#ColorAllocate) 为白色背景下的作图分配合适的颜色。
 	- [+Graphics](#Graphics)
@@ -44,8 +43,15 @@
 		- [XmlString2Dom](#XmlString2Dom) 将XML字符串解析为org.w3c.dom.Document类型
 	- [+Lang](#Lang)
 		- [DistributeVararginByValidation](#DistributeVararginByValidation) 根据验证函数将输入的Varargin分发到输出变量
+		- [GetNthOutputs](#GetNthOutputs) 获取函数的第N个输出
+	- [+Ops](#Ops)
+		- [IsMember](#IsMember) 支持任意类型输入的ismember
+		- [Unique](#Unique) 支持任意类型输入的unique
 	- [+Parallel](#Parallel)
 		- [@MmfSemaphore](#MmfSemaphore) 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
+	- [+SpecFun](#SpecFun)
+		- [LogicalExhaustion](#LogicalExhaustion) 穷举一定长度的所有可能的逻辑向量
+		- [Subsets](#Subsets) 列出集合的所有子集
 	- [+UITools](#UITools)
 		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框
 		- [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框
@@ -701,10 +707,10 @@ AnyOperationsAborted(1,1)logical，指示是否有操作被用户取消。
 
 返回值：Exist(1,1)logical，Java路径是否在调用本函数之前就已存在于静态列表中。注意，存在于静态列表中并不意味着MATLAB已经加载了它。例如运行本函数两次，第2次必定返回true，但新添加的路径仍然必须重启MATLAB才能生效。
 ## +Graph2D
-### LegendMultiShadowedLines
-带图例的多条误差阴影线图
+### MultiShadowedLines
+绘制多条误差阴影线图
 ```MATLAB
-load("+MATLAB\+Graph2D\LMSL示例数据.mat");
+load("+MATLAB\+Graph2D\MultiShadowedLines.mat");
 figure;
 MATLAB.Graphics.FigureAspectRatio(3,2,"Narrow");
 TL=tiledlayout('flow','TileSpacing','tight','Padding','tight');
@@ -714,7 +720,7 @@ Xs=(1:NoSamples)/30-1;
 Axes=cell(NoCells,1);
 for C=1:NoCells
 	Axes{C}=nexttile;
-	Lines=MATLAB.Graph2D.LegendMultiShadowedLines(Mean(:,:,C),Sem(:,:,C),"Xs",Xs);
+	Lines=MATLAB.Graph2D.MultiShadowedLines(Mean(:,:,C),Xs,ErrorShadows=Sem(:,:,C));
 end
 Legend=legend(Lines,Experiments);
 Legend.Layout.Tile=NoCells+1;
@@ -729,85 +735,25 @@ for C=1:NoCells
 	Ax.YTickLabels=round(2.^str2double(Ax.YTickLabels)-1,1,"significant");
 end
 ```
-![](+MATLAB/+Graph2D/LMSL示例图.svg)
+![](+MATLAB/+Graph2D/MultiShadowedLines.svg)
+
 **位置参数**
 
-MeanLines，必需，所有均值线。如果是数值矩阵，第1维是不同的对比组，第2维是Trial；如果是元胞列向量，则每个元胞里是一条均值线行向量。
+MeanLines(:,:)，必需，所有均值线。第1维是不同的线，第2维是线内部的数值
 
-ErrorShadows，可选，对应均值线的误差阴影高度。如果是数值矩阵，第1维是不同的对比组，第2维是Trial；如果是元胞列向量，则每个元胞里是一条误差高度行向量。
+Xs(1,:)，可选，X轴数值，默认为数值的序号。
 
 **名称值参数**
 
-Legends(:,1)string，每条线的图例文本，默认不显示图例
+ErrorShadows，对应均值线的误差阴影高度。第1维是不同的线，第2维是线内部的数值
 
-LineStyles(:,1)cell，每条线的样式。每个元胞里应当是一个元胞数组，包含将要传递给plot的其它参数。默认自动分配高对比颜色。
+LineStyles(:,1)cell，每条线的样式。每个元胞里应当是一个元胞数组，包含将要传递给plot的其它参数。
 
-ShadowStyles(:,1)cell，每块误差阴影的样式。每个元胞里应当是一个元胞数组，包含将要传递给fill的其它参数。默认自动分20%Alpha的默认图线颜色
-
-LegendStyle(1,:)cell，图例的样式，包含将要传递给legend的其它参数。
-
-Ax(1,1)matlab.graphics.axis.Axes，要绘图的坐标区，默认gca。
-
-Xs(1,:)，X轴数值，默认为数值的序号。
+ShadowStyles(:,1)cell，每块误差阴影的样式。每个元胞里应当是一个元胞数组，包含将要传递给fill的其它参数。默认为对应图线颜色加上20%的Alpha
 
 **返回值**
 
 Lines(:,1)matlab.graphics.chart.primitive.Line，平均线，plot函数返回的图线对象
-
-Shadows(:,1)matlab.graphics.primitive.Patch，误差阴影，fill函数返回的填充对象
-
-Legends(1,1)matlab.graphics.illustration.Legend，图例，legend函数返回的图例对象
-### ShadowedLine
-将平均值±误差曲线，通过中间一条均线、两边误差边界阴影的形式作图出来。
-```MATLAB
-import MATLAB.Graph2D.ShadowedLine
-tiledlayout("flow");
-%% 基本用法
-nexttile;
-%生成一些随机数据
-Data=rand(10,10);
-%求平均值
-Mean=mean(Data,1);
-%求误差（此处使用SEM）
-Error=std(Data,0,1)/sqrt(10);
-%作图
-ShadowedLine(Mean,Error);
-%% 自定义样式
-nexttile;
-%横轴在0~1之间
-Xs=linspace(0,1,10);
-%阴影区为半透明红色
-FillStyle={"r","FaceAlpha",0.1,"LineStyle","none"};
-%图线为虚线
-PlotStyle={"--"};
-ShadowedLine(Mean,Error,Xs=Xs,ShadowStyle=FillStyle,LineStyle=PlotStyle);
-```
-![](+MATLAB/+Graph2D/ShadowedLine.svg)
-**位置参数**
-
-LineYs(1,:)，必需，平均值折线Y值，将用plot函数作出
-
-ShadowHeights(1,:)，可选，误差范围阴影高度，将用fill函数作出
-
-**名称值参数**
-
-Xs(1,:)=1:numel(LineYs)，X轴对应数值向量
-
-LineStyle(1,:)cell={'k'}，均值折线的样式，将传递给plot函数实现
-
-ShadowStyle(1,:)cell={"k","FaceAlpha",0.2,"LineStyle","none"}，误差阴影的样式，将传递给fill函数实现
-
-Ax(1,1)matlab.graphics.axis.Axes=gca，作图的坐标区，默认当前坐标区
-
-**参数互限**
-
-LineYs ShadowHeights Xs，这三个向量应当具有相同的长度
-
-**返回值**
-
-Line(1,1)matlab.graphics.chart.primitive.Line，平均线，plot函数返回的图线对象
-
-Shadow(1,1)matlab.graphics.primitive.Patch，误差阴影，fill函数返回的填充对象
 ## +Graph3D
 ### ColorAllocate
 为白色背景下的作图分配合适的颜色。
@@ -1049,18 +995,20 @@ Z(1,:)uint16=1:size(Image,5)，Z轴写入位置。此向量长度必须等于Ima
 
 沿指定维度串联多个OmeTiff文件
 ```MATLAB
-%以下写法均合法，且含义相同：
-MATLAB.ImageSci.OmeTiff.Concatenate('Output.tif','Z','File1.tif','File2.tif','File3.tif');
-MATLAB.ImageSci.OmeTiff.Concatenate('Output.tif',5,["File1.tif","File2.tif","File3.tif"]);
-MATLAB.ImageSci.OmeTiff.Concatenate('Output.tif','Z',{'File1.tif','File2.tif','File3.tif'});
+%以下写法均合法：
+MATLAB.ImageSci.OmeTiff.Concatenate('Z','Output.tif','File1.tif','File2.tif','File3.tif');
+MATLAB.ImageSci.OmeTiff.Concatenate(5,["File1.tif","File2.tif","File3.tif"]);
+%上述代码将弹出对话框要求用户选择保存位置
+MATLAB.ImageSci.OmeTiff.Concatenate('Output.tif','Z');
+%上述代码将弹出对话框要求用户选择输入文件
 ```
 本函数将指定的多个OmeTiff文件沿指定维度串联起来。这些OmeTiff文件必须在串联维度以外的维度具有完全相同的尺寸和相同的像素类型。生成的新文件将输出到指定位置。新文件的维度顺序由第1个输入文件决定
 
 *输入参数*
 
-OutputFile(1,1)string，必需，输出文件的路径
-
 Dimension(1,1)，必需，串联维度，可以是维度编号（按照YXCTZ的顺序），也可以是维度字符（YXCTZ中的一个）
+
+OutputFile(1,1)string，可选，输出文件的路径，默认打开文件保存对话框要求用户手动选择
 
 InputFile，依次输入所有要串联的文件路径，或者把它们组合成数组。第1个文件将决定输出文件的维度顺序。
 
@@ -1089,11 +1037,11 @@ RenamedDom(1,1)org.w3c.dom.Document，仅当From参数为文本时才有返回�
 OmeTiff是一种特殊的Tiff格式。使用Tiff基类库可以读写OmeTiff，但是会丢失维度信息；然而OmeTiff类不能用于读写一般Tiff，因为文件中缺少必要的维度信息。因此需要使用本函数先将一般Tiff转码为OmeTiff，并补充必要的维度信息。
 ```MATLAB
 %将一般Tiff文件Tiff.tif原地转码为OmeTiff。源文件的维度顺序是TZC，输出时使用默认的维度顺序CTZ。SizeC和SizeZ已知，SizeT自动计算
-Transcode('TZC','Tiff.tif',SizeC=2,SizeZ=5);
+Transcode('Tiff.tif',FromDimensionOrder='TZC',SizeC=2,SizeZ=5);
 %打开文件选择对话框让用户手动选择要转码的文件
-Transcode('TZC',SizeC=2,SizeZ=5);
+Transcode(FromDimensionOrder='TZC',SizeC=2,SizeZ=5);
 %转码到一个新文件OmeTiff.tif。源文件维度顺序是CTZ，但希望新文件采用TZC的维度顺序；SizeC和SizeT已知，SizeZ自动计算
-TransCode('CTZ',To='OmeTiff.tif',ToDimension='TZC',SizeC=2,SizeT=100);
+TransCode(FromDimensionOrder='CTZ',To='OmeTiff.tif',ToDimensionOrder='TZC',SizeC=2,SizeT=100);
 ```
 上述示例代码并不要求Tiff.tif只能是一般Tiff而不能是OmeTiff。因此本函数亦可用于将OmeTiff进行reshape、permute等操作。
 
@@ -1102,16 +1050,15 @@ TransCode('CTZ',To='OmeTiff.tif',ToDimension='TZC',SizeC=2,SizeT=100);
 1. 原地转码，即From和To相同
 2. 不改变维度顺序，即FromDimensionOrder和ToDimensionOrder相同
 3. 如果您无需遍历文件就能得知IFD数目，请完全指定SizeC SizeT SizeZ三个参数，避免自动计算时程序不得不遍历整个文件
-
 如果这三条建议都能做到，那么程序将只会直接修改ImageDescription，具有最高的性能。
 
 *位置参数*
 
-FromDimensionOrder(1,3)char，必需，源文件的维度顺序，如'CTZ', 'TZC'等
-
 From(1,1)string，可选，源文件的路径。默认打开文件选择对话框要求用户手动选择。
 
 *名称值参数*
+
+FromDimensionOrder(1,3)char=‘CTZ'，源文件的维度顺序，如'CTZ', 'TZC'等
 
 ToDimensionOrder(1,3)char='CTZ'，转码后的维度顺序。如果和FromDimension相同，将省去图像序列重排的步骤，提高性能。
 
@@ -1249,6 +1196,85 @@ DefaultFun(1,1)function_handle，接受无输入、单一输出的函数句柄�
 **返回值**
 
 varargout，按照重复参数重复的顺序排列输出实际得到的各个参数
+### GetNthOutputs
+获取函数的第N个输出
+
+在仅允许使用单行表达式的场合，例如可选参数的默认值，只能获取函数的第一个返回值，十分不便。只需套用本函数，即可获取任意位置的返回值。
+```MATLAB
+function DoSummary(Array,Dimension)
+arguments
+	Array
+	%Dimension参数的默认值是Array最长的那个维度，需要获取max函数的第2个返回值
+	Dimension(1,1)uint8=MATLAB.Lang.GetNthOutputs(@()max(size(Array)),2)
+end
+```
+**输入参数**
+
+Function(1,1)function_handle，要调用的函数句柄。该函数必需接受0个输入参数，并返回多个值
+
+OutputIndices(1,:)uint8，要获取的返回值序号。可以排列成向量以获取多个指定位置的返回值。
+
+**返回值**
+
+varargout，OutputIndices参数指定位置的Function返回值。
+## +Ops
+### IsMember
+支持任意类型输入的ismember
+
+MATLAB内置ismember函数只支持基本数据类型。本函数支持任意类型输入。返回A在B中的位置，0表示不在。
+
+注意，本函数仅支持内置ismember的部分功能。
+
+**输入参数**
+
+A，必需，要寻找的目标集合
+
+B，必需，要在其中寻找的范围集合
+
+RowByRow(1,1)logical=false，是否把A、B的各行作为一个整体对象。若设为true，则A、B必须都是二维，且具有相同的列数。
+
+**返回值**
+
+Location double，A中各个位置的元素在B中的位置。若RowByRow为true，则为列向量，使得B(Location,:)==A。若false，则和A尺寸相同，数值为A在B中的线性索引，使得B(Location)==A。如果A中某元素在B中不存在，则对应位置的Location为0。因此Location也可以作为判断A中元素是否在B中存在的逻辑值使用：0表示不存在，非0则为存在。
+### Unique
+支持任意类型输入的unique
+
+MATLAB内置unique函数只支持有限的数据类型。本函数支持任意类型输入。返回唯一值和首次出现位置。
+
+注意，本函数仅支持内置unique的部分功能。
+
+**输入参数**
+
+A，必需，要查找唯一值的集合
+
+RowByRow(1,1)logical=false，是否把A的各行作为一个整体对象。若设为true，则A必须是二维。如果A是表或时间表，该参数将固定设为true，无视用户输入。
+
+**返回值**
+
+C，A中的唯一值。如果RowByRow设为true，C和A类型相同且具有相同的列数；否则C是行向量
+
+ia(:,1)double，唯一值在A中第一次出现的位置，有A(ia)==C
+
+ic(:,1)double，使用C重构A所需的索引向量，有C(ic)==A
+
+**小贴士**
+
+findgroups函数也仅支持有限的数据类型，但你可以用本函数实现任意数据类型的findgroups。实际上，设
+```MATLAB
+[G,ID]=findgroups(A);
+[C,~,ic]=MATLAB.Ops.Unique(A);
+```
+则有以下公式成立：
+
+G==ic
+
+ID==C
+
+即
+```MATLAB
+[ID,~,G]=MATLAB.Ops.Unique(A);
+```
+因此本包中不再提供findgroups的增强，因为它仅仅是MATLAB.Ops.Unique的一种特化形式。
 ## +Parallel
 ### MmfSemaphore
 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
@@ -1291,6 +1317,66 @@ end
 *ReturnOne*
 
 归还一个资源配额。将直接导致资源数量+1，不会检查是否超出Fill的量。
+## +SpecFun
+### LogicalExhaustion
+穷举一定长度的所有可能的逻辑向量
+```MATLAB
+MATLAB.SpecFun.LogicalExhaustion(4)
+%{
+ans =
+
+  16×4 logical 数组
+
+   0   0   0   0
+   1   0   0   0
+   0   1   0   0
+   1   1   0   0
+   0   0   1   0
+   1   0   1   0
+   0   1   1   0
+   1   1   1   0
+   0   0   0   1
+   1   0   0   1
+   0   1   0   1
+   1   1   0   1
+   0   0   1   1
+   1   0   1   1
+   0   1   1   1
+   1   1   1   1
+%}
+```
+输入参数：Length，要穷举的逻辑向量长度
+返回值：Exhaustion(bitshift(1,Length),Length)logical，将所有逻辑行向量在第1维堆叠。
+### Subsets
+列出集合的所有子集
+```MATLAB
+MATLAB.SpecFun.Subsets([1 2 3 4])
+%{
+ans =
+
+  16×1 cell 数组
+
+    {1×0 double}
+    {[       1]}
+    {[       2]}
+    {[     1 2]}
+    {[       3]}
+    {[     1 3]}
+    {[     2 3]}
+    {[   1 2 3]}
+    {[       4]}
+    {[     1 4]}
+    {[     2 4]}
+    {[   1 2 4]}
+    {[     3 4]}
+    {[   1 3 4]}
+    {[   2 3 4]}
+    {[ 1 2 3 4]}
+%}
+```
+输入参数：Set，集合向量。本函数不会检查Set是否符合数学上的集合元素唯一性要求，而是将每个元素都视为独特的。如需排除重复项，请在调用之前对Set使用unique
+
+返回值：SS(bitshift(1,numel(Set)),1)cell，列出Set所有子集行向量。如果Set中包含重复项，则SS中也将包含重复项。
 ## +UITools
 ### OpenFileDialog
 可以设置初始目录，以及保存上次所在目录的文件打开对话框
