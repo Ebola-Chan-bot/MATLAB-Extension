@@ -1789,61 +1789,61 @@
 				"purpose": "文件对话框标题"
 			}
 		],
-		"MATLAB.UITools.SaveFileDialog": {
-			"inputs": [
-				{
-					"name": "Filter",
-					"kind": "namevalue",
-					"type": [
-						[
-							"scalar",
-							"string"
-						],
-						[
-							"char",
-							"vector"
-						]
-					],
-					"purpose": "文件名筛选器"
-				},
-				{
-					"name": "InitialDirectory",
-					"kind": "namevalue",
-					"type": [
-						"folder"
-					],
-					"purpose": "文件对话框中显示的初始目录"
-				},
-				{
-					"name": "Title",
-					"kind": "namevalue",
-					"type": [
-						[
-							"scalar",
-							"string"
-						],
-						[
-							"char",
-							"vector"
-						]
-					],
-					"purpose": "文件对话框标题"
-				}
-			],
-			"outputs": [
-				{
-					"name": "FilePath",
-					"type": [
-						"row",
-						"string"
-					]
-				}
-			],
-			"platforms": "win64"
-		},
 		"outputs": [
 			{
 				"name": "FilePaths",
+				"type": [
+					"row",
+					"string"
+				]
+			}
+		],
+		"platforms": "win64"
+	},
+	"MATLAB.UITools.SaveFileDialog": {
+		"inputs": [
+			{
+				"name": "Filter",
+				"kind": "namevalue",
+				"type": [
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
+				"purpose": "文件名筛选器"
+			},
+			{
+				"name": "InitialDirectory",
+				"kind": "namevalue",
+				"type": [
+					"folder"
+				],
+				"purpose": "文件对话框中显示的初始目录"
+			},
+			{
+				"name": "Title",
+				"kind": "namevalue",
+				"type": [
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
+				"purpose": "文件对话框标题"
+			}
+		],
+		"outputs": [
+			{
+				"name": "FilePath",
 				"type": [
 					"row",
 					"string"

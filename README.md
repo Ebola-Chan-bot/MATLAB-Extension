@@ -16,16 +16,16 @@
 		- [@ArrayBuilder](#ArrayBuilder) 数组累加器类
 		- [Cell2Mat](#Cell2Mat) cell2mat的升级版
 		- [DimensionFun](#DimensionFun) 对数组按维度执行函数，支持单一维度隐式扩展和返回数组自动拼接
-		- [FolderFun](#FolderFun) 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数
+		- [FolderFun](#FolderFun) 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
 		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
 	- [+ElMat](#ElMat)
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 	- [+General](#General)
 		- [Save](#Save) 内置save函数的强化版
-		- [SHFileCopy](#SHFileCopy) 调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。
-		- [SHFileDelete](#SHFileDelete) 调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。
-		- [SHFileMove](#SHFileMove) 调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+		- [SHFileCopy](#SHFileCopy) 调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
+		- [SHFileDelete](#SHFileDelete) 调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
+		- [SHFileMove](#SHFileMove) 调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
 		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
 	- [+Graph2D](#Graph2D)
 		- [MultiShadowedLines](#MultiShadowedLines) 带图例的多条误差阴影线图
@@ -53,8 +53,8 @@
 		- [LogicalExhaustion](#LogicalExhaustion) 穷举一定长度的所有可能的逻辑向量
 		- [Subsets](#Subsets) 列出集合的所有子集
 	- [+UITools](#UITools)
-		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框
-		- [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框
+		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框（仅限Windows）
+		- [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框（仅限Windows）
 - [+MatlabShared](#MatlabShared)
 	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
 		- [ClearCache](#ClearCache) 清除缓存的下载器文件
