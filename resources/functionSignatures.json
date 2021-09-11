@@ -554,32 +554,16 @@
 			{
 				"name": "From",
 				"kind": "required",
-				"type": [
-					"string",
-					"vector"
-				],
 				"purpose": "所有要复制的源文件、目录"
 			},
 			{
 				"name": "To",
 				"kind": "required",
-				"type": [
-					"string",
-					"vector"
-				],
 				"purpose": "复制的目标"
 			},
 			{
 				"name": "Flags",
 				"kind": "ordered",
-				"type": [
-					[
-						"FILEOP_FLAGS"
-					],
-					[
-						"uint16"
-					]
-				],
 				"purpose": "功能旗帜",
 				"default": 64
 			}
@@ -607,23 +591,11 @@
 			{
 				"name": "From",
 				"kind": "required",
-				"type": [
-					"string",
-					"vector"
-				],
 				"purpose": "所有要删除的文件、目录"
 			},
 			{
 				"name": "Flags",
 				"kind": "ordered",
-				"type": [
-					[
-						"FILEOP_FLAGS"
-					],
-					[
-						"uint16"
-					]
-				],
 				"purpose": "功能旗帜",
 				"default": 64
 			}
@@ -651,34 +623,54 @@
 			{
 				"name": "From",
 				"kind": "required",
-				"type": [
-					"string",
-					"vector"
-				],
 				"purpose": "所有要移动的源文件、目录"
 			},
 			{
 				"name": "To",
 				"kind": "required",
-				"type": [
-					"string",
-					"vector"
-				],
 				"purpose": "移动的目标"
 			},
 			{
 				"name": "Flags",
 				"kind": "ordered",
-				"type": [
-					[
-						"FILEOP_FLAGS"
-					],
-					[
-						"uint16"
-					]
-				],
 				"purpose": "功能旗帜",
 				"default": 64
+			}
+		],
+		"outputs": [
+			{
+				"name": "ErrorCode",
+				"type": [
+					"scalar",
+					"int32"
+				]
+			},
+			{
+				"name": "AnyOperationsAborted",
+				"type": [
+					"scalar",
+					"logical"
+				]
+			}
+		],
+		"platforms": "win64"
+	},
+	"MATLAB.General.SHFileRename": {
+		"inputs": [
+			{
+				"name": "OldPaths",
+				"kind": "required",
+				"purpose": "要重命名的所有文件的完整路径"
+			},
+			{
+				"name": "NewNames",
+				"kind": "required",
+				"purpose": "要命名到的新文件名"
+			},
+			{
+				"name": "Flags",
+				"kind": "ordered",
+				"purpose": "特殊功能旗帜"
 			}
 		],
 		"outputs": [

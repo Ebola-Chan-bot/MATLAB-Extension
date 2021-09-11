@@ -25,7 +25,8 @@
 		- [Save](#Save) 内置save函数的强化版
 		- [SHFileCopy](#SHFileCopy) 调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
 		- [SHFileDelete](#SHFileDelete) 调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
-		- [SHFileMove](#SHFileMove) 调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
+		- [SHFileMove](#SHFileMove) 调用Windows文件资源管理器进行文件、目录移动和重命名操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
+		- [SHFileRename](#SHFileRename) 调用Windows文件资源管理器进行文件、目录重命名操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
 		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
 	- [+Graph2D](#Graph2D)
 		- [MultiShadowedLines](#MultiShadowedLines) 带图例的多条误差阴影线图
@@ -615,7 +616,7 @@ From="D:\OneDrive - 翁悸会\壁纸";
 
 From(:,1)string，必需，所有要复制的源文件、目录。可以同时指定多个文件或目录，不需要在同一个目录下，并且可以使用通配符。
 
-To(:,1)string，必需，复制的目标。如果指定为标量，将把所有文件、目录复制到该字符串所指定的目录下；若目录不存在，可以自动创建。如果指定为向量，则必须和From具有相同的尺寸，每个文件、目录进行一一对应的复制；并且需要指定MATLAB.General.FILEOP_FLAGS.FOF_MULTIDESTFILES旗帜。
+To(:,1)string，必需，复制的目标。如果指定为标量，将把所有文件、目录复制到该字符串所指定的目录下；若目录不存在，可以自动创建。如果指定为向量，则必须和From具有相同的尺寸，每个文件、目录进行一一对应的复制；并且Flags需要额外指定MATLAB.General.FILEOP_FLAGS.FOF_MULTIDESTFILES旗帜。
 
 Flags(1,1)uint16=MATLAB.General.FILEOP_FLAGS.FOF_ALLOWUNDO，可选，功能旗帜。[FILEOP_FLAGS](+MATLAB/+General/FILEOP_FLAGS.m)中定义了可选的附加功能。这些功能可以通过bitor进行组合，同时启用。如果不希望指定任何附加功能，请将该值显式设为0。
 
@@ -645,7 +646,7 @@ From=["C:\Users\vhtmf\Pictures\1"
 
 From(:,1)string，必需，所有要删除的文件、目录。可以同时指定多个文件或目录，不需要在同一个目录下，并且可以使用通配符。
 
-Flags(1,1)uint16=MATLAB.General.FILEOP_FLAGS.FOF_ALLOWUNDO，可选，功能旗帜。[FILEOP_FLAGS](+MATLAB/+General/FILEOP_FLAGS.m)中定义了可选的附加功能。这些功能可以通过bitor进行组合，同时启用。如果不希望指定任何附加功能，请将该值显式设为0。
+Flags(1,1)uint16=MATLAB.General.FILEOP_FLAGS.FOF_ALLOWUNDO，可选，功能旗帜，一般无需指定。[FILEOP_FLAGS](+MATLAB/+General/FILEOP_FLAGS.m)中定义了可选的附加功能。这些功能可以通过bitor进行组合，同时启用。如果不希望指定任何附加功能，请将该值显式设为0。
 
 **返回值**
 
@@ -687,9 +688,42 @@ From="D:\OneDrive - 翁悸会\壁纸";
 
 From(:,1)string，必需，所有要移动的源文件、目录。可以同时指定多个文件或目录，不需要在同一个目录下，并且可以使用通配符。
 
-To(:,1)string，必需，移动的目标。如果指定为标量，将把所有文件、目录移动到该字符串所指定的目录下；若目录不存在，可以自动创建。如果指定为向量，则必须和From具有相同的尺寸，每个文件、目录进行一一对应的移动；并且需要指定MATLAB.General.FILEOP_FLAGS.FOF_MULTIDESTFILES旗帜。
+To(:,1)string，必需，移动的目标。如果指定为标量，将把所有文件、目录移动到该字符串所指定的目录下；若目录不存在，可以自动创建。如果指定为向量，则必须和From具有相同的尺寸，每个文件、目录进行一一对应的移动；并且Flags需要额外指定MATLAB.General.FILEOP_FLAGS.FOF_MULTIDESTFILES旗帜。
 
 Flags(1,1)uint16=MATLAB.General.FILEOP_FLAGS.FOF_ALLOWUNDO，可选，功能旗帜。[FILEOP_FLAGS](+MATLAB/+General/FILEOP_FLAGS.m)中定义了可选的附加功能。这些功能可以通过bitor进行组合，同时启用。如果不希望指定任何附加功能，请将该值显式设为0。
+
+**返回值**
+
+ErrorCode(1,1)int32，错误代码。如果操作成功，返回0；否则返回一个特定的代码。代码对应的错误说明，请查阅[winerror.h](+MATLAB/+General/winerror.h)。
+
+AnyOperationsAborted(1,1)logical，指示是否有操作被用户取消。
+### SHFileRename
+批量重命名文件或目录
+
+本函数是MATLAB.General.SHFileMove针对重命名需求的特化版。只需输入旧路径（完整路径）和新名称（仅文件名）向量，一次性批量完成重命名操作。
+
+注意，虽然您也可以使用MATLAB.General.SHFileMove进行重命名操作，但不能反过来使用本函数进行文件移动操作。
+```MATLAB
+%如下代码将5个文件各自重命名，一次性批量完成操作。
+From=["D:\OneDrive - 翁悸会\壁纸\(1).png"
+"D:\OneDrive - 翁悸会\壁纸\(2).png"
+"D:\OneDrive - 翁悸会\壁纸\(3).png"
+"D:\OneDrive - 翁悸会\壁纸\(4).png"
+"D:\OneDrive - 翁悸会\壁纸\(5).png"];
+To=["1.png"
+"2.png"
+"3.png"
+"4.png"
+"5.png"];
+[ErrorCode,AnyOperationAborted]=MATLAB.General.SHFileRename(From,To);
+```
+**输入参数**
+
+OldPaths(:,1)string，必需，要重命名的所有文件的完整路径
+
+NewNames(:,1)string，必需，要命名到的新文件名（仅文件名，不含目录）
+
+Flags(1,1)uint16=0x0041，可选，特殊功能旗帜，一般无需指定。使用bitor组合多面旗帜，可在[FILEOP_FLAGS](+MATLAB/+General/FILEOP_FLAGS.m)中查看。
 
 **返回值**
 
