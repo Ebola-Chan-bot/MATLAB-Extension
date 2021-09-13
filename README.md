@@ -358,7 +358,7 @@ A={1 [2 3]
 [4 5] 6}
 %此元胞数组直接使用cell2mat拼接会报错，但可以使用本函数拼接：
 C=DimensionFun(@cell2mat,A);
-%此示例仅用于展示DimensionFun的拼接功能，实际上可以直接使用SuperCell2Mat(A)一步到位。本函数实际上也是调用该函数实现的。
+%此示例仅用于展示DimensionFun的拼接功能，实际上可以直接使用MATLAB.DataTypes.Cell2Mat(A)一步到位。本函数实际上也是调用该函数实现的。
 %% 序列采样-拆分打包与隐式扩展的相互作用展示
 Sequence=1:10;
 Start=(1:5)';
