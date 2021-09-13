@@ -29,7 +29,7 @@
 		- [SHFileRename](#SHFileRename) 调用Windows文件资源管理器进行文件、目录重命名操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
 		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
 	- [+Graph2D](#Graph2D)
-		- [MultiShadowedLines](#MultiShadowedLines) 带图例的多条误差阴影线图
+		- [MultiShadowedLines](#MultiShadowedLines) 绘制多条误差阴影线图
 	- [+Graph3D](#Graph3D)
 		- [ColorAllocate](#ColorAllocate) 为白色背景下的作图分配合适的颜色。
 	- [+Graphics](#Graphics)
@@ -654,9 +654,11 @@ ErrorCode(1,1)int32，错误代码。如果操作成功，返回0；否则返回
 
 AnyOperationsAborted(1,1)logical，指示是否有操作被用户取消。
 ### SHFileMove
-调用Windows文件资源管理器进行文件、目录移动操作，支持批量操作、显示进度、撤销、对话框等高级功能。
+调用Windows文件资源管理器进行文件、目录移动或重命名操作，支持批量操作、显示进度、撤销、对话框等高级功能。
 
-MATLAB自带的movefile功能十分简陋，一次只能操作一个或具有通配符的一系列文件；不能操作目录；不能显示进度；移动后无法撤销；覆盖文件也没有确认对话框等。本函数调用Windows文件资源管理器的强大功能实现完善的文件、目录移动操作。
+MATLAB自带的movefile功能十分简陋，一次只能操作一个或具有通配符的一系列文件；不能操作目录；不能显示进度；移动后无法撤销；覆盖文件也没有确认对话框等。本函数调用Windows文件资源管理器的强大功能实现完善的文件、目录移动或重命名操作。
+
+如果您仅希望原地重命名文件，建议改用MATLAB.General.SHFileRename，更加方便。
 ```MATLAB
 import MATLAB.General.*
 %如下代码将5个文件分别移动到5个不同的文件夹并各自重命名，一次性批量完成操作。
@@ -683,12 +685,14 @@ To="C:\Users\vhtmf\Pictures";
 From="D:\OneDrive - 翁悸会\壁纸";
 [ErrorCode,AnyOperationsAborted] = SHFileMove(From,To)
 %整个目录都被移动了。
+SHFileMove(From,'壁纸新');
+%重命名目录为“壁纸新”
 ```
 **输入参数**
 
 From(:,1)string，必需，所有要移动的源文件、目录。可以同时指定多个文件或目录，不需要在同一个目录下，并且可以使用通配符。
 
-To(:,1)string，必需，移动的目标。如果指定为标量，将把所有文件、目录移动到该字符串所指定的目录下；若目录不存在，可以自动创建。如果指定为向量，则必须和From具有相同的尺寸，每个文件、目录进行一一对应的移动；并且Flags需要额外指定MATLAB.General.FILEOP_FLAGS.FOF_MULTIDESTFILES旗帜。
+To(:,1)string，必需，移动的目标。如果仅指定文件名，则将在原目录下重命名。如果指定为标量，将把所有文件、目录移动到该字符串所指定的目录下；若目录不存在，可以自动创建。如果指定为向量，则必须和From具有相同的尺寸，每个文件、目录进行一一对应的移动；并且需要指定MATLAB.General.FILEOP_FLAGS.FOF_MULTIDESTFILES旗帜。
 
 Flags(1,1)uint16=MATLAB.General.FILEOP_FLAGS.FOF_ALLOWUNDO，可选，功能旗帜。[FILEOP_FLAGS](+MATLAB/+General/FILEOP_FLAGS.m)中定义了可选的附加功能。这些功能可以通过bitor进行组合，同时启用。如果不希望指定任何附加功能，请将该值显式设为0。
 
