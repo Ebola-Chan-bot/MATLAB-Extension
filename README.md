@@ -376,7 +376,7 @@ disp(DimensionFun(@(Sequence,Start,End)Sequence(Start:End),Sequence,Start,End,Sp
 
 Function(1,1)function_handle，必需，要执行的函数。必须接受等同于Arguments重复次数的参数
 
-Arguments，重复，输入参数数组。输入的数组个数必须等于Function所能接受的输入值个数。所有数组各维度尺寸要么相等，要么为1，不允许各不相同的维度尺寸。不允许输入表格或其它非MATLAB标准数组，请始终先转化为MATLAB数组或元胞数组。
+Arguments，重复，输入参数数组。输入的数组个数必须等于Function所能接受的输入值个数。所有数组在SplitDimensions上的尺寸要么相等，要么为1，不允许各不相同的维度尺寸。不允许输入表格或其它非MATLAB标准数组，请始终先转化为MATLAB数组或元胞数组。
 
 **名称值参数**
 
