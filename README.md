@@ -7,6 +7,8 @@
 	- [+Addons](#Addons) 本包用于开发人员管理发布包，以及用户查询包依赖项。
 		- [GetRequirements](#GetRequirements) 获取包中包含的依赖项列表
 		- [PublishRequirements](#PublishRequirements) 在包目录下生成一个依赖项.mat文件
+	- [+AudioVideo](#AudioVideo)
+		- [VideoPreview](#VideoPreview) 生成一张图片作为视频文件的预览
 	- [+DataFun](#DataFun)
 		- [MaxSubs](#MaxSubs) 返回数组的最大值以及所在的坐标。
 		- [MeanSem](#MeanSem) 一次性高效算出数据沿维度的平均值和标准误
@@ -101,6 +103,19 @@ V.G.Me="1.3.0";
 输入参数：PackageName(1,1)string，你的包名，需要在该包下包含Version函数，返回版本依赖结构体
 
 返回值：RequirementTable(:,2)table，第1列Package，第2列Version，列出该包发布时所有依赖项和版本
+## +AudioVideo
+### VideoPreview
+生成一张图片作为视频文件的预览
+
+*名称值参数*
+
+VideoPath(1,1)string，视频文件路径。默认打开文件选择对话框供用户手动选择。
+
+PreviewOption(1,1)MATLAB.AudioVideo.PreviewOptions=MATLAB.AudioVideo.PreviewOptions.First，生成图片的方式
+
+*返回值*
+
+Preview(:,:)，预览图
 ## +DataFun
 ### MaxSubs
 返回数组的最大值以及所在的坐标。

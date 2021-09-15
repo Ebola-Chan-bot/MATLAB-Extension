@@ -44,6 +44,47 @@
 			}
 		]
 	},
+	"MATLAB.AudioVideo.VideoPreview": {
+		"inputs": [
+			{
+				"name": "VideoPath",
+				"kind": "namevalue",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
+				"purpose": "视频文件路径"
+			},
+			{
+				"name": "PreviewOption",
+				"kind": "namevalue",
+				"type": [
+					"MATLAB.AudioVideo.PreviewOptions",
+					"scalar"
+				],
+				"purpose": "生成图片的方式",
+				"default": "MATLAB.AudioVideo.PreviewOptions.First"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Preview",
+				"type": [
+					"2d",
+					"real"
+				]
+			}
+		]
+	},
 	"MATLAB.DataFun.MaxSubs": {
 		"inputs": [
 			{
