@@ -562,6 +562,117 @@
 			}
 		]
 	},
+	"MATLAB.General.Load": {
+		"inputs": [
+			{
+				"name": "filename",
+				"kind": "required",
+				"type": [
+					[
+						"file=*.mat",
+						"@(x) exist(x,'file')==2||exist([x '.mat'],'file')==2"
+					],
+					[
+						"matlabpathfile=*.mat"
+					]
+				]
+			},
+			{
+				"name": "variables",
+				"kind": "ordered",
+				"type": [
+					[
+						"char",
+						"choices=matlab.internal.language.introspective.tabcompletion.load_vvariables(filename)"
+					]
+				],
+				"repeating": true
+			}
+		],
+		"outputs": [
+			{
+				"name": "S",
+				"type": [
+					"struct"
+				]
+			}
+		]
+	},
+	"MATLAB.General.Load": {
+		"inputs": [
+			{
+				"name": "filename",
+				"kind": "required",
+				"type": [
+					[
+						"file",
+						"@(x) exist(x,'file')==2||exist([x '.mat'],'file')==2"
+					],
+					[
+						"matlabpathfile=*.mat"
+					]
+				]
+			},
+			{
+				"name": "'-mat'",
+				"kind": "ordered",
+				"type": [
+					[
+						"char",
+						"choices={'-mat'}"
+					]
+				]
+			},
+			{
+				"name": "variables",
+				"kind": "ordered",
+				"type": [
+					[
+						"char",
+						"choices=matlab.internal.language.introspective.tabcompletion.load_vvariables(filename)"
+					]
+				],
+				"repeating": true
+			}
+		],
+		"outputs": [
+			{
+				"name": "S",
+				"type": [
+					"struct"
+				]
+			}
+		]
+	},
+	"MATLAB.General.Load": {
+		"inputs": [
+			{
+				"name": "filename",
+				"kind": "required",
+				"type": [
+					"file"
+				]
+			},
+			{
+				"name": "'-ascii'",
+				"kind": "required",
+				"type": [
+					[
+						"char",
+						"choices={'-ascii'}"
+					]
+				]
+			}
+		],
+		"outputs": [
+			{
+				"name": "S",
+				"type": [
+					"double"
+				]
+			}
+		]
+	},
 	"MATLAB.General.Save": {
 		"inputs": [
 			{
@@ -1597,6 +1708,31 @@
 					"vector"
 				],
 				"purpose": "要获取的返回值序号"
+			}
+		]
+	},
+	"MATLAB.Lang.Input": {
+		"inputs": [
+			{
+				"name": "prompt",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
+				"purpose": "向用户显示的文本"
+			},
+			{
+				"name": "Flag",
+				"kind": "flag",
+				"type": "choices={'s'}",
+				"purpose": "返回输入的文本，而不会将输入作为表达式来计算"
 			}
 		]
 	},
