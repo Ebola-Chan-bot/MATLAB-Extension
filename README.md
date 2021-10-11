@@ -24,7 +24,8 @@
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 	- [+General](#General)
-		- [Load](#Load) 内置load函数的优化版
+		- [CD](#CD) 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
+		- [Load](#Load) 内置load函数的增强版，取消适用场合限制
 		- [Save](#Save) 内置save函数的强化版
 		- [SHFileCopy](#SHFileCopy) 调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
 		- [SHFileDelete](#SHFileDelete) 调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
@@ -577,6 +578,14 @@ ArbitraryOrder(1,:)=1:numel(DimensionSize)，希望得到的索引矩阵的维�
 
 \[S1,S2,S3, …\]\(1,:\)uint32，下标向量。例如Sk向量在位置I处的值，表示线性索引I对应的第k维下标。
 ## +General
+### CD
+内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
+
+内置cd函数，如果不指定参数，功能和pwd完全一样，毫无意义。本函数将其增强，若不指定参数，则调用uigetdir要求用户手动选择；如果用户取消选择，则等同于调用pwd
+
+输入参数：NewDirectory(1,:)char，要改到的当前目录，默认打开目录选择对话框要求用户手动选择
+
+返回值：OldDirectory(1,:)char，调用本函数之前的当前目录
 ### Load
 内置load函数的增强版，取消适用场合限制
 

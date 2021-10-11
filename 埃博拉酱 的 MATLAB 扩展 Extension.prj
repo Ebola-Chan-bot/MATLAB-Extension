@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration file="C:\Users\vhtmf\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\OneDrive - 翁悸会\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
+  <configuration file="D:\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="D:\OneDrive - 翁悸会\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
     <param.appname>埃博拉酱 的 MATLAB 扩展 Extension</param.appname>
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
@@ -31,7 +31,8 @@
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 	- [+General](#General)
-		- [Load](#Load) 内置load函数的优化版
+		- [CD](#CD) 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
+		- [Load](#Load) 内置load函数的增强版，取消适用场合限制
 		- [Save](#Save) 内置save函数的强化版
 		- [SHFileCopy](#SHFileCopy) 调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
 		- [SHFileDelete](#SHFileDelete) 调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
@@ -72,7 +73,7 @@
 		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
 		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>4.0.0</param.version>
+    <param.version>4.1.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -178,7 +179,7 @@
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="埃博拉酱 的 MATLAB 扩展 Extension.mltbx" optional="false">C:\Users\vhtmf\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="埃博拉酱 的 MATLAB 扩展 Extension.mltbx" optional="false">D:\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>

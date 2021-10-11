@@ -562,6 +562,37 @@
 			}
 		]
 	},
+	"MATLAB.General.CD": {
+		"inputs": [
+			{
+				"name": "NewDirectory",
+				"kind": "ordered",
+				"type": [
+					[
+						"folder"
+					],
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
+				"purpose": "要改到的当前目录"
+			}
+		],
+		"outputs": [
+			{
+				"name": "OldDirectory",
+				"type": [
+					"char",
+					"row"
+				]
+			}
+		]
+	},
 	"MATLAB.General.Load": {
 		"inputs": [
 			{
