@@ -2021,28 +2021,42 @@
 		],
 		"platforms": "win64"
 	},
-	"MatlabShared.SupportPkg.ClearCache": {
-		"inputs": [
-			{
-				"name": "CacheDirectory",
-				"kind": "ordered",
-				"type": "folder",
-				"purpose": "默认为本函数所在目录下的Cache子目录"
-			}
-		]
-	},
 	"MatlabShared.SupportPkg.InstallSupportPackages": {
 		"inputs": [
 			{
 				"name": "ArchivesDirectory",
 				"kind": "ordered",
-				"type": "folder",
+				"type": [
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
 				"purpose": "支持包安装文件所在路径"
 			},
 			{
 				"name": "MatlabRoot",
 				"kind": "namevalue",
-				"type": "folder",
+				"type": [
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
 				"purpose": "MATLAB安装目录"
 			}
 		]
@@ -2050,8 +2064,26 @@
 	"MatlabShared.SupportPkg.SupportPackageDownloader": {
 		"inputs": [
 			{
-				"name": "RunAfterDownload",
+				"name": "CacheDirectory",
 				"kind": "ordered",
+				"type": [
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
+				"purpose": "下载位置"
+			},
+			{
+				"name": "RunAfterDownload",
+				"kind": "namevalue",
 				"type": [
 					"scalar",
 					"logical"
@@ -2060,14 +2092,8 @@
 				"default": true
 			},
 			{
-				"name": "CacheDirectory",
-				"kind": "ordered",
-				"type": "folder",
-				"purpose": "下载位置"
-			},
-			{
 				"name": "ComputerArch",
-				"kind": "ordered",
+				"kind": "namevalue",
 				"type": "choices={'win64','glnxa64','maci64'}",
 				"purpose": "目标操作系统架构"
 			},
@@ -2075,8 +2101,14 @@
 				"name": "VersionRelease",
 				"kind": "namevalue",
 				"type": [
-					"scalar",
-					"string"
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"char",
+						"vector"
+					]
 				],
 				"purpose": "目标MATLAB发行版本"
 			}

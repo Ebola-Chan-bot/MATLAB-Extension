@@ -62,7 +62,6 @@
 		- [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框（仅限Windows）
 - [+MatlabShared](#MatlabShared)
 	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
-		- [ClearCache](#ClearCache) 清除缓存的下载器文件
 		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
 		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器
 # +MATLAB
@@ -1533,12 +1532,6 @@ FilePath(1,1)string，对话框中选定文件的绝对路径。如果未选择�
 如需在不联网的其它计算机上安装，请先在联网计算机上运行[SupportPackageDownloader](#SupportPackageDownloader)，将下载的支持包安装文件复制到目标计算机上，然后在目标计算机上运行[InstallSupportPackages](#InstallSupportPackages)。
 
 以下是各函数详细说明。
-### ClearCache
-清除缓存的下载器文件
-
-执行本函数将清除[SupportPackageDownloader](#SupportPackageDownloader)下载的下载器文件，释放空间。
-
-输入参数：CacheDirectory(1,1)string，默认为本函数所在目录下的Cache子目录
 ### InstallSupportPackages
 安装下载好的支持包
 
@@ -1548,7 +1541,7 @@ FilePath(1,1)string，对话框中选定文件的绝对路径。如果未选择�
 
 ArchivesDirectory(1,1)string，可选位置参数，支持包安装文件所在路径。如果不提供该参数，将弹出选择文件夹窗口要求用户手动选择。
 
-MatlabRoot(1,1)string=matlabroot，名称-值对组参数，MATLAB安装目录。
+MatlabRoot(1,1)string=matlabroot，名称值参数，MATLAB安装目录。
 ### SupportPackageDownloader
 下载支持包下载器。
 
@@ -1557,16 +1550,16 @@ MATLAB支持包需要先下载一个独立下载器才能下载。本函数根�
 %为本机下载，无需指定任何参数
 MatlabShared.SupportPkg.SupportPackageDownloader;
 %为不同系统架构、不同MATLAB发行版本下载，需要指定目标架构、发行版本等。例如为Linux上的R2020b下载：
-MatlabShared.SupportPkg.SupportPackageDownloader(false,"D:\SupportPackageDownloader","glnxa64",VersionRelease="2021b");
+MatlabShared.SupportPkg.SupportPackageDownloader('D:\SupportPackageDownloader',RunAfterDownload=false,ComputerArch='glnxa64',VersionRelease='R2020b');
 ```
 **可选位置参数**
 
+CacheDirectory(1,:)char，下载位置。默认打开目录选择对话框要求用户手动选择。注意，不支持含有非ASCII字符的路径
+
+**名称值参数**
+
 RunAfterDownload(1,1)logical=true，下载后是否立即执行下载器
 
-CacheDirectory(1,1)string，下载位置。默认在本函数目录的Cache子目录下。
+ComputerArch(1,:)char=computer("arch")，目标操作系统架构，支持'win64', 'glnxa64'和'maci64'三种。
 
-ComputerArch(1,1)string{mustBeMember(ComputerArch,["win64" "glnxa64" "maci64"])}=computer("arch")，目标操作系统架构
-
-**名称-值对组参数**
-
-VersionRelease(1,1)string=version('-release')，目标MATLAB发行版本
+VersionRelease(1,:)char=version('-release')，目标MATLAB发行版本，如'R2021b'

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration file="D:\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="D:\OneDrive - 翁悸会\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
+  <configuration file="C:\Users\vhtmf\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\OneDrive - 翁悸会\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
     <param.appname>埃博拉酱 的 MATLAB 扩展 Extension</param.appname>
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
@@ -69,11 +69,10 @@
 		- [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框（仅限Windows）
 - [+MatlabShared](#MatlabShared)
 	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
-		- [ClearCache](#ClearCache) 清除缓存的下载器文件
 		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
 		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>3.3.0</param.version>
+    <param.version>4.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -179,19 +178,12 @@
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="埃博拉酱 的 MATLAB 扩展 Extension.mltbx" optional="false">D:\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="埃博拉酱 的 MATLAB 扩展 Extension.mltbx" optional="false">C:\Users\vhtmf\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
       <root>C:\Program Files\MATLAB\R2021b</root>
-      <toolboxes>
-        <toolbox name="fixedpoint" />
-      </toolboxes>
-      <toolbox>
-        <fixedpoint>
-          <enabled>true</enabled>
-        </fixedpoint>
-      </toolbox>
+      <toolboxes />
     </matlab>
     <platform>
       <unix>false</unix>
