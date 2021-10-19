@@ -562,6 +562,28 @@
 			}
 		]
 	},
+	"MATLAB.ElMat.PadCat": {
+		"inputs": [
+			{
+				"name": "Dimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拼接维度"
+			},
+			{
+				"name": "Padder",
+				"kind": "required",
+				"type": "scalar",
+				"purpose": "补全子"
+			},
+			{
+				"name": "Array",
+				"kind": "required",
+				"purpose": "要拼接的数组",
+				"repeating": true
+			}
+		]
+	},
 	"MATLAB.General.CD": {
 		"inputs": [
 			{

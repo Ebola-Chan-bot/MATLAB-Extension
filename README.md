@@ -23,6 +23,7 @@
 	- [+ElMat](#ElMat)
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
+		- [PadCat](#PadCat) 内置cat函数的魔改版，可以给不兼容数组自动补全空值
 	- [+General](#General)
 		- [CD](#CD) 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
 		- [Load](#Load) 内置load函数的魔改版，取消适用场合限制，支持直接输出变量
@@ -577,6 +578,41 @@ ArbitraryOrder(1,:)=1:numel(DimensionSize)，希望得到的索引矩阵的维�
 **返回值**
 
 \[S1,S2,S3, …\]\(1,:\)uint32，下标向量。例如Sk向量在位置I处的值，表示线性索引I对应的第k维下标。
+### PadCat
+内置cat函数的魔改版，可以给不兼容数组自动补全空值
+
+内置cat函数要求拼接的数组在拼接维度以外的维度上尺寸都相等。本函数取消此限制，但要求指定一个补全子，将尺寸不匹配的短缺部分用补全子补全。
+```MATLAB
+A=ones(2,2);
+B=1;
+%A和B尺寸不兼容，不能直接cat。但可以用PadCat强行拼接，尺寸不足的地方补0：
+MATLAB.ElMat.PadCat(3,0,A,B)
+%上述代码将A和B沿第3维拼接，B尺寸不足的地方补0，得到：
+%{
+ans(:,:,1) =
+
+     1     1
+     1     1
+
+
+ans(:,:,2) =
+
+     1     0
+     0     0
+%}
+```
+
+**输入参数**
+
+Dimension(1,1)uint8，必需，拼接维度
+
+Padder(1,1)，必需，补全子，尺寸较小的数组将用补全子补足到足够大的尺寸
+
+Array，必需重复，要拼接的数组。所有数组和补全子必须具有相同的数据类型，但这些数组可以有任意尺寸。
+
+**返回值**
+
+Array，拼接好的数组，跟输入数组具有相同的数据类型。其在拼接维度上的尺寸等于所有输入数组在该维度上的尺寸之和，其它维度的尺寸等于所有输入数组在该维度上尺寸的最大值。
 ## +General
 ### CD
 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录

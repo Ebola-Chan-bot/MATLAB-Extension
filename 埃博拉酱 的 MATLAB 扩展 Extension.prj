@@ -30,6 +30,7 @@
 	- [+ElMat](#ElMat)
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
+		- [PadCat](#PadCat) 内置cat函数的魔改版，可以给不兼容数组自动补全空值
 	- [+General](#General)
 		- [CD](#CD) 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
 		- [Load](#Load) 内置load函数的魔改版，取消适用场合限制，支持直接输出变量
@@ -73,7 +74,7 @@
 		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
 		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>4.2.0</param.version>
+    <param.version>4.3.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -171,10 +172,6 @@
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+MATLAB</file>
       <file>${PROJECT_ROOT}\+MatlabShared</file>
-      <file>${PROJECT_ROOT}\1.mat</file>
-      <file>${PROJECT_ROOT}\2.mat</file>
-      <file>${PROJECT_ROOT}\3.mat</file>
-      <file>${PROJECT_ROOT}\4.mat</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
       <file>${PROJECT_ROOT}\示例数据.bin</file>
