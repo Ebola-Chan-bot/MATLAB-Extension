@@ -596,111 +596,38 @@
 	"MATLAB.General.Load": {
 		"inputs": [
 			{
-				"name": "filename",
-				"kind": "required",
+				"name": "Path",
+				"kind": "ordered",
 				"type": [
 					[
-						"file=*.mat",
-						"@(x) exist(x,'file')==2||exist([x '.mat'],'file')==2"
+						"file=*.mat"
 					],
 					[
-						"matlabpathfile=*.mat"
-					]
-				]
-			},
-			{
-				"name": "variables",
-				"kind": "ordered",
-				"type": [
-					[
-						"char",
-						"choices=matlab.internal.language.introspective.tabcompletion.load_vvariables(filename)"
-					]
-				],
-				"repeating": true
-			}
-		],
-		"outputs": [
-			{
-				"name": "S",
-				"type": [
-					"struct"
-				]
-			}
-		]
-	},
-	"MATLAB.General.Load": {
-		"inputs": [
-			{
-				"name": "filename",
-				"kind": "required",
-				"type": [
-					[
-						"file",
-						"@(x) exist(x,'file')==2||exist([x '.mat'],'file')==2"
+						"string",
+						"scalar"
 					],
 					[
-						"matlabpathfile=*.mat"
-					]
-				]
-			},
-			{
-				"name": "'-mat'",
-				"kind": "ordered",
-				"type": [
-					[
 						"char",
-						"choices={'-mat'}"
-					]
-				]
-			},
-			{
-				"name": "variables",
-				"kind": "ordered",
-				"type": [
-					[
-						"char",
-						"choices=matlab.internal.language.introspective.tabcompletion.load_vvariables(filename)"
+						"vector"
 					]
 				],
-				"repeating": true
-			}
-		],
-		"outputs": [
-			{
-				"name": "S",
-				"type": [
-					"struct"
-				]
-			}
-		]
-	},
-	"MATLAB.General.Load": {
-		"inputs": [
-			{
-				"name": "filename",
-				"kind": "required",
-				"type": [
-					"file"
-				]
+				"purpose": "MAT文件路径"
 			},
 			{
-				"name": "'-ascii'",
-				"kind": "required",
+				"name": "VariableName",
+				"kind": "ordered",
 				"type": [
 					[
+						"string",
+						"scalar"
+					],
+					[
 						"char",
-						"choices={'-ascii'}"
+						"vector"
 					]
-				]
-			}
-		],
-		"outputs": [
-			{
-				"name": "S",
-				"type": [
-					"double"
-				]
+				],
+				"repeating": true,
+				"purpose": "要载入的变量名"
 			}
 		]
 	},
@@ -708,7 +635,7 @@
 		"inputs": [
 			{
 				"name": "MatPath",
-				"kind": "required",
+				"kind": "ordered",
 				"type": [
 					[
 						"string",

@@ -32,8 +32,8 @@
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 	- [+General](#General)
 		- [CD](#CD) 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
-		- [Load](#Load) 内置load函数的增强版，取消适用场合限制
-		- [Save](#Save) 内置save函数的强化版
+		- [Load](#Load) 内置load函数的魔改版，取消适用场合限制，支持直接输出变量
+		- [Save](#Save) 内置save函数的魔改版
 		- [SHFileCopy](#SHFileCopy) 调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
 		- [SHFileDelete](#SHFileDelete) 调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
 		- [SHFileMove](#SHFileMove) 调用Windows文件资源管理器进行文件、目录移动和重命名操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
@@ -73,7 +73,7 @@
 		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
 		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>4.1.2</param.version>
+    <param.version>4.2.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -123,7 +123,7 @@
     <param.required.addons />
     <param.matlab.project.id />
     <param.matlab.project.name />
-    <param.release.start>R2021a</param.release.start>
+    <param.release.start>R2021b</param.release.start>
     <param.release.end>latest</param.release.end>
     <param.release.current.only>false</param.release.current.only>
     <param.compatiblity.windows>true</param.compatiblity.windows>
@@ -171,9 +171,14 @@
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+MATLAB</file>
       <file>${PROJECT_ROOT}\+MatlabShared</file>
+      <file>${PROJECT_ROOT}\1.mat</file>
+      <file>${PROJECT_ROOT}\2.mat</file>
+      <file>${PROJECT_ROOT}\3.mat</file>
+      <file>${PROJECT_ROOT}\4.mat</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
       <file>${PROJECT_ROOT}\示例数据.bin</file>
+      <file>${PROJECT_ROOT}\示例数据.mat</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
