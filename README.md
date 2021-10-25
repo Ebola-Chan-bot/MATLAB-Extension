@@ -843,13 +843,23 @@ AnyOperationsAborted(1,1)logical，指示是否有操作被用户取消。
 ### StaticJavaPath
 确认Java路径已添加到静态路径列表
 
-内置javaaddpath只能将Java路径添加到动态列表，因此每次运行程序都要重新添加。本函数能够遍历静态Java路径列表，检查是否存在指定的Java路径；若不存在，则添加之。
+内置javaaddpath只能将Java路径添加到动态列表，因此每次运行程序都要重新添加。本函数能够遍历静态Java路径列表，检查是否存在指定的Java路径；若不存在，则添加之。只需添加一次，以后再启动MATLAB都无需再次添加。
+```MATLAB
+import MATLAB.General.StaticJavaPath
+%添加静态Java路径
+StaticJavaPath(Path)
+%重置Java路径到默认，然后再添加。当系统默认代码页设置改变时，需要进行一次重置才能正常使用。此语法总是返回false。
+StaticJavaPath(Path,true)
+```
+**输入参数**
 
-注意，静态添加的Java路径必须重启MATLAB以后才能生效
+Path(1,1)string，必需，要确认的Java路径
 
-输入参数：Path(1,1)string，要确认的Java路径
+Reset(1,1)logical=false，可选，是否先重置Java路径到默认值，然后再添加指定的Java路径。当系统默认代码页设置改变时，需要进行此重置才能正常使用。
 
-返回值：Exist(1,1)logical，Java路径是否在调用本函数之前就已存在于静态列表中。注意，存在于静态列表中并不意味着MATLAB已经加载了它。例如运行本函数两次，第2次必定返回true，但新添加的路径仍然必须重启MATLAB才能生效。
+**返回值**
+
+Exist(1,1)logical，Java路径是否在调用本函数之前就已存在于静态列表中。如果设置Reset参数，总是返回false。
 ## +Graph2D
 ### MultiShadowedLines
 绘制多条误差阴影线图

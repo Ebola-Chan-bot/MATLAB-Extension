@@ -74,7 +74,7 @@
 		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
 		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>4.3.0</param.version>
+    <param.version>4.4.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
@@ -186,7 +186,14 @@
     <workflow />
     <matlab>
       <root>C:\Program Files\MATLAB\R2021b</root>
-      <toolboxes />
+      <toolboxes>
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
     </matlab>
     <platform>
       <unix>false</unix>
