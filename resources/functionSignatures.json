@@ -903,30 +903,6 @@
 			}
 		]
 	},
-	"MATLAB.Graph3D.ColorAllocate": {
-		"inputs": [
-			{
-				"name": "NoColors",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "要分配的颜色个数"
-			},
-			{
-				"name": "TryCount",
-				"kind": "ordered",
-				"type": "positive",
-				"purpose": "尝试优化的次数"
-			}
-		],
-		"outputs": [
-			{
-				"name": "Colors",
-				"type": [
-					"size=:,3"
-				]
-			}
-		]
-	},
 	"MATLAB.Graphics.FigureAspectRatio": {
 		"inputs": [
 			{

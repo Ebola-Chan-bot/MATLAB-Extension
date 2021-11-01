@@ -42,8 +42,6 @@
 		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
 	- [+Graph2D](#Graph2D)
 		- [MultiShadowedLines](#MultiShadowedLines) 绘制多条误差阴影线图
-	- [+Graph3D](#Graph3D)
-		- [ColorAllocate](#ColorAllocate) 为白色背景下的作图分配合适的颜色。
 	- [+Graphics](#Graphics)
 		- [FigureAspectRatio](#FigureAspectRatio) 设置当前图窗的纵横比
 	- [+ImageSci](#ImageSci)
@@ -74,7 +72,7 @@
 		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
 		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>4.4.0</param.version>
+    <param.version>5.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name>
       <item>MATLAB</item>
