@@ -27,26 +27,24 @@
 		- [DimensionFun](#DimensionFun) 对数组按维度执行函数，支持单一维度隐式扩展和返回数组自动拼接
 		- [FolderFun](#FolderFun) 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
 		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
+	- [+ElFun](#ElFun)
+		- [AngleND](#AngleND) 计算两个N维空间向量的夹角弧度
 	- [+ElMat](#ElMat)
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 		- [PadCat](#PadCat) 内置cat函数的魔改版，可以给不兼容数组自动补全空值
 	- [+General](#General)
 		- [CD](#CD) 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
+		- [CopyFile](#CopyFile) 调用 Win32 ShellAPI 执行可撤销的批量文件复制
+		- [Delete](#Delete) 调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
 		- [Load](#Load) 内置load函数的魔改版，取消适用场合限制，支持直接输出变量
+		- [MoveFile](#MoveFile) 调用 Win32 ShellAPI 执行可撤销的批量文件移动
 		- [Save](#Save) 内置save函数的魔改版
-		- [SHFileCopy](#SHFileCopy) 调用Windows文件资源管理器进行文件、目录复制操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
-		- [SHFileDelete](#SHFileDelete) 调用Windows文件资源管理器进行文件、目录删除操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
-		- [SHFileMove](#SHFileMove) 调用Windows文件资源管理器进行文件、目录移动和重命名操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
-		- [SHFileRename](#SHFileRename) 调用Windows文件资源管理器进行文件、目录重命名操作，支持批量操作、显示进度、撤销、对话框等高级功能。（仅限Windows）
 		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
 	- [+Graph2D](#Graph2D)
 		- [MultiShadowedLines](#MultiShadowedLines) 绘制多条误差阴影线图
 	- [+Graphics](#Graphics)
 		- [FigureAspectRatio](#FigureAspectRatio) 设置当前图窗的纵横比
-	- [+ImageSci](#ImageSci)
-		- [@OmeTiff](#OmeTiff) 支持XYCTZ五维索引的OME标准Tiff增强库
-		- [SetLastDirectory](#SetLastDirectory) 跳转到最后一个IFD，并且返回该IFD的序号。
 	- [+IOFun](#IOFun)
 		- [DelimitedStrings2Table](#DelimitedStrings2Table) 将一列分隔符字符串的前几个字段读出为表格或时间表
 		- [MatVariableRename](#MatVariableRename) 批量重命名.mat文件中的变量
@@ -74,15 +72,9 @@
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
     <param.version>5.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
-    <param.products.name>
-      <item>MATLAB</item>
-    </param.products.name>
-    <param.products.id>
-      <item>1</item>
-    </param.products.id>
-    <param.products.version>
-      <item>9.11</item>
-    </param.products.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
     <param.platforms />
     <param.guid>55b2e8d7-e4f3-4a7d-b01d-758acb6984a2</param.guid>
     <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
@@ -138,6 +130,9 @@
     <unset>
       <param.company />
       <param.output />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
       <param.platforms />
       <param.exclude.pcodedmfiles />
       <param.examples />
@@ -170,6 +165,7 @@
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+MATLAB</file>
       <file>${PROJECT_ROOT}\+MatlabShared</file>
+      <file>${PROJECT_ROOT}\.vs</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
       <file>${PROJECT_ROOT}\示例数据.bin</file>

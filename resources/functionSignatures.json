@@ -486,6 +486,48 @@
 			}
 		]
 	},
+	"MATLAB.ElFun.AngleND":{
+		"inputs":[
+			{
+				"mutuallyExclusiveGroup":[
+					[
+						{
+							"name":"Vector1",
+							"kind":"required",
+							"type":["2d","real"],
+							"purpose":"一个侧翼向量"
+						},
+						{
+							"name":"Vector2",
+							"kind":"required",
+							"type":["2d","real"],
+							"purpose":"另一个侧翼向量"
+						}
+					],
+					[
+						{
+							"name":"Flank1",
+							"kind":"required",
+							"type":["2d","real"],
+							"purpose":"一个侧翼点的坐标"
+						},
+						{
+							"name":"Vertex",
+							"kind":"required",
+							"type":["2d","real"],
+							"purpose":"顶点坐标"
+						},
+						{
+							"name":"Flank2",
+							"kind":"required",
+							"type":["2d","real"],
+							"purpose":"另一个侧翼点坐标"
+						}
+					]
+				]
+			}
+		]
+	},
 	"MATLAB.ElMat.OrderedDimensionSize2IndexArray": {
 		"inputs": [
 			{
@@ -615,6 +657,32 @@
 			}
 		]
 	},
+	"MATLAB.General.CopyFile":{
+		"inputs":[
+			{
+				"name":"Source",
+				"kind":"required",
+				"type":[["file"],["folder"],["char","vector"],["string","vector"],["cell","vector"]],
+				"purpose":"源路径，可以是多个文件、目录的混合，也可以使用通配符"
+			},
+			{
+				"name":"Destination",
+				"kind":"required",
+				"type":[["file"],["char","vector"],["string","vector"],["cell","vector"]],
+				"purpose":"目标路径，可以是多个文件、目录的混合。"
+			}
+		]
+	},
+	"MATLAB.General.Delete":{
+		"inputs":[
+			{
+				"name":"Paths",
+				"kind":"required",
+				"type":[["file"],["folder"],["char","vector"],["string","vector"],["cell","vector"]],
+				"purpose":"要删除的所有文件、目录路径。"
+			}
+		]
+	},
 	"MATLAB.General.Load": {
 		"inputs": [
 			{
@@ -653,6 +721,22 @@
 			}
 		]
 	},
+	"MATLAB.General.MoveFile":{
+		"inputs":[
+			{
+				"name":"Source",
+				"kind":"required",
+				"type":[["file"],["folder"],["char","vector"],["string","vector"],["cell","vector"]],
+				"purpose":"源路径，可以是多个文件、目录的混合，也可以使用通配符"
+			},
+			{
+				"name":"Destination",
+				"kind":"required",
+				"type":[["file"],["char","vector"],["string","vector"],["cell","vector"]],
+				"purpose":"目标路径，可以是多个文件、目录的混合。"
+			}
+		]
+	},
 	"MATLAB.General.Save": {
 		"inputs": [
 			{
@@ -680,148 +764,6 @@
 				"repeating": true
 			}
 		]
-	},
-	"MATLAB.General.SHFileCopy": {
-		"inputs": [
-			{
-				"name": "From",
-				"kind": "required",
-				"purpose": "所有要复制的源文件、目录"
-			},
-			{
-				"name": "To",
-				"kind": "required",
-				"purpose": "复制的目标"
-			},
-			{
-				"name": "Flags",
-				"kind": "ordered",
-				"purpose": "功能旗帜",
-				"default": 64
-			}
-		],
-		"outputs": [
-			{
-				"name": "ErrorCode",
-				"type": [
-					"scalar",
-					"int32"
-				]
-			},
-			{
-				"name": "AnyOperationsAborted",
-				"type": [
-					"scalar",
-					"logical"
-				]
-			}
-		],
-		"platforms": "win64"
-	},
-	"MATLAB.General.SHFileDelete": {
-		"inputs": [
-			{
-				"name": "From",
-				"kind": "required",
-				"purpose": "所有要删除的文件、目录"
-			},
-			{
-				"name": "Flags",
-				"kind": "ordered",
-				"purpose": "功能旗帜",
-				"default": 64
-			}
-		],
-		"outputs": [
-			{
-				"name": "ErrorCode",
-				"type": [
-					"scalar",
-					"int32"
-				]
-			},
-			{
-				"name": "AnyOperationsAborted",
-				"type": [
-					"scalar",
-					"logical"
-				]
-			}
-		],
-		"platforms": "win64"
-	},
-	"MATLAB.General.SHFileMove": {
-		"inputs": [
-			{
-				"name": "From",
-				"kind": "required",
-				"purpose": "所有要移动的源文件、目录"
-			},
-			{
-				"name": "To",
-				"kind": "required",
-				"purpose": "移动的目标"
-			},
-			{
-				"name": "Flags",
-				"kind": "ordered",
-				"purpose": "功能旗帜",
-				"default": 64
-			}
-		],
-		"outputs": [
-			{
-				"name": "ErrorCode",
-				"type": [
-					"scalar",
-					"int32"
-				]
-			},
-			{
-				"name": "AnyOperationsAborted",
-				"type": [
-					"scalar",
-					"logical"
-				]
-			}
-		],
-		"platforms": "win64"
-	},
-	"MATLAB.General.SHFileRename": {
-		"inputs": [
-			{
-				"name": "OldPaths",
-				"kind": "required",
-				"purpose": "要重命名的所有文件的完整路径"
-			},
-			{
-				"name": "NewNames",
-				"kind": "required",
-				"purpose": "要命名到的新文件名"
-			},
-			{
-				"name": "Flags",
-				"kind": "ordered",
-				"purpose": "特殊功能旗帜"
-			}
-		],
-		"outputs": [
-			{
-				"name": "ErrorCode",
-				"type": [
-					"scalar",
-					"int32"
-				]
-			},
-			{
-				"name": "AnyOperationsAborted",
-				"type": [
-					"scalar",
-					"logical"
-				]
-			}
-		],
-		"platforms": "win64"
 	},
 	"MATLAB.General.StaticJavaPath": {
 		"inputs": [
@@ -953,524 +895,6 @@
 				"type": [
 					"scalar",
 					"matlab.ui.Figure"
-				]
-			}
-		]
-	},
-	"MATLAB.ImageSci.OmeTiff": {
-		"inputs": [
-			{
-				"name": "FilePath",
-				"kind": "ordered",
-				"type": [
-					[
-						"file"
-					],
-					[
-						"matlabpathfile=*.tif,*.tiff"
-					],
-					[
-						"char",
-						"vector"
-					],
-					[
-						"scalar",
-						"string"
-					]
-				],
-				"purpose": "OmeTiff文件路径"
-			},
-			{
-				"name": "Mode",
-				"kind": "ordered",
-				"type": "choices={'r','w','w8','r+'}",
-				"purpose": "采用何种模式打开文件",
-				"default": "r"
-			},
-			{
-				"name": "Mode",
-				"kind": "namevalue",
-				"type": "choices={'r','w','w8','r+'}",
-				"purpose": "采用何种模式打开文件",
-				"default": "r"
-			},
-			{
-				"name": "ImageDescription",
-				"kind": "namevalue",
-				"type": [
-					[
-						"scalar",
-						"org.w3c.dom.Document"
-					],
-					[
-						"scalar",
-						"string"
-					],
-					[
-						"char",
-						"vector"
-					]
-				],
-				"purpose": "OmeXml元数据"
-			}
-		],
-		"outputs": [
-			{
-				"name": "obj",
-				"type": [
-					"scalar",
-					"MATLAB.ImageSci.OmeTiff"
-				]
-			}
-		]
-	},
-	"MATLAB.ImageSci.OmeTiff.Concatenate": {
-		"inputs": [
-			{
-				"name": "Dimension",
-				"kind": "required",
-				"type": [
-					[
-						"scalar",
-						"positive"
-					],
-					[
-						"scalar",
-						"char"
-					],
-					[
-						"scalar",
-						"string"
-					]
-				],
-				"purpose": "串联维度"
-			},
-			{
-				"name": "OutputFile",
-				"kind": "ordered",
-				"type": [
-					[
-						"scalar",
-						"string"
-					],
-					[
-						"row",
-						"char"
-					],
-					[
-						"file=*.tif"
-					]
-				],
-				"purpose": "输出文件的路径"
-			},
-			{
-				"mutuallyExclusiveGroup": [
-					[
-						{
-							"name": "InputFile",
-							"kind": "required",
-							"type": [
-								[
-									"vector",
-									"string"
-								],
-								[
-									"vector",
-									"cell"
-								],
-								[
-									"file=*.tif"
-								]
-							],
-							"purpose": "所有要串联的文件路径"
-						}
-					],
-					[
-						{
-							"name": "InputFile",
-							"kind": "ordered",
-							"type": [
-								[
-									"scalar",
-									"string"
-								],
-								[
-									"row",
-									"char"
-								],
-								[
-									"file=*.tif"
-								]
-							],
-							"repeating": true,
-							"purpose": "依次输入所有要串联的文件路径"
-						}
-					]
-				]
-			}
-		]
-	},
-	"MATLAB.ImageSci.OmeTiff.Read5D": {
-		"inputs": [
-			{
-				"name": "obj",
-				"kind": "required",
-				"type": [
-					"scalar",
-					"MATLAB.ImageSci.OmeTiff"
-				],
-				"purpose": "类对象"
-			},
-			{
-				"name": "X",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "X轴截取范围。若不指定，则不作裁剪全部读取。"
-			},
-			{
-				"name": "Y",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "Y轴截取范围。若不指定，则不作裁剪全部读取。"
-			},
-			{
-				"name": "C",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "C轴截取范围。若不指定，则不作裁剪全部读取。"
-			},
-			{
-				"name": "T",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "T轴截取范围。若不指定，则不作裁剪全部读取。"
-			},
-			{
-				"name": "Z",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "Z轴截取范围。若不指定，则不作裁剪全部读取。"
-			}
-		],
-		"outputs": [
-			{
-				"name": "Image",
-				"type": [
-					"real",
-					"size=:,:,:,:,:"
-				]
-			}
-		]
-	},
-	"MATLAB.ImageSci.OmeTiff.Rename": {
-		"inputs": [
-			{
-				"name": "From",
-				"kind": "required",
-				"type": [
-					[
-						"string",
-						"scalar"
-					],
-					[
-						"char",
-						"vector"
-					],
-					[
-						"file=*.tif"
-					],
-					[
-						"scalar",
-						"org.w3c.dom.Document"
-					]
-				],
-				"purpose": "可以是文件路径或ImageDescription的org.w3c.dom.Document或文本。"
-			},
-			{
-				"name": "To",
-				"kind": "required",
-				"type": [
-					[
-						"string",
-						"scalar"
-					],
-					[
-						"char",
-						"vector"
-					]
-				],
-				"purpose": "要修改到的文件名"
-			}
-		],
-		"outputs": [
-			{
-				"name": "RenamedDom",
-				"type": [
-					"scalar",
-					"org.w3c.dom.Document"
-				]
-			}
-		]
-	},
-	"MATLAB.ImageSci.OmeTiff.setTag": {
-		"inputs": [
-			{
-				"name": "tiffobj",
-				"kind": "required",
-				"type": [
-					"scalar",
-					"MATLAB.ImageSci.OmeTiff"
-				],
-				"purpose": "类对象"
-			},
-			{
-				"mutuallyExclusiveGroup": [
-					[
-						{
-							"name": "tagId",
-							"kind": "required",
-							"type": [
-								[
-									"numeric"
-								],
-								[
-									"char",
-									"choices=Tiff.getTagNames"
-								]
-							],
-							"purpose": "标签ID，可以是字符、数字或Tiff.getTagNames枚举项"
-						},
-						{
-							"name": "tagValue",
-							"kind": "required",
-							"purpose": "标签值"
-						}
-					],
-					[
-						{
-							"name": "tagStruct",
-							"kind": "required",
-							"type": [
-								"struct"
-							],
-							"purpose": "标签结构体。可通过GetDefaultTagStruct取得。"
-						}
-					]
-				]
-			}
-		]
-	},
-	"MATLAB.ImageSci.OmeTiff.Transcode": {
-		"inputs": [
-			{
-				"name": "From",
-				"kind": "ordered",
-				"type": [
-					[
-						"scalar",
-						"string"
-					],
-					[
-						"row",
-						"char"
-					],
-					[
-						"file=*.tif"
-					],
-					[
-						"matlabpathfile=*.tif"
-					]
-				],
-				"purpose": "源文件的路径"
-			},
-			{
-				"name": "FromDimensionOrder",
-				"kind": "namevalue",
-				"type": [
-					[
-						"char",
-						"size=1,3"
-					],
-					[
-						"string"
-					]
-				],
-				"purpose": "源文件的维度顺序",
-				"default": "'CTZ'"
-			},
-			{
-				"name": "ToDimensionOrder",
-				"kind": "namevalue",
-				"type": [
-					[
-						"char",
-						"size=1,3"
-					],
-					[
-						"string"
-					]
-				],
-				"purpose": "转码后的维度顺序",
-				"default": "'CTZ'"
-			},
-			{
-				"name": "To",
-				"kind": "namevalue",
-				"type": [
-					[
-						"scalar",
-						"string"
-					],
-					[
-						"row",
-						"char"
-					],
-					[
-						"file=*.tif"
-					],
-					[
-						"matlabpathfile=*.tif"
-					]
-				],
-				"purpose": "目标文件的路径"
-			},
-			{
-				"name": "SizeC",
-				"kind": "namevalue",
-				"type": [
-					"positive",
-					"scalar"
-				],
-				"purpose": "颜色通道数"
-			},
-			{
-				"name": "SizeT",
-				"kind": "namevalue",
-				"type": [
-					"positive",
-					"scalar"
-				],
-				"purpose": "采样时点数"
-			},
-			{
-				"name": "SizeZ",
-				"kind": "namevalue",
-				"type": [
-					"positive",
-					"scalar"
-				],
-				"purpose": "图像纵深"
-			}
-		]
-	},
-	"MATLAB.ImageSci.OmeTiff.Write5D": {
-		"inputs": [
-			{
-				"name": "obj",
-				"kind": "required",
-				"type": [
-					"scalar",
-					"MATLAB.ImageSci.OmeTiff"
-				],
-				"purpose": "类对象"
-			},
-			{
-				"name": "Image",
-				"kind": "required",
-				"type": [
-					"real",
-					"size=:,:,:,:,:"
-				],
-				"purpose": "要写入的图像数据。维度顺序总是YXCTZ，无论文件中定义的顺序为何"
-			},
-			{
-				"name": "TagStruct",
-				"kind": "ordered",
-				"type": [
-					"scalar",
-					"struct"
-				],
-				"purpose": "Tiff标签结构体，一般无需设置，保持默认即可"
-			},
-			{
-				"name": "X",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "X轴写入位置。此向量长度必须等于Image第2维长度"
-			},
-			{
-				"name": "Y",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "Y轴写入位置。此向量长度必须等于Image第1维长度"
-			},
-			{
-				"name": "C",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "C轴写入位置。此向量长度必须等于Image第3维长度"
-			},
-			{
-				"name": "T",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "T轴写入位置。此向量长度必须等于Image第4维长度"
-			},
-			{
-				"name": "Z",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "Z轴写入位置。此向量长度必须等于Image第5维长度"
-			}
-		]
-	},
-	"MATLAB.ImageSci.SetLastDirectory": {
-		"inputs": [
-			{
-				"name": "TiffClient",
-				"kind": "required",
-				"type": [
-					"scalar",
-					"Tiff"
-				]
-			}
-		],
-		"outputs": [
-			{
-				"name": "LastDirectory",
-				"type": [
-					"scalar",
-					"double"
 				]
 			}
 		]
