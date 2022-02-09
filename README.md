@@ -807,50 +807,55 @@ Exist(1,1)logical，Java路径是否在调用本函数之前就已存在于静�
 ### MultiShadowedLines
 绘制多条误差阴影线图
 ```MATLAB
-load("+MATLAB\+Graph2D\MultiShadowedLines.mat");
-figure;
-MATLAB.Graphics.FigureAspectRatio(3,2,"Narrow");
-TL=tiledlayout('flow','TileSpacing','tight','Padding','tight');
-NoCells=size(Mean,3);
-NoSamples=width(Sem);
-Xs=(1:NoSamples)/30-1;
-Axes=cell(NoCells,1);
-for C=1:NoCells
-	Axes{C}=nexttile;
-	Lines=MATLAB.Graph2D.MultiShadowedLines(Mean(:,:,C),Xs,ErrorShadows=Sem(:,:,C));
-end
-Legend=legend(Lines,Experiments);
-Legend.Layout.Tile=NoCells+1;
-title(TL,"PV average activity curve per day for individual neurons");
-xlabel(TL,"Time from stimulus (s)");
-ylabel(TL,"ΔF/F_0");
-YLim=cell2mat(cellfun(@ylim,Axes,"UniformOutput",false));
-YLim=[min(YLim(:,1)) max(YLim(:,2))];
-for C=1:NoCells
-	Ax=Axes{C};
-	ylim(Ax,YLim);
-	Ax.YTickLabels=round(2.^str2double(Ax.YTickLabels)-1,1,"significant");
-end
+import MATLAB.Graph2D.MultiShadowedLines
+%绘制多线图，无阴影
+MultiShadowedLines(Y);
+%绘制带阴影的多线图，需要指定阴影高度
+MultiShadowedLines(Y,ShadowHeights);
+%绘制带阴影的多线图，指定阴影高度和不透明度
+MultiShadowedLines(Y,ShadowHeights,FaceAlpha);
+%与上述任何语法组合，额外指定其它参数
+MultiShadowedLines(___,Name=Value);
+%与上述任何语法组合，返回补片对象，后续可用于绘制图例等
+Patches=MultiShadowedLines(___);
 ```
-![](+MATLAB/+Graph2D/MultiShadowedLines.svg)
+**示例**
+
+绘制长度相等，均为6的3条随机阴影线图
+```MATLAB
+figure;
+Colors=[1 0.4 0.9;0 0.7 0.1;0 0 0.1];
+Patches=MATLAB.Graph2D.MultiShadowedLines(rand(6,3),rand(6,3)/3,EdgeColors=Colors);
+legend(Patches,["1" "2" "3"]);
+```
+![](+MATLAB/+Graph2D/等长MultiShadowedLines.svg)
+
+绘制长度不等，分别为5、6、7的3条随机阴影线图
+```MATLAB
+figure;
+Colors=[1 0.4 0.9;0 0.7 0.1;0 0 0.1];
+Patches=MATLAB.Graph2D.MultiShadowedLines({rand(5,1) rand(6,1) rand(7,1)},{rand(5,1)/3 rand(6,1)/3 rand(7,1)/3},EdgeColors=Colors);
+legend(Patches,["1" "2" "3"]);
+```
+![](+MATLAB/+Graph2D/不等长MultiShadowedLines.svg)
 
 **位置参数**
 
-MeanLines(:,:)，必需，所有均值线。第1维是不同的线，第2维是线内部的数值
+Y，每个点的Y坐标。如果是数值矩阵，每一列是一条线上的所有点。如果是元胞行向量，则每个元胞内是一条线上所有点组成的数值向量。
 
-Xs(1,:)，可选，X轴数值，默认为数值的序号。
+ShadowHeights，每个点的阴影高度，阴影范围为Y±ShadowHeights。如果是数值矩阵，每一列是一条线上的所有点。如果是元胞行向量，则每个元胞内是一条线上所有点组成的数值向量。
+
+FaceAlpha(1,1)double=0.2，阴影的不透明度。0为完全透明，1为完全不透明。
 
 **名称值参数**
 
-ErrorShadows，对应均值线的误差阴影高度。第1维是不同的线，第2维是线内部的数值
+X，每个点的X坐标。如果是数值矩阵，每一列是一条线上的所有点。如果是元胞行向量，则每个元胞内是一条线上所有点组成的数值向量。
 
-LineStyles(:,1)cell，每条线的样式。每个元胞里应当是一个元胞数组，包含将要传递给plot的其它参数。
-
-ShadowStyles(:,1)cell，每块误差阴影的样式。每个元胞里应当是一个元胞数组，包含将要传递给fill的其它参数。默认为对应图线颜色加上20%的Alpha
+EdgeColors(:,3)double，每条线的颜色。第1维是不同的线，第2维是RGB颜色通道，范围[0,1]。
 
 **返回值**
 
-Lines(:,1)matlab.graphics.chart.primitive.Line，平均线，plot函数返回的图线对象
+Patches(1,:)matlab.graphics.primitive.Patch，每条线对应的补片对象，可用于后续绘制图例。
 ## +Graphics
 ### FigureAspectRatio
 设置当前图窗的纵横比

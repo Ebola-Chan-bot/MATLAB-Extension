@@ -1,76 +1,72 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration file="D:\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="D:\OneDrive - 翁悸会\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
+  <configuration file="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
     <param.appname>埃博拉酱 的 MATLAB 扩展 Extension</param.appname>
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company />
-    <param.summary>对MATLAB一些蹩脚及缺失功能的升级和增补（部分功能仅支持Windows系统）。例如，返回数组最大值的坐标，不需要预分配内存的累加数组，Bioformats Ome Tiff，XML字符串与DOM模型互转，文件移动复制删除重命名批量操作，许多内置函数的功能强化升级版……</param.summary>
-    <param.description>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能
-
-本项目的发布版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
-# 目录
-本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
-- [+MATLAB](#MATLAB)
-	- [+Addons](#Addons) 本包用于开发人员管理发布包，以及用户查询包依赖项。
-		- [GetRequirements](#GetRequirements) 获取包中包含的依赖项列表
-		- [PublishRequirements](#PublishRequirements) 在包目录下生成一个依赖项.mat文件
-	- [+AudioVideo](#AudioVideo)
-		- [VideoPreview](#VideoPreview) 生成一张图片作为视频文件的预览
-	- [+DataFun](#DataFun)
-		- [MaxSubs](#MaxSubs) 返回数组的最大值以及所在的坐标。
-		- [MeanSem](#MeanSem) 一次性高效算出数据沿维度的平均值和标准误
-		- [MinSubs](#MinSubs) 返回数组的最小值以及所在的坐标。
-		- [Rescale](#Rescale) 数组元素沿指定维度的缩放范围
-	- [+DataTypes](#DataTypes)
-		- [@ArrayBuilder](#ArrayBuilder) 数组累加器类
-		- [Cell2Mat](#Cell2Mat) cell2mat的升级版
-		- [DimensionFun](#DimensionFun) 对数组按维度执行函数，支持单一维度隐式扩展和返回数组自动拼接
-		- [FolderFun](#FolderFun) 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
-		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
-	- [+ElFun](#ElFun)
-		- [AngleND](#AngleND) 计算两个N维空间向量的夹角弧度
-	- [+ElMat](#ElMat)
-		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
-		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
-		- [PadCat](#PadCat) 内置cat函数的魔改版，可以给不兼容数组自动补全空值
-	- [+General](#General)
-		- [CD](#CD) 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
-		- [CopyFile](#CopyFile) 调用 Win32 ShellAPI 执行可撤销的批量文件复制
-		- [Delete](#Delete) 调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
-		- [Load](#Load) 内置load函数的魔改版，取消适用场合限制，支持直接输出变量
-		- [MoveFile](#MoveFile) 调用 Win32 ShellAPI 执行可撤销的批量文件移动
-		- [Save](#Save) 内置save函数的魔改版
-		- [StaticJavaPath](#StaticJavaPath) 确认Java路径已添加到静态路径列表
-	- [+Graph2D](#Graph2D)
-		- [MultiShadowedLines](#MultiShadowedLines) 绘制多条误差阴影线图
-	- [+Graphics](#Graphics)
-		- [FigureAspectRatio](#FigureAspectRatio) 设置当前图窗的纵横比
-	- [+IOFun](#IOFun)
-		- [DelimitedStrings2Table](#DelimitedStrings2Table) 将一列分隔符字符串的前几个字段读出为表格或时间表
-		- [MatVariableRename](#MatVariableRename) 批量重命名.mat文件中的变量
-		- [XmlDom2String](#XmlDom2String) 将org.w3c.dom.Document导出为XML文本
-		- [XmlString2Dom](#XmlString2Dom) 将XML字符串解析为org.w3c.dom.Document类型
-	- [+Lang](#Lang)
-		- [DistributeVararginByValidation](#DistributeVararginByValidation) 根据验证函数将输入的Varargin分发到输出变量
-		- [GetNthOutputs](#GetNthOutputs) 获取函数的第N个输出
-		- [Input](#Input) 内置input函数的优化版
-	- [+Ops](#Ops)
-		- [IsMember](#IsMember) 支持任意类型输入的ismember
-		- [Unique](#Unique) 支持任意类型输入的unique
-	- [+Parallel](#Parallel)
-		- [@MmfSemaphore](#MmfSemaphore) 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
-	- [+SpecFun](#SpecFun)
-		- [LogicalExhaustion](#LogicalExhaustion) 穷举一定长度的所有可能的逻辑向量
-		- [Subsets](#Subsets) 列出集合的所有子集
-	- [+UITools](#UITools)
-		- [OpenFileDialog](#OpenFileDialog) 可以设置初始目录，以及保存上次所在目录的文件打开对话框（仅限Windows）
-		- [SaveFileDialog](#SaveFileDialog) 可以设置初始目录，以及保存上次所在目录的文件保存对话框（仅限Windows）
-- [+MatlabShared](#MatlabShared)
-	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
-		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
-		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器</param.description>
+    <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，返回数组最大值的坐标，带误差阴影的多线图，XML字符串与DOM模型互转，文件移动复制删除重命名批量操作，许多内置函数的功能强化升级版……</param.summary>
+    <param.description>本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
++MATLAB
++Addons 本包用于开发人员管理发布包，以及用户查询包依赖项。
+GetRequirements 获取包中包含的依赖项列表
+PublishRequirements 在包目录下生成一个依赖项.mat文件
++AudioVideo
+VideoPreview 生成一张图片作为视频文件的预览
++DataFun
+MaxSubs 返回数组的最大值以及所在的坐标。
+MeanSem 一次性高效算出数据沿维度的平均值和标准误
+MinSubs 返回数组的最小值以及所在的坐标。
+Rescale 数组元素沿指定维度的缩放范围
++DataTypes
+@ArrayBuilder 数组累加器类
+Cell2Mat cell2mat的升级版
+DimensionFun 对数组按维度执行函数，支持单一维度隐式扩展和返回数组自动拼接
+FolderFun 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
+RepeatingFun 重复多次调用函数，为每个重复参数生成一个返回值
++ElFun
+AngleND 计算两个N维空间向量的夹角弧度
++ElMat
+OrderedDimensionSize2IndexArray 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
+OrderedDimensionSize2SubsVectors 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
+PadCat 内置cat函数的魔改版，可以给不兼容数组自动补全空值
++General
+CD 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
+CopyFile 调用 Win32 ShellAPI 执行可撤销的批量文件复制
+Delete 调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
+Load 内置load函数的魔改版，取消适用场合限制，支持直接输出变量
+MoveFile 调用 Win32 ShellAPI 执行可撤销的批量文件移动
+Save 内置save函数的魔改版
+StaticJavaPath 确认Java路径已添加到静态路径列表
++Graph2D
+MultiShadowedLines 绘制多条误差阴影线图
++Graphics
+FigureAspectRatio 设置当前图窗的纵横比
++IOFun
+DelimitedStrings2Table 将一列分隔符字符串的前几个字段读出为表格或时间表
+MatVariableRename 批量重命名.mat文件中的变量
+XmlDom2String 将org.w3c.dom.Document导出为XML文本
+XmlString2Dom 将XML字符串解析为org.w3c.dom.Document类型
++Lang
+DistributeVararginByValidation 根据验证函数将输入的Varargin分发到输出变量
+GetNthOutputs 获取函数的第N个输出
+Input 内置input函数的优化版
++Ops
+IsMember 支持任意类型输入的ismember
+Unique 支持任意类型输入的unique
++Parallel
+@MmfSemaphore 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
++SpecFun
+LogicalExhaustion 穷举一定长度的所有可能的逻辑向量
+Subsets 列出集合的所有子集
++UITools
+OpenFileDialog 可以设置初始目录，以及保存上次所在目录的文件打开对话框（仅限Windows）
+SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文件保存对话框（仅限Windows）
++MatlabShared
++SupportPkg 一键获取MATLAB硬件支持包
+InstallSupportPackages 安装下载好的支持包
+SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>5.0.0</param.version>
+    <param.version>6.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -165,29 +161,21 @@
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+MATLAB</file>
       <file>${PROJECT_ROOT}\+MatlabShared</file>
-      <file>${PROJECT_ROOT}\.vs</file>
+      <file>${PROJECT_ROOT}\PatchTest.mlx</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
-      <file>${PROJECT_ROOT}\示例数据.bin</file>
       <file>${PROJECT_ROOT}\示例数据.mat</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="埃博拉酱 的 MATLAB 扩展 Extension.mltbx" optional="false">D:\OneDrive - 翁悸会\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="埃博拉酱 的 MATLAB 扩展 Extension.mltbx" optional="false">C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2021b</root>
-      <toolboxes>
-        <toolbox name="neuralnetwork" />
-      </toolboxes>
-      <toolbox>
-        <neuralnetwork>
-          <enabled>true</enabled>
-        </neuralnetwork>
-      </toolbox>
+      <root>C:\Program Files\MATLAB\R2022a</root>
+      <toolboxes />
     </matlab>
     <platform>
       <unix>false</unix>

@@ -486,42 +486,57 @@
 			}
 		]
 	},
-	"MATLAB.ElFun.AngleND":{
-		"inputs":[
+	"MATLAB.ElFun.AngleND": {
+		"inputs": [
 			{
-				"mutuallyExclusiveGroup":[
+				"mutuallyExclusiveGroup": [
 					[
 						{
-							"name":"Vector1",
-							"kind":"required",
-							"type":["2d","real"],
-							"purpose":"一个侧翼向量"
+							"name": "Vector1",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "一个侧翼向量"
 						},
 						{
-							"name":"Vector2",
-							"kind":"required",
-							"type":["2d","real"],
-							"purpose":"另一个侧翼向量"
+							"name": "Vector2",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "另一个侧翼向量"
 						}
 					],
 					[
 						{
-							"name":"Flank1",
-							"kind":"required",
-							"type":["2d","real"],
-							"purpose":"一个侧翼点的坐标"
+							"name": "Flank1",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "一个侧翼点的坐标"
 						},
 						{
-							"name":"Vertex",
-							"kind":"required",
-							"type":["2d","real"],
-							"purpose":"顶点坐标"
+							"name": "Vertex",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "顶点坐标"
 						},
 						{
-							"name":"Flank2",
-							"kind":"required",
-							"type":["2d","real"],
-							"purpose":"另一个侧翼点坐标"
+							"name": "Flank2",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "另一个侧翼点坐标"
 						}
 					]
 				]
@@ -657,29 +672,83 @@
 			}
 		]
 	},
-	"MATLAB.General.CopyFile":{
-		"inputs":[
+	"MATLAB.General.CopyFile": {
+		"inputs": [
 			{
-				"name":"Source",
-				"kind":"required",
-				"type":[["file"],["folder"],["char","vector"],["string","vector"],["cell","vector"]],
-				"purpose":"源路径，可以是多个文件、目录的混合，也可以使用通配符"
+				"name": "Source",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "源路径，可以是多个文件、目录的混合，也可以使用通配符"
 			},
 			{
-				"name":"Destination",
-				"kind":"required",
-				"type":[["file"],["char","vector"],["string","vector"],["cell","vector"]],
-				"purpose":"目标路径，可以是多个文件、目录的混合。"
+				"name": "Destination",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "目标路径，可以是多个文件、目录的混合。"
 			}
 		]
 	},
-	"MATLAB.General.Delete":{
-		"inputs":[
+	"MATLAB.General.Delete": {
+		"inputs": [
 			{
-				"name":"Paths",
-				"kind":"required",
-				"type":[["file"],["folder"],["char","vector"],["string","vector"],["cell","vector"]],
-				"purpose":"要删除的所有文件、目录路径。"
+				"name": "Paths",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "要删除的所有文件、目录路径。"
 			}
 		]
 	},
@@ -721,19 +790,54 @@
 			}
 		]
 	},
-	"MATLAB.General.MoveFile":{
-		"inputs":[
+	"MATLAB.General.MoveFile": {
+		"inputs": [
 			{
-				"name":"Source",
-				"kind":"required",
-				"type":[["file"],["folder"],["char","vector"],["string","vector"],["cell","vector"]],
-				"purpose":"源路径，可以是多个文件、目录的混合，也可以使用通配符"
+				"name": "Source",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "源路径，可以是多个文件、目录的混合，也可以使用通配符"
 			},
 			{
-				"name":"Destination",
-				"kind":"required",
-				"type":[["file"],["char","vector"],["string","vector"],["cell","vector"]],
-				"purpose":"目标路径，可以是多个文件、目录的混合。"
+				"name": "Destination",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "目标路径，可以是多个文件、目录的混合。"
 			}
 		]
 	},
@@ -790,58 +894,67 @@
 	"MATLAB.Graph2D.MultiShadowedLines": {
 		"inputs": [
 			{
-				"name": "MeanLines",
+				"name": "Y",
 				"kind": "required",
 				"type": [
-					"real",
-					"2d"
+					[
+						"real",
+						"2d"
+					],
+					[
+						"cell",
+						"vector"
+					]
 				],
-				"purpose": "所有均值线"
+				"purpose": "每个点的Y坐标"
 			},
 			{
-				"name": "Xs",
+				"name": "ShadowHeights",
 				"kind": "ordered",
 				"type": [
-					"vector",
-					"numeric"
+					[
+						"real",
+						"2d"
+					],
+					[
+						"cell",
+						"vector"
+					]
 				],
-				"purpose": "X轴数值，默认为数值的序号"
+				"purpose": "每个点的阴影高度，阴影范围为Y±ShadowHeights"
 			},
 			{
-				"name": "ErrorShadows",
+				"name": "FaceAlpha",
+				"kind": "ordered",
 				"type": [
 					"real",
-					"2d"
+					"scalar"
 				],
-				"kind": "namevalue",
-				"purpose": "对应均值线的误差阴影高度"
+				"purpose": "阴影的不透明度。0为完全透明，1为完全不透明。"
 			},
 			{
-				"name": "LineStyles",
+				"name": "X",
 				"kind": "namevalue",
 				"type": [
-					"vector",
-					"cell"
+					[
+						"real",
+						"2d"
+					],
+					[
+						"cell",
+						"vector"
+					]
 				],
-				"purpose": "每条线的样式。每个元胞里应当是一个元胞数组，包含将要传递给plot的其它参数"
+				"purpose": "每个点的X坐标"
 			},
 			{
-				"name": "ShadowStyles",
+				"name": "EdgeColors",
 				"kind": "namevalue",
 				"type": [
-					"vector",
-					"cell"
+					"real",
+					"size=:,3"
 				],
-				"purpose": "每块误差阴影的样式。每个元胞里应当是一个元胞数组，包含将要传递给fill的其它参数"
-			}
-		],
-		"outputs": [
-			{
-				"name": "Lines",
-				"type": [
-					"column",
-					"matlab.graphics.chart.primitive.Line"
-				]
+				"purpose": "每条线的颜色。第1维是不同的线，第2维是RGB颜色通道，范围[0,1]。"
 			}
 		]
 	},
