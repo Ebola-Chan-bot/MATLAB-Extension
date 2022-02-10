@@ -543,6 +543,34 @@
 			}
 		]
 	},
+	"MATLAB.ElMat.LinSpace":{
+		"inputs":[
+			{
+				"name":"Start",
+				"kind":"required",
+				"type":"numeric",
+				"purpose":"起始数组"
+			},
+			{
+				"name":"End",
+				"kind":"required",
+				"type":"numeric",
+				"purpose":"终末数组"
+			},
+			{
+				"name":"Number",
+				"kind":"required",
+				"type":">1",
+				"purpose":"插补个数，包含起始和终末，因此数目至少为2"
+			},
+			{
+				"name":"Dimension",
+				"kind":"ordered",
+				"type":"positive",
+				"purpose":"插补维度，默认使用Start和End的尺寸均为1的最小维度"
+			}
+		]
+	},
 	"MATLAB.ElMat.OrderedDimensionSize2IndexArray": {
 		"inputs": [
 			{

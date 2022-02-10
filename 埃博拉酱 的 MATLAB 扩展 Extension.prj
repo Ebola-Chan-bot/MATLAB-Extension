@@ -5,8 +5,7 @@
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company />
     <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，返回数组最大值的坐标，带误差阴影的多线图，XML字符串与DOM模型互转，文件移动复制删除重命名批量操作，许多内置函数的功能强化升级版……</param.summary>
-    <param.description>本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
-+MATLAB
+    <param.description>+MATLAB
 +Addons 本包用于开发人员管理发布包，以及用户查询包依赖项。
 GetRequirements 获取包中包含的依赖项列表
 PublishRequirements 在包目录下生成一个依赖项.mat文件
@@ -26,6 +25,7 @@ RepeatingFun 重复多次调用函数，为每个重复参数生成一个返回�
 +ElFun
 AngleND 计算两个N维空间向量的夹角弧度
 +ElMat
+LinSpace 支持任意维度数组的linspace
 OrderedDimensionSize2IndexArray 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 OrderedDimensionSize2SubsVectors 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 PadCat 内置cat函数的魔改版，可以给不兼容数组自动补全空值
@@ -66,7 +66,7 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>6.0.0</param.version>
+    <param.version>6.1.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -161,7 +161,6 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+MATLAB</file>
       <file>${PROJECT_ROOT}\+MatlabShared</file>
-      <file>${PROJECT_ROOT}\PatchTest.mlx</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
       <file>${PROJECT_ROOT}\示例数据.mat</file>

@@ -1,4 +1,4 @@
-埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能
+埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。依赖[Win32API](https://ww2.mathworks.cn/matlabcentral/fileexchange/102159-win32-file-shell-api)
 
 本项目的发布版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
 # 目录
@@ -23,6 +23,7 @@
 	- [+ElFun](#ElFun)
 		- [AngleND](#AngleND) 计算两个N维空间向量的夹角弧度
 	- [+ElMat](#ElMat)
+		- [LinSpace](#LinSpace) 支持任意维度数组的linspace
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 		- [PadCat](#PadCat) 内置cat函数的魔改版，可以给不兼容数组自动补全空值
@@ -525,6 +526,119 @@ Angle=AngleND(Flank1,Vertex,Flank2)
 
 A(:,1)，每组点或向量的夹角，用弧度表示，范围[0,π]
 ## +ElMat
+### LinSpace
+支持任意维度数组的linspace
+
+内置linspace函数仅支持从两个标量生成行向量。本函数支持任意两个尺寸兼容的数组，在其单一维度上均匀插补，生成新数组
+```MATLAB
+import MATLAB.ElMat.LinSpace
+%生成以两个数组为始终的指定数量插补数组，插补将在第一个单一维度上进行
+Sequence=LinSpace(Start,End,Number);
+%指定插补的维度，该维度长度必须为1
+Sequence=LinSpace(Start,End,Number,Dimension);
+Start和End的尺寸必须兼容。意思是，在所有两者尺寸不一致的维度上，两者之一尺寸必须为1。
+示例
+import MATLAB.ElMat.LinSpace
+%不同于内置linspace，本函数默认对两个标量生成列向量而不是行向量
+LinSpace(1,10,3)
+%{
+ans =
+
+    1.0000
+    5.5000
+   10.0000
+%}
+%本函数支持对两个向量在其它维度上进行插补。如两个行向量可以在第1维插补成矩阵：
+LinSpace([1 2 3],[4 5 6],4)
+%{
+ans =
+
+     1     2     3
+     2     3     4
+     3     4     5
+     4     5     6
+%}
+%支持多维数组，在指定维度上进行插补。
+LinSpace(ones(3,1,1,2),zeros(3,1,1,2),3,3)
+%{
+ans(:,:,1,1) =
+
+     1
+     1
+     1
+
+
+ans(:,:,2,1) =
+
+    0.5000
+    0.5000
+    0.5000
+
+
+ans(:,:,3,1) =
+
+     0
+     0
+     0
+
+
+ans(:,:,1,2) =
+
+     1
+     1
+     1
+
+
+ans(:,:,2,2) =
+
+    0.5000
+    0.5000
+    0.5000
+
+
+ans(:,:,3,2) =
+
+     0
+     0
+     0
+%}
+%尺寸不同但兼容的两个数组也可以：
+LinSpace([1 2 3],[1;2;3],3)
+%{
+ans(:,:,1) =
+
+     1     2     3
+     1     2     3
+     1     2     3
+
+
+ans(:,:,2) =
+
+    1.0000    1.5000    2.0000
+    1.5000    2.0000    2.5000
+    2.0000    2.5000    3.0000
+
+
+ans(:,:,3) =
+
+     1     1     1
+     2     2     2
+     3     3     3
+%}
+```
+**输入参数**
+
+Start，起始数组
+
+End，终末数组
+
+Number，整数标量，插补个数，包含起始和终末，因此数目至少为2
+
+Dimension，正整数标量，插补维度，默认使用Start和End的尺寸均为1的最小维度。如果指定维度，也必须满足Start和End在该维度尺寸为1。
+
+**返回值**
+
+Sequence，插补结果。在插补维度上尺寸为Number，在其它维度上尺寸为Start和End在该维度尺寸的较大者
 ### OrderedDimensionSize2IndexArray
 根据实际维度顺序和尺寸，生成自定义的下标转线性索引数组
 
