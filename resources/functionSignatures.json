@@ -85,6 +85,21 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.FindGroupsN": {
+		"inputs": [
+			{
+				"name": "A",
+				"kind": "required",
+				"purpose": "分组变量"
+			},
+			{
+				"name": "Dimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拆分维度"
+			}
+		]
+	},
 	"MATLAB.DataFun.MaxSubs": {
 		"inputs": [
 			{
@@ -315,17 +330,7 @@
 			}
 		]
 	},
-	"MATLAB.DataTypes.Cell2Mat": {
-		"inputs": [
-			{
-				"name": "Cells",
-				"kind": "required",
-				"type": "cell",
-				"purpose": "要拼接的元胞数组"
-			}
-		]
-	},
-	"MATLAB.DataTypes.DimensionFun": {
+	"MATLAB.DataTypes.ArrayFun": {
 		"inputs": [
 			{
 				"name": "Function",
@@ -340,70 +345,44 @@
 				"purpose": "输入参数数组"
 			},
 			{
-				"mutuallyExclusiveGroup": [
-					[
-						{
-							"name": "PackDimensions",
-							"kind": "namevalue",
-							"type": [
-								"numeric",
-								"vector"
-							],
-							"purpose": "将每个Arguments数组的指定维度打包"
-						},
-						{
-							"name": "CatMode",
-							"kind": "namevalue",
-							"type": [
-								"MATLAB.DataTypes.CatMode",
-								"scalar"
-							],
-							"purpose": "返回值拼接选项",
-							"default": "MATLAB.DataTypes.CatMode.CanCat"
-						},
-						{
-							"name": "Warning",
-							"kind": "namevalue",
-							"type": [
-								"logical",
-								"scalar"
-							],
-							"purpose": "如果输入参数只有一个且为空，是否显示警告",
-							"default": true
-						}
-					],
-					[
-						{
-							"name": "SplitDimensions",
-							"kind": "namevalue",
-							"type": [
-								"numeric",
-								"vector"
-							],
-							"purpose": "在每个Arguments数组的指定维度上拆分"
-						},
-						{
-							"name": "CatMode",
-							"kind": "namevalue",
-							"type": [
-								"MATLAB.DataTypes.CatMode",
-								"scalar"
-							],
-							"purpose": "返回值拼接选项",
-							"default": "MATLAB.DataTypes.CatMode.CanCat"
-						},
-						{
-							"name": "Warning",
-							"kind": "namevalue",
-							"type": [
-								"logical",
-								"scalar"
-							],
-							"purpose": "如果输入参数只有一个且为空，是否显示警告",
-							"default": true
-						}
-					]
-				]
+				"name": "Dimension",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "运算维度",
+				"default":[]
+			},
+			{
+				"name": "CatMode",
+				"kind": "namevalue",
+				"type": [
+					"MATLAB.DataTypes.CatMode",
+					"scalar"
+				],
+				"purpose": "返回值拼接选项",
+				"default": "MATLAB.DataTypes.CatMode.Scalar"
+			},
+			{
+				"name": "Warning",
+				"kind": "namevalue",
+				"type": [
+					"logical",
+					"scalar"
+				],
+				"purpose": "如果输入参数只有一个且为空，是否显示警告",
+				"default": true
+			}
+		]
+	},
+	"MATLAB.DataTypes.Cell2Mat": {
+		"inputs": [
+			{
+				"name": "Cells",
+				"kind": "required",
+				"type": "cell",
+				"purpose": "要拼接的元胞数组"
 			}
 		]
 	},
@@ -543,31 +522,52 @@
 			}
 		]
 	},
-	"MATLAB.ElMat.LinSpace":{
+	"MATLAB.ElMat.IsEqualN":{
 		"inputs":[
 			{
-				"name":"Start",
+				"name":"A",
 				"kind":"required",
-				"type":"numeric",
-				"purpose":"起始数组"
+				"purpose":"要比较的对象"
 			},
 			{
-				"name":"End",
+				"name":"B",
 				"kind":"required",
-				"type":"numeric",
-				"purpose":"终末数组"
+				"purpose":"要比较的对象"
 			},
 			{
-				"name":"Number",
-				"kind":"required",
-				"type":">1",
-				"purpose":"插补个数，包含起始和终末，因此数目至少为2"
-			},
-			{
-				"name":"Dimension",
+				"name":"Dimensions",
 				"kind":"ordered",
-				"type":"positive",
-				"purpose":"插补维度，默认使用Start和End的尺寸均为1的最小维度"
+				"type":["real","vector"],
+				"purpose":"比较维度",
+				"default":0
+			}
+		]
+	},
+	"MATLAB.ElMat.LinSpace": {
+		"inputs": [
+			{
+				"name": "Start",
+				"kind": "required",
+				"type": "numeric",
+				"purpose": "起始数组"
+			},
+			{
+				"name": "End",
+				"kind": "required",
+				"type": "numeric",
+				"purpose": "终末数组"
+			},
+			{
+				"name": "Number",
+				"kind": "required",
+				"type": ">1",
+				"purpose": "插补个数，包含起始和终末，因此数目至少为2"
+			},
+			{
+				"name": "Dimension",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "插补维度，默认使用Start和End的尺寸均为1的最小维度"
 			}
 		]
 	},
@@ -1257,37 +1257,63 @@
 			}
 		]
 	},
-	"MATLAB.Ops.IsMember": {
+	"MATLAB.Ops.IsMemberN": {
 		"inputs": [
 			{
-				"name": "A",
+				"name": "Member",
 				"kind": "required",
 				"purpose": "要寻找的目标集合"
 			},
 			{
-				"name": "B",
+				"name": "Set",
 				"kind": "required",
 				"purpose": "要在其中寻找的范围集合"
 			},
 			{
-				"name": "RowByRow",
-				"kind": "ordered",
-				"type": [
-					"scalar",
-					"logical"
-				],
-				"purpose": "是否把A、B的各行作为一个整体对象",
-				"default": false
-			}
-		],
-		"outputs": [
-			{
-				"name": "Location",
-				"type": "double"
+				"name": "Dimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拆分维度"
 			}
 		]
 	},
-	"MATLAB.Ops.Unique": {
+	"MATLAB.Ops.SetDiffN":{
+		"inputs":[
+			{
+				"name":"SetA",
+				"kind":"required",
+				"purpose":"被减的集合"
+			},
+			{
+				"name":"SetB",
+				"kind":"required",
+				"purpose":"要减去的集合"
+			},
+			{
+				"name": "Dimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拆分维度"
+			}
+		]
+	},
+	"MATLAB.Ops.UnionN":{
+		"inputs":[
+			{
+				"name": "Dimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拆分维度"
+			},
+			{
+				"name":"Set",
+				"kind":"ordered",
+				"repeating":true,
+				"purpose":"参与合并的集合"
+			}
+		]
+	},
+	"MATLAB.Ops.UniqueN": {
 		"inputs": [
 			{
 				"name": "A",
@@ -1295,33 +1321,10 @@
 				"purpose": "要查找唯一值的集合"
 			},
 			{
-				"name": "RowByRow",
-				"kind": "ordered",
-				"type": [
-					"logical",
-					"scalar"
-				],
-				"purpose": "是否把A的各行作为一个整体对象",
-				"default": false
-			}
-		],
-		"outputs": [
-			{
-				"name": "C"
-			},
-			{
-				"name": "ia",
-				"type": [
-					"double",
-					"column"
-				]
-			},
-			{
-				"name": "ic",
-				"type": [
-					"double",
-					"column"
-				]
+				"name": "Dimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拆分维度"
 			}
 		]
 	},
@@ -1407,6 +1410,17 @@
 					"scalar",
 					"MATLAB.Parallel.MmfSemaphore"
 				]
+			}
+		]
+	},
+	"MATLAB.Project.ListAllProjectPaths":{
+		"inputs":[
+			{
+				"name":"Project",
+				"kind":"ordered",
+				"type":["scalar","matlab.project.Project"],
+				"purpose":"要查找搜索路径的工程对象",
+				"default":"matlab.project.rootProject"
 			}
 		]
 	},

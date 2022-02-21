@@ -10,24 +10,27 @@
 	- [+AudioVideo](#AudioVideo)
 		- [VideoPreview](#VideoPreview) 生成一张图片作为视频文件的预览
 	- [+DataFun](#DataFun)
+		- [FindGroupsN](#FindGroupsN) 内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 		- [MaxSubs](#MaxSubs) 返回数组的最大值以及所在的坐标。
 		- [MeanSem](#MeanSem) 一次性高效算出数据沿维度的平均值和标准误
 		- [MinSubs](#MinSubs) 返回数组的最小值以及所在的坐标。
 		- [Rescale](#Rescale) 数组元素沿指定维度的缩放范围
 	- [+DataTypes](#DataTypes)
 		- [@ArrayBuilder](#ArrayBuilder) 数组累加器类
+		- [ArrayFun](#ArrayFun) 内置arrayfun的升级版，支持指定维度、单一维度隐式扩展和返回数组自动拼接
 		- [Cell2Mat](#Cell2Mat) cell2mat的升级版
-		- [DimensionFun](#DimensionFun) 对数组按维度执行函数，支持单一维度隐式扩展和返回数组自动拼接
 		- [FolderFun](#FolderFun) 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
 		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
 	- [+ElFun](#ElFun)
 		- [AngleND](#AngleND) 计算两个N维空间向量的夹角弧度
 	- [+ElMat](#ElMat)
+		- [IsEqualN](#IsEqualN) 内置isequaln的升级版，支持任意数组类型，并可以指定比较维度，返回逻辑数组
 		- [LinSpace](#LinSpace) 支持任意维度数组的linspace
 		- [OrderedDimensionSize2IndexArray](#OrderedDimensionSize2IndexArray) 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 		- [OrderedDimensionSize2SubsVectors](#OrderedDimensionSize2SubsVectors) 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 		- [PadCat](#PadCat) 内置cat函数的魔改版，可以给不兼容数组自动补全空值
 	- [+General](#General)
+		- [BuiltinPaths](#BuiltinPaths) 列出所有MATLAB官方API的搜索路径
 		- [CD](#CD) 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
 		- [CopyFile](#CopyFile) 调用 Win32 ShellAPI 执行可撤销的批量文件复制
 		- [Delete](#Delete) 调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
@@ -49,10 +52,14 @@
 		- [GetNthOutputs](#GetNthOutputs) 获取函数的第N个输出
 		- [Input](#Input) 内置input函数的优化版
 	- [+Ops](#Ops)
-		- [IsMember](#IsMember) 支持任意类型输入的ismember
-		- [Unique](#Unique) 支持任意类型输入的unique
+		- [IsMemberN](#IsMemberN) 内置ismember的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
+		- [SetDiffN](#SetDiffN) 内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
+		- [UnionN](#UnionN) 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
+		- [UniqueN](#UniqueN) 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 	- [+Parallel](#Parallel)
 		- [@MmfSemaphore](#MmfSemaphore) 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
+	- [Project](#Project)
+		- [ListAllProjectPaths](#ListAllProjectPaths) 列出指定工程所添加的搜索路径
 	- [+SpecFun](#SpecFun)
 		- [LogicalExhaustion](#LogicalExhaustion) 穷举一定长度的所有可能的逻辑向量
 		- [Subsets](#Subsets) 列出集合的所有子集
@@ -117,6 +124,66 @@ PreviewOption(1,1)MATLAB.AudioVideo.PreviewOptions=MATLAB.AudioVideo.PreviewOpti
 
 Preview(:,:)，预览图
 ## +DataFun
+### FindGroupsN
+内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
+```MATLAB
+%不同于内置，本函数必须指定一个分组维度，且不支持对表进行分组（因为表只有一个维度可以分组，直接用内置函数就行了呗）
+[G,ID]=MATLAB.DataFun.FindGroupsN(A,Dimension);
+```
+**示例**
+```MATLAB
+import MATLAB.DataFun.FindGroupsN
+A=[
+0 0 NaN
+NaN NaN 0
+0 0 NaN
+];
+%沿不同维度分组会产生不同结果，且NaN值会被视为相等
+[G,ID]=FindGroupsN(A,1)
+%{
+G =
+
+     1
+     2
+     1
+
+
+ID =
+
+     0     0   NaN
+   NaN   NaN     0
+%}
+[G,ID]=FindGroupsN(A,2)
+%{
+G =
+
+     1
+     1
+     2
+
+
+ID =
+
+     0   NaN
+   NaN     0
+     0   NaN
+%}
+```
+**输入参数**
+
+A，分组变量，可以是任意尺寸、任意类型的MATLAB标准数组
+
+Dimension(1,1)，拆分维度，必须是正整数。数组将按此维度被拆分为子数组，然后将它们看作单个元素比较相等性。
+
+**输出参数**
+
+G(:,1)，组编号。无论输入维度为何，此参数总是返回正整数列向量。不同于内置，missing类值也会被赋予有效的组编号。
+
+ID，用于标识每个组的值。各维尺寸与A相同，除了在Dimension维度上仅包含A的唯一值，与组编号对应。ID在Dimension维度上用G进行索引可以得到A。
+
+**提示**
+
+本函数在实际算法上仅仅是MATLAB.Ops.UniqueN的特化形式，为了与内置findgroups对应而存在。参考MATLAB.Ops.UniqueN文档获取更多丰富用法。
 ### MaxSubs
 返回数组的最大值以及所在的坐标。
 
@@ -335,6 +402,104 @@ BuildDimension(1,1)uint8，累加维度
 `Clear`
 
 清空储藏，从零开始重新累加，而不必新建对象重新分配内存，具有较高的性能。
+### ArrayFun
+内置arrayfun的升级版，支持指定维度、单一维度隐式扩展和返回数组自动拼接
+
+内置arrayfun只能进行按元素运算，不能按行、按列甚至按平面运算，而且不支持单一维度隐式扩展，如果返回值不是标量还不能自动拼接。采用本函数可以实现按任意维度运算，且支持单一维度隐式扩展，返回数组自动拼接。
+```MATLAB
+import MATLAB.DataTypes.ArrayFun
+
+ArrayFun(Function,A);
+%基本语法，与arrayfun行为相同
+
+ArrayFun(Function,A1,…,An);
+%多个数组作为参数时，允许各数组对应维度尺寸相同或为1。而arrayfun要求尺寸必须相同。
+
+ArrayFun(___,Name=Value);
+%指定运算维度和拼接方式，不支持arrayfun的UniformOutput参数，详见参数说明。
+
+B=ArrayFun(___);
+%返回值拼接成和扩展后的输入数组尺寸相同的数组，但名称值参数可能改变此行为
+
+[B1,…,Bn]=ArrayFun(___);
+%每个返回值数组都是由Function对应位置的返回值按同样方式拼接而来。
+```
+**示例**
+```MATLAB
+import MATLAB.DataTypes.*
+%% 本函数最主要的功能是，将不支持向量化的函数在形式上强行向量化：
+A={[1 2] 3};
+B={[1 2] 3;[1 2] 4};
+%A和B的第1行相等，第2行不等，我们希望两者按行比较相等性，得到[true;false]这样的结果。但是元胞数组不支持==运算，isequal也只能得出两个数组不相等的结论。此时可以：
+Equal=ArrayFun(@isequal,A,B,Dimension=2,CatMode=CatMode.Scalar)
+%上述语句意义是，对A和B向量化进行isequal比较，将第2维打包作为单个元素，返回值是标量。第2维打包后A就变成了单个元素，B变成了列向量，然后按元素比较相等性，A可以自动扩展成同尺寸的列向量，于是得到：
+%{
+Equal =
+
+  2×1 logical 数组
+
+   1
+   0
+%}
+
+%% 图像拼接-1
+%本示例将一系列宽度相同的图片纵向拼接成一张长图。假设ImagePaths是一个包含了待拼接图像路径的列向量
+imshow(ArrayFun(@imread,ImagePaths,CatMode=CatMode.Linear));
+%由于ImagePaths是向量，且imread返回uint8数值类型，因此以下写法也是等效的：
+imshow(ArrayFun(@imread,ImagePaths,CatMode=CatMode.Linear));
+
+%% 图像拼接-2
+%同样是拼接图象，如果ImagePaths是一个待拼接的子图路径的矩阵呢？同样可以按照这个矩阵对这些图像自动进行二维拼接！
+imshow(ArrayFun(@imread,ImagePaths,CatMode=CatMode.CanCat));
+
+%% 序列采样-拆分打包与隐式扩展的相互作用展示
+Sequence=1:10;
+Start=(1:5)';
+End=(6:10)';
+disp(ArrayFun(@(Sequence,Start,End)Sequence(Start:End),Sequence,Start,End,Dimension=-1,CatMode=CatMode.Linear));
+%输出
+%     1     2     3     4     5     6
+%     2     3     4     5     6     7
+%     3     4     5     6     7     8
+%     4     5     6     7     8     9
+%     5     6     7     8     9    10
+%注意，由于Dimension=-1，因此具有单一第1维的Sequence发生了隐式扩展，而具有单一第2维的Start和End未发生隐式扩展，而是直接打包交付给Function运算。
+```
+**位置参数**
+
+Function(1,1)function_handle，必需，要执行的函数。必须接受等同于Arguments重复次数的参数
+
+A1,…,An，重复，输入参数数组。输入的数组个数必须等于Function所能接受的输入值个数。不允许输入表格或其它非MATLAB标准数组，请始终先转化为MATLAB数组或元胞数组。
+
+**名称值参数**
+
+*Dimension*(1,:)=[]，运算维度。可以执行以下类型值：
+- 正整数向量。此时A1,…,An会将被指定的这些维度打包交付给Function，Function收到的这些参数在指定维度上和原数组相同，其它维度上尺寸为1。因此被指定的这些维度可以具有任意的尺寸而不会被repmat重复。但其它维度上仍然要求要么具有相同的尺寸，要么尺寸为1；其中尺寸为1的维度会调用repmat自动重复到与其他数组匹配的尺寸。
+- 负整数向量。此时A1,…,An会将被指定的这些维度拆分，其它维度打包交付给Function，Function收到的这些参数在指定维度上尺寸为1，其它维度上尺寸和原数组相同。因此被指定的这些维度要么具有相同的尺寸，要么尺寸为1；其中尺寸为1的维度会调用repmat自动重复到与其他数组匹配的尺寸。其它维度可以具有任意的尺寸而不会被repmat重复。指定负整数向量作为Dimension，等价于指定其它维度的正整数向量作为Dimension。
+- 空值，相当于所有维度都拆分。此时Function会接收到A1,…,An的单个元素作为参数，因此A1,…,An在每个维度上要么具有相同的尺寸，要么尺寸为1。尺寸为1的维度会调用repmat自动重复到与其他数组匹配的尺寸。
+- 0，相当于所有维度都打包。此时Function会一次性接收到A1,…,An的全部元素作为参数，即等价于直接调用Function(A1,…,An)，因此A1,…,An各维度均可以具有任意的尺寸。
+
+*CatMode*(1,1)MATLAB.DataTypes.CatMode=MATLAB.DataTypes.CatMode.Scalar，返回值拼接选项，根据Function的返回值设定：
+- DontCat，不拼接，行为类似于arrayfun的UnformOutput=true，为每次Function调用返回值套上一个元胞变成标量返回，拼接成在拆分维度上尺寸和输入数组相同、打包维度上尺寸均为1的元胞数组。
+- CanCat，Function的返回值为数组，允许尺寸不同，但最终可以拼接成一整个大数组。将在DontCat基础上调用MATLAB.DataTypes.Cell2Mat完成拼接。
+- EsNlcs，Function的返回值为数值、逻辑、字符或字段相同的结构体数组，且尺寸完全相同。将在DontCat基础上调用cell2mat完成拼接。
+- Linear，Dimension为负整数标量或等价情况，且返回值在该维度以外的维度上尺寸均相等，可以在DontCat基础上用cat线性串联成数组
+- Scalar，Function的返回值为标量，可以UniformOutput=true直接返回数组。
+
+无论何种情况，都可以设为DontCat；其它选项都必须满足特定条件（对Function的每个返回值）。此外若Function的任何一个返回值是函数句柄，不能拼接成数组，只能选择DontCat。对于任何可拼接的情况，选择CanCat都能完成拼接，但性能最低。如果您确定您的函数返回值可以满足更苛刻的条件，应尽量优先选择Scalar>Linear>EsNlcs>CanCat
+
+*Warning*(1,1)logical=true，如果输入参数只有一个且为空，Function将不会被调用，因而无法获知返回值的数据类型，可能会与输入参数不为空的情况出现不一致的情形。该参数指定这种情况下是否要显示警告。
+
+**输出参数**
+
+返回值为由Function的返回值按其所对应的参数在数组中的位置拼接成的数组。如果Function具有多个返回值，则每个返回值各自拼接成数组，作为本函数的多个返回值。根据CatMode不同：
+- DontCat，返回元胞数组，尺寸与输入在拆分维度的尺寸相同，打包维度上尺寸为1。元胞里是对应位置的参数包输入Function产生的返回值。
+- Linear & EsNlcs & CanCat，返回数组，该数组由DontCat返回值在拆分维度上的拼接得到
+- Scalar，返回数组，尺寸与输入在拆分维度上的尺寸相同，打包维度上尺寸为1
+
+**局限性**
+
+本函数具有和arrayfun类似的局限性。虽然能将不可向量化的函数强行“向量化”，但这种向量化是纯软件实现，不受硬件支持，因此不能获得性能提升，对特定的简单问题甚至性能比for循环更差。本函数的主要意义在于增加代码可读性。
 ### Cell2Mat
 cell2mat的升级版
 
@@ -526,6 +691,62 @@ Angle=AngleND(Flank1,Vertex,Flank2)
 
 A(:,1)，每组点或向量的夹角，用弧度表示，范围[0,π]
 ## +ElMat
+### IsEqualN
+内置isequaln的升级版，支持任意数组类型，并可以指定比较维度，返回逻辑数组
+
+内置isequaln只能比较两个输入是否完全相等，返回逻辑标量。本函数可以进行维度化批量比较，单一维度自动扩展。
+
+**语法**
+```MATLAB
+import MALTAB.ElMat.IsEqualN
+
+%兼容内置isequaln
+Equal=IsEqualN(A,B);
+
+%可以指定比较维度
+Equal=IsEqualN(A,B,Dimension);
+```
+**示例**
+```MATLAB
+import MATLAB.ElMat.IsEqualN
+A=true(4,4,1);
+B=true(4,1,4);
+IsEqualN(A,B)
+%返回false，因为一个行向量一个列向量整体上尺寸不相等
+IsEqualN(A,B,1)
+%返回true(1,4,4)，因为A和B的维度1打包后都是true(4,1)，相等返回true，维度2、3自动扩展交叉
+IsEqualN(A,B,2)
+%返回false(4,1,4)，因为维度2打包后，A是true(1,4)，B是true，不相等返回false，维度3自动扩展，与维度1交叉
+IsEqualN(A,B,[1 2])
+%返回false(1,1,4)，因为维度1、2打包后，A是true(4,4)，B是true(4,1)，尺寸不相等返回false，维度3自动扩展。
+IsEqualN(A,B,0)
+%同IsEqualN(A,B)
+IsEqualN(A,B,[])
+%同IsEqualN(A,B)
+IsEqualN(A,B,-3)
+%同IsEqualN(A,B,[1 2])
+IsEqualN(A,B,-[2 3])
+%同IsEqualN(A,B,1)
+IsEqualN(ones(3,4),ones(4,4),1)
+%第1维尺寸不兼容，但因为是打包维度之一，不会报错，而是返回false(1,4)
+```
+**输入参数**
+
+A、B，要比较的对象，可以是任意尺寸、任意类型的MATLAB标准数组
+
+Dimensions(1,:)=0，比较维度。支持以下几种语法：
+- 正整数向量，指定要将AB进行打包的维度，打包的维度无论尺寸还是数值不相等均视为不相等。打包以外的维度必须兼容（要么尺寸相等，要么AB中至少一方尺寸为1）包内维度不兼容一律返回false。
+- 负整数向量，指定要将AB进行拆分比较的维度，这等价于将除此之外的所有维度打包。拆分维度必须兼容，拆分以外的维度可以不兼容。
+- 0，将所有维度打包，此时行为等价于内置isequaln(A,B)
+- []，将所有维度拆分，此时行为类似于A==B，但即使不支持==运算的元素也会调用isequaln进行比较，且无效值一律视为相等。
+
+**输出参数**
+
+逻辑数组，其尺寸：
+- Dimension为正整数向量，则返回值各维尺寸均为AB中对应维度尺寸较大者，但Dimension指定的维度尺寸为1
+- Dimension为负整数向量，则返回值各维尺寸在指定维度上均为AB中对应维度尺寸较大者，其它维度尺寸为1
+- Dimension为0，返回标量
+- Dimension为[]，返回值各维尺寸均为AB中对应维度尺寸较大者
 ### LinSpace
 支持任意维度数组的linspace
 
@@ -769,6 +990,16 @@ Array，必需重复，要拼接的数组。所有数组和补全子必须具有
 
 Array，拼接好的数组，跟输入数组具有相同的数据类型。其在拼接维度上的尺寸等于所有输入数组在该维度上的尺寸之和，其它维度的尺寸等于所有输入数组在该维度上尺寸的最大值。
 ## +General
+### BuiltinPaths
+列出所有MATLAB官方API的搜索路径
+
+MATLAB及其各种工具包在安装时就会定义好一批搜索路径，无需用户手动指定。本函数列出这些路径。
+```MATLAB
+Paths=MATLAB.General.BuiltinPaths
+```
+**输出参数**
+
+Paths(1,:)char，pathsep分割的官方API搜索路径
 ### CD
 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
 
@@ -1147,63 +1378,282 @@ varargout，OutputIndices参数指定位置的Function返回值。
 
 内置input函数无法在参数块中使用。本函数取消这些限制，且功能完全相同。
 ## +Ops
-### IsMember
-支持任意类型输入的ismember
+### IsMemberN
+内置ismember的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
+```MATLAB
+%将Member和Set在Dimension维度上拆分成子数组作为单个元素，返回Is指示Member的每个子数组在Set中是否出现，返回Location指示出现的位置
+[Is,Location] = MATLAB.Ops.IsMemberN(Member,Set,Dimension)
+```
+**示例**
+```MATLAB
+import MATLAB.Ops.IsMemberN
+%%支持任意类型数组
+[Is,Location]=IsMemberN({struct},{1 2 struct},2)
+%{
+Is =
 
-MATLAB内置ismember函数只支持基本数据类型。本函数支持任意类型输入。返回A在B中的位置，0表示不在。
+  logical
 
-注意，本函数仅支持内置ismember的部分功能。
+   1
 
+
+Location =
+
+     3
+%}
+
+%%不同维度产生不同结果
+Set=[0 0 NaN;NaN NaN 0;0 0 NaN];
+Element=[0 0 NaN;0 NaN 0;0 0 0];
+[Is,Location]=IsMemberN(Element,Set,1)
+%{
+Is =
+
+  3×1 logical 数组
+
+   1
+   0
+   0
+
+
+Location =
+
+     1
+     0
+     0
+%}
+[Is,Location]=IsMemberN(Element,Set,2)
+%{
+Is =
+
+  1×3 logical 数组
+
+   0   1   0
+
+
+Location =
+
+     0     1     0
+%}
+```
 **输入参数**
 
-A，必需，要寻找的目标集合
+Member，要寻找的目标集合，可以是任意尺寸、任意类型的MATLAB标准数组
 
-B，必需，要在其中寻找的范围集合
+Set，要在其中寻找的范围集合，可以是任意尺寸、任意类型的MATLAB标准数组
 
-RowByRow(1,1)logical=false，是否把A、B的各行作为一个整体对象。若设为true，则A、B必须都是二维，且具有相同的列数。
+Dimension(1,1)，拆分维度，必须是正整数。数组将按此维度被拆分为子数组，然后将它们看作单个元素比较相等性。
 
-**返回值**
+**输出参数**
 
-Location double，A中各个位置的元素在B中的位置。若RowByRow为true，则为列向量，使得B(Location,:)==A。若false，则和A尺寸相同，数值为A在B中的线性索引，使得B(Location)==A。如果A中某元素在B中不存在，则对应位置的Location为0。因此Location也可以作为判断A中元素是否在B中存在的逻辑值使用：0表示不存在，非0则为存在。
-### Unique
-支持任意类型输入的unique
+Is logical，与Member在Dimension维度上尺寸相同的向量，指示Member的每个元素是否在Set中。
 
-MATLAB内置unique函数只支持有限的数据类型。本函数支持任意类型输入。返回唯一值和首次出现位置。
+Location double，与Member在Dimension维度上尺寸相同的向量，指示Member的每个子数组在Set中的位置。如果不在Set中，则为0。
 
-注意，本函数仅支持内置unique的部分功能。
+注意，如果Member和Set在Dimension以外的维度尺寸不完全相同，将返回全0结果，因为尺寸不同的子数组一律不认为是相等的。
+### SetDiffN
+内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
+```MATLAB
+%将SetA和SetB在Dimension维度上拆分成子数组作为单个元素，求差集SetA-SetB=Diff，并返回Diff中每个元素在SetA中的位置
+[Diff,IA]=MATLAB.Ops.SetDiffN(SetA,SetB,Dimension)
+```
+**示例**
+```MATLAB
+import MATLAB.Ops.SetDiffN
+%%支持任意类型数组
+[Diff,IA]=SetDiffN({1 2 struct},{struct},2)
+%{
+Diff =
 
+  1×2 cell 数组
+
+    {[1]}    {[2]}
+
+
+IA =
+
+     1     2
+%}
+
+%%不同维度产生不同结果
+SetA=[0 0 NaN;NaN NaN 0;0 0 NaN];
+SetB=[0 0 NaN;0 NaN 0;0 0 0];
+[Diff,IA]=SetDiffN(SetA,SetB,1)
+%{
+Diff =
+
+   NaN   NaN     0
+
+
+IA =
+
+     2
+%}
+[Diff,IA]=SetDiffN(SetA,SetB,2)
+%{
+Diff =
+
+   NaN
+     0
+   NaN
+
+
+IA =
+
+     3
+%}
+```
 **输入参数**
 
-A，必需，要查找唯一值的集合
+SetA，被减的集合，可以是任意尺寸、任意类型的MATLAB标准数组
 
-RowByRow(1,1)logical=false，是否把A的各行作为一个整体对象。若设为true，则A必须是二维。如果A是表或时间表，该参数将固定设为true，无视用户输入。
+SetB，要减去的集合，可以是任意尺寸、任意类型的MATLAB标准数组
 
-**返回值**
+Dimension(1,1)，拆分维度，必须是正整数。数组将按此维度被拆分为子数组，然后将它们看作单个元素比较相等性。
 
-C，A中的唯一值。如果RowByRow设为true，C和A类型相同且具有相同的列数；否则C是行向量
+**输出参数**
 
-ia(:,1)double，唯一值在A中第一次出现的位置，有A(ia)==C
+Diff，SetA-SetB得到的差集，即存在于SetA而不存在于SetB中的子数组。Diff在Dimension维度上尺寸不大于SetA，其它维度尺寸和SetA相同。
 
-ic(:,1)double，使用C重构A所需的索引向量，有C(ic)==A
-
-**小贴士**
-
-findgroups函数也仅支持有限的数据类型，但你可以用本函数实现任意数据类型的findgroups。实际上，设
+IA，与Diff在Dimension维度上尺寸相同的正整数向量，指示Diff的每个子数组SetA中的位置。SetA在Dimension维度上使用IA索引将可以得到Diff。
+### UnionN
+内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
 ```MATLAB
-[G,ID]=findgroups(A);
-[C,~,ic]=MATLAB.Ops.Unique(A);
+%在Dimension维度上将Set1,Set2,…,Setn拆分成子数组作为单个元素，然后求它们的无重复并集USet
+USet=MATLAB.Ops.UnionN(Dimension,Set1,Set2,…,Setn)
 ```
-则有以下公式成立：
-
-G==ic
-
-ID==C
-
-即
+**示例**
 ```MATLAB
-[ID,~,G]=MATLAB.Ops.Unique(A);
+import MATLAB.Ops.UnionN
+%%支持多个任意类型数组并集
+UnionN(2,{1 NaN struct},{"5" {} struct},{NaN struct missing})
+%{
+ans =
+
+  1×5 cell 数组
+
+    {[1]}    {[NaN]}    {1×1 struct}    {["5"]}    {0×0 cell}
+%}
+
+%%不同维度产生不同结果
+SetA=[0 0 NaN;NaN NaN 0;0 0 NaN];
+SetB=[0 0 NaN;0 NaN 0;0 0 0];
+UnionN(1,SetA,SetB)
+%{
+ans =
+
+     0     0   NaN
+   NaN   NaN     0
+     0   NaN     0
+     0     0     0
+%}
+UnionN(2,SetA,SetB)
+%{
+ans =
+
+     0   NaN     0   NaN
+   NaN     0     0     0
+     0   NaN     0     0
+%}
 ```
-因此本包中不再提供findgroups的增强，因为它仅仅是MATLAB.Ops.Unique的一种特化形式。
+**输入参数**
+
+Dimension(1,1)，拆分维度，必须是正整数。数组将按此维度被拆分为子数组，然后将它们看作单个元素拼接和比较相等性。
+
+Set1,Set2,…,Setn，参与合并的集合，可以是任意尺寸、任意类型的MATLAB标准数组，但这些集合内部必须有相同的类型，尺寸上也仅允许Dimension以外的维度不同。
+
+**输出参数**
+
+USet，合并得到的并集，与Set1,Set2,…,Setn在Dimension以外的维度上尺寸相同，在Dimension维度上拆分出的子数组不具有重复项。
+### UniqueN
+内置unique的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
+```MATLAB
+%在Dimension维度上将A拆分成子数组作为单个元素，然后剔除其中的重复项只保留唯一值集合C，并返回唯一值在A中第一次出现的位置ia和使用C重构A所需的索引向量ic
+[C,ia,ic] = MATLAB.Ops.UniqueN(A,Dimension)
+```
+**示例**
+```MATLAB
+import MATLAB.Ops.UniqueN
+%%支持任意类型数组
+[C,ia,ic]=UniqueN({NaN NaN struct 2 NaN struct},2)
+%{
+C =
+
+  1×3 cell 数组
+
+    {[NaN]}    {1×1 struct}    {[2]}
+
+
+ia =
+
+     1     3     4
+
+
+ic =
+
+     1
+     1
+     2
+     3
+     1
+     2
+%}
+
+%%不同维度产生不同结果
+Set=[0 0 NaN;NaN NaN 0;0 0 NaN];
+[C,ia,ic]=UniqueN(Set,1)
+%{
+C =
+
+     0     0   NaN
+   NaN   NaN     0
+
+
+ia =
+
+     1     2
+
+
+ic =
+
+     1
+     2
+     1
+%}
+[C,ia,ic]=UniqueN(Set,2)
+%{
+C =
+
+     0   NaN
+   NaN     0
+     0   NaN
+
+
+ia =
+
+     1     3
+
+
+ic =
+
+     1
+     1
+     2
+%}
+```
+**输入参数**
+
+A，要查找唯一值的集合，可以是任意尺寸、任意类型的MATLAB标准数组
+
+Dimension(1,1)，拆分维度，必须是正整数。数组将按此维度被拆分为子数组，然后将它们看作单个元素比较相等性。
+
+**输出参数**
+
+C，A中的唯一值。与A在Dimension以外的维度上尺寸相同，在Dimension维度上拆分出的子数组不具有重复项。
+
+ia(1,:)，唯一值在A中第一次出现的位置，A在Dimension维度上使用ia索引可以得到C。
+
+ic(:,1)，使用C重构A所需的索引向量，C在Dimension维度上使用ic索引可以得到A。
 ## +Parallel
 ### MmfSemaphore
 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
@@ -1246,6 +1696,23 @@ end
 *ReturnOne*
 
 归还一个资源配额。将直接导致资源数量+1，不会检查是否超出Fill的量。
+## +Project
+### ListAllProjectPaths
+列出指定工程所添加的搜索路径
+```MATLAB
+import MATLAB.Project.ListAllProjectPaths
+%列出当前MATLAB会话打开的所有工程所添加的搜索路径
+ProjectPaths = ListAllProjectPaths
+%列出指定工程所添加的搜索路径——这些路径将在工程关闭时被移除出路径列表。
+ProjectPaths = ListAllProjectPaths(Project)
+```
+**输入参数**
+
+Project(1,1)matlab.project.Project=matlab.project.rootProject，要查找搜索路径的工程对象。该对象的所有引用工程的搜索路径也将被一并返回。
+
+**输出参数**
+
+ProjectPaths(1,:)string，查找到的所有搜索路径，保证没有重复项。这些路径将在工程关闭时被移除出搜索路径列表。
 ## +SpecFun
 ### LogicalExhaustion
 穷举一定长度的所有可能的逻辑向量

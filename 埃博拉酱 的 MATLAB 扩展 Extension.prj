@@ -5,31 +5,41 @@
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company />
     <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，返回数组最大值的坐标，带误差阴影的多线图，XML字符串与DOM模型互转，文件移动复制删除重命名批量操作，许多内置函数的功能强化升级版……</param.summary>
-    <param.description>+MATLAB
+    <param.description>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。依赖Win32API
+
+本项目的发布版本号遵循语义化版本规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
+
+目录
+本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
+
++MATLAB
 +Addons 本包用于开发人员管理发布包，以及用户查询包依赖项。
 GetRequirements 获取包中包含的依赖项列表
 PublishRequirements 在包目录下生成一个依赖项.mat文件
 +AudioVideo
 VideoPreview 生成一张图片作为视频文件的预览
 +DataFun
+FindGroupsN 内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 MaxSubs 返回数组的最大值以及所在的坐标。
 MeanSem 一次性高效算出数据沿维度的平均值和标准误
 MinSubs 返回数组的最小值以及所在的坐标。
 Rescale 数组元素沿指定维度的缩放范围
 +DataTypes
 @ArrayBuilder 数组累加器类
+ArrayFun 内置arrayfun的升级版，支持指定维度、单一维度隐式扩展和返回数组自动拼接
 Cell2Mat cell2mat的升级版
-DimensionFun 对数组按维度执行函数，支持单一维度隐式扩展和返回数组自动拼接
 FolderFun 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
 RepeatingFun 重复多次调用函数，为每个重复参数生成一个返回值
 +ElFun
 AngleND 计算两个N维空间向量的夹角弧度
 +ElMat
+IsEqualN 内置isequaln的升级版，支持任意数组类型，并可以指定比较维度，返回逻辑数组
 LinSpace 支持任意维度数组的linspace
 OrderedDimensionSize2IndexArray 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 OrderedDimensionSize2SubsVectors 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 PadCat 内置cat函数的魔改版，可以给不兼容数组自动补全空值
 +General
+BuiltinPaths 列出所有MATLAB官方API的搜索路径
 CD 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
 CopyFile 调用 Win32 ShellAPI 执行可撤销的批量文件复制
 Delete 调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
@@ -51,10 +61,14 @@ DistributeVararginByValidation 根据验证函数将输入的Varargin分发到�
 GetNthOutputs 获取函数的第N个输出
 Input 内置input函数的优化版
 +Ops
-IsMember 支持任意类型输入的ismember
-Unique 支持任意类型输入的unique
+IsMemberN 内置ismember的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
+SetDiffN 内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
+UnionN 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
+UniqueN 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 +Parallel
 @MmfSemaphore 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
+Project
+ListAllProjectPaths 列出指定工程所添加的搜索路径
 +SpecFun
 LogicalExhaustion 穷举一定长度的所有可能的逻辑向量
 Subsets 列出集合的所有子集
@@ -66,7 +80,7 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>6.1.0</param.version>
+    <param.version>7.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
