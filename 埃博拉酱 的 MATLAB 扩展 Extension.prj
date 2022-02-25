@@ -80,7 +80,7 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>7.0.2</param.version>
+    <param.version>7.0.3</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -121,7 +121,11 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     <param.matlabpath.excludes />
     <param.javaclasspath.excludes />
     <param.exported.on.package>false</param.exported.on.package>
-    <param.required.addons />
+    <param.required.addons>
+      <requiredaddons>
+        <requiredAddOn earliest="2.0.0" fromRepository="true" id="87ec000a-2945-4953-a73c-57eba7771c3c" include="true" latest="latest">Win32 API</requiredAddOn>
+      </requiredaddons>
+    </param.required.addons>
     <param.matlab.project.id />
     <param.matlab.project.name />
     <param.release.start>R2021b</param.release.start>
@@ -154,7 +158,6 @@ SupportPackageDownloader 下载支持包下载器</param.description>
       <param.matlabpath.excludes />
       <param.javaclasspath.excludes />
       <param.exported.on.package />
-      <param.required.addons />
       <param.matlab.project.id />
       <param.matlab.project.name />
       <param.release.current.only />
@@ -187,7 +190,7 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2022a</root>
+      <root>C:\Program Files\MATLAB\R2021b</root>
       <toolboxes />
     </matlab>
     <platform>
