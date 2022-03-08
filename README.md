@@ -58,7 +58,7 @@
 		- [UniqueN](#UniqueN) 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 	- [+Parallel](#Parallel)
 		- [@MmfSemaphore](#MmfSemaphore) 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
-	- [Project](#Project)
+	- [+Project](#Project)
 		- [ListAllProjectPaths](#ListAllProjectPaths) 列出指定工程所添加的搜索路径
 	- [+SpecFun](#SpecFun)
 		- [LogicalExhaustion](#LogicalExhaustion) 穷举一定长度的所有可能的逻辑向量
