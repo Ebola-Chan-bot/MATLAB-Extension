@@ -21,6 +21,7 @@
 		- [Cell2Mat](#Cell2Mat) cell2mat的升级版
 		- [FolderFun](#FolderFun) 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
 		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
+          - [Select](#Select) 对多张表格实施类似于 SQL SELECT 的查询操作
 	- [+ElFun](#ElFun)
 		- [AngleND](#AngleND) 计算两个N维空间向量的夹角弧度
 	- [+ElMat](#ElMat)
@@ -645,6 +646,53 @@ Arguments，重复，每次调用的输入参数
 **返回值**
 
 varargout，每个重复输入的参数按顺序生成的返回值
+### Select
+对多张表格实施类似于 SQL SELECT 的查询操作
+```MATLAB
+%内联多张表，自动检测匹配键变量，类似于内置innerjoin
+Result=Select(From);
+%只返回指定的列
+Result=Select(From,Fields);
+%限定某些列的取值范围。
+Result=Select(From,[],Name=Value);
+%限定某些列的取值范围，且只返回指定的列
+Result=Select(From,Fields,Name=Value);
+```
+**示例**
+```MATLAB
+import MATLAB.DataTypes.Select
+load('示例数据\Select.mat');
+%% 内联两张表，自动检测匹配键变量
+Result=Select({Blocks DateTimes})
+%上述代码等价于`Result=innerjoin(Blocks,DateTimes);`
+
+%% 内联两张表，但只返回某些变量
+Result=Select({Blocks DateTimes},["DateTime" "Mouse" "Design"])
+%上述代码亦可通过内置innerjoin直接实现，但innerjoin要求调用方确认每个变量属于哪个表，而本函数直接要求所有的表除键变量外不得有其它重复变量，因此只需指定变量名
+
+%% 内联两张表，并对某些变量值进行过滤
+Result=Select({Blocks DateTimes},[],Design="blue_air",BlockIndex=1:5)
+
+%% 内联三张表，对某些变量值进行过滤，且只返回某些变量
+Result=Select({DateTimes Trials Blocks},["DateTime" "TrialIndex" "Design"],BlockIndex=1:5)
+
+%% 输入表必须能够通过匹配的键变量内联起来，如果没有，将出错：
+Result=Select({DateTimes,Trials})
+%上述代码出错，因为表Trials不具有和DateTimes匹配的键变量
+```
+**输入参数**
+
+From(1,:)cell，包含要内联的表的元胞数组。这些表之间必须能够通过匹配的键变量构成一张全连通图，否则将无法内联。
+
+Fields(1,:)string，要返回的变量名。如果不设置或留空，则返回所有变量
+
+Name=Value，对某些变量值进行过滤。Name设置为要过滤的变量名，Value设置为该变量的取值范围。仅显示取值范围以内的变量值对应的表行。可以重复设置该参数以过滤多个变量值，这些过滤条件之间是逻辑与关系，即输出的表行将同时满足所有这些过滤条件。
+
+注意，如欲设置名称值参数，则必须先设置Fields参数（可设为空数组以返回所有变量，但不能不设置）
+
+**返回值**
+
+Result(:,:)table，查询结果表，仅包含Fields指定的列（或所有列，如果Fields为空），且每个表行均同时满足所有过滤条件。
 ## +ElFun
 ### AngleND
 计算两个N维空间向量的夹角弧度

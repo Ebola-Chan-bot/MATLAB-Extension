@@ -352,7 +352,7 @@
 					"vector"
 				],
 				"purpose": "运算维度",
-				"default":[]
+				"default": []
 			},
 			{
 				"name": "CatMode",
@@ -465,6 +465,29 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.Select": {
+		"inputs": [
+			{
+				"name": "From",
+				"kind": "required",
+				"type": "cell",
+				"purpose": "包含要内联的表的元胞数组"
+			},
+			{
+				"name": "Fields",
+				"kind": "required",
+				"type": [
+					[
+						"string"
+					],
+					[
+						"cell"
+					]
+				],
+				"purpose": "要返回的变量名"
+			}
+		]
+	},
 	"MATLAB.ElFun.AngleND": {
 		"inputs": [
 			{
@@ -522,24 +545,27 @@
 			}
 		]
 	},
-	"MATLAB.ElMat.IsEqualN":{
-		"inputs":[
+	"MATLAB.ElMat.IsEqualN": {
+		"inputs": [
 			{
-				"name":"A",
-				"kind":"required",
-				"purpose":"要比较的对象"
+				"name": "A",
+				"kind": "required",
+				"purpose": "要比较的对象"
 			},
 			{
-				"name":"B",
-				"kind":"required",
-				"purpose":"要比较的对象"
+				"name": "B",
+				"kind": "required",
+				"purpose": "要比较的对象"
 			},
 			{
-				"name":"Dimensions",
-				"kind":"ordered",
-				"type":["real","vector"],
-				"purpose":"比较维度",
-				"default":0
+				"name": "Dimensions",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "比较维度",
+				"default": 0
 			}
 		]
 	},
@@ -1277,17 +1303,17 @@
 			}
 		]
 	},
-	"MATLAB.Ops.SetDiffN":{
-		"inputs":[
+	"MATLAB.Ops.SetDiffN": {
+		"inputs": [
 			{
-				"name":"SetA",
-				"kind":"required",
-				"purpose":"被减的集合"
+				"name": "SetA",
+				"kind": "required",
+				"purpose": "被减的集合"
 			},
 			{
-				"name":"SetB",
-				"kind":"required",
-				"purpose":"要减去的集合"
+				"name": "SetB",
+				"kind": "required",
+				"purpose": "要减去的集合"
 			},
 			{
 				"name": "Dimension",
@@ -1297,8 +1323,8 @@
 			}
 		]
 	},
-	"MATLAB.Ops.UnionN":{
-		"inputs":[
+	"MATLAB.Ops.UnionN": {
+		"inputs": [
 			{
 				"name": "Dimension",
 				"kind": "required",
@@ -1306,10 +1332,10 @@
 				"purpose": "拆分维度"
 			},
 			{
-				"name":"Set",
-				"kind":"ordered",
-				"repeating":true,
-				"purpose":"参与合并的集合"
+				"name": "Set",
+				"kind": "ordered",
+				"repeating": true,
+				"purpose": "参与合并的集合"
 			}
 		]
 	},
@@ -1413,14 +1439,17 @@
 			}
 		]
 	},
-	"MATLAB.Project.ListAllProjectPaths":{
-		"inputs":[
+	"MATLAB.Project.ListAllProjectPaths": {
+		"inputs": [
 			{
-				"name":"Project",
-				"kind":"ordered",
-				"type":["scalar","matlab.project.Project"],
-				"purpose":"要查找搜索路径的工程对象",
-				"default":"matlab.project.rootProject"
+				"name": "Project",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"matlab.project.Project"
+				],
+				"purpose": "要查找搜索路径的工程对象",
+				"default": "matlab.project.rootProject"
 			}
 		]
 	},

@@ -4,7 +4,7 @@
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company />
-    <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，返回数组最大值的坐标，带误差阴影的多线图，XML字符串与DOM模型互转，文件移动复制删除重命名批量操作，许多内置函数的功能强化升级版……</param.summary>
+    <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，类 SQL SELECT 多表查询，返回数组最大值的坐标，带误差阴影的多线图，XML字符串与DOM模型互转，许多内置函数的功能强化升级版……</param.summary>
     <param.description>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。依赖Win32API
 
 本项目的发布版本号遵循语义化版本规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
@@ -30,6 +30,7 @@ ArrayFun 内置arrayfun的升级版，支持指定维度、单一维度隐式扩
 Cell2Mat cell2mat的升级版
 FolderFun 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
 RepeatingFun 重复多次调用函数，为每个重复参数生成一个返回值
+Select 对多张表格实施类似于 SQL SELECT 的查询操作
 +ElFun
 AngleND 计算两个N维空间向量的夹角弧度
 +ElMat
@@ -67,7 +68,7 @@ UnionN 内置union的升级版，支持任意数组类型，并可以指定拆�
 UniqueN 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 +Parallel
 @MmfSemaphore 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
-Project
++Project
 ListAllProjectPaths 列出指定工程所添加的搜索路径
 +SpecFun
 LogicalExhaustion 穷举一定长度的所有可能的逻辑向量
@@ -80,7 +81,7 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>7.0.3</param.version>
+    <param.version>7.1.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -180,7 +181,7 @@ SupportPackageDownloader 下载支持包下载器</param.description>
       <file>${PROJECT_ROOT}\+MatlabShared</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
-      <file>${PROJECT_ROOT}\示例数据.mat</file>
+      <file>${PROJECT_ROOT}\示例数据</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
@@ -190,7 +191,7 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2021b</root>
+      <root>C:\Program Files\MATLAB\R2022a</root>
       <toolboxes />
     </matlab>
     <platform>
