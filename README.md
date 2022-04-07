@@ -9,6 +9,8 @@
 		- [PublishRequirements](#PublishRequirements) 在包目录下生成一个依赖项.mat文件
 	- [+AudioVideo](#AudioVideo)
 		- [VideoPreview](#VideoPreview) 生成一张图片作为视频文件的预览
+	- [+Containers](#Containers)
+		- [@Queue](#Queue) 表示对象的先进先出集合。
 	- [+DataFun](#DataFun)
 		- [FindGroupsN](#FindGroupsN) 内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 		- [MaxSubs](#MaxSubs) 返回数组的最大值以及所在的坐标。
@@ -124,6 +126,100 @@ PreviewOption(1,1)MATLAB.AudioVideo.PreviewOptions=MATLAB.AudioVideo.PreviewOpti
 *返回值*
 
 Preview(:,:)，预览图
+## +Containers
+### @Queue
+表示对象的先进先出集合。
+
+Queue是一个对象的流水线，对象被一个接一个插入队尾，然后按照插入的顺序一个接一个从队首取出，而不支持随机插入、取出中间的对象。可以对 Queue 及其元素执行三个主要操作：
+- Enqueue 将一个元素添加到队列的末尾。
+- Dequeue 从队列的开头移除最旧的元素。
+- Peek 返回位于队列开头的最旧元素，但不会将其从队列中删除。
+
+**构造函数**
+
+初始化 Queue 类的新实例。
+
+*语法*
+```MATLAB
+import MATLAB.Containers.Queue
+obj=Queue
+%初始化 Queue 类的新实例，该实例为空
+
+obj=Queue(Element1,Element2,…)
+%初始化 Queue 类的新实例，该实例从头到尾包含指定顺序的多个元素。
+```
+输入参数：Element，要放入队列的初始元素。重复输入此参数，以从头到尾排列多个元素。
+
+**成员方法**
+
+*Count*
+
+获取 Queue 中包含的元素数。
+
+返回值：(1,1)double，Queue 中包含的元素数。
+
+*Clear*
+
+从 Queue 中移除所有对象。
+
+注意，此方法不会立即释放集合中的对象，也不会显式delete。对于必须立即释放的元素，您必须使用Dequeue取出然后手动释放。
+
+*Contains*
+
+确定某些元素是否在 Queue 中。
+
+语法
+```MATLAB
+C=obj.Contains(Element1,Element2,…)
+```
+输入参数：Element，要在队列中定位的对象。重复输入此参数可以一次性确定多个对象。
+
+返回值：C(1,:)logical，按照Element的输入顺序返回每个Element是否存在的逻辑值。
+
+*Dequeue*
+
+移除并返回位于 Queue 开始处的对象。
+
+此方法类似于 Peek 方法，但 Peek 不修改 Queue。
+
+语法
+``` MATLAB
+obj.Dequeue
+%移除队首的第1个对象
+
+obj.Dequeue(Number)
+%从队首开始移除多个对象
+
+Elements=obj.Dequeue(___)
+%返回被移除的对象，可以与上述任意语法组合使用
+```
+输入参数：Number，要移除的对象个数。
+
+返回值：Elements(1,:)cell，被移除的对象，按照它们在队列中从头到尾的顺序，并用元胞包装。
+
+提示：如果Number>obj.Count，将仅取出obj.Count个对象，而不产生错误。因此您可以指定Number为Inf以取出所有对象。
+
+*Enqueue*
+
+将对象添加到 Queue 的结尾处。
+
+语法
+```MATLAB
+obj.Enqueue(Element1,Element2,…)
+```
+输入参数：Element，要添加到 Queue 的对象。重复输入此参数可以依次插入多个对象。
+
+*Peek*
+
+返回位于 Queue 开始处的对象但不将其移除。
+
+返回值：(1,:)cell。如果队列为空，返回空元胞{}；否则返回包装着队首元素的元胞标量。
+
+*ToArray*
+
+将 Queue 元素复制到新数组。
+
+返回值：(1,:)cell，包含从 Queue 复制的元素的新数组，每个元素都用元胞包装。
 ## +DataFun
 ### FindGroupsN
 内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据

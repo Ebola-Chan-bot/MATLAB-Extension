@@ -1,10 +1,10 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration file="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
+  <configuration build-checksum="3485444245" file="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
     <param.appname>埃博拉酱 的 MATLAB 扩展 Extension</param.appname>
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company />
-    <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，类 SQL SELECT 多表查询，返回数组最大值的坐标，带误差阴影的多线图，XML字符串与DOM模型互转，许多内置函数的功能强化升级版……</param.summary>
+    <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，队列实现，类 SQL SELECT 多表查询，返回数组最大值的坐标，带误差阴影的多线图，许多内置函数的功能强化升级版……</param.summary>
     <param.description>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。依赖Win32API
 
 本项目的发布版本号遵循语义化版本规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
@@ -18,6 +18,8 @@ GetRequirements 获取包中包含的依赖项列表
 PublishRequirements 在包目录下生成一个依赖项.mat文件
 +AudioVideo
 VideoPreview 生成一张图片作为视频文件的预览
++Containers
+@Queue 表示对象的先进先出集合。
 +DataFun
 FindGroupsN 内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 MaxSubs 返回数组的最大值以及所在的坐标。
@@ -81,7 +83,7 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>7.1.0</param.version>
+    <param.version>7.2.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -129,7 +131,7 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     </param.required.addons>
     <param.matlab.project.id />
     <param.matlab.project.name />
-    <param.release.start>R2021b</param.release.start>
+    <param.release.start>R2021a</param.release.start>
     <param.release.end>latest</param.release.end>
     <param.release.current.only>false</param.release.current.only>
     <param.compatiblity.windows>true</param.compatiblity.windows>

@@ -85,6 +85,58 @@
 			}
 		]
 	},
+	"MATLAB.Containers.Queue":{
+		"inputs:":[
+			{
+				"name":"Element",
+				"kind":"ordered",
+				"purpose":"要放入队列的初始元素",
+				"repeating":true
+			}
+		]
+	},
+	"MATLAB.Containers.Queue.Contains":{
+		"inputs":[
+			{
+				"name":"obj",
+				"kind":"required",
+			},
+			{
+				"name":"Element",
+				"kind":"ordered",
+				"purpose":"要在队列中查找的对象",
+				"repeating":true
+			}
+		]
+	},
+	"MATLAB.Containers.Queue.Dequeue":{
+		"inputs":[
+			{
+				"name":"obj",
+				"kind":"required",
+			},
+			{
+				"name":"Number",
+				"kind":"ordered",
+				"type":["real","scalar"],
+				"purpose":"要移除的对象个数。"
+			}
+		]
+	},
+	"MATLAB.Containers.Queue.Enqueue":{
+		"inputs":[
+			{
+				"name":"obj",
+				"kind":"required",
+			},
+			{
+				"name":"Element",
+				"kind":"required",
+				"purpose":"要添加到 Queue 的对象",
+				"repeating":true
+			}
+		]
+	},
 	"MATLAB.DataFun.FindGroupsN": {
 		"inputs": [
 			{
