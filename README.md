@@ -10,7 +10,8 @@
 	- [+AudioVideo](#AudioVideo)
 		- [VideoPreview](#VideoPreview) 生成一张图片作为视频文件的预览
 	- [+Containers](#Containers)
-		- [@Queue](#Queue) 表示对象的先进先出集合。
+		- [@IQueue](#IQueue) 一个接口，表示对象的先进先出集合。
+		- [@Queue](#Queue) IQueue的简单基本实现
 	- [+DataFun](#DataFun)
 		- [FindGroupsN](#FindGroupsN) 内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 		- [MaxSubs](#MaxSubs) 返回数组的最大值以及所在的坐标。
@@ -127,46 +128,31 @@ PreviewOption(1,1)MATLAB.AudioVideo.PreviewOptions=MATLAB.AudioVideo.PreviewOpti
 
 Preview(:,:)，预览图
 ## +Containers
-### @Queue
-表示对象的先进先出集合。
+### @IQueue
+一个接口，表示对象的先进先出集合。
 
-Queue是一个对象的流水线，对象被一个接一个插入队尾，然后按照插入的顺序一个接一个从队首取出，而不支持随机插入、取出中间的对象。可以对 Queue 及其元素执行三个主要操作：
+IQueue是一个对象的流水线，对象被一个接一个插入队尾，然后按照插入的顺序一个接一个从队首取出，而不支持随机插入、取出中间的对象。可以对 IQueue 及其元素执行三个主要操作：
 - Enqueue 将一个元素添加到队列的末尾。
 - Dequeue 从队列的开头移除最旧的元素。
 - Peek 返回位于队列开头的最旧元素，但不会将其从队列中删除。
-
-**构造函数**
-
-初始化 Queue 类的新实例。
-
-*语法*
-```MATLAB
-import MATLAB.Containers.Queue
-obj=Queue
-%初始化 Queue 类的新实例，该实例为空
-
-obj=Queue(Element1,Element2,…)
-%初始化 Queue 类的新实例，该实例从头到尾包含指定顺序的多个元素。
-```
-输入参数：Element，要放入队列的初始元素。重复输入此参数，以从头到尾排列多个元素。
 
 **成员方法**
 
 *Count*
 
-获取 Queue 中包含的元素数。
+获取 IQueue 中包含的元素数。
 
-返回值：(1,1)double，Queue 中包含的元素数。
+返回值：(1,1)double，IQueue 中包含的元素数。
 
 *Clear*
 
-从 Queue 中移除所有对象。
+从 IQueue 中移除所有对象。
 
 注意，此方法不会立即释放集合中的对象，也不会显式delete。对于必须立即释放的元素，您必须使用Dequeue取出然后手动释放。
 
 *Contains*
 
-确定某些元素是否在 Queue 中。
+确定某些元素是否在 IQueue 中。
 
 语法
 ```MATLAB
@@ -178,9 +164,9 @@ C=obj.Contains(Element1,Element2,…)
 
 *Dequeue*
 
-移除并返回位于 Queue 开始处的对象。
+移除并返回位于 IQueue 开始处的对象。
 
-此方法类似于 Peek 方法，但 Peek 不修改 Queue。
+此方法类似于 Peek 方法，但 Peek 不修改 IQueue。
 
 语法
 ``` MATLAB
@@ -201,25 +187,52 @@ Elements=obj.Dequeue(___)
 
 *Enqueue*
 
-将对象添加到 Queue 的结尾处。
+将对象添加到 IQueue 的结尾处。
 
 语法
 ```MATLAB
 obj.Enqueue(Element1,Element2,…)
 ```
-输入参数：Element，要添加到 Queue 的对象。重复输入此参数可以依次插入多个对象。
+输入参数：Element，要添加到 IQueue 的对象。重复输入此参数可以依次插入多个对象。
+
+*IsEmpty*
+
+检查队列是否为空
+
+返回值：(1,1)logical，若队列为空，true；否则false
 
 *Peek*
 
-返回位于 Queue 开始处的对象但不将其移除。
+返回位于 IQueue 开始处的对象但不将其移除。
 
 返回值：(1,:)cell。如果队列为空，返回空元胞{}；否则返回包装着队首元素的元胞标量。
 
 *ToArray*
 
-将 Queue 元素复制到新数组。
+将 IQueue 元素复制到新数组。
 
-返回值：(1,:)cell，包含从 Queue 复制的元素的新数组，每个元素都用元胞包装。
+返回值：(1,:)cell，包含从 IQueue 复制的元素的新数组，每个元素都用元胞包装。
+### @Queue
+IQueue的简单基本实现
+
+**构造函数**
+
+初始化 Queue 类的新实例。
+
+*语法*
+```MATLAB
+import MATLAB.Containers.Queue
+obj=Queue
+%初始化 Queue 类的新实例，该实例为空
+
+obj=Queue(Element1,Element2,…)
+%初始化 Queue 类的新实例，该实例从头到尾包含指定顺序的多个元素。
+```
+输入参数：Element，要放入队列的初始元素。重复输入此参数，以从头到尾排列多个元素。
+
+**成员方法**
+
+本类成员方法与IQueue接口类完全相同，请参见[@IQueue](#IQueue)文档
 ## +DataFun
 ### FindGroupsN
 内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据

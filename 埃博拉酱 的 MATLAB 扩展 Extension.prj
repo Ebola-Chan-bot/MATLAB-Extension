@@ -19,7 +19,8 @@ PublishRequirements 在包目录下生成一个依赖项.mat文件
 +AudioVideo
 VideoPreview 生成一张图片作为视频文件的预览
 +Containers
-@Queue 表示对象的先进先出集合。
+@IQueue 一个接口，表示对象的先进先出集合。
+@Queue IQueue的简单基本实现
 +DataFun
 FindGroupsN 内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 MaxSubs 返回数组的最大值以及所在的坐标。
@@ -83,13 +84,13 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>7.2.0</param.version>
+    <param.version>7.3.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
     <param.products.version />
     <param.platforms />
-    <param.guid>55b2e8d7-e4f3-4a7d-b01d-758acb6984a2</param.guid>
+    <param.guid>b344599a-983e-4a6c-bd99-ed3a1bdd9626</param.guid>
     <param.exclude.filters>% List files contained in your toolbox folder that you would like to exclude
 % from packaging.  Excludes should be listed relative to the toolbox folder.
 % Some examples of how to specify excludes are provided below:
