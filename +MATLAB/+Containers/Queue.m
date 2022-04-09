@@ -81,7 +81,7 @@ classdef Queue<matlab.mixin.Copyable&MATLAB.Containers.IQueue
 			end
 		end
 		function Data=Peek(obj)
-			if obj.Empty
+			if obj.IsEmpty
 				Data={};
 			else
 				Data=obj.Data(obj.Head+1);
