@@ -4,7 +4,7 @@
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company />
-    <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，队列实现，类 SQL SELECT 多表查询，返回数组最大值的坐标，带误差阴影的多线图，许多内置函数的功能强化升级版……</param.summary>
+    <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，各种容器类，类 SQL SELECT 多表查询，返回数组最大值的坐标，带误差阴影的多线图，许多内置函数的功能强化升级版……</param.summary>
     <param.description>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。依赖Win32API
 
 本项目的发布版本号遵循语义化版本规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
@@ -19,6 +19,7 @@ PublishRequirements 在包目录下生成一个依赖项.mat文件
 +AudioVideo
 VideoPreview 生成一张图片作为视频文件的预览
 +Containers
+@IndexMap IndexMap是一种自动分配键的映射
 @IQueue 一个接口，表示对象的先进先出集合。
 @Queue IQueue的简单基本实现
 +DataFun
@@ -84,7 +85,7 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>7.3.1</param.version>
+    <param.version>7.4.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -182,7 +183,6 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+MATLAB</file>
       <file>${PROJECT_ROOT}\+MatlabShared</file>
-      <file>${PROJECT_ROOT}\matlab.mat</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
       <file>${PROJECT_ROOT}\示例数据</file>

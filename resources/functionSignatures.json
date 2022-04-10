@@ -85,6 +85,52 @@
 			}
 		]
 	},
+	"MATLAB.Containers.IndexMap.Items":{
+		"inputs":[
+			{
+				"name":"Keys",
+				"kind":"ordered",
+				"type":"real",
+				"purpose":"要设置或指定的键向量"
+			},
+			{
+				"name":"Value",
+				"kind":"ordered",
+				"purpose":"要设置的键值",
+				"repeating":true
+			}
+		]
+	},
+	"MATLAB.Containers.IndexMap.Add":{
+		"inputs":[
+			{
+				"name":"Value",
+				"kind":"required",
+				"purpose":"要添加的元素的值",
+				"repeating":true
+			}
+		]
+	},
+	"MATLAB.Containers.IndexMap.IsKey":{
+		"inputs":[
+			{
+				"name":"Keys",
+				"kind":"required",
+				"type":"real",
+				"purpose":"要在 IndexMap 对象中搜索的键向量"
+			}
+		]
+	},
+	"MATLAB.Containers.IndexMap.Remove":{
+		"inputs":[
+			{
+				"name":"Keys",
+				"kind":"required",
+				"type":"real",
+				"purpose":"要从 IndexMap 对象中删除的键-值对组的键"
+			}
+		]
+	},
 	"MATLAB.Containers.IQueue.Contains":{
 		"inputs":[
 			{
