@@ -85,143 +85,180 @@
 			}
 		]
 	},
-	"MATLAB.Containers.IndexMap.Items":{
-		"inputs":[
+	"MATLAB.Containers.IndexMap.Items": {
+		"inputs": [
 			{
-				"name":"Keys",
-				"kind":"ordered",
-				"type":"real",
-				"purpose":"要设置或指定的键向量"
+				"name": "obj",
+				"kind": "required"
 			},
 			{
-				"name":"Value",
-				"kind":"ordered",
-				"purpose":"要设置的键值",
-				"repeating":true
-			}
-		]
-	},
-	"MATLAB.Containers.IndexMap.Add":{
-		"inputs":[
-			{
-				"name":"Value",
-				"kind":"required",
-				"purpose":"要添加的元素的值",
-				"repeating":true
-			}
-		]
-	},
-	"MATLAB.Containers.IndexMap.IsKey":{
-		"inputs":[
-			{
-				"name":"Keys",
-				"kind":"required",
-				"type":"real",
-				"purpose":"要在 IndexMap 对象中搜索的键向量"
-			}
-		]
-	},
-	"MATLAB.Containers.IndexMap.Remove":{
-		"inputs":[
-			{
-				"name":"Keys",
-				"kind":"required",
-				"type":"real",
-				"purpose":"要从 IndexMap 对象中删除的键-值对组的键"
-			}
-		]
-	},
-	"MATLAB.Containers.IQueue.Contains":{
-		"inputs":[
-			{
-				"name":"obj",
-				"kind":"required"
+				"name": "Keys",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "要设置或指定的键向量"
 			},
 			{
-				"name":"Element",
-				"kind":"ordered",
-				"purpose":"要在队列中查找的对象",
-				"repeating":true
+				"name": "Value",
+				"kind": "ordered",
+				"purpose": "要设置的键值",
+				"repeating": true
 			}
 		]
 	},
-	"MATLAB.Containers.IQueue.Dequeue":{
-		"inputs":[
+	"MATLAB.Containers.IndexMap.Add": {
+		"inputs": [
 			{
-				"name":"obj",
-				"kind":"required"
+				"name": "obj",
+				"kind": "required"
 			},
 			{
-				"name":"Number",
-				"kind":"ordered",
-				"type":["real","scalar"],
-				"purpose":"要移除的对象个数。"
+				"name": "Value",
+				"kind": "required",
+				"purpose": "要添加的元素的值",
+				"repeating": true
 			}
 		]
 	},
-	"MATLAB.Containers.IQueue.Enqueue":{
-		"inputs":[
+	"MATLAB.Containers.IndexMap.Allocate": {
+		"inputs": [
 			{
-				"name":"obj",
-				"kind":"required"
+				"name": "obj",
+				"kind": "required"
 			},
 			{
-				"name":"Element",
-				"kind":"required",
-				"purpose":"要添加到 Queue 的对象",
-				"repeating":true
+				"name": "Number",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "分配新键的数目",
+				"default": 1
 			}
 		]
 	},
-	"MATLAB.Containers.Queue":{
-		"inputs:":[
+	"MATLAB.Containers.IndexMap.IsKey": {
+		"inputs": [
 			{
-				"name":"Element",
-				"kind":"ordered",
-				"purpose":"要放入队列的初始元素",
-				"repeating":true
-			}
-		]
-	},
-	"MATLAB.Containers.Queue.Contains":{
-		"inputs":[
-			{
-				"name":"obj",
-				"kind":"required"
+				"name": "obj",
+				"kind": "required"
 			},
 			{
-				"name":"Element",
-				"kind":"ordered",
-				"purpose":"要在队列中查找的对象",
-				"repeating":true
+				"name": "Keys",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要在 IndexMap 对象中搜索的键向量"
 			}
 		]
 	},
-	"MATLAB.Containers.Queue.Dequeue":{
-		"inputs":[
+	"MATLAB.Containers.IndexMap.Remove": {
+		"inputs": [
 			{
-				"name":"obj",
-				"kind":"required"
+				"name": "obj",
+				"kind": "required"
 			},
 			{
-				"name":"Number",
-				"kind":"ordered",
-				"type":["real","scalar"],
-				"purpose":"要移除的对象个数。"
+				"name": "Keys",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要从 IndexMap 对象中删除的键-值对组的键"
 			}
 		]
 	},
-	"MATLAB.Containers.Queue.Enqueue":{
-		"inputs":[
+	"MATLAB.Containers.IQueue.Contains": {
+		"inputs": [
 			{
-				"name":"obj",
-				"kind":"required"
+				"name": "obj",
+				"kind": "required"
 			},
 			{
-				"name":"Element",
-				"kind":"required",
-				"purpose":"要添加到 Queue 的对象",
-				"repeating":true
+				"name": "Element",
+				"kind": "ordered",
+				"purpose": "要在队列中查找的对象",
+				"repeating": true
+			}
+		]
+	},
+	"MATLAB.Containers.IQueue.Dequeue": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required"
+			},
+			{
+				"name": "Number",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "要移除的对象个数。"
+			}
+		]
+	},
+	"MATLAB.Containers.IQueue.Enqueue": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required"
+			},
+			{
+				"name": "Element",
+				"kind": "required",
+				"purpose": "要添加到 Queue 的对象",
+				"repeating": true
+			}
+		]
+	},
+	"MATLAB.Containers.Queue": {
+		"inputs:": [
+			{
+				"name": "Element",
+				"kind": "ordered",
+				"purpose": "要放入队列的初始元素",
+				"repeating": true
+			}
+		]
+	},
+	"MATLAB.Containers.Queue.Contains": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required"
+			},
+			{
+				"name": "Element",
+				"kind": "ordered",
+				"purpose": "要在队列中查找的对象",
+				"repeating": true
+			}
+		]
+	},
+	"MATLAB.Containers.Queue.Dequeue": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required"
+			},
+			{
+				"name": "Number",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "要移除的对象个数。"
+			}
+		]
+	},
+	"MATLAB.Containers.Queue.Enqueue": {
+		"inputs": [
+			{
+				"name": "obj",
+				"kind": "required"
+			},
+			{
+				"name": "Element",
+				"kind": "required",
+				"purpose": "要添加到 Queue 的对象",
+				"repeating": true
 			}
 		]
 	},

@@ -43,15 +43,33 @@ classdef IndexMap<handle
 			% Value1,Value2,…，要添加的元素的值，可以重复指定多个要添加的新值
 			% # 返回值
 			% Keys，为添加的元素分配的新键，与每个输入值一一对应。
-			NumAdd=numel(varargin);
-			NewCount=NumAdd+obj.Count;
+			Keys=obj.Allocate(numel(varargin));
+			obj.CellArray(Keys)=varargin;
+		end
+		function Keys=Allocate(obj,Number)
+			% 预分配指定数目的新键，暂不赋值
+			% 新键对应的值可能是未初始化的任意值
+			% # 语法
+			% Keys=obj.Allocate
+			% %分配一个新键
+			%
+			% Keys=obj.Allocate(Number)
+			% %分配指定数目的新键
+			% # 输入参数
+			% Number=1，可选，分配新键的数目
+			% # 返回值
+			% Keys，分配的指定数目的新键
+			arguments
+				obj
+				Number=1
+			end
+			NewCount=Number+obj.Count;
 			if NewCount>numel(obj.ValidLogical)
 				NewCapacity=NewCount*2;
 				obj.CellArray{NewCapacity}=[];
 				obj.ValidLogical(NewCapacity)=false;
 			end
-			Keys=find(~obj.ValidLogical,NumAdd);
-			obj.CellArray(Keys)=varargin;
+			Keys=find(~obj.ValidLogical,Number);
 			obj.ValidLogical(Keys)=true;
 		end
 		function Clear(obj)
