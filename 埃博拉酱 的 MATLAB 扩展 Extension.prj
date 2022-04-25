@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="3485444245" file="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
+  <configuration build-checksum="2478821895" file="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
     <param.appname>埃博拉酱 的 MATLAB 扩展 Extension</param.appname>
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
@@ -85,7 +85,7 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>7.4.1</param.version>
+    <param.version>7.4.2</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -129,6 +129,7 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     <param.required.addons>
       <requiredaddons>
         <requiredAddOn earliest="2.0.0" fromRepository="true" id="87ec000a-2945-4953-a73c-57eba7771c3c" include="true" latest="latest">Win32 API</requiredAddOn>
+        <requiredAddOn earliest="earliest" fromRepository="true" id="b344599a-983e-4a6c-bd99-ed3a1bdd9626" include="false" latest="latest">埃博拉酱 的 MATLAB 扩展 Extension</requiredAddOn>
       </requiredaddons>
     </param.required.addons>
     <param.matlab.project.id />
