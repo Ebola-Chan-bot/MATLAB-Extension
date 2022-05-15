@@ -13,11 +13,6 @@
 本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
 
 +MATLAB
-+Addons 本包用于开发人员管理发布包，以及用户查询包依赖项。
-GetRequirements 获取包中包含的依赖项列表
-PublishRequirements 在包目录下生成一个依赖项.mat文件
-+AudioVideo
-VideoPreview 生成一张图片作为视频文件的预览
 +Containers
 @IndexMap IndexMap是一种自动分配键的映射
 @IQueue 一个接口，表示对象的先进先出集合。
@@ -71,8 +66,6 @@ IsMemberN 内置ismember的升级版，支持任意数组类型，并可以指�
 SetDiffN 内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 UnionN 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
 UniqueN 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
-+Parallel
-@MmfSemaphore 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
 +Project
 ListAllProjectPaths 列出指定工程所添加的搜索路径
 +SpecFun
@@ -86,7 +79,7 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>7.5.0</param.version>
+    <param.version>8.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />

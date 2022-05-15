@@ -4,11 +4,6 @@
 # 目录
 本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
 - [+MATLAB](#MATLAB)
-	- [+Addons](#Addons) 本包用于开发人员管理发布包，以及用户查询包依赖项。
-		- [GetRequirements](#GetRequirements) 获取包中包含的依赖项列表
-		- [PublishRequirements](#PublishRequirements) 在包目录下生成一个依赖项.mat文件
-	- [+AudioVideo](#AudioVideo)
-		- [VideoPreview](#VideoPreview) 生成一张图片作为视频文件的预览
 	- [+Containers](#Containers)
 		- [@IndexMap](#IndexMap) IndexMap是一种自动分配键的映射
 		- [@IQueue](#IQueue) 一个接口，表示对象的先进先出集合。
@@ -62,8 +57,6 @@
 		- [SetDiffN](#SetDiffN) 内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 		- [UnionN](#UnionN) 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
 		- [UniqueN](#UniqueN) 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
-	- [+Parallel](#Parallel)
-		- [@MmfSemaphore](#MmfSemaphore) 使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
 	- [+Project](#Project)
 		- [ListAllProjectPaths](#ListAllProjectPaths) 列出指定工程所添加的搜索路径
 	- [+SpecFun](#SpecFun)
@@ -77,58 +70,6 @@
 		- [InstallSupportPackages](#InstallSupportPackages) 安装下载好的支持包
 		- [SupportPackageDownloader](#SupportPackageDownloader) 下载支持包下载器
 # +MATLAB
-## +Addons
-本包用于开发人员管理发布包，以及用户查询包依赖项。
-### 依赖版本结构体
-要使用本包中的依赖版本管理工具，你的包目录下必须有一个Version函数，返回依赖版本结构体。
-
-依赖版本结构体包含一个Me字段，存储本包的版本号。其它字段则为所有依赖包的包名。如果依赖包名有点号分割，则表示为点索引的次级结构体。例如你开发的包A.B版本1.0.0，依赖包C.D版本1.1.0、包C.E-2.2.0和包F-1.3.0，则你应当撰写一个A.B.Version函数，返回含有如下字段的结构体：
-- Me(1,1)string="1.0.0"，本包的版本号
-- C(1,1)struct，依赖包C.D和C.E共用的顶级限定名，为一个结构体，包含如下字段：
-	- D(1,1)struct，至少包含一个字段Me(1,1)string="1.1.0"，为包C.D的版本号。也可以继续包含C.D自身的其它依赖项。可以在包C.D中也包含一个同构的Version函数，实现递归调用。
-	- E(1,1)struct，类似于C.D依赖项，C.E也有一个Me字段为版本号"2.2.0"
-- F(1,1)struct，至少包含一个字段Me(1,1)string="1.3.0"
-
-A.B.Version函数代码示例：
-```MATLAB
-function V=Version
-V.Me="1.0.0";
-%假定这些依赖包也都包含Version函数，则可以进行递归调用
-V.C.D=C.D.Version;
-V.C.E=C.E.Version;
-V.F=F.Version;
-%假设还依赖一个包G不包含Version函数，则必须手动输入
-V.G.Me="1.3.0";
-```
-### GetRequirements
-获取包中包含的依赖项列表
-
-如果包目录下有一个依赖项.mat文件，本函数将载入那个文件并将其中的RequirementTable返回。该文件记录了包发布时所有依赖项的版本信息。可由[PublishRequirements](#PublishRequirements)生成。
-
-输入参数：PackageName(1,1)string，要查看依赖信息的包名，默认本包（EbolaChan.MatlabExtension）
-
-返回值：RequirementTable(:,2)table，第1列Package，第2列Version，列出该包发布时所有依赖项和版本
-### PublishRequirements
-在包目录下生成一个依赖项.mat文件
-
-本函数用于包开发人员。当包下含有返回[依赖版本结构体](#依赖版本结构体)的Version函数时，可以用本函数在同目录下生成一个"依赖项.mat"，保存版本依赖结构体的所有一级依赖项的当前版本。这样当你的包发布给用户后，用户可以用[GetRequirements](#GetRequirements)得到你的包发布时所有依赖项的版本，然后逐一下载安装所有的依赖项。
-
-输入参数：PackageName(1,1)string，你的包名，需要在该包下包含Version函数，返回版本依赖结构体
-
-返回值：RequirementTable(:,2)table，第1列Package，第2列Version，列出该包发布时所有依赖项和版本
-## +AudioVideo
-### VideoPreview
-生成一张图片作为视频文件的预览
-
-*名称值参数*
-
-VideoPath(1,1)string，视频文件路径。默认打开文件选择对话框供用户手动选择。
-
-PreviewOption(1,1)MATLAB.AudioVideo.PreviewOptions=MATLAB.AudioVideo.PreviewOptions.First，生成图片的方式
-
-*返回值*
-
-Preview(:,:)，预览图
 ## +Containers
 ### @IndexMap
 IndexMap是一种自动分配键的映射
@@ -1957,48 +1898,6 @@ C，A中的唯一值。与A在Dimension以外的维度上尺寸相同，在Dimen
 ia(1,:)，唯一值在A中第一次出现的位置，A在Dimension维度上使用ia索引可以得到C。
 
 ic(:,1)，使用C重构A所需的索引向量，C在Dimension维度上使用ic索引可以得到A。
-## +Parallel
-### MmfSemaphore
-使用内存映射文件来模拟一个信号量，用于跨进程资源分配。
-
-Windows的命名信号量十分坑爹，一旦设定好，重启系统之前都无法修改，因此退而求其次采用MATLAB内存映射文件实现跨进程资源分配。
-
-如下示例，并行使用GPU计算时，因为显存有限，且过多进程同时使用GPU反而导致性能下降，所以需要进行信号量分配。
-
-首先，在启动进程中，规定信号量总数，即允许同时使用GPU的进程个数为2：
-```MATLAB
-GpuMmf=MATLAB.Parallel.MmfSemaphore;
-GpuMmf.Fill(2);
-%然后可以启动分进程
-```
-然后，在分进程代码中，先检查GPU是否空闲，再决定使用GPU还是CPU运算：
-```MATLAB
-if GpuMmf.RequestOne
-	%GPU空闲，执行占用GPU的代码，用完后要记得归还
-	GpuMmf.ReturnOne;
-else
-	%GPU忙碌，执行占用CPU的代码
-end
-```
-本类暂未实现线程安全，所以可能存在争用问题，导致分配出错。但至多导致多分或少分，不会中断程序。如果精确分配十分重要，请不要使用本类。
-
-**构造方法**
-
-输入参数：FilePath(1,1)string，可选，内存映射文件路径。如果指定文件不存在，将创建该文件，写入一个字节0，表示当前无资源可供分配。
-
-**成员方法**
-
-*Fill*
-
-填充信号量中的资源。输入参数：Number(1,1)uint8，填充资源数量
-
-*RequestOne*
-
-求取一个资源配额。返回值：Success(1,1)logical，求取是否成功
-
-*ReturnOne*
-
-归还一个资源配额。将直接导致资源数量+1，不会检查是否超出Fill的量。
 ## +Project
 ### ListAllProjectPaths
 列出指定工程所添加的搜索路径
