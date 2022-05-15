@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="2478821895" file="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
+  <configuration build-checksum="3753063665" file="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
     <param.appname>埃博拉酱 的 MATLAB 扩展 Extension</param.appname>
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
@@ -33,6 +33,7 @@ Rescale 数组元素沿指定维度的缩放范围
 ArrayFun 内置arrayfun的升级版，支持指定维度、单一维度隐式扩展和返回数组自动拼接
 Cell2Mat cell2mat的升级版
 FolderFun 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
+MergeStructs 将多个结构体标量按字段合并，重复的字段将取第一个值
 RepeatingFun 重复多次调用函数，为每个重复参数生成一个返回值
 Select 对多张表格实施类似于 SQL SELECT 的查询操作
 +ElFun
@@ -85,7 +86,7 @@ SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文�
 InstallSupportPackages 安装下载好的支持包
 SupportPackageDownloader 下载支持包下载器</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>7.4.3</param.version>
+    <param.version>7.5.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -183,6 +184,7 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+MATLAB</file>
       <file>${PROJECT_ROOT}\+MatlabShared</file>
+      <file>${PROJECT_ROOT}\currify.m</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
       <file>${PROJECT_ROOT}\示例数据</file>

@@ -24,6 +24,7 @@
 		- [ArrayFun](#ArrayFun) 内置arrayfun的升级版，支持指定维度、单一维度隐式扩展和返回数组自动拼接
 		- [Cell2Mat](#Cell2Mat) cell2mat的升级版
 		- [FolderFun](#FolderFun) 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
+		- [MergeStructs](#MergeStructs) 将多个结构体标量按字段合并，重复的字段将取第一个值
 		- [RepeatingFun](#RepeatingFun) 重复多次调用函数，为每个重复参数生成一个返回值
 		- [Select](#Select) 对多张表格实施类似于 SQL SELECT 的查询操作
 	- [+ElFun](#ElFun)
@@ -836,6 +837,38 @@ UniformOutput(1,1)logical=true，是否将输出值直接拼接成向量。若fa
 **返回值**
 
 每个文件路径执行函数后的返回值列向量。如果Function有多个返回值，则返回同样多个列向量，每个元素对应位置都是对一个文件调用Function产生的返回值。根据UniformOutput的设定，这些元素有可能还会套在一层元胞里。
+### MergeStructs
+将多个结构体标量按字段合并，重复的字段将取第一个值
+
+**语法**
+```MATLAB
+Merged=MATLAB.DataTypes.MergeStructs(Struct1,Struct2,…)
+```
+**示例**
+```MATLAB
+S1=struct(A="A",B='B',C=[]);
+S2=struct;
+S3=struct(CC=NaN,B="",Z2=missing);
+MATLAB.DataTypes.MergeStructs(S1,S2,S3)
+%{
+ans = 
+
+  包含以下字段的 struct:
+
+     A: "A"
+     B: 'B'
+     C: []
+    CC: NaN
+    Z2: [1×1 missing]
+&}
+```
+**输入参数**
+
+Struct1,Struct2,…，任意多个结构体标量
+
+**返回值**
+
+Merged，按字段合并的结构体。对于重复的字段，只保留第一个值。
 ### RepeatingFun
 重复多次调用函数，为每个重复参数生成一个返回值
 ```MATLAB
