@@ -3,81 +3,29 @@
     <param.appname>埃博拉酱 的 MATLAB 扩展 Extension</param.appname>
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
-    <param.company />
-    <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，各种容器类，类 SQL SELECT 多表查询，返回数组最大值的坐标，带误差阴影的多线图，许多内置函数的功能强化升级版……</param.summary>
-    <param.description>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。依赖Win32API
-
-本项目的发布版本号遵循语义化版本规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
-
-目录
+    <param.company>一致行动党</param.company>
+    <param.summary>埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，可枚举异常基类，各种容器类，类 SQL SELECT 多表查询，返回数组最大值的坐标，带误差阴影的多线图，许多内置函数的功能强化升级版……</param.summary>
+    <param.description>目录
 本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
 
 +MATLAB
 +Containers
-@IndexMap IndexMap是一种自动分配键的映射
-@IQueue 一个接口，表示对象的先进先出集合。
-@Queue IQueue的简单基本实现
 +DataFun
-FindGroupsN 内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
-MaxSubs 返回数组的最大值以及所在的坐标。
-MeanSem 一次性高效算出数据沿维度的平均值和标准误
-MinSubs 返回数组的最小值以及所在的坐标。
-Rescale 数组元素沿指定维度的缩放范围
 +DataTypes
-@ArrayBuilder 数组累加器类
-ArrayFun 内置arrayfun的升级版，支持指定维度、单一维度隐式扩展和返回数组自动拼接
-Cell2Mat cell2mat的升级版
-FolderFun 取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数（仅限Windows）
-MergeStructs 将多个结构体标量按字段合并，重复的字段将取第一个值
-RepeatingFun 重复多次调用函数，为每个重复参数生成一个返回值
-Select 对多张表格实施类似于 SQL SELECT 的查询操作
 +ElFun
-AngleND 计算两个N维空间向量的夹角弧度
 +ElMat
-IsEqualN 内置isequaln的升级版，支持任意数组类型，并可以指定比较维度，返回逻辑数组
-LinSpace 支持任意维度数组的linspace
-OrderedDimensionSize2IndexArray 根据维度顺序和尺寸，生成自定义的下标转线性索引数组
-OrderedDimensionSize2SubsVectors 根据维度顺序和尺寸，生成自定义的线性索引转下标向量
-PadCat 内置cat函数的魔改版，可以给不兼容数组自动补全空值
 +General
-BuiltinPaths 列出所有MATLAB官方API的搜索路径
-CD 内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
-CopyFile 调用 Win32 ShellAPI 执行可撤销的批量文件复制
-Delete 调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
-Load 内置load函数的魔改版，取消适用场合限制，支持直接输出变量
-MoveFile 调用 Win32 ShellAPI 执行可撤销的批量文件移动
-Save 内置save函数的魔改版
-StaticJavaPath 确认Java路径已添加到静态路径列表
 +Graph2D
-MultiShadowedLines 绘制多条误差阴影线图
 +Graphics
-FigureAspectRatio 设置当前图窗的纵横比
 +IOFun
-DelimitedStrings2Table 将一列分隔符字符串的前几个字段读出为表格或时间表
-MatVariableRename 批量重命名.mat文件中的变量
-XmlDom2String 将org.w3c.dom.Document导出为XML文本
-XmlString2Dom 将XML字符串解析为org.w3c.dom.Document类型
 +Lang
-DistributeVararginByValidation 根据验证函数将输入的Varargin分发到输出变量
-GetNthOutputs 获取函数的第N个输出
-Input 内置input函数的优化版
 +Ops
-IsMemberN 内置ismember的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
-SetDiffN 内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
-UnionN 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
-UniqueN 内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 +Project
-ListAllProjectPaths 列出指定工程所添加的搜索路径
 +SpecFun
-LogicalExhaustion 穷举一定长度的所有可能的逻辑向量
-Subsets 列出集合的所有子集
 +UITools
-OpenFileDialog 可以设置初始目录，以及保存上次所在目录的文件打开对话框（仅限Windows）
-SaveFileDialog 可以设置初始目录，以及保存上次所在目录的文件保存对话框（仅限Windows）
 +MatlabShared
 +SupportPkg 一键获取MATLAB硬件支持包
-InstallSupportPackages 安装下载好的支持包
-SupportPackageDownloader 下载支持包下载器</param.description>
+每个代码文件内部都有详细文档，可以用doc命令查看</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
     <param.version>8.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
@@ -105,11 +53,9 @@ SupportPackageDownloader 下载支持包下载器</param.description>
 % All files matching a pattern in all subfolders of the toolbox folder:
 % **/*.bak
 %
-.git
-.resources/project/*
-.gitattributes
-.gitignore
-图标.png</param.exclude.filters>
+.git*
+.resources/project
+**/*.asv</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
@@ -141,7 +87,6 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     <param.additional.sw.mac.url />
     <param.additional.sw.linux.url />
     <unset>
-      <param.company />
       <param.output />
       <param.products.name />
       <param.products.id />
@@ -177,9 +122,9 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+MATLAB</file>
       <file>${PROJECT_ROOT}\+MatlabShared</file>
-      <file>${PROJECT_ROOT}\currify.m</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
+      <file>${PROJECT_ROOT}\图标.png</file>
       <file>${PROJECT_ROOT}\示例数据</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
@@ -190,7 +135,7 @@ SupportPackageDownloader 下载支持包下载器</param.description>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2022a</root>
+      <root>C:\Program Files\MATLAB\R2022b</root>
       <toolboxes />
     </matlab>
     <platform>

@@ -540,14 +540,17 @@
 		],
 		"platforms": "win64"
 	},
-	"MATLAB.DataTypes.MergeStructs":{
-		"inputs":[
+	"MATLAB.DataTypes.MergeStructs": {
+		"inputs": [
 			{
-				"name":"Struct",
-				"kind":"required",
-				"type":["struct","scalar"],
-				"repeating":true,
-				"purpose":"要并入的结构体标量"
+				"name": "Struct",
+				"kind": "required",
+				"type": [
+					"struct",
+					"scalar"
+				],
+				"repeating": true,
+				"purpose": "要并入的结构体标量"
 			}
 		]
 	},
@@ -1382,6 +1385,28 @@
 				"kind": "flag",
 				"type": "choices={'s'}",
 				"purpose": "返回输入的文本，而不会将输入作为表达式来计算"
+			}
+		]
+	},
+	"MATLAB.Lang.IEnumerableException.Throw": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Message",
+				"kind": "ordered",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "错误相关的文字说明"
 			}
 		]
 	},

@@ -14,14 +14,32 @@ classdef ArrayBuilder<handle
 	end
 	methods
 		function obj = ArrayBuilder(BuildDimension)
-			%输入参数：BuildDimension(1,1)uint8=1，累加维度
+			%构造ArrayBuilder对象
+			%# 语法
+			% ```
+			% import MATLAB.DataTypes.ArrayBuilder
+			%
+			% obj=ArrayBuilder;
+			% %构造在第1维度上累加的数组
+			%
+			% obj=ArrayBuilder(BuildDimension)
+			% %构造在指定维度上累加的数组
+			% ```
+			%# 输入参数
+			% BuildDimension(1,1)uint8=1，累加维度
 			arguments
 				BuildDimension=1
 			end
 			obj.BuildDimension=BuildDimension;
 		end
 		function Append(obj,New)
-			%输入参数：New，累加内容。所有累加内容在累加维度上尺寸可以不一致，但在其它维度上必须一致。
+			%向数组末尾累加新值
+			%# 语法
+			% ```
+			% obj.Append(New);
+			% ```
+			%# 输入参数
+			% New，累加内容。所有累加内容在累加维度上尺寸可以不一致，但在其它维度上必须一致。
 			obj.Stock=obj.Stock+1;
 			if obj.Capacity<obj.Stock
 				obj.Capacity=obj.Stock*2;
@@ -31,12 +49,24 @@ classdef ArrayBuilder<handle
 		end
 		function Array=Harvest(obj)
 			%收获累加完毕的MATLAB数组。收获后可以释放本对象，也可以继续累加。
+			%# 语法
+			% ```
+			% Array=obj.Harvest;
+			% ```
+			%# 返回值
+			% Array，目前累加到的数组拼接
 			Array=cat(obj.BuildDimension,obj.Storage{1:obj.Stock});
 			obj.Storage={Array};
 			obj.Stock=1;
 			obj.Capacity=1;
 		end
 		function Clear(obj)
+			%清空ArrayBuilder对象
+			%# 语法
+			% ```
+			% obj.Clear;
+			% ```
+			%注意，此方法不会立即清空缓存中的类对象，因而也不会立即析构它们，您必须手动析构。
 			obj.Stock=0;
 		end
 	end

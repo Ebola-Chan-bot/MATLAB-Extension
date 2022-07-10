@@ -1,4 +1,5 @@
 classdef CatMode
+	%此类用于MATLAB.DataTypes.ArrayFun的参数枚举
 	enumeration
 		%Function的返回值为标量
 		Scalar
