@@ -48,6 +48,8 @@ classdef IEnumerableException
 			% ```
 			%# 输入参数
 			% Message(1,1)string，错误相关的文字说明
+
+			%标识符不能含有.号
 			Identifier=replace(sprintf('%s:%s',class(obj),obj),'.',':');
 			if nargin>1
 				error(Identifier,'%s：%s',Identifier,Message);
