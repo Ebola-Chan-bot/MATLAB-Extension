@@ -443,7 +443,7 @@
 					"vector"
 				],
 				"purpose": "运算维度",
-				"default": []
+				"default": "[]"
 			},
 			{
 				"name": "CatMode",
