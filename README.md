@@ -214,13 +214,13 @@ function Paths = BuiltinPaths
 %内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
 function OldDirectory = CD(NewDirectory)
 %调用 Win32 ShellAPI 执行可撤销的批量文件复制
-function [Status,Message] = CopyFile(Source,Destination)
+function AnyOperationCanceled = CopyFile(Source,Destination)
 %调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
-function [Status,Message]=Delete(Paths)
+function AnyOperationCanceled=Delete(Paths)
 %内置load函数的魔改版，取消适用场合限制，支持直接输出变量
 function varargout = Load(Path,VariableName)
 %调用 Win32 ShellAPI 执行可撤销的批量文件移动
-function [Status,Message] = MoveFile(Source,Destination)
+function AnyOperationCanceled = MoveFile(Source,Destination)
 %内置save函数的魔改版，采用名称值参数保存变量，可以在parfor循环中使用。
 function Save(MatPath,Variable)
 %确认Java路径已添加到静态路径列表
