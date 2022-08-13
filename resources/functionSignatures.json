@@ -593,63 +593,6 @@
 			}
 		]
 	},
-	"MATLAB.ElFun.AngleND": {
-		"inputs": [
-			{
-				"mutuallyExclusiveGroup": [
-					[
-						{
-							"name": "Vector1",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "一个侧翼向量"
-						},
-						{
-							"name": "Vector2",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "另一个侧翼向量"
-						}
-					],
-					[
-						{
-							"name": "Flank1",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "一个侧翼点的坐标"
-						},
-						{
-							"name": "Vertex",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "顶点坐标"
-						},
-						{
-							"name": "Flank2",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "另一个侧翼点坐标"
-						}
-					]
-				]
-			}
-		]
-	},
 	"MATLAB.ElMat.IsEqualN": {
 		"inputs": [
 			{
@@ -1050,127 +993,6 @@
 			}
 		]
 	},
-	"MATLAB.Graph2D.MultiShadowedLines": {
-		"inputs": [
-			{
-				"name": "Y",
-				"kind": "required",
-				"type": [
-					[
-						"real",
-						"2d"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "每个点的Y坐标"
-			},
-			{
-				"name": "ShadowHeights",
-				"kind": "ordered",
-				"type": [
-					[
-						"real",
-						"2d"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "每个点的阴影高度，阴影范围为Y±ShadowHeights"
-			},
-			{
-				"name": "FaceAlpha",
-				"kind": "ordered",
-				"type": [
-					"real",
-					"scalar"
-				],
-				"purpose": "阴影的不透明度。0为完全透明，1为完全不透明。"
-			},
-			{
-				"name": "X",
-				"kind": "namevalue",
-				"type": [
-					[
-						"real",
-						"2d"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "每个点的X坐标"
-			},
-			{
-				"name": "EdgeColors",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"size=:,3"
-				],
-				"purpose": "每条线的颜色。第1维是不同的线，第2维是RGB颜色通道，范围[0,1]。"
-			}
-		]
-	},
-	"MATLAB.Graphics.FigureAspectRatio": {
-		"inputs": [
-			{
-				"name": "HorizontalProportion",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "宽度比值。例如如果你希望图窗为4:3，则此值给4"
-			},
-			{
-				"name": "VerticalProportion",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "高度比值。例如如果你希望图窗为4:3，则此值给3"
-			},
-			{
-				"mutuallyExclusiveGroup": [
-					[
-						{
-							"name": "ScaleFactor",
-							"kind": "ordered",
-							"type": "positive",
-							"purpose": "缩放倍率"
-						}
-					],
-					[
-						{
-							"name": "ScaleMode",
-							"kind": "ordered",
-							"type": "choices={'Amplify','Narrow'}",
-							"purpose": "缩放模式"
-						}
-					]
-				]
-			},
-			{
-				"name": "Fig",
-				"kind": "namevalue",
-				"type": [
-					"scalar",
-					"matlab.ui.Figure"
-				],
-				"purpose": "图窗对象。如果指定该参数，将对指定的图窗进行操作，而不一定是当前图窗"
-			}
-		],
-		"outputs": [
-			{
-				"name": "Fig",
-				"type": [
-					"scalar",
-					"matlab.ui.Figure"
-				]
-			}
-		]
-	},
 	"MATLAB.IOFun.DelimitedStrings2Table": {
 		"inputs": [
 			{
@@ -1388,28 +1210,6 @@
 			}
 		]
 	},
-	"MATLAB.Lang.IEnumerableException.Throw": {
-		"inputs": [
-			{
-				"name": "obj"
-			},
-			{
-				"name": "Message",
-				"kind": "ordered",
-				"type": [
-					[
-						"string",
-						"scalar"
-					],
-					[
-						"char",
-						"row"
-					]
-				],
-				"purpose": "错误相关的文字说明"
-			}
-		]
-	},
 	"MATLAB.Ops.IsMemberN": {
 		"inputs": [
 			{
@@ -1511,6 +1311,99 @@
 					"logical",
 					"2d"
 				]
+			}
+		]
+	},
+	"MATLAB.SupportPkg.InstallSupportPackages": {
+		"inputs": [
+			{
+				"name": "ArchivesDirectory",
+				"kind": "ordered",
+				"type": [
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
+				"purpose": "支持包安装文件所在路径"
+			},
+			{
+				"name": "MatlabRoot",
+				"kind": "namevalue",
+				"type": [
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
+				"purpose": "MATLAB安装目录"
+			}
+		]
+	},
+	"MATLAB.SupportPkg.SupportPackageDownloader": {
+		"inputs": [
+			{
+				"name": "CacheDirectory",
+				"kind": "ordered",
+				"type": [
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
+				"purpose": "下载位置"
+			},
+			{
+				"name": "RunAfterDownload",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "下载后是否立即执行下载器",
+				"default": true
+			},
+			{
+				"name": "ComputerArch",
+				"kind": "namevalue",
+				"type": "choices={'win64','glnxa64','maci64'}",
+				"purpose": "目标操作系统架构"
+			},
+			{
+				"name": "VersionRelease",
+				"kind": "namevalue",
+				"type": [
+					[
+						"scalar",
+						"string"
+					],
+					[
+						"char",
+						"vector"
+					]
+				],
+				"purpose": "目标MATLAB发行版本"
 			}
 		]
 	},
@@ -1627,96 +1520,241 @@
 		],
 		"platforms": "win64"
 	},
-	"MatlabShared.SupportPkg.InstallSupportPackages": {
+	"MATLAB.AngleND": {
 		"inputs": [
 			{
-				"name": "ArchivesDirectory",
-				"kind": "ordered",
-				"type": [
+				"mutuallyExclusiveGroup": [
 					[
-						"folder"
+						{
+							"name": "Vector1",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "一个侧翼向量"
+						},
+						{
+							"name": "Vector2",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "另一个侧翼向量"
+						}
 					],
 					[
-						"char",
-						"vector"
-					],
-					[
-						"string",
-						"scalar"
+						{
+							"name": "Flank1",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "一个侧翼点的坐标"
+						},
+						{
+							"name": "Vertex",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "顶点坐标"
+						},
+						{
+							"name": "Flank2",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "另一个侧翼点坐标"
+						}
 					]
-				],
-				"purpose": "支持包安装文件所在路径"
-			},
-			{
-				"name": "MatlabRoot",
-				"kind": "namevalue",
-				"type": [
-					[
-						"folder"
-					],
-					[
-						"char",
-						"vector"
-					],
-					[
-						"string",
-						"scalar"
-					]
-				],
-				"purpose": "MATLAB安装目录"
+				]
 			}
 		]
 	},
-	"MatlabShared.SupportPkg.SupportPackageDownloader": {
+	"MATLAB.FigureAspectRatio": {
 		"inputs": [
 			{
-				"name": "CacheDirectory",
-				"kind": "ordered",
-				"type": [
-					[
-						"folder"
-					],
-					[
-						"char",
-						"vector"
-					],
-					[
-						"string",
-						"scalar"
-					]
-				],
-				"purpose": "下载位置"
+				"name": "HorizontalProportion",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "宽度比值。例如如果你希望图窗为4:3，则此值给4"
 			},
 			{
-				"name": "RunAfterDownload",
+				"name": "VerticalProportion",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "高度比值。例如如果你希望图窗为4:3，则此值给3"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "ScaleFactor",
+							"kind": "ordered",
+							"type": "positive",
+							"purpose": "缩放倍率"
+						}
+					],
+					[
+						{
+							"name": "ScaleMode",
+							"kind": "ordered",
+							"type": "choices={'Amplify','Narrow'}",
+							"purpose": "缩放模式"
+						}
+					]
+				]
+			},
+			{
+				"name": "Fig",
 				"kind": "namevalue",
 				"type": [
 					"scalar",
-					"logical"
+					"matlab.ui.Figure"
 				],
-				"purpose": "下载后是否立即执行下载器",
-				"default": true
+				"purpose": "图窗对象。如果指定该参数，将对指定的图窗进行操作，而不一定是当前图窗"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Fig",
+				"type": [
+					"scalar",
+					"matlab.ui.Figure"
+				]
+			}
+		]
+	},
+	"MATLAB.IEnumerableException.Throw": {
+		"inputs": [
+			{
+				"name": "obj"
 			},
 			{
-				"name": "ComputerArch",
-				"kind": "namevalue",
-				"type": "choices={'win64','glnxa64','maci64'}",
-				"purpose": "目标操作系统架构"
-			},
-			{
-				"name": "VersionRelease",
-				"kind": "namevalue",
+				"name": "Message",
+				"kind": "ordered",
 				"type": [
 					[
-						"scalar",
-						"string"
+						"string",
+						"scalar"
 					],
 					[
 						"char",
+						"row"
+					]
+				],
+				"purpose": "错误相关的文字说明"
+			},
+			{
+				"name":"Detail",
+				"kind":"namevalue",
+				"purpose":
+			}
+		]
+	},
+	"MATLAB.MException":{
+		"inputs":[
+			{
+				"name":"Detail",
+				"kind":"namevalue",
+				"purpose":"异常的其它详细信息"
+			},
+			{
+				"name":"Identifier",
+				"kind":"namevalue",
+				"type":[["string","scalar"],["char","row"]],
+				"purpose":"错误的唯一标识符"
+			},
+			{
+				"name":"Message",
+				"kind":"namevalue",
+				"type":[["string","scalar"],["char","row"]],
+				"purpose":"错误消息"
+			},
+			{
+				"name":"Causes",
+				"kind":"namevalue",
+				"type":"MException",
+				"purpose":"异常的其他原因"
+			},
+			{
+				"name":"Correction",
+				"kind":"namevalue",
+				"type":["scalar","matlab.lang.correction.Correction"],
+				"purpose":"异常的建议修复"
+			}
+		]
+	},
+	"MATLAB.MultiShadowedLines": {
+		"inputs": [
+			{
+				"name": "Y",
+				"kind": "required",
+				"type": [
+					[
+						"real",
+						"2d"
+					],
+					[
+						"cell",
 						"vector"
 					]
 				],
-				"purpose": "目标MATLAB发行版本"
+				"purpose": "每个点的Y坐标"
+			},
+			{
+				"name": "ShadowHeights",
+				"kind": "ordered",
+				"type": [
+					[
+						"real",
+						"2d"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "每个点的阴影高度，阴影范围为Y±ShadowHeights"
+			},
+			{
+				"name": "FaceAlpha",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "阴影的不透明度。0为完全透明，1为完全不透明。"
+			},
+			{
+				"name": "X",
+				"kind": "namevalue",
+				"type": [
+					[
+						"real",
+						"2d"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "每个点的X坐标"
+			},
+			{
+				"name": "EdgeColors",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"size=:,3"
+				],
+				"purpose": "每条线的颜色。第1维是不同的线，第2维是RGB颜色通道，范围[0,1]。"
 			}
 		]
 	}

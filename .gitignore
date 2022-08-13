@@ -1,1 +1,9 @@
 # List of untracked files to ignore
+.vs
+packages
+**/*.mltbx
+**/*.asv
+**/*.exp
+**/*.lib
+**/*.pdb
+Windows平台/x64

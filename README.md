@@ -1,28 +1,57 @@
-埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。依赖[Win32API](https://ww2.mathworks.cn/matlabcentral/fileexchange/102159-win32-file-shell-api)
+埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。
 
 本项目的发布版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
 # 目录
-本包中所有函数均在命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
+本包中所有函数均在MATLAB命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
 - [+MATLAB](#MATLAB)
 	- [+Containers](#Containers)
 	- [+DataFun](#DataFun)
 	- [+DataTypes](#DataTypes)
-	- [+ElFun](#ElFun)
 	- [+ElMat](#ElMat)
 	- [+General](#General)
-	- [+Graph2D](#Graph2D)
-	- [+Graphics](#Graphics)
 	- [+IOFun](#IOFun)
 	- [+Lang](#Lang)
 	- [+Ops](#Ops)
-	- [+Project](#Project)
 	- [+SpecFun](#SpecFun)
-	- [+UITools](#UITools)
-- [+MatlabShared](#MatlabShared)
 	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
+	- [+UITools](#UITools)
 
 每个代码文件内部都有详细文档，可以用doc命令查看，此处仅列出函数签名、类公开接口和功能简介。
 # +MATLAB
+类
+```MATLAB
+classdef IEnumerableException
+	%可枚举异常，提供一种方便的异常接口类
+	methods
+		function Throw(obj,Message,options)
+			%抛出异常，可选指定更多详细信息
+		end
+	end
+end
+classdef MException<MException
+	%内置MException的扩展，支持更灵活的构造和额外的Detail属性
+	properties
+		%异常的其它详细信息
+		Detail
+	end
+	methods
+		function obj=MException(options)
+			%使用全员可选的名称值参数构造对象
+		end
+	end
+end
+```
+函数
+```MATLAB
+%计算两个N维空间向量的夹角弧度
+function A=AngleND(varargin)
+%绘制多条误差阴影线图
+function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
+%设置当前图窗的纵横比
+function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,Scale,options)
+%列出指定工程所添加的搜索路径
+function ProjectPaths = ListAllProjectPaths(Project)
+```
 ## +Containers
 ```MATLAB
 classdef IndexMap<handle
@@ -165,11 +194,6 @@ function varargout = RepeatingFun(Function,Arguments)
 %对多张表格实施类似于 SQL SELECT 的查询操作
 function Result = Select(From,Fields,Where)
 ```
-## +ElFun
-```MATLAB
-%计算两个N维空间向量的夹角弧度
-function A=AngleND(varargin)
-```
 ## +ElMat
 ```MATLAB
 %内置isequaln的升级版，支持任意数组类型，并可以指定比较维度，返回逻辑数组
@@ -202,16 +226,6 @@ function Save(MatPath,Variable)
 %确认Java路径已添加到静态路径列表
 function Exist=StaticJavaPath(Path,Reset)
 ```
-## +Graph2D
-```MATLAB
-%绘制多条误差阴影线图
-function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
-```
-## +Graphics
-```MATLAB
-%设置当前图窗的纵横比
-function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,Scale,options)
-```
 ## +IOFun
 ```MATLAB
 %将一列分隔符字符串的前几个字段读出为表格或时间表
@@ -224,18 +238,6 @@ function XmlString = XmlDom2String(XmlDom)
 function XmlDom = XmlString2Dom(XmlString)
 ```
 ## +Lang
-类
-```MATLAB
-classdef IEnumerableException
-	%可枚举异常，提供一种方便的异常接口类
-	methods
-		function Throw(obj,Message)
-			%抛出异常，可选指定更多详细信息
-		end
-	end
-end
-```
-函数
 ```MATLAB
 %根据验证函数将输入的Varargin分发到输出变量
 function varargout = DistributeVararginByValidation(Varargin,ValidationFun,DefaultFun)
@@ -255,11 +257,6 @@ function USet = UnionN(Dimension,varargin)
 %内置unique的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [C,ia,ic] = UniqueN(A,Dimension)
 ```
-## +Project
-```MATLAB
-%列出指定工程所添加的搜索路径
-function ProjectPaths = ListAllProjectPaths(Project)
-```
 ## +SpecFun
 ```MATLAB
 %穷举一定长度的所有可能的逻辑向量
@@ -267,15 +264,6 @@ function Exhaustion = LogicalExhaustion(Length)
 %列出集合的所有子集
 function SS = Subsets(Set)
 ```
-## +UITools
-```MATLAB
-%可以设置初始目录，以及保存上次所在目录的文件打开对话框
-function FilePaths = OpenFileDialog(options)
-%可以设置初始目录，以及保存上次所在目录的文件保存对话框
-function FilePath = SaveFileDialog(options)
-```
-# +MatlabShared
-本包目前仅用于下载支持包
 ## +SupportPkg
 ```MATLAB
 %示例脚本
@@ -284,4 +272,11 @@ Demo
 function InstallSupportPackages(ArchivesDirectory,options)
 %下载支持包下载器。
 function SupportPackageDownloader(CacheDirectory,options)
+```
+## +UITools
+```MATLAB
+%可以设置初始目录，以及保存上次所在目录的文件打开对话框
+function FilePaths = OpenFileDialog(options)
+%可以设置初始目录，以及保存上次所在目录的文件保存对话框
+function FilePath = SaveFileDialog(options)
 ```
