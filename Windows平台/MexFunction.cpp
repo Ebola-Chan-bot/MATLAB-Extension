@@ -10,6 +10,15 @@ void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 		CopyFile,
 		Delete,
 		MoveFile,
+		ZipOpen,
+		ZipNameLocate,
+		ZipFopen,
+		ZipFread,
+		ZipFclose,
+		ZipDiscard,
+		ZipGetSize,
+		ZipGetName,
+		ZipGetNumEntries,
 	};
 	try
 	{

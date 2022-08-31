@@ -14,6 +14,8 @@ enum MATLAB异常类型 :uint8_t
 	输入参数数目错误,
 	Zip档案无效,
 	Zip文件名获取失败,
+	Zip文件明细获取失败,
+	Zip未记录文件大小,
 };
 enum 内部异常类型 :uint8_t
 {
@@ -26,7 +28,7 @@ struct MATLAB异常
 	MATLAB异常类型 异常类型 = 成功;
 	内部异常类型 内部异常 = 无;
 	int 错误代码 = 0;
-	size_t 第几个 = 0;
+	size_t 第几个 = -1;
 	constexpr MATLAB异常() {}
 	constexpr MATLAB异常(MATLAB异常类型 异常类型) :异常类型(异常类型) {}
 	constexpr MATLAB异常(MATLAB异常类型 异常类型, size_t 第几个) : 异常类型(异常类型), 第几个(第几个) {}

@@ -21,5 +21,6 @@ API声明(ZipFopen);
 API声明(ZipFread);
 API声明(ZipFclose);
 API声明(ZipDiscard);
+API声明(ZipGetSize);
 API声明(ZipGetName);
 API声明(ZipGetNumEntries);

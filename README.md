@@ -1,7 +1,5 @@
 埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。
 
-本项目的发布版本号遵循[语义化版本](https://semver.org/lang/zh-CN/)规范。开发者认为这是一个优秀的规范，并向每一位开发者推荐遵守此规范。
-
 [![View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://ww2.mathworks.cn/matlabcentral/fileexchange/96344-matlab-extension)
 # 目录
 本包中所有函数均在MATLAB命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
@@ -11,6 +9,7 @@
 	- [+DataTypes](#DataTypes)
 	- [+ElMat](#ElMat)
 	- [+General](#General)
+	- [+IO](#IO)
 	- [+IOFun](#IOFun)
 	- [+Lang](#Lang)
 	- [+Ops](#Ops)
@@ -227,6 +226,44 @@ function AnyOperationCanceled = MoveFile(Source,Destination)
 function Save(MatPath,Variable)
 %确认Java路径已添加到静态路径列表
 function Exist=StaticJavaPath(Path,Reset)
+```
+## +IO
+```MATLAB
+classdef ZipFileReader<handle
+	%ZIP文件批量读入器，直接从ZIP档案中读入，不会向磁盘写出解压文件
+	properties(SetAccess=immutable)
+		%创建该对象的ZipReader
+		ZipReader
+	end
+	methods
+		function [Data,BytesRead]=Read(objs,NumBytes)
+			%从文件读入指定数目的字节
+		end
+	end
+end
+classdef ZipReader<handle
+	%ZIP档案读入器。不同于内置unzip，本类支持直接读入ZIP档案中的文件字节（解压后的），而不需要将其解压到文件。
+    methods
+        function obj = ZipReader(ZipPath)
+			%构造ZipReader对象，从指定路径打开一个ZIP档案
+		end
+		function Locates=NameLocate(obj,Names)
+			%查找指定文件名在档案中的索引
+		end
+		function FileReader=FOpen(obj,NameOrIndex)
+			%打开ZIP档案中的文件以供读入
+		end
+		function Sizes=GetSize(obj,NameOrIndex)
+			%获取档案中指定文件的压缩前大小
+		end
+		function Names=GetName(obj,Indices)
+			%根据索引取得文件名
+		end
+		function NumEntries=GetNumEntries(obj)
+			%获取档案中的文件数目
+		end
+    end
+end
 ```
 ## +IOFun
 ```MATLAB

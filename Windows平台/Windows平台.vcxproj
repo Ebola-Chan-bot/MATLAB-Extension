@@ -74,16 +74,16 @@
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
-    <ExternalIncludePath>C:\Users\vhtmf\source\repos\Mex工具\nuget\build\native\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
-    <LibraryPath>C:\Users\vhtmf\source\repos\Mex工具\nuget\build\native\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
     <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
-    <ExternalIncludePath>C:\Users\vhtmf\source\repos\Mex工具\nuget\build\native\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
-    <LibraryPath>C:\Users\vhtmf\source\repos\Mex工具\nuget\build\native\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</ExternalIncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
     <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -138,7 +138,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>Mex工具.v143.x64.$(Configuration).lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -163,7 +163,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>Mex工具.v143.x64.$(Configuration).lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -190,14 +190,14 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\libzip.redist.1.1.2.7\build\native\libzip.redist.targets" Condition="Exists('..\packages\libzip.redist.1.1.2.7\build\native\libzip.redist.targets')" />
-    <Import Project="..\packages\libzip.1.1.2.7\build\native\libzip.targets" Condition="Exists('..\packages\libzip.1.1.2.7\build\native\libzip.targets')" />
+    <Import Project="..\packages\MATLAB.MexTools.1.2.1\build\native\MATLAB.MexTools.targets" Condition="Exists('..\packages\MATLAB.MexTools.1.2.1\build\native\MATLAB.MexTools.targets')" />
+    <Import Project="..\packages\EbolaChan.LibZip.1.9.2.4\build\native\EbolaChan.LibZip.targets" Condition="Exists('..\packages\EbolaChan.LibZip.1.9.2.4\build\native\EbolaChan.LibZip.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\libzip.redist.1.1.2.7\build\native\libzip.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libzip.redist.1.1.2.7\build\native\libzip.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\libzip.1.1.2.7\build\native\libzip.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libzip.1.1.2.7\build\native\libzip.targets'))" />
+    <Error Condition="!Exists('..\packages\MATLAB.MexTools.1.2.1\build\native\MATLAB.MexTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MATLAB.MexTools.1.2.1\build\native\MATLAB.MexTools.targets'))" />
+    <Error Condition="!Exists('..\packages\EbolaChan.LibZip.1.9.2.4\build\native\EbolaChan.LibZip.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EbolaChan.LibZip.1.9.2.4\build\native\EbolaChan.LibZip.targets'))" />
   </Target>
 </Project>
