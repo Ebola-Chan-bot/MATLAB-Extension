@@ -7,3 +7,4 @@ packages
 **/*.lib
 **/*.pdb
 Windows平台/x64
+*.mexw64

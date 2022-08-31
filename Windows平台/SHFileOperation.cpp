@@ -55,9 +55,6 @@ TypedArray<bool> CopyMove(ArgumentList& inputs, UINT wFunc)
 	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = wFunc,.pFrom = (wchar_t*)From.c_str() ,.pTo = (wchar_t*)To.c_str(),.fFlags = Flags };
 	return 执行操作(操作结构);
 }
-#ifdef CopyFile
-#undef CopyFile
-#endif
 API声明(CopyFile)
 {
 	outputs[1] = CopyMove(inputs, FO_COPY);
@@ -68,9 +65,6 @@ API声明(Delete)
 	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FOF_ALLOWUNDO };
 	outputs[1] = 执行操作(操作结构);
 }
-#ifdef MoveFile
-#undef MoveFile
-#endif
 API声明(MoveFile)
 {
 	outputs[1] = CopyMove(inputs, FO_MOVE);
