@@ -194,6 +194,8 @@ function Merged = MergeStructs(varargin)
 function varargout = RepeatingFun(Function,Arguments)
 %对多张表格实施类似于 SQL SELECT 的查询操作
 function Result = Select(From,Fields,Where)
+%内置typecast的升级版，支持多维数组，需指定转换维度
+function Y = TypeCast(X,Type,Dimension)
 ```
 ## +ElMat
 ```MATLAB

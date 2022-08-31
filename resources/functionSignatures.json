@@ -593,6 +593,28 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.TypeCast":{
+		"inputs":[
+			{
+				"name":"X",
+				"kind":"required",
+				"type":"numeric",
+				"purpose":"要转换的多维数组"
+			},
+			{
+				"name":"Type",
+				"kind":"required",
+				"type":[["string","scalar"],["char","row"]],
+				"purpose":"新数据类型"
+			},
+			{
+				"name":"Dimension",
+				"kind":"ordered",
+				"type":"positive",
+				"purpose":"转换维度"
+			}
+		]
+	},
 	"MATLAB.ElMat.IsEqualN": {
 		"inputs": [
 			{
