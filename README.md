@@ -199,6 +199,12 @@ function Y = TypeCast(X,Type,Dimension)
 ```
 ## +ElMat
 ```MATLAB
+%内置flip函数的升级版，支持同时翻转多个维度
+function A = Flip(A,Dimensions)
+%内置rot90函数的升级版，支持指定任意两个维度组成的旋转平面
+function A = Rot90(A,varargin)
+%内置transpose函数的升级版，支持转置任意两个维度
+function A = Transpose(A,DimPair)
 %内置isequaln的升级版，支持任意数组类型，并可以指定比较维度，返回逻辑数组
 function Equal = IsEqualN(A,B,Dimensions)
 %支持任意维度数组的linspace

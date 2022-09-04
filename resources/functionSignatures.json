@@ -615,6 +615,21 @@
 			}
 		]
 	},
+	"MATLAB.ElMat.Flip":{
+		"inputs":[
+			{
+				"name":"A",
+				"kind":"required",
+				"purpose":"要翻转的数组"
+			},
+			{
+				"name":"Dimensions",
+				"kind":"ordered",
+				"type":["row","real"],
+				"purpose":"要翻转的维度"
+			}
+		]
+	},
 	"MATLAB.ElMat.IsEqualN": {
 		"inputs": [
 			{
@@ -762,6 +777,62 @@
 				"kind": "required",
 				"purpose": "要拼接的数组",
 				"repeating": true
+			}
+		]
+	},
+	"MATLAB.ElMat.Rot90":{
+		"inputs":[
+			{
+				"name":"A",
+				"kind":"required",
+				"purpose":"要旋转的数组"
+			},
+			{
+				"mutuallyExclusiveGroup":[
+					[
+						{
+							"name":"k",
+							"kind":"ordered",
+							"type":["real","scalar"],
+							"purpose":"要逆时针旋转的次数"
+						},
+						{
+							"name":"DimPair",
+							"kind":"ordered",
+							"type":["size=1,2","real"],
+							"purpose":"用于构成旋转平面的两个维度"
+						}
+					],
+					[
+						{
+							"name":"DimPair",
+							"kind":"ordered",
+							"type":["size=1,2","real"],
+							"purpose":"用于构成旋转平面的两个维度"
+						},
+						{
+							"name":"k",
+							"kind":"ordered",
+							"type":["real","scalar"],
+							"purpose":"要逆时针旋转的次数"
+						}
+					]
+				]
+			}
+		]
+	},
+	"MATLAB.ElMat.Transpose":{
+		"inputs":[
+			{
+				"name":"A",
+				"kind":"required",
+				"purpose":"要转置的数组"
+			},
+			{
+				"name":"DimPair",
+				"kind":"ordered",
+				"type":["real","size=1,2"],
+				"purpose":"要转置的两个维度"
 			}
 		]
 	},
