@@ -1064,6 +1064,21 @@
 			}
 		]
 	},
+	"MATLAB.General.SearchNames":{
+		"inputs":[
+			{
+				"name":"Names",
+				"kind":"required",
+				"type":[["string"],["cell"],["char"]],
+				"purpose":"要搜索的名称"
+			},
+			{
+				"name":"Parent",
+				"kind":"ordered",
+				"purpose":"要搜索的复合变量"
+			}
+		]
+	},
 	"MATLAB.General.StaticJavaPath": {
 		"inputs": [
 			{

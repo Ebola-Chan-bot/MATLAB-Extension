@@ -232,6 +232,8 @@ function varargout = Load(Path,VariableName)
 function AnyOperationCanceled = MoveFile(Source,Destination)
 %内置save函数的魔改版，采用名称值参数保存变量，可以在parfor循环中使用。
 function Save(MatPath,Variable)
+%在工作区或复合变量中搜索变量名、结构体字段、表格列或对象属性
+function Paths = SearchNames(Names,Parent)
 %确认Java路径已添加到静态路径列表
 function Exist=StaticJavaPath(Path,Reset)
 ```
