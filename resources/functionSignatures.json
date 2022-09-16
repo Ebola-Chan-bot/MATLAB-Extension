@@ -947,6 +947,16 @@
 			}
 		]
 	},
+	"MATLAB.General.JavaAddPath":{
+		"inputs":[
+			{
+				"name":"Paths",
+				"kind":"required",
+				"type":[["folder"],["file=*.jar"],["char","row"],["string","vector"],["cell","vector"]],
+				"purpose":"要添加到Java路径的目录或jar文件"
+			}
+		]
+	},
 	"MATLAB.General.Load": {
 		"inputs": [
 			{

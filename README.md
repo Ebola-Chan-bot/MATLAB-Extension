@@ -226,6 +226,8 @@ function OldDirectory = CD(NewDirectory)
 function AnyOperationCanceled = CopyFile(Source,Destination)
 %调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
 function AnyOperationCanceled=Delete(Paths)
+%内置javaaddpath的升级版，自动添加目录下的所有jar
+function JavaAddPath(Paths)
 %内置load函数的魔改版，取消适用场合限制，支持直接输出变量
 function varargout = Load(Path,VariableName)
 %调用 Win32 ShellAPI 执行可撤销的批量文件移动
