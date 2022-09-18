@@ -310,7 +310,7 @@
 								"real",
 								"vector"
 							],
-							"purpose": "拆分维度"
+							"purpose": "参与缩放的维度"
 						}
 					],
 					[
