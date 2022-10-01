@@ -863,6 +863,16 @@
 			}
 		]
 	},
+	"MATLAB.ElMat.UniformSize":{
+		"inputs":[
+			{
+				"name":"Array",
+				"kind":"required",
+				"repeating":true,
+				"purpose":"要统一的数组"
+			}
+		]
+	},
 	"MATLAB.General.CD": {
 		"inputs": [
 			{
@@ -1571,6 +1581,26 @@
 				"kind": "required",
 				"type": "positive",
 				"purpose": "拆分维度"
+			}
+		]
+	},
+	"MATLAB.Ops.LogicalAssign":{
+		"inputs":[
+			{
+				"name":"Array",
+				"kind":"required",
+				"purpose":"要赋值的目标数组"
+			},
+			{
+				"name":"Logical",
+				"kind":"required",
+				"type":"logical",
+				"purpose":"多维逻辑遮罩"
+			},
+			{
+				"name":"Value",
+				"kind":"required",
+				"purpose":"用于赋值的源数组"
 			}
 		]
 	},

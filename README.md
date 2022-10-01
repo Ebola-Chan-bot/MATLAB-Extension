@@ -215,6 +215,8 @@ function Array = PadCat(Dimension,Padder,varargin)
 function A = Rot90(A,varargin)
 %内置transpose函数的升级版，支持转置任意两个维度
 function A = Transpose(A,DimPair)
+%通过重复维度来统一数组的尺寸
+function varargout = UniformSize(varargin)
 ```
 ## +General
 ```MATLAB
@@ -303,6 +305,8 @@ function X = Input(varargin)
 ```MATLAB
 %内置ismember的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [Is,Location] = IsMemberN(Member,Set,Dimension)
+%维度化的逻辑赋值
+function Array = LogicalAssign(Array,Logical,Value)
 %内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [Diff,IA] = SetDiffN(SetA,SetB,Dimension)
 %内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
