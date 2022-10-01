@@ -283,6 +283,8 @@ end
 function Table = DelimitedStrings2Table(Strings,FieldNames,Delimiter,options)
 %批量重命名.mat文件中的变量
 function MatVariableRename(OldNames,NewNames,MatPaths)
+%发送喵提醒
+function SendMeowAlert(MeowCode)
 %将org.w3c.dom.Document导出为XML文本
 function XmlString = XmlDom2String(XmlDom)
 %将XML字符串解析为org.w3c.dom.Document类型
