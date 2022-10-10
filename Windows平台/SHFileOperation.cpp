@@ -2,36 +2,21 @@
 #include "MexAPI.h"
 #include <shellapi.h>
 #include "MATLAB异常.h"
-String 字符串转换(Array& 输入)
+void 字符串转换(Array& 输入, String& 输出)
 {
 	switch (输入.getType())
 	{
 	case ArrayType::CHAR:
-	{
-		String 返回 = CharArray(std::move(输入)).toUTF16();
-		返回.push_back(0);
-		return std::move(返回);
-	}
+		输出.append(CharArray(std::move(输入)).toUTF16()).push_back(0);
+		break;
 	case ArrayType::MATLAB_STRING:
-	{
-		StringArray 数组(std::move(输入));
-		String 返回 = std::move(数组[0]);
-		返回.push_back(0);
-		const size_t 数组长度 = 数组.getNumberOfElements();
-		for (uint8_t a = 1; a < 数组长度; ++a)
-			返回.append(数组[a]).push_back(0);
-		return std::move(返回);
-	}
+		for (const String& 元素 : StringArray(std::move(输入)))
+			输出.append(元素).push_back(0);
+		break;
 	case ArrayType::CELL:
-	{
-		CellArray 数组(std::move(输入));
-		String 返回 = CharArrayRef(数组[0]).toUTF16();
-		返回.push_back(0);
-		const size_t 数组长度 = 数组.getNumberOfElements();
-		for (uint8_t a = 1; a < 数组长度; ++a)
-			返回.append(CharArrayRef(数组[a]).toUTF16()).push_back(0);
-		return std::move(返回);
-	}
+		for (const CharArrayRef& 元素 : CellArray(std::move(输入)))
+			输出.append(元素.toUTF16()).push_back(0);
+		break;
 	default:
 		throw MATLAB异常(输入不是字符串);
 	}
@@ -46,12 +31,14 @@ TypedArray<bool> 执行操作(SHFILEOPSTRUCTW& 操作结构)
 }
 TypedArray<bool> CopyMove(ArgumentList& inputs, UINT wFunc)
 {
-	String From = 字符串转换(inputs[1]);
+	String From;
+	字符串转换(inputs[1],From);
 	FILEOP_FLAGS Flags = FOF_ALLOWUNDO;
 	Array& ArrayTo = inputs[2];
 	if (ArrayTo.getNumberOfElements() > 1 && ArrayTo.getType() != ArrayType::CHAR)
 		Flags |= FOF_MULTIDESTFILES;
-	String To = 字符串转换(ArrayTo);
+	String To;
+	字符串转换(ArrayTo,To);
 	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = wFunc,.pFrom = (wchar_t*)From.c_str() ,.pTo = (wchar_t*)To.c_str(),.fFlags = Flags };
 	return 执行操作(操作结构);
 }
@@ -61,7 +48,8 @@ API声明(CopyFile)
 }
 API声明(Delete)
 {
-	const String From = 字符串转换(inputs[1]);
+	String From;
+	字符串转换(inputs[1],From);
 	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FOF_ALLOWUNDO };
 	outputs[1] = 执行操作(操作结构);
 }

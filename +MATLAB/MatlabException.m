@@ -13,6 +13,7 @@ classdef MatlabException<uint8&MATLAB.IEnumerableException
         Failed_to_get_Zip_file_name(10)
 		Failed_to_get_the_stat_of_the_Zip_file(11)
 		Zip_doesnt_log_file_size(12)
+		Unable_to_uniform_size(13)
 
         Missing_matching_key(251)
         Fields_not_found_in_tables(252)

@@ -199,6 +199,8 @@ function Y = TypeCast(X,Type,Dimension)
 ```
 ## +ElMat
 ```MATLAB
+%内置flip函数的升级版，支持同时翻转多个维度
+function A = Flip(A,Dimensions)
 %内置isequaln的升级版，支持任意数组类型，并可以指定比较维度，返回逻辑数组
 function Equal = IsEqualN(A,B,Dimensions)
 %支持任意维度数组的linspace
@@ -209,6 +211,12 @@ function ActualIndexArrayByArbitrarySubs = OrderedDimensionSize2IndexArray(Dimen
 function varargout = OrderedDimensionSize2SubsVectors(DimensionSize,DSOrderArbitrary,options)
 %内置cat函数的魔改版，可以给不兼容数组自动补全空值
 function Array = PadCat(Dimension,Padder,varargin)
+%内置rot90函数的升级版，支持指定任意两个维度组成的旋转平面
+function A = Rot90(A,varargin)
+%内置transpose函数的升级版，支持转置任意两个维度
+function A = Transpose(A,DimPair)
+%通过重复维度来统一数组的尺寸
+function varargout = UniformSize(varargin)
 ```
 ## +General
 ```MATLAB
@@ -220,12 +228,16 @@ function OldDirectory = CD(NewDirectory)
 function AnyOperationCanceled = CopyFile(Source,Destination)
 %调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
 function AnyOperationCanceled=Delete(Paths)
+%内置javaaddpath的升级版，自动添加目录下的所有jar
+function JavaAddPath(Paths)
 %内置load函数的魔改版，取消适用场合限制，支持直接输出变量
 function varargout = Load(Path,VariableName)
 %调用 Win32 ShellAPI 执行可撤销的批量文件移动
 function AnyOperationCanceled = MoveFile(Source,Destination)
 %内置save函数的魔改版，采用名称值参数保存变量，可以在parfor循环中使用。
 function Save(MatPath,Variable)
+%在工作区或复合变量中搜索变量名、结构体字段、表格列或对象属性
+function Paths = SearchNames(Names,Parent)
 %确认Java路径已添加到静态路径列表
 function Exist=StaticJavaPath(Path,Reset)
 ```
@@ -273,6 +285,8 @@ end
 function Table = DelimitedStrings2Table(Strings,FieldNames,Delimiter,options)
 %批量重命名.mat文件中的变量
 function MatVariableRename(OldNames,NewNames,MatPaths)
+%发送喵提醒
+function SendMeowAlert(MeowCode)
 %将org.w3c.dom.Document导出为XML文本
 function XmlString = XmlDom2String(XmlDom)
 %将XML字符串解析为org.w3c.dom.Document类型
@@ -291,6 +305,8 @@ function X = Input(varargin)
 ```MATLAB
 %内置ismember的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [Is,Location] = IsMemberN(Member,Set,Dimension)
+%维度化的逻辑赋值
+function Array = LogicalAssign(Array,Logical,Value)
 %内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [Diff,IA] = SetDiffN(SetA,SetB,Dimension)
 %内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合

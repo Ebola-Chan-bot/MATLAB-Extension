@@ -310,7 +310,7 @@
 								"real",
 								"vector"
 							],
-							"purpose": "拆分维度"
+							"purpose": "参与缩放的维度"
 						}
 					],
 					[
@@ -593,25 +593,52 @@
 			}
 		]
 	},
-	"MATLAB.DataTypes.TypeCast":{
-		"inputs":[
+	"MATLAB.DataTypes.TypeCast": {
+		"inputs": [
 			{
-				"name":"X",
-				"kind":"required",
-				"type":"numeric",
-				"purpose":"要转换的多维数组"
+				"name": "X",
+				"kind": "required",
+				"type": "numeric",
+				"purpose": "要转换的多维数组"
 			},
 			{
-				"name":"Type",
-				"kind":"required",
-				"type":[["string","scalar"],["char","row"]],
-				"purpose":"新数据类型"
+				"name": "Type",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "新数据类型"
 			},
 			{
-				"name":"Dimension",
-				"kind":"ordered",
-				"type":"positive",
-				"purpose":"转换维度"
+				"name": "Dimension",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "转换维度"
+			}
+		]
+	},
+	"MATLAB.ElMat.Flip": {
+		"inputs": [
+			{
+				"name": "A",
+				"kind": "required",
+				"purpose": "要翻转的数组"
+			},
+			{
+				"name": "Dimensions",
+				"kind": "ordered",
+				"type": [
+					"row",
+					"real"
+				],
+				"purpose": "要翻转的维度"
 			}
 		]
 	},
@@ -765,6 +792,87 @@
 			}
 		]
 	},
+	"MATLAB.ElMat.Rot90": {
+		"inputs": [
+			{
+				"name": "A",
+				"kind": "required",
+				"purpose": "要旋转的数组"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "k",
+							"kind": "ordered",
+							"type": [
+								"real",
+								"scalar"
+							],
+							"purpose": "要逆时针旋转的次数"
+						},
+						{
+							"name": "DimPair",
+							"kind": "ordered",
+							"type": [
+								"size=1,2",
+								"real"
+							],
+							"purpose": "用于构成旋转平面的两个维度"
+						}
+					],
+					[
+						{
+							"name": "DimPair",
+							"kind": "ordered",
+							"type": [
+								"size=1,2",
+								"real"
+							],
+							"purpose": "用于构成旋转平面的两个维度"
+						},
+						{
+							"name": "k",
+							"kind": "ordered",
+							"type": [
+								"real",
+								"scalar"
+							],
+							"purpose": "要逆时针旋转的次数"
+						}
+					]
+				]
+			}
+		]
+	},
+	"MATLAB.ElMat.Transpose": {
+		"inputs": [
+			{
+				"name": "A",
+				"kind": "required",
+				"purpose": "要转置的数组"
+			},
+			{
+				"name": "DimPair",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"size=1,2"
+				],
+				"purpose": "要转置的两个维度"
+			}
+		]
+	},
+	"MATLAB.ElMat.UniformSize":{
+		"inputs":[
+			{
+				"name":"Array",
+				"kind":"required",
+				"repeating":true,
+				"purpose":"要统一的数组"
+			}
+		]
+	},
 	"MATLAB.General.CD": {
 		"inputs": [
 			{
@@ -873,6 +981,35 @@
 					]
 				],
 				"purpose": "要删除的所有文件、目录路径。"
+			}
+		]
+	},
+	"MATLAB.General.JavaAddPath": {
+		"inputs": [
+			{
+				"name": "Paths",
+				"kind": "required",
+				"type": [
+					[
+						"folder"
+					],
+					[
+						"file=*.jar"
+					],
+					[
+						"char",
+						"row"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "要添加到Java路径的目录或jar文件"
 			}
 		]
 	},
@@ -993,6 +1130,31 @@
 			}
 		]
 	},
+	"MATLAB.General.SearchNames": {
+		"inputs": [
+			{
+				"name": "Names",
+				"kind": "required",
+				"type": [
+					[
+						"string"
+					],
+					[
+						"cell"
+					],
+					[
+						"char"
+					]
+				],
+				"purpose": "要搜索的名称"
+			},
+			{
+				"name": "Parent",
+				"kind": "ordered",
+				"purpose": "要搜索的复合变量"
+			}
+		]
+	},
 	"MATLAB.General.StaticJavaPath": {
 		"inputs": [
 			{
@@ -1015,109 +1177,154 @@
 			}
 		]
 	},
-	"MATLAB.IO.ZipFileReader.Read":{
-		"inputs":[
+	"MATLAB.IO.ZipFileReader.Read": {
+		"inputs": [
 			{
-				"name":"objs",
-				"kind":"required",
-				"type":"MATLAB.IO.ZipFileReader",
-				"purpose":"要读入的文件"
+				"name": "objs",
+				"kind": "required",
+				"type": "MATLAB.IO.ZipFileReader",
+				"purpose": "要读入的文件"
 			},
 			{
-				"name":"NumBytes",
-				"kind":"required",
-				"type":"positive",
-				"purpose":"要读入的字节数上限"
+				"name": "NumBytes",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要读入的字节数上限"
 			}
 		]
 	},
-	"MATLAB.IO.ZipReader":{
-		"inputs":[
+	"MATLAB.IO.ZipReader": {
+		"inputs": [
 			{
-				"name":"ZipPath",
-				"kind":"required",
-				"type":[["file=*.zip"],["string","scalar"],["char","row"]],
-				"purpose":"ZIP档案路径"
+				"name": "ZipPath",
+				"kind": "required",
+				"type": [
+					[
+						"file=*.zip"
+					],
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "ZIP档案路径"
 			}
 		]
 	},
-	"MATLAB.IO.ZipReader.NameLocate":{
-		"inputs":[
+	"MATLAB.IO.ZipReader.NameLocate": {
+		"inputs": [
 			{
-				"name":"obj"
+				"name": "obj"
 			},
 			{
-				"name":"Names",
-				"kind":"required",
-				"type":[["string"],["char","row"],["cell"]],
-				"purpose":"要查找的文件名"
+				"name": "Names",
+				"kind": "required",
+				"type": [
+					[
+						"string"
+					],
+					[
+						"char",
+						"row"
+					],
+					[
+						"cell"
+					]
+				],
+				"purpose": "要查找的文件名"
 			}
 		]
 	},
-	"MATLAB.IO.ZipReader.FOpen":{
-		"inputs":[
+	"MATLAB.IO.ZipReader.FOpen": {
+		"inputs": [
 			{
-				"name":"obj"
+				"name": "obj"
 			},
 			{
-				"mutuallyExclusiveGroup":[
+				"mutuallyExclusiveGroup": [
 					[
 						{
-							"name":"Names",
-							"kind":"ordered",
-							"type":[["string"],["char","row"],["cell"]],
-							"purpose":"要打开的文件名"
+							"name": "Names",
+							"kind": "ordered",
+							"type": [
+								[
+									"string"
+								],
+								[
+									"char",
+									"row"
+								],
+								[
+									"cell"
+								]
+							],
+							"purpose": "要打开的文件名"
 						}
 					],
 					[
 						{
-							"name":"Indices",
-							"kind":"ordered",
-							"type":"real",
-							"purpose":"要打开的文件索引，从0开始"
+							"name": "Indices",
+							"kind": "ordered",
+							"type": "real",
+							"purpose": "要打开的文件索引，从0开始"
 						}
 					]
 				]
 			}
 		]
 	},
-	"MATLAB.IO.ZipReader.GetSize":{
-		"inputs":[
+	"MATLAB.IO.ZipReader.GetSize": {
+		"inputs": [
 			{
-				"name":"obj"
+				"name": "obj"
 			},
 			{
-				"mutuallyExclusiveGroup":[
+				"mutuallyExclusiveGroup": [
 					[
 						{
-							"name":"Names",
-							"kind":"ordered",
-							"type":[["string"],["char","row"],["cell"]],
-							"purpose":"要查询的文件名"
+							"name": "Names",
+							"kind": "ordered",
+							"type": [
+								[
+									"string"
+								],
+								[
+									"char",
+									"row"
+								],
+								[
+									"cell"
+								]
+							],
+							"purpose": "要查询的文件名"
 						}
 					],
 					[
 						{
-							"name":"Indices",
-							"kind":"ordered",
-							"type":"real",
-							"purpose":"要查询的文件索引，从0开始"
+							"name": "Indices",
+							"kind": "ordered",
+							"type": "real",
+							"purpose": "要查询的文件索引，从0开始"
 						}
 					]
 				]
 			}
 		]
 	},
-	"MATLAB.IO.ZipReader.GetName":{
-		"inputs":[
+	"MATLAB.IO.ZipReader.GetName": {
+		"inputs": [
 			{
-				"name":"obj"
+				"name": "obj"
 			},
 			{
-				"name":"Indices",
-				"kind":"ordered",
-				"type":"real",
-				"purpose":"要查找的文件索引，从0开始"
+				"name": "Indices",
+				"kind": "ordered",
+				"type": "real",
+				"purpose": "要查找的文件索引，从0开始"
 			}
 		]
 	},
@@ -1212,6 +1419,25 @@
 					"vector"
 				],
 				"purpose": "要重命名的.mat路径"
+			}
+		]
+	},
+	"MATLAB.IOFun.SendMeowAlert": {
+		"inputs": [
+			{
+				"name": "MeowCode",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "喵码，用于指定通知目标。"
 			}
 		]
 	},
@@ -1355,6 +1581,26 @@
 				"kind": "required",
 				"type": "positive",
 				"purpose": "拆分维度"
+			}
+		]
+	},
+	"MATLAB.Ops.LogicalAssign":{
+		"inputs":[
+			{
+				"name":"Array",
+				"kind":"required",
+				"purpose":"要赋值的目标数组"
+			},
+			{
+				"name":"Logical",
+				"kind":"required",
+				"type":"logical",
+				"purpose":"多维逻辑遮罩"
+			},
+			{
+				"name":"Value",
+				"kind":"required",
+				"purpose":"用于赋值的源数组"
 			}
 		]
 	},
@@ -1780,42 +2026,63 @@
 				"purpose": "错误相关的文字说明"
 			},
 			{
-				"name":"Detail",
-				"kind":"namevalue",
-				"purpose":"错误的其它详细信息"
+				"name": "Detail",
+				"kind": "namevalue",
+				"purpose": "错误的其它详细信息"
 			}
 		]
 	},
-	"MATLAB.MException":{
-		"inputs":[
+	"MATLAB.MException": {
+		"inputs": [
 			{
-				"name":"Detail",
-				"kind":"namevalue",
-				"purpose":"异常的其它详细信息"
+				"name": "Detail",
+				"kind": "namevalue",
+				"purpose": "异常的其它详细信息"
 			},
 			{
-				"name":"Identifier",
-				"kind":"namevalue",
-				"type":[["string","scalar"],["char","row"]],
-				"purpose":"错误的唯一标识符"
+				"name": "Identifier",
+				"kind": "namevalue",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "错误的唯一标识符"
 			},
 			{
-				"name":"Message",
-				"kind":"namevalue",
-				"type":[["string","scalar"],["char","row"]],
-				"purpose":"错误消息"
+				"name": "Message",
+				"kind": "namevalue",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "错误消息"
 			},
 			{
-				"name":"Causes",
-				"kind":"namevalue",
-				"type":"MException",
-				"purpose":"异常的其他原因"
+				"name": "Causes",
+				"kind": "namevalue",
+				"type": "MException",
+				"purpose": "异常的其他原因"
 			},
 			{
-				"name":"Correction",
-				"kind":"namevalue",
-				"type":["scalar","matlab.lang.correction.Correction"],
-				"purpose":"异常的建议修复"
+				"name": "Correction",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"matlab.lang.correction.Correction"
+				],
+				"purpose": "异常的建议修复"
 			}
 		]
 	},
