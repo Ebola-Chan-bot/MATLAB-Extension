@@ -863,13 +863,13 @@
 			}
 		]
 	},
-	"MATLAB.ElMat.UniformSize":{
-		"inputs":[
+	"MATLAB.ElMat.UniformSize": {
+		"inputs": [
 			{
-				"name":"Array",
-				"kind":"required",
-				"repeating":true,
-				"purpose":"要统一的数组"
+				"name": "Array",
+				"kind": "required",
+				"repeating": true,
+				"purpose": "要统一的数组"
 			}
 		]
 	},
@@ -1584,23 +1584,23 @@
 			}
 		]
 	},
-	"MATLAB.Ops.LogicalAssign":{
-		"inputs":[
+	"MATLAB.Ops.LogicalAssign": {
+		"inputs": [
 			{
-				"name":"Array",
-				"kind":"required",
-				"purpose":"要赋值的目标数组"
+				"name": "Array",
+				"kind": "required",
+				"purpose": "要赋值的目标数组"
 			},
 			{
-				"name":"Logical",
-				"kind":"required",
-				"type":"logical",
-				"purpose":"多维逻辑遮罩"
+				"name": "Logical",
+				"kind": "required",
+				"type": "logical",
+				"purpose": "多维逻辑遮罩"
 			},
 			{
-				"name":"Value",
-				"kind":"required",
-				"purpose":"用于赋值的源数组"
+				"name": "Value",
+				"kind": "required",
+				"purpose": "用于赋值的源数组"
 			}
 		]
 	},
@@ -2150,6 +2150,15 @@
 					"size=:,3"
 				],
 				"purpose": "每条线的颜色。第1维是不同的线，第2维是RGB颜色通道，范围[0,1]。"
+			},
+			{
+				"name": "LineStyles",
+				"kind": "namevalue",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "每条线的线型"
 			}
 		]
 	}
