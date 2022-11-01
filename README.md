@@ -190,6 +190,8 @@ function Cells = Cell2Mat(Cells)
 function varargout = FolderFun(Function,Directory,options)
 %将多个结构体标量按字段合并，重复的字段将取第一个值
 function Merged = MergeStructs(varargin)
+%按照键列合并表
+function Merged = MergeTables(KeyColumns,varargin)
 %重复多次调用函数，为每个重复参数生成一个返回值
 function varargout = RepeatingFun(Function,Arguments)
 %对多张表格实施类似于 SQL SELECT 的查询操作
