@@ -554,27 +554,40 @@
 			}
 		]
 	},
-	"MATLAB.DataTypes.MergeTables":{
-		"inputs":[
+	"MATLAB.DataTypes.MergeTables": {
+		"inputs": [
 			{
-				"mutuallyExclusiveGroup":[
+				"mutuallyExclusiveGroup": [
 					[
 						{
-							"name":"KeyColumns",
-							"kind":"required",
-							"type":[["string","vector"],["char","row"],["cell","vector"]],
-							"purpose":"指定键列名"
+							"name": "KeyColumns",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"vector"
+								],
+								[
+									"char",
+									"row"
+								],
+								[
+									"cell",
+									"vector"
+								]
+							],
+							"purpose": "指定键列名"
 						}
 					],
 					[]
 				]
 			},
 			{
-				"name":"Table",
-				"kind":"required",
-				"type":"tabular",
-				"purpose":"要合并的表",
-				"repeating":true
+				"name": "Table",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "要合并的表",
+				"repeating": true
 			}
 		]
 	},
@@ -1197,6 +1210,79 @@
 				"type": [
 					"scalar",
 					"logical"
+				]
+			}
+		]
+	},
+	"MATLAB.General.Which": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "'-all'",
+							"kind": "ordered",
+							"type": "choices={'-all'}"
+						},
+						{
+							"name": "item",
+							"kind": "required",
+							"type": [
+								[
+									"identifier=variable,function,localfunction,package,classdef"
+								],
+								[
+									"file=*.m,*.mlx,*.mdl,*.slx"
+								],
+								[
+									"char"
+								]
+							]
+						}
+					],
+					[
+						{
+							"name": "item",
+							"kind": "required",
+							"type": [
+								[
+									"identifier=variable,function,localfunction,package,classdef"
+								],
+								[
+									"file=*.m,*.mlx,*.mdl,*.slx"
+								],
+								[
+									"char"
+								]
+							]
+						},
+						{
+							"name": "'-all'",
+							"kind": "ordered",
+							"type": "choices={'-all'}"
+						}
+					],
+					[
+						{
+							"name": "fun1",
+							"kind": "required",
+							"type": [
+								"char"
+							]
+						},
+						{
+							"name": "'in'",
+							"kind": "required",
+							"type": "choices={'in'}"
+						},
+						{
+							"name": "fun2",
+							"kind": "required",
+							"type": [
+								"identifier=function"
+							]
+						}
+					]
 				]
 			}
 		]
@@ -1969,6 +2055,28 @@
 								"real"
 							],
 							"purpose": "另一个侧翼点坐标"
+						}
+					]
+				]
+			}
+		]
+	},
+	"MATLAB.Doc": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "name",
+							"kind": "ordered",
+							"type": "identifier=variable,function,localfunction,package,classdef"
+						}
+					],
+					[
+						{
+							"name": "filename",
+							"kind": "ordered",
+							"type": "file"
 						}
 					]
 				]

@@ -46,6 +46,8 @@ end
 ```MATLAB
 %计算两个N维空间向量的夹角弧度
 function A=AngleND(varargin)
+%解决内置doc无法正确显示包内类下成员实时函数的问题
+function Doc(varargin)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
 %设置当前图窗的纵横比
@@ -242,6 +244,8 @@ function Save(MatPath,Variable)
 function Paths = SearchNames(Names,Parent)
 %确认Java路径已添加到静态路径列表
 function Exist=StaticJavaPath(Path,Reset)
+%解决内置which找不到包内类下成员方法的问题
+function Path = Which(varargin)
 ```
 ## +IO
 ```MATLAB
