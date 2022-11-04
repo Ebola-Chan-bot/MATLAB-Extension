@@ -2293,5 +2293,33 @@
 				"purpose": "每条线的线型"
 			}
 		]
+	},
+	"MATLAB.TtrtnWbgc": {
+		"inputs": [
+			{
+				"name": "Graph",
+				"kind": "required",
+				"type": [
+					"graph",
+					"scalar"
+				],
+				"purpose": "要尝试移除的图"
+			},
+			{
+				"name": "ToRemove",
+				"kind": "required",
+				"type": [
+					[
+						"logical",
+						"vector"
+					],
+					[
+						"real",
+						"vector"
+					]
+				],
+				"purpose": "尝试移除的节点"
+			}
+		]
 	}
 }

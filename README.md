@@ -48,12 +48,14 @@ end
 function A=AngleND(varargin)
 %解决内置doc无法正确显示包内类下成员实时函数的问题
 function Doc(varargin)
-%绘制多条误差阴影线图
-function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
 %设置当前图窗的纵横比
 function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,Scale,options)
 %列出指定工程所添加的搜索路径
 function ProjectPaths = ListAllProjectPaths(Project)
+%绘制多条误差阴影线图
+function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
+%在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
+function Graph = TtrtnWbgc(Graph,ToRemove)
 ```
 ## +Containers
 ```MATLAB
