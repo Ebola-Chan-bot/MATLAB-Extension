@@ -661,6 +661,63 @@
 			}
 		]
 	},
+	"MATLAB.ElFun.AngleND": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Vector1",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "一个侧翼向量"
+						},
+						{
+							"name": "Vector2",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "另一个侧翼向量"
+						}
+					],
+					[
+						{
+							"name": "Flank1",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "一个侧翼点的坐标"
+						},
+						{
+							"name": "Vertex",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "顶点坐标"
+						},
+						{
+							"name": "Flank2",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "另一个侧翼点坐标"
+						}
+					]
+				]
+			}
+		]
+	},
 	"MATLAB.ElMat.Flip": {
 		"inputs": [
 			{
@@ -2003,63 +2060,6 @@
 			}
 		],
 		"platforms": "win64"
-	},
-	"MATLAB.AngleND": {
-		"inputs": [
-			{
-				"mutuallyExclusiveGroup": [
-					[
-						{
-							"name": "Vector1",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "一个侧翼向量"
-						},
-						{
-							"name": "Vector2",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "另一个侧翼向量"
-						}
-					],
-					[
-						{
-							"name": "Flank1",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "一个侧翼点的坐标"
-						},
-						{
-							"name": "Vertex",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "顶点坐标"
-						},
-						{
-							"name": "Flank2",
-							"kind": "required",
-							"type": [
-								"2d",
-								"real"
-							],
-							"purpose": "另一个侧翼点坐标"
-						}
-					]
-				]
-			}
-		]
 	},
 	"MATLAB.Doc": {
 		"inputs": [

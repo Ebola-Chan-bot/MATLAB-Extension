@@ -7,6 +7,7 @@
 	- [+Containers](#Containers)
 	- [+DataFun](#DataFun)
 	- [+DataTypes](#DataTypes)
+	- [+ElFun](#ElFun)
 	- [+ElMat](#ElMat)
 	- [+General](#General)
 	- [+IO](#IO)
@@ -44,8 +45,6 @@ end
 ```
 函数
 ```MATLAB
-%计算两个N维空间向量的夹角弧度
-function A=AngleND(varargin)
 %解决内置doc无法正确显示包内类下成员实时函数的问题
 function Doc(varargin)
 %设置当前图窗的纵横比
@@ -202,6 +201,11 @@ function varargout = RepeatingFun(Function,Arguments)
 function Result = Select(From,Fields,Where)
 %内置typecast的升级版，支持多维数组，需指定转换维度
 function Y = TypeCast(X,Type,Dimension)
+```
+## +ElFun
+```MATLAB
+%计算两个N维空间向量的夹角弧度
+function A=AngleND(varargin)
 ```
 ## +ElMat
 ```MATLAB

@@ -22,7 +22,7 @@
 +UITools
 每个代码文件内部都有详细文档，可以用doc命令查看。</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>9.10.0</param.version>
+    <param.version>10.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
