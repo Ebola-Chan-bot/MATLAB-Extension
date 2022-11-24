@@ -1,4 +1,4 @@
-埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。
+埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。还替官方修复了许多内置函数的bug。
 
 [![View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://ww2.mathworks.cn/matlabcentral/fileexchange/96344-matlab-extension)
 # 目录
@@ -47,10 +47,14 @@ end
 ```MATLAB
 %解决内置doc无法正确显示包内类下成员实时函数的问题
 function Doc(varargin)
+%修复内置edit无法打开含有非ASCII字符的主机名SMB共享的.m代码文件的问题
+function foundFile = Edit(args)
 %设置当前图窗的纵横比
 function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,Scale,options)
 %列出指定工程所添加的搜索路径
 function ProjectPaths = ListAllProjectPaths(Project)
+%将存在bug的内置函数替换为已修复版本，或将已修复的版本还原。
+function ModifyBuiltin(File,Restore)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）

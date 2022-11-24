@@ -4,7 +4,7 @@
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company>一致行动党</param.company>
-    <param.summary>提供许多内置函数的bug修复（是的，我们有在替官方修bug）、功能升级版，以及一系列内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，在不破坏图连通性的前提下尝试移除节点，表合并，维度化逻辑赋值，统一数组尺寸，发送喵提醒……</param.summary>
+    <param.summary>提供许多内置函数的bug修复（是的，我们有在替官方修bug）、功能升级版，以及一系列内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，修复edit不能打开非ASCII主机名的SMB共享.m代码的bug，在不破坏图连通性的前提下尝试移除节点，表合并……</param.summary>
     <param.description>本包中所有函数均在MATLAB命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
 
 +MATLAB
@@ -22,7 +22,7 @@
 +UITools
 每个代码文件内部都有详细文档，可以用doc命令查看。</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>10.0.0</param.version>
+    <param.version>11.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -65,7 +65,7 @@ Windows平台
     <param.apps />
     <param.registered.apps />
     <param.docs />
-    <param.getting.started.guide />
+    <param.getting.started.guide>${PROJECT_ROOT}\doc\GettingStarted.mlx</param.getting.started.guide>
     <param.matlabpath.excludes />
     <param.javaclasspath.excludes />
     <param.exported.on.package>false</param.exported.on.package>
@@ -99,7 +99,6 @@ Windows平台
       <param.apps />
       <param.registered.apps />
       <param.docs />
-      <param.getting.started.guide />
       <param.matlabpath.excludes />
       <param.javaclasspath.excludes />
       <param.exported.on.package />
@@ -119,8 +118,11 @@ Windows平台
     </fileset.rootdir>
     <fileset.rootfiles>
       <file>${PROJECT_ROOT}\+MATLAB</file>
+      <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
+      <file>${PROJECT_ROOT}\修复</file>
+      <file>${PROJECT_ROOT}\原版</file>
       <file>${PROJECT_ROOT}\图标.png</file>
       <file>${PROJECT_ROOT}\示例数据</file>
     </fileset.rootfiles>

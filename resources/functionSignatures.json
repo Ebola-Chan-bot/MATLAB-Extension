@@ -2083,6 +2083,29 @@
 			}
 		]
 	},
+	"MATLAB.Edit": {
+		"inputs": [
+			{
+				"name": "file",
+				"kind": "ordered",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"matlabpathfile=*.m,*.mlx,*.mlapp,*.sfx"
+					],
+					[
+						"identifier=package,classdef"
+					],
+					[
+						"char"
+					]
+				],
+				"repeating": true
+			}
+		]
+	},
 	"MATLAB.FigureAspectRatio": {
 		"inputs": [
 			{
@@ -2215,6 +2238,25 @@
 					"matlab.lang.correction.Correction"
 				],
 				"purpose": "异常的建议修复"
+			}
+		]
+	},
+	"MATLAB.ModifyBuiltin": {
+		"inputs": [
+			{
+				"name": "File",
+				"kind": "required",
+				"type": "choices={'doc','edit'}",
+				"purpose": "要修复的函数名称"
+			},
+			{
+				"name": "Restore",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "是否还原而非修改"
 			}
 		]
 	},
