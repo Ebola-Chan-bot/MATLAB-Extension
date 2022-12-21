@@ -15,6 +15,11 @@ classdef MatlabException<uint8&MATLAB.IEnumerableException
 		Zip_doesnt_log_file_size(12)
 		Unable_to_uniform_size(13)
 
+		Stack_is_empty(246)
+		Queue_is_empty(247)
+		Empty_vector_must_specify_a_padding_value(248)
+		Vector_is_empty(249)
+		Index_exceeds_vector_size(250)
         Missing_matching_key(251)
         Fields_not_found_in_tables(252)
 		Error_copying_file(253)
