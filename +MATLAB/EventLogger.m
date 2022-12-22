@@ -27,7 +27,7 @@ classdef EventLogger<handle
 				if NewSize>height(obj.RawLog)
 					obj.RawLog.Event(NewSize*2)=Event;
 				end
-				obj.RawLog.Time(NewSize)=seconds(toc);
+				obj.RawLog.Time(NewSize)=seconds(toc(obj.StartTime));
 				obj.RawLog.Event(NewSize)=Event;
 				obj.NumEvents=NewSize;
 			end
