@@ -4,7 +4,7 @@
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company>一致行动党</param.company>
-    <param.summary>提供许多内置函数的bug修复（是的，我们有在替官方修bug）、功能升级版，以及一系列内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，STL风格的容器（队列，栈，向量），事件时间记录器</param.summary>
+    <param.summary>提供许多内置函数的bug修复（是的，我们有在替官方修bug）、功能升级版，以及一系列内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，STL风格的容器（队列，栈，向量），事件时间记录器，生命周期所有者</param.summary>
     <param.description>本包中所有函数均在MATLAB命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
 
 +MATLAB

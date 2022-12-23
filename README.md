@@ -434,26 +434,8 @@ classdef Owner<handle&matlab.mixin.indexing.RedefinesDot
 	end
 	methods
 		function obj = Owner(Object)
-			obj.Object=Object;
+			%为句柄对象构造一个Owner
 		end
-		function delete(obj)
-			delete(obj.iObject);
-		end
-		function C=class(obj)
-			C=split(class(obj.iObject),'.');
-			C=['Owner<' C{end} '>'];
-		end
-	end
-	methods(Access=protected)
-        function varargout = dotReference(obj,indexOp)
-            [varargout{1:nargout}] = obj.iObject.(indexOp);
-		end
-        function obj = dotAssign(obj,indexOp,varargin)
-            [obj.iObject.(indexOp)] = varargin{:};
-		end        
-        function n = dotListLength(obj,indexOp,indexContext)
-            n = listLength(obj.iObject,indexOp,indexContext);
-        end
 	end
 end
 ```
