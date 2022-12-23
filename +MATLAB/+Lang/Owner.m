@@ -25,6 +25,7 @@ classdef Owner<handle&matlab.mixin.indexing.RedefinesDot
 			end
 		end
 		function obj = Owner(Object)
+			%为句柄对象构造一个Owner
 			obj.Object=Object;
 		end
 		function delete(obj)

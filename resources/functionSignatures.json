@@ -2232,6 +2232,19 @@
 			}
 		]
 	},
+	"MATLAB.EventLogger.LogEvent":{
+		"inputs":[
+			{
+				"name":"obj"
+			},
+			{
+				"name":"Event",
+				"kind":"required",
+				"type":"scalar",
+				"purpose":"事件记录标量"
+			}
+		]
+	},
 	"MATLAB.FigureAspectRatio": {
 		"inputs": [
 			{

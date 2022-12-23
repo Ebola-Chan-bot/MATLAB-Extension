@@ -19,6 +19,12 @@ classdef EventLogger<handle
 		end
 		function LogEvent(obj,Event)
 			%记录一个事件
+			%# 语法
+			% ```
+			% obj.LogEvent(Event);
+			% ```
+			%# 输入参数
+			% Event(1,1)，可以允许任意标量数据类型作为事件记录
 			if isempty(obj.RawLog)
 				obj.RawLog=timetable(seconds(toc(obj.StartTime)),Event);
 				obj.NumEvents=1;

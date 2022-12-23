@@ -42,6 +42,24 @@ classdef MException<MException
 		end
 	end
 end
+classdef EventLogger<handle
+	%事件记录器，类似于秒表
+	properties(SetAccess=private)
+		%已记录的事件个数
+		NumEvents=0
+	end
+	methods
+		function Reset(obj)
+			%重置计时器
+		end
+		function LogEvent(obj,Event)
+			%记录一个事件
+		end
+		function TT=GetTimeTable(obj)
+			%返回事件记录时间表
+		end
+	end
+end
 ```
 函数
 ```MATLAB
@@ -130,6 +148,94 @@ classdef Queue<matlab.mixin.Copyable&MATLAB.Containers.IQueue
 	methods
 		function obj=Queue(varargin)
 			% 初始化 Queue 类的新实例。
+		end
+	end
+end
+classdef Stack<handle
+	%STL风格的先进后出栈实现，但不要求栈中对象具有相同的数据类型
+	properties(SetAccess=private)
+		%栈中对象个数
+		Size=0;
+	end
+	properties(Dependent)
+		%获取或设置栈顶对象。如果栈为空，将发生错误
+		Top
+	end
+	methods
+		function Pop(obj)
+			%将栈顶对象弹出栈。如果栈为空，将发生错误
+		end
+		function Push(obj,Value)
+			%将一个对象压入栈
+		end
+	end
+end
+classdef StlQueue<handle
+	%STL风格的先进先出队列实现，但不要求队列中对象具有相同的数据类型
+	properties(Dependent)
+		%获取或设置队尾对象。如果队列为空，将发生错误
+		Back
+		%获取或设置队首对象。如果队列为空，将发生错误
+		Front
+	end
+	properties(SetAccess=private)
+		%队列中对象个数
+		Size=0;
+	end
+	methods
+		function Pop(obj)
+			%将队首对象弹出队列。如果队列为空，将发生错误
+		end
+		function Push(obj,Value)
+			%将一个对象压入队尾
+		end
+	end
+end
+classdef Vector<handle
+	%STL风格的向量实现，向量中的元素必须具有相同的数据类型，且该类型必须是基本数据类型，或具有默认无参构造函数
+	properties(SetAccess=private)
+		%向量中的元素个数
+		Size=0
+	end
+	properties(Dependent)
+		%获取或设置向量中的最后一个元素。如果向量为空，将发生错误
+		Back
+		%获取或设置向量中的第一个元素。如果向量为空，将发生错误
+		Front
+	end
+	methods
+		function Value=At(obj,Index,Value)
+			%获取或设置向量中指定位置的元素。
+		end
+		function C=Capacity(obj)
+			%返回在不分配更多的存储的情况下向量可以包含的元素数。
+		end
+		function Clear(obj)
+			%清除向量的元素。
+		end
+		function D=Data(obj)
+			%以MATLAB数组形式返回向量中所有元素
+		end
+		function Erase(obj,Index)
+			%从指定位置删除向量中的元素
+		end
+		function Insert(obj,Values,StartIndex)
+			%将元素插入到向量的指定位置。
+		end
+		function PopBack(obj)
+			%删除向量末尾处的元素。如果向量为空，将引发错误。
+		end
+		function PushBack(obj,Values)
+			%在向量末尾处追加元素
+		end
+		function Reserve(obj,Capacity,Value)
+			%为向量对象保留最小的存储长度，必要时为其分配空间。
+		end
+		function Resize(obj,NewSize,Value)
+			%为向量指定新的尺寸。
+		end
+		function ShrinkToFit(obj)
+			%释放向量保留的额外内存，其中的句柄对象引用计数将减一。
 		end
 	end
 end
@@ -309,6 +415,7 @@ function XmlString = XmlDom2String(XmlDom)
 function XmlDom = XmlString2Dom(XmlString)
 ```
 ## +Lang
+函数
 ```MATLAB
 %根据验证函数将输入的Varargin分发到输出变量
 function varargout = DistributeVararginByValidation(Varargin,ValidationFun,DefaultFun)
@@ -316,6 +423,39 @@ function varargout = DistributeVararginByValidation(Varargin,ValidationFun,Defau
 function varargout = GetNthOutputs(Function,OutputIndices)
 %内置input函数的增强版，取消适用场合限制
 function X = Input(varargin)
+```
+类
+```MATLAB
+classdef Owner<handle&matlab.mixin.indexing.RedefinesDot
+	%为句柄对象制定一个所有者，托管其生命周期
+	properties(Dependent)
+		%Owner所持有的句柄对象。Owner被delete时，该对象将强制被delete。
+		Object
+	end
+	methods
+		function obj = Owner(Object)
+			obj.Object=Object;
+		end
+		function delete(obj)
+			delete(obj.iObject);
+		end
+		function C=class(obj)
+			C=split(class(obj.iObject),'.');
+			C=['Owner<' C{end} '>'];
+		end
+	end
+	methods(Access=protected)
+        function varargout = dotReference(obj,indexOp)
+            [varargout{1:nargout}] = obj.iObject.(indexOp);
+		end
+        function obj = dotAssign(obj,indexOp,varargin)
+            [obj.iObject.(indexOp)] = varargin{:};
+		end        
+        function n = dotListLength(obj,indexOp,indexContext)
+            n = listLength(obj.iObject,indexOp,indexContext);
+        end
+	end
+end
 ```
 ## +Ops
 ```MATLAB
