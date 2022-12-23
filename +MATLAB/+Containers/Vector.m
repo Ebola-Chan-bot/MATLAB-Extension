@@ -111,13 +111,19 @@ classdef Vector<handle
 				MATLAB.MatlabException.Vector_is_empty.Throw;
 			end
 		end
-		function PushBack(obj,Value)
-			%在向量末尾处添加一个元素
-			NewSize=obj.Size+numel(Value);
+		function PushBack(obj,Values)
+			%在向量末尾处追加元素
+			%# 语法
+			% ```
+			% obj.PushBack(Values);
+			% ```
+			%# 输入参数
+			% Values(1,:)，要追加的元素
+			NewSize=obj.Size+numel(Values);
 			if NewSize>obj.Capacity
-				obj.Container(NewSize*2)=Value(1);
+				obj.Container(NewSize*2)=Values(1);
 			end
-			obj.Container(obj.Size+1:NewSize)=Value;
+			obj.Container(obj.Size+1:NewSize)=Values;
 			obj.Size=NewSize;
 		end
 		function Reserve(obj,Capacity,Value)
@@ -140,7 +146,7 @@ classdef Vector<handle
 				elseif isempty(obj.Container)
 					MATLAB.MatlabException.Empty_vector_must_specify_a_padding_value.Throw;
 				else
-					obj.Container(Capacity)=obj.Capacity(1);
+					obj.Container(Capacity)=obj.Container(1);
 				end
 			end
 		end
