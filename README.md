@@ -192,29 +192,27 @@ classdef StlQueue<handle
 	end
 end
 classdef Vector<handle
-	%STL风格的向量实现，向量中的元素必须具有相同的数据类型，且该类型必须是基本数据类型，或具有默认无参构造函数
+	%STL风格的向量实现
 	properties(SetAccess=private)
 		%向量中的元素个数
 		Size=0
 	end
 	properties(Dependent)
-		%获取或设置向量中的最后一个元素。如果向量为空，将发生错误
+		%获取或设置向量中的最后一个元素。
 		Back
-		%获取或设置向量中的第一个元素。如果向量为空，将发生错误
+		%获取或设置向量中的第一个元素。
 		Front
+		%在不分配更多的存储的情况下向量可以包含的元素数
+		Capacity
+		%向量中所有元素
+		Data
 	end
 	methods
 		function Value=At(obj,Index,Value)
 			%获取或设置向量中指定位置的元素。
 		end
-		function C=Capacity(obj)
-			%返回在不分配更多的存储的情况下向量可以包含的元素数。
-		end
 		function Clear(obj)
 			%清除向量的元素。
-		end
-		function D=Data(obj)
-			%以MATLAB数组形式返回向量中所有元素
 		end
 		function Erase(obj,Index)
 			%从指定位置删除向量中的元素
@@ -223,7 +221,7 @@ classdef Vector<handle
 			%将元素插入到向量的指定位置。
 		end
 		function PopBack(obj)
-			%删除向量末尾处的元素。如果向量为空，将引发错误。
+			%删除向量末尾处的元素。
 		end
 		function PushBack(obj,Values)
 			%在向量末尾处追加元素
