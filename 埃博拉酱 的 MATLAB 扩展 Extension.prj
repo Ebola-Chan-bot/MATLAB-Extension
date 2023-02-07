@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.toolbox" plugin-version="1.0">
-  <configuration build-checksum="3753063665" file="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
+  <configuration build-checksum="3753063665" file="C:\Users\vhtmf\Documents\MATLAB\埃博拉酱的MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.prj" location="C:\Users\vhtmf\Documents\MATLAB\埃博拉酱的MATLAB扩展" name="埃博拉酱 的 MATLAB 扩展 Extension" target="target.toolbox" target-name="打包为工具箱">
     <param.appname>埃博拉酱 的 MATLAB 扩展 Extension</param.appname>
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
@@ -23,7 +23,7 @@
 +UITools
 每个代码文件内部都有详细文档，可以用doc命令查看。</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>10.1.1</param.version>
+    <param.version>10.1.2</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
@@ -122,6 +122,7 @@ Windows平台
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
+      <file>${PROJECT_ROOT}\UpgradeLog.htm</file>
       <file>${PROJECT_ROOT}\修复</file>
       <file>${PROJECT_ROOT}\原版</file>
       <file>${PROJECT_ROOT}\图标.png</file>
@@ -131,7 +132,7 @@ Windows平台
     <fileset.depfun.excluded />
     <fileset.package />
     <build-deliverables>
-      <file location="${PROJECT_ROOT}" name="埃博拉酱 的 MATLAB 扩展 Extension.mltbx" optional="false">C:\Users\vhtmf\Documents\MATLAB\MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</file>
+      <file location="${PROJECT_ROOT}" name="埃博拉酱 的 MATLAB 扩展 Extension.mltbx" optional="false">C:\Users\vhtmf\Documents\MATLAB\埃博拉酱的MATLAB扩展\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</file>
     </build-deliverables>
     <workflow />
     <matlab>

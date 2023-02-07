@@ -15,6 +15,8 @@ classdef MatlabException<uint8&MATLAB.IEnumerableException
 		Zip_doesnt_log_file_size(12)
 		Unable_to_uniform_size(13)
 
+		Number_of_EdgeColors_does_not_match_number_of_lines(244)
+		Number_of_LineStyles_does_not_match_number_of_lines(244)
 		Cannot_own_a_non_handle_value(245)
 		Stack_is_empty(246)
 		Queue_is_empty(247)
