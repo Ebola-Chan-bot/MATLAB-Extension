@@ -1871,7 +1871,7 @@
 			},
 			{
 				"name": "Dimension",
-				"kind": "required",
+				"kind": "ordered",
 				"type": "positive",
 				"purpose": "拆分维度"
 			}
