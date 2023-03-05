@@ -6,4 +6,7 @@ packages
 **/*.exp
 **/*.lib
 **/*.pdb
-Windows平台/x64
+**/x64
+**/bin
+**/My Project
+**/obj
