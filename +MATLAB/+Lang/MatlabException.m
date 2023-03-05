@@ -27,6 +27,7 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Unsupported_writeout_types(24)
 		Unsupported_array_types(25)
 		MEX_exception(26)
+		FillData_larger_than_NumBytes(27)
 
 		Number_of_EdgeColors_does_not_match_number_of_lines(243)
 		Number_of_LineStyles_does_not_match_number_of_lines(244)
