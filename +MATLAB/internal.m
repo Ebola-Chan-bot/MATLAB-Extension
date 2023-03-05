@@ -12,7 +12,7 @@ classdef internal
 			Set=Set(~any(triu(Set==Set',1),1));
 		end
 		function Set=QuickUnion(SetA,SetB)
-			Set=MATLAB.Internal.QuickUnique(SetA,SetB);
+			Set=MATLAB.internal.QuickUnique(SetA,SetB);
 		end
 		function Is=QuickIsMember(Element,Set)
 			Is=any(Element==Set);

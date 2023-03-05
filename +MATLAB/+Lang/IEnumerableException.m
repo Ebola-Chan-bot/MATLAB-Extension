@@ -2,7 +2,7 @@ classdef IEnumerableException
 	%可枚举异常，提供一种方便的异常接口类
 	%本类是接口类，使用者必须定义自己的实体类，继承本类。最推荐的方法是用一个枚举类继承本类，实现方便的Throw方法：
 	%```
-	%classdef MyException<MATLAB.IEnumerableException
+	%classdef MyException<MATLAB.Lang.IEnumerableException
 	%	enumeration
 	%		File_open_failed
 	%		Memory_mapping_failed
@@ -18,7 +18,7 @@ classdef IEnumerableException
 	%```
 	%本接口类不定义任何属性，因此您的枚举类还可以继承自基本数据类型，实现错误代码，如：
 	%```
-	%classdef MyException<uint8&MATLAB.IEnumerableException
+	%classdef MyException<uint8&MATLAB.Lang.IEnumerableException
 	%	%对基本数据类型的继承必须放在前面
 	%	enumeration
 	%		File_open_failed(0)
@@ -36,7 +36,7 @@ classdef IEnumerableException
 	methods
 		function Throw(obj,Message,options)
 			%抛出异常，可选指定更多详细信息
-			%此方法抛出的异常被捕获为MATLAB.MException而不是内置MException。MATLAB.MException是对内置MException的扩展，支持额外的Detail属性以包含更多错误相关详细信息。
+			%此方法抛出的异常被捕获为MATLAB.Lang.MException而不是内置MException。MATLAB.Lang.MException是对内置MException的扩展，支持额外的Detail属性以包含更多错误相关详细信息。
 			%# 语法
 			% ```
 			% obj.Throw;
@@ -50,8 +50,8 @@ classdef IEnumerableException
 			% ```
 			%# 输入参数
 			% Message(1,1)string，错误相关的文字说明
-			% Detail，错误的其它详细信息，作为抛出MATLAB.MException的Detail属性值
-			%See also MATLAB.MException
+			% Detail，错误的其它详细信息，作为抛出MATLAB.Lang.MException的Detail属性值
+			%See also MATLAB.Lang.MException
 			arguments
 				obj
 				Message=''
@@ -60,9 +60,9 @@ classdef IEnumerableException
 			%标识符不能含有.号
 			Identifier=replace(sprintf('%s:%s',class(obj),obj),'.',':');
 			if isempty(Message)
-				MATLAB.MException(Identifier=Identifier,Message=Identifier,Detail=options.Detail).throwAsCaller;
+				MATLAB.Lang.MException(Identifier=Identifier,Message=Identifier,Detail=options.Detail).throwAsCaller;
 			else
-				MATLAB.MException(Identifier=Identifier,Message=sprintf('%s：%s',Identifier,Message),Detail=options.Detail).throwAsCaller;
+				MATLAB.Lang.MException(Identifier=Identifier,Message=sprintf('%s：%s',Identifier,Message),Detail=options.Detail).throwAsCaller;
 			end
 		end
 	end

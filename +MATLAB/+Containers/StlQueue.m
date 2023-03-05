@@ -17,28 +17,28 @@ classdef StlQueue<handle
 	methods
 		function Value=get.Back(obj)
 			if isempty(obj.iBack)
-				MATLAB.MatlabException.Queue_is_empty.Throw;
+				MATLAB.Lang.MatlabException.Queue_is_empty.Throw;
 			else
 				Value=obj.iBack.Value;
 			end
 		end
 		function set.Back(obj,Value)
 			if isempty(obj.iBack)
-				MATLAB.MatlabException.Queue_is_empty.Throw;
+				MATLAB.Lang.MatlabException.Queue_is_empty.Throw;
 			else
 				obj.iBack.Value=Value;
 			end
 		end
 		function Value=get.Front(obj)
 			if isempty(obj.iFront)
-				MATLAB.MatlabException.Queue_is_empty.Throw;
+				MATLAB.Lang.MatlabException.Queue_is_empty.Throw;
 			else
 				Value=obj.iFront.Value;
 			end
 		end
 		function set.Front(obj,Value)
 			if isempty(obj.iFront)
-				MATLAB.MatlabException.Queue_is_empty.Throw;
+				MATLAB.Lang.MatlabException.Queue_is_empty.Throw;
 			else
 				obj.iFront.Value=Value;
 			end
@@ -54,7 +54,7 @@ classdef StlQueue<handle
 					obj.Size=obj.Size-1;
 				end
 			else
-				MATLAB.MatlabException.Queue_is_empty.Throw;
+				MATLAB.Lang.MatlabException.Queue_is_empty.Throw;
 			end
 		end
 		function Push(obj,Value)

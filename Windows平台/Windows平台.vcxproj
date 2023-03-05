@@ -123,7 +123,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;WINDOWS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -133,6 +133,7 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <EnableModules>true</EnableModules>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,7 +147,7 @@
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;WINDOWS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -156,6 +157,7 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <EnableModules>true</EnableModules>
+      <ExceptionHandling>Async</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -171,11 +173,14 @@
     <ClInclude Include="MATLAB异常.h" />
     <ClInclude Include="MexAPI.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="实用工具.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="LipZip.cpp" />
     <ClCompile Include="MATLAB异常.cpp" />
+    <ClCompile Include="MemoryMapping.cpp" />
     <ClCompile Include="MexFunction.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -183,7 +188,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Pointer.cpp" />
     <ClCompile Include="SHFileOperation.cpp" />
+    <ClCompile Include="实用工具.cpp" />
+    <ClCompile Include="杂项.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -191,13 +199,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\EbolaChan.LibZip.1.9.2.5\build\native\EbolaChan.LibZip.targets" Condition="Exists('..\packages\EbolaChan.LibZip.1.9.2.5\build\native\EbolaChan.LibZip.targets')" />
-    <Import Project="..\packages\MATLAB.MexTools.1.2.2\build\native\MATLAB.MexTools.targets" Condition="Exists('..\packages\MATLAB.MexTools.1.2.2\build\native\MATLAB.MexTools.targets')" />
+    <Import Project="..\packages\MATLAB.MexTools.2.0.0\build\native\MATLAB.MexTools.targets" Condition="Exists('..\packages\MATLAB.MexTools.2.0.0\build\native\MATLAB.MexTools.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\EbolaChan.LibZip.1.9.2.5\build\native\EbolaChan.LibZip.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EbolaChan.LibZip.1.9.2.5\build\native\EbolaChan.LibZip.targets'))" />
-    <Error Condition="!Exists('..\packages\MATLAB.MexTools.1.2.2\build\native\MATLAB.MexTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MATLAB.MexTools.1.2.2\build\native\MATLAB.MexTools.targets'))" />
+    <Error Condition="!Exists('..\packages\MATLAB.MexTools.2.0.0\build\native\MATLAB.MexTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MATLAB.MexTools.2.0.0\build\native\MATLAB.MexTools.targets'))" />
   </Target>
 </Project>

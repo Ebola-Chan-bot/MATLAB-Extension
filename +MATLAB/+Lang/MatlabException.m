@@ -1,4 +1,4 @@
-classdef MatlabException<uint8&MATLAB.IEnumerableException
+classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
     enumeration
         Success(0)
         Input_is_not_a_string(1)
@@ -13,7 +13,20 @@ classdef MatlabException<uint8&MATLAB.IEnumerableException
         Failed_to_get_Zip_file_name(10)
 		Failed_to_get_the_stat_of_the_Zip_file(11)
 		Zip_doesnt_log_file_size(12)
-		Unable_to_uniform_size(13)
+		File_creation_failed(13)
+		Failed_to_get_file_size(14)
+		Failed_to_read_file(15)
+		Set_file_end_failed(16)
+		Failed_to_set_file_pointer(17)
+		Failed_to_write_out_file(18)
+		Failed_to_close_file(19)
+		Failed_to_create_file_mapping(20)
+		Failed_to_map_file_view(21)
+		Memory_copy_failed(22)
+		Unsupported_readin_types(23)
+		Unsupported_writeout_types(24)
+		Unsupported_array_types(25)
+		MEX_exception(26)
 
 		Number_of_EdgeColors_does_not_match_number_of_lines(243)
 		Number_of_LineStyles_does_not_match_number_of_lines(244)

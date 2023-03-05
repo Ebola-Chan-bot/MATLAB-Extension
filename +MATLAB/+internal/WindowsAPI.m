@@ -12,21 +12,41 @@ classdef WindowsAPI<uint8
 		ZipGetSize(9)
 		ZipGetName(10)
 		ZipGetNumEntries(11)
+		File_Create(12)
+		File_GetSize(13)
+		File_Read(14)
+		File_SetEnd(15)
+		File_SetPointer(16)
+		File_Write(17)
+		File_Close(18)
+		MemoryMapping_Create(19)
+		MemoryMapping_View(20)
+		MemoryMapping_Unview(21)
+		MemoryMapping_Close(22)
+		Pointer_Allocate(23)
+		Pointer_Read(24)
+		Pointer_Write(25)
+		Pointer_Copy(26)
+		Pointer_Release(27)
+		TypeCast(28)
 	end
 	methods
 		function varargout=Call(obj,varargin)
 			import MATLAB.internal.InnerException
+			import MATLAB.Lang.*
 			varargout=cell(1,nargout);
 			[Error,varargout{:}]=WindowsCall(uint8(obj),varargin{:});
-			ExceptionType=MATLAB.MatlabException(Error.ExceptionType);
-			if ExceptionType~=MATLAB.MatlabException.Success
+			ExceptionType=MatlabException(Error.ExceptionType);
+			if ExceptionType~=MatlabException.Success
 				switch InnerException(Error.InnerException)
 					case InnerException.None
 						ExceptionType.Throw;
 					case InnerException.Win32Exception
-						Detail.InnerException=MATLAB.WindowsErrorCode(Error.ErrorCode);
+						Detail.InnerException=WindowsErrorCode(Error.ErrorCode);
 					case InnerException.LibzipException
 						Detail.InnerException=MATLAB.IO.LibzipException(Error.ErrorCode);
+					case InnerException.MexException
+						Detail.InnerException=MexException(Error.ErrorCode);
 				end
 				if Error.Index
 					Detail.Index=Error.Index;

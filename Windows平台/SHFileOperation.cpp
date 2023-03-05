@@ -18,14 +18,14 @@ void 字符串转换(Array& 输入, String& 输出)
 			输出.append(元素.toUTF16()).push_back(0);
 		break;
 	default:
-		throw MATLAB异常(输入不是字符串);
+		throw MATLAB异常(MATLAB异常类型::输入不是字符串);
 	}
 }
 TypedArray<bool> 执行操作(SHFILEOPSTRUCTW& 操作结构)
 {
 	const int 异常 = SHFileOperationW(&操作结构);
 	if (异常 && 异常 != ERROR_CANCELLED)
-		throw MATLAB异常(文件操作失败, Win32异常, 异常);
+		throw MATLAB异常(MATLAB异常类型::文件操作失败, 内部异常类型::Win32异常, 异常);
 	else
 		return 数组工厂.createScalar<bool>(操作结构.fAnyOperationsAborted);
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <Mex类型.h>
 using namespace matlab::data;
-enum MATLAB异常类型 :uint8_t
+enum class MATLAB异常类型 :uint8_t
 {
 	成功,
 	输入不是字符串,
@@ -16,17 +16,33 @@ enum MATLAB异常类型 :uint8_t
 	Zip文件名获取失败,
 	Zip文件明细获取失败,
 	Zip未记录文件大小,
+	文件创建失败,
+	获取文件大小失败,
+	读入文件失败,
+	设置文件结束失败,
+	设置文件指针失败,
+	写出文件失败,
+	关闭文件失败,
+	创建文件映射失败,
+	映射文件视图失败,
+	内存拷贝失败,
+	不支持的读入类型,
+	不支持的写出类型,
+	不支持的数组类型,
+	Mex异常,
+	填充数据超出内存范围,
 };
-enum 内部异常类型 :uint8_t
+enum class 内部异常类型 :uint8_t
 {
 	无,
 	Win32异常,
 	LibZip异常,
+	Mex异常,
 };
 struct MATLAB异常
 {
-	MATLAB异常类型 异常类型 = 成功;
-	内部异常类型 内部异常 = 无;
+	MATLAB异常类型 异常类型 = MATLAB异常类型::成功;
+	内部异常类型 内部异常 = 内部异常类型::无;
 	int 错误代码 = 0;
 	size_t 第几个 = -1;
 	constexpr MATLAB异常() {}

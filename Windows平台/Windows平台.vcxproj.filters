@@ -27,6 +27,9 @@
     <ClInclude Include="MexAPI.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="实用工具.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -45,6 +48,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="LipZip.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryMapping.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Pointer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="杂项.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="实用工具.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
