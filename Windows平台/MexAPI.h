@@ -39,6 +39,7 @@ API声明(File_Close);
 //MemoryMapping
 
 API声明(MemoryMapping_Create);
+API声明(MemoryMapping_Open);
 API声明(MemoryMapping_View);
 API声明(MemoryMapping_Unview);
 API声明(MemoryMapping_Close);

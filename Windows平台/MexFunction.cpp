@@ -27,6 +27,7 @@ void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 		File_Write,
 		File_Close,
 		MemoryMapping_Create,
+		MemoryMapping_Open,
 		MemoryMapping_View,
 		MemoryMapping_Unview,
 		MemoryMapping_Close,

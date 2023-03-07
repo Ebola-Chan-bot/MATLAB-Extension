@@ -31,6 +31,7 @@ enum class MATLAB异常类型 :uint8_t
 	不支持的数组类型,
 	Mex异常,
 	填充数据超出内存范围,
+	打开文件映射失败,
 };
 enum class 内部异常类型 :uint8_t
 {

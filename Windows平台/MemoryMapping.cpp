@@ -10,12 +10,18 @@ API声明(MemoryMapping_Create)
 		名称 = 万能转码<String>(std::move(inputs[4]));
 		Name = (LPCWSTR)名称.c_str();
 	}
-	const CellArray 数据数组(std::move(inputs[5]));
-	const uint8_t 数据个数 = 数据数组.getNumberOfElements();
-	const std::unique_ptr<std::unique_ptr<无类型数组>[]>无类型数据 = std::make_unique_for_overwrite<std::unique_ptr<无类型数组>[]>(数据个数);
+	uint8_t 数据个数; 
+	std::unique_ptr<std::unique_ptr<无类型数组>[]>无类型数据;
 	uint64_t 总字节数 = 0;
-	for (uint8_t a = 0; a < 数据个数; ++a)
-		总字节数 += (无类型数据[a] = 无类型数组::创建(数据数组[a]))->字节数;
+	if (inputs[5].getType() == ArrayType::CELL)
+	{
+		const CellArray 数据数组(std::move(inputs[5]));
+		无类型数据 = std::make_unique_for_overwrite<std::unique_ptr<无类型数组>[]>(数据个数 = 数据数组.getNumberOfElements());
+		for (uint8_t a = 0; a < 数据个数; ++a)
+			总字节数 += (无类型数据[a] = 无类型数组::创建(数据数组[a]))->字节数;
+	}
+	else
+		总字节数 = ((无类型数据 = std::make_unique_for_overwrite<std::unique_ptr<无类型数组>[]>(数据个数 = 1))[0] = 无类型数组::创建(std::move(inputs[5])))->字节数;
 	LARGE_INTEGER 文件大小{ .QuadPart = 万能转码<LONGLONG>(std::move(inputs[3])) };
 	const HANDLE 文件句柄 = (HANDLE)万能转码<uint64_t>(std::move(inputs[1]));
 	if (文件大小.QuadPart)
@@ -56,6 +62,28 @@ API声明(MemoryMapping_Create)
 			outputs[2] = 万能转码(映射指针);
 		else
 			UnmapViewOfFile(映射指针);
+}
+API声明(MemoryMapping_Open)
+{
+	const String Name = 万能转码<String>(std::move(inputs[2]));
+	const DWORD DesiredAccess = 万能转码<uint32_t>(std::move(inputs[1]));
+	const HANDLE 映射句柄 = OpenFileMappingW(DesiredAccess, false, (LPCWSTR)Name.c_str());
+	if (映射句柄)
+		outputs[1] = 万能转码(映射句柄);
+	else
+		throw MATLAB异常(MATLAB异常类型::打开文件映射失败, 内部异常类型::Win32异常, GetLastError());
+	if (outputs.size() > 2)
+	{
+		const LPVOID 映射指针 = MapViewOfFile(映射句柄, DesiredAccess, 0, 0, 0);
+		if (映射指针)
+			outputs[2] = 万能转码(映射指针);
+		else
+		{
+			const MATLAB异常 异常(MATLAB异常类型::映射文件视图失败, 内部异常类型::Win32异常, GetLastError());
+			CloseHandle(映射句柄);
+			throw 异常;
+		}
+	}
 }
 API声明(MemoryMapping_View)
 {

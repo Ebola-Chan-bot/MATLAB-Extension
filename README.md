@@ -22,57 +22,16 @@
 # +MATLAB
 类
 ```MATLAB
-classdef IEnumerableException
-	%可枚举异常，提供一种方便的异常接口类
-	methods
-		function Throw(obj,Message,options)
-			%抛出异常，可选指定更多详细信息
-		end
-	end
-end
-classdef MException<MException
-	%内置MException的扩展，支持更灵活的构造和额外的Detail属性
-	properties
-		%异常的其它详细信息
-		Detail
-	end
-	methods
-		function obj=MException(options)
-			%使用全员可选的名称值参数构造对象
-		end
-	end
-end
-classdef EventLogger<handle
+classdef EventLogger
 	%事件记录器，类似于秒表
-	properties(SetAccess=private)
-		%已记录的事件个数
-		NumEvents=0
-	end
-	methods
-		function Reset(obj)
-			%重置计时器
-		end
-		function LogEvent(obj,Event)
-			%记录一个事件
-		end
-		function TT=GetTimeTable(obj)
-			%返回事件记录时间表
-		end
-	end
 end
 ```
 函数
 ```MATLAB
-%解决内置doc无法正确显示包内类下成员实时函数的问题
-function Doc(varargin)
-%修复内置edit无法打开含有非ASCII字符的主机名SMB共享的.m代码文件的问题
-function foundFile = Edit(args)
 %设置当前图窗的纵横比
 function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,Scale,options)
 %列出指定工程所添加的搜索路径
 function ProjectPaths = ListAllProjectPaths(Project)
-%将存在bug的内置函数替换为已修复版本，或将已修复的版本还原。
-function ModifyBuiltin(File,Restore)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
@@ -80,162 +39,23 @@ function Graph = TtrtnWbgc(Graph,ToRemove)
 ```
 ## +Containers
 ```MATLAB
-classdef IndexMap<handle
+classdef IndexMap
 	% IndexMap是一种自动分配键的映射
-	methods
-		function C=Count(obj)
-			% 返回对象中的键-值对组的数量
-		end
-		function Values=Items(obj,Keys,varargin)
-			% 获取或设置与指定的键关联的值。
-		end
-		function Keys=Add(obj,varargin)
-			% 将指定的值添加到IndexMap中，返回自动分配的新键。
-		end
-		function Keys=Allocate(obj,Number)
-			% 预分配指定数目的新键，暂不赋值
-		end
-		function Clear(obj)
-			% 将所有键和值从IndexMap中移除。
-		end
-		function IK=IsKey(obj,Keys)
-			% 确定 IndexMap 对象是否包含键
-		end
-		function K=Keys(obj)
-			% 返回一个向量，其中包含 IndexMap 对象中的所有键。
-		end
-		function Remove(obj,Keys)
-			% 从 IndexMap 对象中删除键-值对组
-		end
-	end
 end
-classdef(Abstract)IQueue<handle
+classdef(Abstract)IQueue
 	% 表示对象的先进先出集合。
-	events
-		%有元素被添加到队列中时引发此事件
-		DataEnqueued
-	end
-	methods(Abstract)
-		% 移除并返回位于 IQueue 开始处的对象。
-		Elements=Dequeue(obj,Number)
-		% 将对象添加到 IQueue 的结尾处。
-		Enqueue(obj,varargin)
-	end
-	%某些方法的默认实现。子类可以重写成性能更高的实现。
-	methods
-		function C=Count(obj)
-			% 获取 Queue 中包含的元素数。
-		end
-		function Clear(obj)
-			% 从 IQueue 中移除所有对象。
-		end
-		function C=Contains(obj,varargin)
-			% 确定某些元素是否在 IQueue 中。
-		end
-		function P=Peek(obj)
-			% 返回位于 IQueue 开始处的对象但不将其移除。
-		end
-		function Array=ToArray(obj)
-			% 将 IQueue 元素复制到新数组。
-		end
-		function E=IsEmpty(obj)
-			% 检查队列是否为空
-		end
-	end
 end
-classdef Queue<matlab.mixin.Copyable&MATLAB.Containers.IQueue
+classdef Queue
 	%MALTAB.Containers.IQueue的简单基本实现
-	methods
-		function obj=Queue(varargin)
-			% 初始化 Queue 类的新实例。
-		end
-	end
 end
-classdef Stack<handle
+classdef Stack
 	%STL风格的先进后出栈实现，但不要求栈中对象具有相同的数据类型
-	properties(SetAccess=private)
-		%栈中对象个数
-		Size=0;
-	end
-	properties(Dependent)
-		%获取或设置栈顶对象。如果栈为空，将发生错误
-		Top
-	end
-	methods
-		function Pop(obj)
-			%将栈顶对象弹出栈。如果栈为空，将发生错误
-		end
-		function Push(obj,Value)
-			%将一个对象压入栈
-		end
-	end
 end
-classdef StlQueue<handle
+classdef StlQueue
 	%STL风格的先进先出队列实现，但不要求队列中对象具有相同的数据类型
-	properties(Dependent)
-		%获取或设置队尾对象。如果队列为空，将发生错误
-		Back
-		%获取或设置队首对象。如果队列为空，将发生错误
-		Front
-	end
-	properties(SetAccess=private)
-		%队列中对象个数
-		Size=0;
-	end
-	methods
-		function Pop(obj)
-			%将队首对象弹出队列。如果队列为空，将发生错误
-		end
-		function Push(obj,Value)
-			%将一个对象压入队尾
-		end
-	end
 end
-classdef Vector<handle
+classdef Vector
 	%STL风格的向量实现
-	properties(SetAccess=private)
-		%向量中的元素个数
-		Size=0
-	end
-	properties(Dependent)
-		%获取或设置向量中的最后一个元素。
-		Back
-		%获取或设置向量中的第一个元素。
-		Front
-		%在不分配更多的存储的情况下向量可以包含的元素数
-		Capacity
-		%向量中所有元素
-		Data
-	end
-	methods
-		function Value=At(obj,Index,Value)
-			%获取或设置向量中指定位置的元素。
-		end
-		function Clear(obj)
-			%清除向量的元素。
-		end
-		function Erase(obj,Index)
-			%从指定位置删除向量中的元素
-		end
-		function Insert(obj,Values,StartIndex)
-			%将元素插入到向量的指定位置。
-		end
-		function PopBack(obj)
-			%删除向量末尾处的元素。
-		end
-		function PushBack(obj,Values)
-			%在向量末尾处追加元素
-		end
-		function Reserve(obj,Capacity,Value)
-			%为向量对象保留最小的存储长度，必要时为其分配空间。
-		end
-		function Resize(obj,NewSize,Value)
-			%为向量指定新的尺寸。
-		end
-		function ShrinkToFit(obj)
-			%释放向量保留的额外内存，其中的句柄对象引用计数将减一。
-		end
-	end
 end
 ```
 ## +DataFun
@@ -254,41 +74,11 @@ function Array = Rescale(Array,LowerBound,UpperBound,Dimensions)
 ## +DataTypes
 类
 ```MATLAB
-classdef ArrayBuilder<handle
+classdef ArrayBuilder
 	%数组累加器
-	properties(SetAccess=immutable)
-		%累加维度
-		BuildDimension
-	end
-	methods
-		function obj = ArrayBuilder(BuildDimension)
-			%构造ArrayBuilder对象
-		end
-		function Append(obj,New)
-			%向数组末尾累加新值
-		end
-		function Array=Harvest(obj)
-			%收获累加完毕的MATLAB数组。收获后可以释放本对象，也可以继续累加。
-		end
-		function Clear(obj)
-			%清空ArrayBuilder对象
-		end
-	end
 end
 classdef CatMode
 	%此类用于MATLAB.DataTypes.ArrayFun的参数枚举
-	enumeration
-		%Function的返回值为标量
-		Scalar
-		%SplitDimensions为标量，且Function的返回值为类型、PackDimensions维度上尺寸均相同的数组
-		Linear
-		%Function的返回值为数值、逻辑、字符或字段相同的结构体数组，且尺寸完全相同
-		EsNlcs
-		%Function的返回值为数组，允许尺寸不同，但最终可以拼接成一整个大数组
-		CanCat
-		%不符合上述任何条件，或返回值为函数句柄
-		DontCat
-	end
 end
 ```
 函数
@@ -337,6 +127,7 @@ function A = Transpose(A,DimPair)
 function varargout = UniformSize(varargin)
 ```
 ## +General
+函数
 ```MATLAB
 %列出所有MATLAB官方API的搜索路径
 function Paths = BuiltinPaths
@@ -361,45 +152,26 @@ function Exist=StaticJavaPath(Path,Reset)
 %解决内置which找不到包内类下成员方法的问题
 function Path = Which(varargin)
 ```
+类
+```MATLAB
+classdef Pointer<uint64
+	%分配和读写C++内存指针
+end
+classdef SharedPtr<handle
+	%将引用计数智能指针回绕在动态分配的对象周围。
+end
+```
 ## +IO
 ```MATLAB
-classdef ZipFileReader<handle
+classdef ZipFileReader
 	%ZIP文件批量读入器，直接从ZIP档案中读入，不会向磁盘写出解压文件
-	properties(SetAccess=immutable)
-		%创建该对象的ZipReader
-		ZipReader
-	end
-	methods
-		function [Data,BytesRead]=Read(objs,NumBytes)
-			%从文件读入指定数目的字节
-		end
-	end
 end
-classdef ZipReader<handle
+classdef ZipReader
 	%ZIP档案读入器。不同于内置unzip，本类支持直接读入ZIP档案中的文件字节（解压后的），而不需要将其解压到文件。
-    methods
-        function obj = ZipReader(ZipPath)
-			%构造ZipReader对象，从指定路径打开一个ZIP档案
-		end
-		function Locates=NameLocate(obj,Names)
-			%查找指定文件名在档案中的索引
-		end
-		function FileReader=FOpen(obj,NameOrIndex)
-			%打开ZIP档案中的文件以供读入
-		end
-		function Sizes=GetSize(obj,NameOrIndex)
-			%获取档案中指定文件的压缩前大小
-		end
-		function Names=GetName(obj,Indices)
-			%根据索引取得文件名
-		end
-		function NumEntries=GetNumEntries(obj)
-			%获取档案中的文件数目
-		end
-    end
 end
 ```
 ## +IOFun
+函数
 ```MATLAB
 %将一列分隔符字符串的前几个字段读出为表格或时间表
 function Table = DelimitedStrings2Table(Strings,FieldNames,Delimiter,options)
@@ -412,9 +184,20 @@ function XmlString = XmlDom2String(XmlDom)
 %将XML字符串解析为org.w3c.dom.Document类型
 function XmlDom = XmlString2Dom(XmlString)
 ```
+类
+```MATLAB
+classdef File<handle
+	%使用 Win32 API 的文件读写操作，比MATLAB内置文件操作更灵活丰富
+end
+classdef MemoryMapping<handle
+	%使用 Win32 API 操作内存映射文件
+end
+```
 ## +Lang
 函数
 ```MATLAB
+%为MATLAB安装补丁，修复已知bug
+function BugList = BuiltinBugFix(Command,RestartDisposition)
 %根据验证函数将输入的Varargin分发到输出变量
 function varargout = DistributeVararginByValidation(Varargin,ValidationFun,DefaultFun)
 %获取函数的第N个输出
@@ -424,17 +207,14 @@ function X = Input(varargin)
 ```
 类
 ```MATLAB
-classdef Owner<handle&matlab.mixin.indexing.RedefinesDot
+classdef IEnumerableException
+	%可枚举异常，提供一种方便的异常接口类
+end
+classdef MException
+	%内置MException的扩展，支持更灵活的构造和额外的Detail属性
+end
+classdef Owner
 	%为句柄对象制定一个所有者，托管其生命周期
-	properties(Dependent)
-		%Owner所持有的句柄对象。Owner被delete时，该对象将强制被delete。
-		Object
-	end
-	methods
-		function obj = Owner(Object)
-			%为句柄对象构造一个Owner
-		end
-	end
 end
 ```
 ## +Ops

@@ -1332,41 +1332,79 @@
 			}
 		]
 	},
-	"MATLAB.General.Pointer.Allocate":{
-		"inputs":[
+	"MATLAB.General.Pointer.Allocate": {
+		"inputs": [
 			{
-				"name":"NumBytes",
-				"kind":"namevalue",
-				"type":["real","scalar"],
-				"purpose":"要分配的字节数"
+				"name": "NumBytes",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "要分配的字节数"
 			},
 			{
-				"name":"FillData",
-				"kind":"namevalue",
-				"type":"cell",
-				"purpose":"要填充的初始内容"
+				"name": "FillData",
+				"kind": "namevalue",
+				"type": "cell",
+				"purpose": "要填充的初始内容"
 			}
 		]
 	},
-	"MATLAB.General.Pointer.Copy":{
-		"inputs":[
+	"MATLAB.General.Pointer.Copy": {
+		"inputs": [
 			{
-				"name":"ToPointer",
-				"kind":"required",
-				"type":"positive",
-				"purpose":"拷贝目标指针"
+				"name": "ToPointer",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拷贝目标指针"
 			},
 			{
-				"name":"FromPointer",
-				"kind":"required",
-				"type":"positive",
-				"purpose":"拷贝来源指针"
+				"name": "FromPointer",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拷贝来源指针"
 			},
 			{
-				"name":"NumBytes",
-				"kind":"required",
-				"type":"positive",
-				"purpose":"要拷贝的字节数"
+				"name": "NumBytes",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要拷贝的字节数"
+			}
+		]
+	},
+	"MATLAB.General.Pointer.Read": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Number",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要读入的元素个数"
+			},
+			{
+				"name": "Type",
+				"kind": "ordered",
+				"type": [
+					"MATLAB.DataTypes.ArrayType",
+					"scalar"
+				],
+				"purpose": "要读入的数据类型"
+			}
+		]
+	},
+	"MATLAB.General.Pointer.Write": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Data",
+				"kind": "required",
+				"purpose": "要写出的POD数组",
+				"repeating": true
 			}
 		]
 	},
@@ -1420,6 +1458,115 @@
 				"name": "Parent",
 				"kind": "ordered",
 				"purpose": "要搜索的复合变量"
+			}
+		]
+	},
+	"MATLAB.General.SharedPtr": {
+		"inputs": [
+			{
+				"name": "Pointer",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要共享的资源指针"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Deleter",
+							"kind": "ordered",
+							"type": "function_handle",
+							"purpose": "资源删除器"
+						}
+					],
+					[
+						{
+							"name": "Owner",
+							"kind": "ordered",
+							"type": [
+								"handle",
+								"scalar"
+							],
+							"purpose": "资源的所有者"
+						}
+					]
+				]
+			}
+		]
+	},
+	"MATLAB.General.SharedPtr.Allocate": {
+		"inputs": [
+			{
+				"name": "NumBytes",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "要分配的字节数"
+			},
+			{
+				"name": "FillData",
+				"kind": "namevalue",
+				"type": "cell",
+				"purpose": "要填充的初始内容"
+			}
+		]
+	},
+	"MATLAB.General.SharedPtr.Copy": {
+		"inputs": [
+			{
+				"name": "ToPointer",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拷贝目标指针"
+			},
+			{
+				"name": "FromPointer",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拷贝来源指针"
+			},
+			{
+				"name": "NumBytes",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要拷贝的字节数"
+			}
+		]
+	},
+	"MATLAB.General.SharedPtr.Read": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Number",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要读入的元素个数"
+			},
+			{
+				"name": "Type",
+				"kind": "ordered",
+				"type": [
+					"MATLAB.DataTypes.ArrayType",
+					"scalar"
+				],
+				"purpose": "要读入的数据类型"
+			}
+		]
+	},
+	"MATLAB.General.SharedPtr.Write": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Data",
+				"kind": "required",
+				"purpose": "要写出的POD数组",
+				"repeating": true
 			}
 		]
 	},
@@ -1732,6 +1879,147 @@
 			}
 		]
 	},
+	"MATLAB.IOFun.File": {
+		"inputs": [
+			{
+				"name": "FileName",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"file"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "要创建或打开的文件或设备的名称"
+			},
+			{
+				"name": "DesiredAccess",
+				"kind": "namevalue",
+				"type": [
+					"uint32",
+					"scalar"
+				],
+				"purpose": "请求对文件或设备的访问权限"
+			},
+			{
+				"name": "ShareMode",
+				"kind": "namevalue",
+				"type": [
+					"uint32",
+					"scalar"
+				],
+				"purpose": "文件或设备请求的共享模式"
+			},
+			{
+				"name": "CreationDisposition",
+				"kind": "namevalue",
+				"type": [
+					"MATLAB.Flags",
+					"scalar"
+				],
+				"purpose": "对存在或不存在的文件或设备执行的操作"
+			},
+			{
+				"name": "FlagsAndAttributes",
+				"kind": "namevalue",
+				"type": [
+					"uint32",
+					"scalar"
+				],
+				"purpose": "文件或设备属性和标志"
+			}
+		]
+	},
+	"MATLAB.IOFun.File.Read": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Number",
+							"kind": "ordered",
+							"type": "positive",
+							"purpose": "要读入的元素个数"
+						},
+						{
+							"name": "Type",
+							"kind": "ordered",
+							"type": [
+								"scalar",
+								"MATLAB.DataTypes.ArrayType"
+							],
+							"purpose": "要读入的数据类型"
+						}
+					],
+					[
+						{
+							"name": "Type",
+							"kind": "ordered",
+							"type": [
+								"scalar",
+								"MATLAB.DataTypes.ArrayType"
+							],
+							"purpose": "要读入的数据类型"
+						},
+						{
+							"name": "Number",
+							"kind": "ordered",
+							"type": "positive",
+							"purpose": "要读入的元素个数"
+						}
+					]
+				]
+			}
+		]
+	},
+	"MATLAB.IOFun.File.SetPointer": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "DistanceToMove",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "移动文件指针的字节数"
+			},
+			{
+				"name": "MoveMethod",
+				"kind": "ordered",
+				"type": [
+					"MATLAB.Flags",
+					"scalar"
+				],
+				"purpose": "文件指针移动的起点"
+			}
+		]
+	},
+	"MATLAB.IOFun.File.Write": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Data",
+				"kind": "required",
+				"purpose": "要写出的POD数组",
+				"repeating": true
+			}
+		]
+	},
 	"MATLAB.IOFun.MatVariableRename": {
 		"inputs": [
 			{
@@ -1760,6 +2048,96 @@
 					"vector"
 				],
 				"purpose": "要重命名的.mat路径"
+			}
+		]
+	},
+	"MATLAB.IOFun.MemoryMapping.Create": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "File",
+				"kind": "namevalue",
+				"type": [
+					[
+						"uint64",
+						"scalar"
+					],
+					[
+						"MATLAB.IOFun.File",
+						"scalar"
+					]
+				],
+				"purpose": "要从中创建文件映射对象的文件的句柄"
+			},
+			{
+				"name": "Protect",
+				"kind": "namevalue",
+				"type": [
+					"uint32",
+					"scalar"
+				],
+				"purpose": "指定文件映射对象的页面保护"
+			},
+			{
+				"name": "MaximumSize",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "文件映射对象的最大大小"
+			},
+			{
+				"name": "Name",
+				"kind": "namevalue",
+				"type": [
+					[
+						"char",
+						"row"
+					],
+					[
+						"string"
+					]
+				],
+				"purpose": "文件映射对象的名称"
+			},
+			{
+				"name": "FillData",
+				"kind": "namevalue",
+				"purpose": "要填充的初始内容"
+			}
+		]
+	}, 
+	"MATLAB.IOFun.MemoryMapping.View": {
+		"inputs": [
+			{
+				"name": "DesiredAccess",
+				"kind": "namevalue",
+				"type": [
+					"uint32",
+					"scalar"
+				],
+				"purpose": "对文件映射对象的访问类型"
+			},
+			{
+				"name": "FileOffset",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "要开始视图的文件偏移量"
+			},
+			{
+				"name": "NumberOfBytesToMap",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "要映射到视图的文件映射的字节数"
 			}
 		]
 	},
@@ -1826,6 +2204,22 @@
 			}
 		]
 	},
+	"MATLAB.Lang.BuiltinBugFix":{
+		"inputs":[
+			{
+				"name":"Command",
+				"kind":"ordered",
+				"type":["real","vector"],
+				"purpose":"要修复/还原的bug序号"
+			},
+			{
+				"name":"RestartDisposition",
+				"kind":"ordered",
+				"type":["MATLAB.Flags","scalar"],
+				"purpose":"修复后是否重启MATLAB"
+			}
+		]
+	},
 	"MATLAB.Lang.DistributeVararginByValidation": {
 		"inputs": [
 			{
@@ -1880,6 +2274,33 @@
 			}
 		]
 	},
+	"MATLAB.Lang.IEnumerableException.Throw": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Message",
+				"kind": "ordered",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "错误相关的文字说明"
+			},
+			{
+				"name": "Detail",
+				"kind": "namevalue",
+				"purpose": "错误的其它详细信息"
+			}
+		]
+	},
 	"MATLAB.Lang.Input": {
 		"inputs": [
 			{
@@ -1902,6 +2323,60 @@
 				"kind": "flag",
 				"type": "choices={'s'}",
 				"purpose": "返回输入的文本，而不会将输入作为表达式来计算"
+			}
+		]
+	},
+	"MATLAB.Lang.MException": {
+		"inputs": [
+			{
+				"name": "Detail",
+				"kind": "namevalue",
+				"purpose": "异常的其它详细信息"
+			},
+			{
+				"name": "Identifier",
+				"kind": "namevalue",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "错误的唯一标识符"
+			},
+			{
+				"name": "Message",
+				"kind": "namevalue",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "错误消息"
+			},
+			{
+				"name": "Causes",
+				"kind": "namevalue",
+				"type": "MException",
+				"purpose": "异常的其他原因"
+			},
+			{
+				"name": "Correction",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"matlab.lang.correction.Correction"
+				],
+				"purpose": "异常的建议修复"
 			}
 		]
 	},
@@ -2235,51 +2710,6 @@
 		],
 		"platforms": "win64"
 	},
-	"MATLAB.Doc": {
-		"inputs": [
-			{
-				"mutuallyExclusiveGroup": [
-					[
-						{
-							"name": "name",
-							"kind": "ordered",
-							"type": "identifier=variable,function,localfunction,package,classdef"
-						}
-					],
-					[
-						{
-							"name": "filename",
-							"kind": "ordered",
-							"type": "file"
-						}
-					]
-				]
-			}
-		]
-	},
-	"MATLAB.Edit": {
-		"inputs": [
-			{
-				"name": "file",
-				"kind": "ordered",
-				"type": [
-					[
-						"file"
-					],
-					[
-						"matlabpathfile=*.m,*.mlx,*.mlapp,*.sfx"
-					],
-					[
-						"identifier=package,classdef"
-					],
-					[
-						"char"
-					]
-				],
-				"repeating": true
-			}
-		]
-	},
 	"MATLAB.EventLogger.LogEvent": {
 		"inputs": [
 			{
@@ -2344,106 +2774,6 @@
 					"scalar",
 					"matlab.ui.Figure"
 				]
-			}
-		]
-	},
-	"MATLAB.IEnumerableException.Throw": {
-		"inputs": [
-			{
-				"name": "obj"
-			},
-			{
-				"name": "Message",
-				"kind": "ordered",
-				"type": [
-					[
-						"string",
-						"scalar"
-					],
-					[
-						"char",
-						"row"
-					]
-				],
-				"purpose": "错误相关的文字说明"
-			},
-			{
-				"name": "Detail",
-				"kind": "namevalue",
-				"purpose": "错误的其它详细信息"
-			}
-		]
-	},
-	"MATLAB.MException": {
-		"inputs": [
-			{
-				"name": "Detail",
-				"kind": "namevalue",
-				"purpose": "异常的其它详细信息"
-			},
-			{
-				"name": "Identifier",
-				"kind": "namevalue",
-				"type": [
-					[
-						"string",
-						"scalar"
-					],
-					[
-						"char",
-						"row"
-					]
-				],
-				"purpose": "错误的唯一标识符"
-			},
-			{
-				"name": "Message",
-				"kind": "namevalue",
-				"type": [
-					[
-						"string",
-						"scalar"
-					],
-					[
-						"char",
-						"row"
-					]
-				],
-				"purpose": "错误消息"
-			},
-			{
-				"name": "Causes",
-				"kind": "namevalue",
-				"type": "MException",
-				"purpose": "异常的其他原因"
-			},
-			{
-				"name": "Correction",
-				"kind": "namevalue",
-				"type": [
-					"scalar",
-					"matlab.lang.correction.Correction"
-				],
-				"purpose": "异常的建议修复"
-			}
-		]
-	},
-	"MATLAB.ModifyBuiltin": {
-		"inputs": [
-			{
-				"name": "File",
-				"kind": "required",
-				"type": "choices={'doc','edit'}",
-				"purpose": "要修复的函数名称"
-			},
-			{
-				"name": "Restore",
-				"kind": "ordered",
-				"type": [
-					"scalar",
-					"logical"
-				],
-				"purpose": "是否还原而非修改"
 			}
 		]
 	},

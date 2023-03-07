@@ -40,12 +40,7 @@ classdef ArrayType<int32
 			%获取POD类型的字节数
 			%POD类型是指具有确定字节数的数据类型，包括 logical, char 和数值类型。非POD类型则可能具有不确定
 			% 的字节数，如 string, cell, struct 等。
-			%# 语法
-			% ```
-			% Size=obj.TypeSize;
-			% ```
-			%# 返回值
-			% Size(1,1)uint8，指定POD类型对应的底层字节数。如果返回0，说明指定数据类型不是POD。
+			%对于非POD类型，此方法将返回0值。
 			persistent TypeSizes
 			if isempty(TypeSizes)
 				TypeSizes=load(fullfile(fileparts(mfilename('fullpath')),'数据类型尺寸.mat')).TypeSizes;
