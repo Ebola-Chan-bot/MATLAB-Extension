@@ -2777,6 +2777,46 @@
 			}
 		]
 	},
+	"MATLAB.LineFollowingArrow":{
+		"inputs":[
+			{
+				"name":"XYCoordinates",
+				"kind":"required",
+				"type":[["size=2,:","real"],["row","numeric"]],
+				"purpose":"引导箭头方向的曲线上各点坐标"
+			},
+			{
+				"name":"NumArrows",
+				"kind":"namevalue",
+				"type":"positive",
+				"purpose":"要绘制的箭头个数"
+			},
+			{
+				"name":"Wingspan",
+				"kind":"namevalue",
+				"type":"positive",
+				"purpose":"箭头翼长"
+			},
+			{
+				"name":"HalfRadian",
+				"kind":"namevalue",
+				"type":["real","scalar"],
+				"purpose":"箭头展开的半弧度"
+			},
+			{
+				"name":"HalfAngle",
+				"kind":"namevalue",
+				"type":["real","scalar"],
+				"purpose":"箭头展开的半角度"
+			},
+			{
+				"name":"PlotArguments",
+				"kind":"namevalue",
+				"type":["cell","row"],
+				"purpose":"要传递给plot的其它参数"
+			}
+		]
+	},
 	"MATLAB.MultiShadowedLines": {
 		"inputs": [
 			{

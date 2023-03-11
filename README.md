@@ -30,6 +30,8 @@ end
 ```MATLAB
 %设置当前图窗的纵横比
 function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,Scale,options)
+%绘制跟随曲线方向的箭头
+function Arrows = LineFollowingArrow(XYCoordinates,options)
 %列出指定工程所添加的搜索路径
 function ProjectPaths = ListAllProjectPaths(Project)
 %绘制多条误差阴影线图
