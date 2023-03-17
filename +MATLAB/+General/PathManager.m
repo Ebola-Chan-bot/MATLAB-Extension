@@ -34,8 +34,8 @@
 			%See also MATLAB.General.PathManager.Uninstall
 			CurrentPaths=path;
 			restoredefaultpath;
-			path(CurrentPaths);
 			MATLAB.internal.savepath;
+			path(CurrentPaths);
 			MATLAB.internal.ElevatedOperation.Install_Path_Manager.Call(uint8(numel(matlabroot)),matlabroot);
 			clear savepath
 		end
