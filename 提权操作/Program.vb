@@ -42,19 +42,19 @@ Module Program
 		Dim 参数流 As MemoryMappedViewStream = MemoryMappedFile.OpenExisting(args(0)).CreateViewStream
 		Select Case 参数流.ReadByte
 			Case 提权操作.Install_Path_Manager
-				Dim MatlabRoot As String = 读入字符串(参数流)
-				File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\替换savepath.m"), Path.Combine(MatlabRoot, "toolbox\matlab\general\savepath.m"), True)
-				Dim 路径 As String = Path.Combine(Environment.GetEnvironmentVariable("ProgramData"), "MathWorks\PathManager")
-				Directory.CreateDirectory(路径)
-				路径 = Path.Combine(路径, "共享路径.txt")
+				Dim Matlab路径 As String = 读入字符串(参数流)
+				File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\替换savepath.m"), Path.Combine(Matlab路径, "toolbox\matlab\general\savepath.m"), True)
+				Dim ProgramData路径 As String = Path.Combine(Environment.GetEnvironmentVariable("ProgramData"), "MathWorks\PathManager")
+				Directory.CreateDirectory(ProgramData路径)
+				ProgramData路径 = Path.Combine(ProgramData路径, "共享路径.txt")
 				'必须用文本文件记录路径，系统环境变量会被用户环境变量屏蔽
-				If Not File.Exists(路径) Then
+				If Not File.Exists(ProgramData路径) Then
 					'不要覆盖已有文件
-					File.Create(路径)
+					File.Create(ProgramData路径)
 				End If
-				路径 = Path.Combine(MatlabRoot, "toolbox\local\matlabrc.m")
+				Matlab路径 = Path.Combine(Matlab路径, "toolbox\local\matlabrc.m")
 				'此处要注意避免重复安装导致重复添加多行
-				File.WriteAllLines(路径, (From 行 As String In File.ReadAllLines(路径) Select 行 Where Not 行.EndsWith("%PathManager")).Append($"path(path,fileread('{路径}'));%PathManager"))
+				File.WriteAllLines(Matlab路径, (From 行 As String In File.ReadAllLines(Matlab路径) Select 行 Where Not 行.EndsWith("%PathManager")).Append($"path(path,fileread('{ProgramData路径}'));%PathManager"))
 			Case 提权操作.Uninstall_Path_Manager
 				Dim Matlab路径 As String = 读入字符串(参数流)
 				File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\savepath.m"), Path.Combine(Matlab路径, "toolbox\matlab\general\savepath.m"), True)
