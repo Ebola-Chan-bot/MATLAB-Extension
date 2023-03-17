@@ -59,7 +59,7 @@ Module Program
 				File.WriteAllLines(MatlabRC, (From 行 As String In File.ReadAllLines(MatlabRC) Select 行 Where Not 行.EndsWith("%PathManager")).Append($"path(path,fileread('{ProgramData路径}'));%PathManager"))
 				Dim 文件信息 As New FileInfo(Path.Combine(MatlabRoot, "toolbox\local\pathdef.m"))
 				Dim 访问控制 = 文件信息.GetAccessControl
-				访问控制.SetAccessRule(New FileSystemAccessRule("Users", FileSystemRights.ReadData, AccessControlType.Allow))
+				访问控制.SetAccessRule(New FileSystemAccessRule("Users", FileSystemRights.Read, AccessControlType.Allow))
 				文件信息.SetAccessControl(访问控制)
 			Case 提权操作.Uninstall_Path_Manager
 				Dim Matlab路径 As String = 读入字符串(参数流)
