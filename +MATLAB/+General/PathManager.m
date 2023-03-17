@@ -35,6 +35,7 @@
 			CurrentPaths=path;
 			restoredefaultpath;
 			MATLAB.internal.savepath;
+			%必须先save再还原，否则会把工具箱路径也给写进pathdef
 			path(CurrentPaths);
 			MATLAB.internal.ElevatedOperation.Install_Path_Manager.Call(uint8(numel(matlabroot)),matlabroot);
 			clear savepath
