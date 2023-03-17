@@ -2,6 +2,7 @@ Imports System.IO
 Imports System.IO.MemoryMappedFiles
 Imports System.Reflection
 Imports System.Runtime.InteropServices
+Imports System.Security.AccessControl
 Imports Microsoft.Win32
 
 Module Program
@@ -43,8 +44,8 @@ Module Program
 		Dim 参数流 As MemoryMappedViewStream = MemoryMappedFile.OpenExisting(args(0)).CreateViewStream
 		Select Case 参数流.ReadByte
 			Case 提权操作.Install_Path_Manager
-				Dim Matlab路径 As String = 读入字符串(参数流)
-				File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\替换savepath.m"), Path.Combine(Matlab路径, "toolbox\matlab\general\savepath.m"), True)
+				Dim MatlabRoot As String = 读入字符串(参数流)
+				File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\替换savepath.m"), Path.Combine(MatlabRoot, "toolbox\matlab\general\savepath.m"), True)
 				Dim ProgramData路径 As String = Path.Combine(Environment.GetEnvironmentVariable("ProgramData"), "MathWorks\PathManager")
 				Directory.CreateDirectory(ProgramData路径)
 				ProgramData路径 = Path.Combine(ProgramData路径, "共享路径.txt")
@@ -53,9 +54,13 @@ Module Program
 					'不要覆盖已有文件
 					File.Create(ProgramData路径)
 				End If
-				Matlab路径 = Path.Combine(Matlab路径, "toolbox\local\matlabrc.m")
+				Dim MatlabRC As String = Path.Combine(MatlabRoot, "toolbox\local\matlabrc.m")
 				'此处要注意避免重复安装导致重复添加多行
-				File.WriteAllLines(Matlab路径, (From 行 As String In File.ReadAllLines(Matlab路径) Select 行 Where Not 行.EndsWith("%PathManager")).Append($"path(path,fileread('{ProgramData路径}'));%PathManager"))
+				File.WriteAllLines(MatlabRC, (From 行 As String In File.ReadAllLines(MatlabRC) Select 行 Where Not 行.EndsWith("%PathManager")).Append($"path(path,fileread('{ProgramData路径}'));%PathManager"))
+				Dim 文件信息 As New FileInfo(Path.Combine(MatlabRoot, "toolbox\local\pathdef.m"))
+				Dim 访问控制 = 文件信息.GetAccessControl
+				访问控制.SetAccessRule(New FileSystemAccessRule("Users", FileSystemRights.ReadData, AccessControlType.Allow))
+				文件信息.SetAccessControl(访问控制)
 			Case 提权操作.Uninstall_Path_Manager
 				Dim Matlab路径 As String = 读入字符串(参数流)
 				File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\savepath.m"), Path.Combine(Matlab路径, "toolbox\matlab\general\savepath.m"), True)
