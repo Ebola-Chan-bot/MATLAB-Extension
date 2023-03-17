@@ -3005,6 +3005,22 @@
 			}
 		]
 	},
+	"MATLAB.Rgb2Gray": {
+		"inputs": [
+			{
+				"name": "RGB",
+				"kind": "required",
+				"type": "real",
+				"purpose": "具有RGB颜色通道的图像数组"
+			},
+			{
+				"name": "Dimension",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "要视为RGB维度的维度序号"
+			}
+		]
+	},
 	"MATLAB.TtrtnWbgc": {
 		"inputs": [
 			{

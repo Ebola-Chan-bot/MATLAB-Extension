@@ -23,9 +23,10 @@ Module Program
 
 	Private Sub 添加共享路径(新路径 As IEnumerable(Of String))
 		Dim 共享路径 As String = Path.Combine(Environment.GetEnvironmentVariable("ProgramData"), "MathWorks\PathManager\共享路径.txt")
-		新路径 = 新路径.Except(File.ReadAllText(共享路径).Split(";"))
+		Dim 旧路径 As String = File.ReadAllText(共享路径)
+		新路径 = 新路径.Except(旧路径.Split(";"))
 		If 新路径.Any Then
-			File.AppendAllText(共享路径, String.Join(";", 新路径))
+			File.AppendAllText(共享路径, If(旧路径 = "", "", ";") + String.Join(";", 新路径))
 		End If
 	End Sub
 
