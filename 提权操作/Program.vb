@@ -22,11 +22,21 @@ Module Program
 		Builtin_bug_fix
 	End Enum
 
+	Private Sub 公开只读权限(路径 As String)
+		Dim 文件信息 As New FileInfo(路径)
+		Dim 访问控制 = 文件信息.GetAccessControl
+		访问控制.SetAccessRule(New FileSystemAccessRule("Users", FileSystemRights.Read, AccessControlType.Allow))
+		文件信息.SetAccessControl(访问控制)
+	End Sub
+
 	Private Sub 添加共享路径(新路径 As IEnumerable(Of String))
 		Dim 共享路径 As String = Path.Combine(Environment.GetEnvironmentVariable("ProgramData"), "MathWorks\PathManager\共享路径.txt")
 		Dim 旧路径 As String = File.ReadAllText(共享路径)
 		新路径 = 新路径.Except(旧路径.Split(";"))
 		If 新路径.Any Then
+			For Each 路径 As String In 新路径
+				公开只读权限(路径)
+			Next
 			File.AppendAllText(共享路径, If(旧路径 = "", "", ";") + String.Join(";", 新路径))
 		End If
 	End Sub
@@ -57,10 +67,7 @@ Module Program
 				Dim MatlabRC As String = Path.Combine(MatlabRoot, "toolbox\local\matlabrc.m")
 				'此处要注意避免重复安装导致重复添加多行
 				File.WriteAllLines(MatlabRC, (From 行 As String In File.ReadAllLines(MatlabRC) Select 行 Where Not 行.EndsWith("%PathManager")).Append($"path(path,fileread('{ProgramData路径}'));%PathManager"))
-				Dim 文件信息 As New FileInfo(Path.Combine(MatlabRoot, "toolbox\local\pathdef.m"))
-				Dim 访问控制 = 文件信息.GetAccessControl
-				访问控制.SetAccessRule(New FileSystemAccessRule("Users", FileSystemRights.Read, AccessControlType.Allow))
-				文件信息.SetAccessControl(访问控制)
+				公开只读权限(Path.Combine(MatlabRoot, "toolbox\local\pathdef.m"))
 			Case 提权操作.Uninstall_Path_Manager
 				Dim Matlab路径 As String = 读入字符串(参数流)
 				File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\savepath.m"), Path.Combine(Matlab路径, "toolbox\matlab\general\savepath.m"), True)
