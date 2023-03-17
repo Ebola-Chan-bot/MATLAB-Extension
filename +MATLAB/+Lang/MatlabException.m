@@ -29,6 +29,8 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		MEX_exception(26)
 		FillData_larger_than_NumBytes(27)
 
+		Invalid_RestartDisposition(241)
+		PathManager_not_installed(242)
 		Number_of_EdgeColors_does_not_match_number_of_lines(243)
 		Number_of_LineStyles_does_not_match_number_of_lines(244)
 		Cannot_own_a_non_handle_value(245)

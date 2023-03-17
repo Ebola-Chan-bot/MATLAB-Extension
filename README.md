@@ -156,6 +156,9 @@ function Path = Which(varargin)
 ```
 类
 ```MATLAB
+classdef PathManager<handle
+	%搜索路径管理系统
+end
 classdef Pointer<uint64
 	%分配和读写C++内存指针
 end

@@ -8,22 +8,10 @@
     <ApplicationIcon>图标.ico</ApplicationIcon>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>$(SolutionDir)</OutputPath>
+  <PropertyGroup>
+    <OutputPath>$(SolutionDir)+MATLAB\+internal\</OutputPath>
     <RemoveIntegerChecks>True</RemoveIntegerChecks>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>$(SolutionDir)</OutputPath>
-    <RemoveIntegerChecks>True</RemoveIntegerChecks>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="Program.vb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="图标.ico" />
-  </ItemGroup>
 
 </Project>

@@ -1332,6 +1332,69 @@
 			}
 		]
 	},
+	"MATLAB.General.PathManager.SharedPaths": {
+		"inputs": [
+			{
+				"name": "SP",
+				"kind": "ordered",
+				"type": [
+					[
+						"char",
+						"row"
+					],
+					[
+						"string"
+					],
+					[
+						"cell"
+					]
+				],
+				"purpose": "要设置的新路径"
+			}
+		]
+	},
+	"MATLAB.General.PathManager.AddSharedPaths": {
+		"inputs": [
+			{
+				"name": "SP",
+				"kind": "required",
+				"type": [
+					[
+						"char",
+						"row"
+					],
+					[
+						"string"
+					],
+					[
+						"cell"
+					]
+				],
+				"purpose": "要添加的搜索路径"
+			}
+		]
+	},
+	"MATLAB.General.PathManager.RemoveSharedPaths": {
+		"inputs": [
+			{
+				"name": "SP",
+				"kind": "required",
+				"type": [
+					[
+						"char",
+						"row"
+					],
+					[
+						"string"
+					],
+					[
+						"cell"
+					]
+				],
+				"purpose": "要移除的搜索路径"
+			}
+		]
+	},
 	"MATLAB.General.Pointer.Allocate": {
 		"inputs": [
 			{
@@ -2054,9 +2117,6 @@
 	"MATLAB.IOFun.MemoryMapping.Create": {
 		"inputs": [
 			{
-				"name": "obj"
-			},
-			{
 				"name": "File",
 				"kind": "namevalue",
 				"type": [
@@ -2109,7 +2169,35 @@
 				"purpose": "要填充的初始内容"
 			}
 		]
-	}, 
+	},
+	"MATLAB.IOFun.MemoryMapping.Open": {
+		"inputs": [
+			{
+				"name": "Name",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "要打开的文件映射对象的名称"
+			},
+			{
+				"name": "DesiredAccess",
+				"kind": "ordered",
+				"type": [
+					"uint32",
+					"scalar"
+				],
+				"purpose": "对文件映射对象的访问"
+			}
+		]
+	},
 	"MATLAB.IOFun.MemoryMapping.View": {
 		"inputs": [
 			{
@@ -2204,19 +2292,25 @@
 			}
 		]
 	},
-	"MATLAB.Lang.BuiltinBugFix":{
-		"inputs":[
+	"MATLAB.Lang.BuiltinBugFix": {
+		"inputs": [
 			{
-				"name":"Command",
-				"kind":"ordered",
-				"type":["real","vector"],
-				"purpose":"要修复/还原的bug序号"
+				"name": "Command",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "要修复/还原的bug序号"
 			},
 			{
-				"name":"RestartDisposition",
-				"kind":"ordered",
-				"type":["MATLAB.Flags","scalar"],
-				"purpose":"修复后是否重启MATLAB"
+				"name": "RestartDisposition",
+				"kind": "ordered",
+				"type": [
+					"MATLAB.Flags",
+					"scalar"
+				],
+				"purpose": "修复后是否重启MATLAB"
 			}
 		]
 	},
@@ -2777,43 +2871,61 @@
 			}
 		]
 	},
-	"MATLAB.LineFollowingArrow":{
-		"inputs":[
+	"MATLAB.LineFollowingArrow": {
+		"inputs": [
 			{
-				"name":"XYCoordinates",
-				"kind":"required",
-				"type":[["size=2,:","real"],["row","numeric"]],
-				"purpose":"引导箭头方向的曲线上各点坐标"
+				"name": "XYCoordinates",
+				"kind": "required",
+				"type": [
+					[
+						"size=2,:",
+						"real"
+					],
+					[
+						"row",
+						"numeric"
+					]
+				],
+				"purpose": "引导箭头方向的曲线上各点坐标"
 			},
 			{
-				"name":"NumArrows",
-				"kind":"namevalue",
-				"type":"positive",
-				"purpose":"要绘制的箭头个数"
+				"name": "NumArrows",
+				"kind": "namevalue",
+				"type": "positive",
+				"purpose": "要绘制的箭头个数"
 			},
 			{
-				"name":"Wingspan",
-				"kind":"namevalue",
-				"type":"positive",
-				"purpose":"箭头翼长"
+				"name": "Wingspan",
+				"kind": "namevalue",
+				"type": "positive",
+				"purpose": "箭头翼长"
 			},
 			{
-				"name":"HalfRadian",
-				"kind":"namevalue",
-				"type":["real","scalar"],
-				"purpose":"箭头展开的半弧度"
+				"name": "HalfRadian",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "箭头展开的半弧度"
 			},
 			{
-				"name":"HalfAngle",
-				"kind":"namevalue",
-				"type":["real","scalar"],
-				"purpose":"箭头展开的半角度"
+				"name": "HalfAngle",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "箭头展开的半角度"
 			},
 			{
-				"name":"PlotArguments",
-				"kind":"namevalue",
-				"type":["cell","row"],
-				"purpose":"要传递给plot的其它参数"
+				"name": "PlotArguments",
+				"kind": "namevalue",
+				"type": [
+					"cell",
+					"row"
+				],
+				"purpose": "要传递给plot的其它参数"
 			}
 		]
 	},
