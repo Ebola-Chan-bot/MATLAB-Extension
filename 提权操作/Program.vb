@@ -120,6 +120,13 @@ Module Program
 						Case -3
 							Dim 文件路径 As String = Path.Combine(MatlabRoot, "toolbox\matlab\codetools\edit.m")
 							File.WriteAllText(文件路径, File.ReadAllText(文件路径).Replace("EbolaChan.OpenEditor", "matlab.desktop.editor.Document.openEditor"))
+						Case 4
+							File.Copy(Path.Combine(包目录, "+internal\WebSave.m"), Path.Combine(共享目录, "WebSave.m"), True)
+							Dim 文件路径 As String = Path.Combine(MatlabRoot, "toolbox\matlab\toolbox_packaging\+matlab\+internal\+addons\+metadata\ToolboxConfigurationReader.m")
+							File.WriteAllText(文件路径, File.ReadAllText(文件路径).Replace("websave", "EbolaChan.WebSave"))
+						Case -4
+							Dim 文件路径 As String = Path.Combine(MatlabRoot, "toolbox\matlab\toolbox_packaging\+matlab\+internal\+addons\+metadata\ToolboxConfigurationReader.m")
+							File.WriteAllText(文件路径, File.ReadAllText(文件路径).Replace("EbolaChan.WebSave", "websave"))
 					End Select
 				Next
 		End Select
