@@ -36,6 +36,8 @@ function Arrows = LineFollowingArrow(XYCoordinates,options)
 function ProjectPaths = ListAllProjectPaths(Project)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
+%生成任意概率分布密度的随机数
+function varargout = RandAnyDist(PDF,Size,Range)
 %将任意维度的RGB图像转换为灰度图
 function Image = Rgb2Gray(Image,Dimension)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）

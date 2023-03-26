@@ -3005,6 +3005,42 @@
 			}
 		]
 	},
+	"MATLAB.RandAnyDist": {
+		"inputs": [
+			{
+				"name": "PDF",
+				"kind": "required",
+				"type": [
+					[
+						"function_handle"
+					],
+					[
+						"symfun"
+					]
+				],
+				"purpose": "联合概率密度函数"
+			},
+			{
+				"name": "Size",
+				"kind": "required",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "要返回的随机数组的各维尺寸"
+			},
+			{
+				"name": "Range",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"vector"
+				],
+				"repeating": true,
+				"purpose": "每个随机变量的数值范围和数据类型"
+			}
+		]
+	},
 	"MATLAB.Rgb2Gray": {
 		"inputs": [
 			{
