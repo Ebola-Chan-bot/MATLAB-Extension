@@ -854,6 +854,22 @@
 			}
 		]
 	},
+	"MATLAB.ElMat.CutCat":{
+		"inputs":[
+			{
+				"name":"Dimension",
+				"kind":"required",
+				"type":"positive",
+				"purpose":"拼接维度"
+			},
+			{
+				"name":"Array",
+				"kind":"required",
+				"repeating":true,
+				"purpose":"要拼接的数组"
+			}
+		]
+	},
 	"MATLAB.ElMat.Flip": {
 		"inputs": [
 			{

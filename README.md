@@ -113,6 +113,8 @@ function A=AngleND(varargin)
 ```
 ## +ElMat
 ```MATLAB
+%内置cat函数的魔改版，可以给不兼容数组自动剪除尾数
+function Array = CutCat(Dimension,varargin)
 %内置flip函数的升级版，支持同时翻转多个维度
 function A = Flip(A,Dimensions)
 %内置isequaln的升级版，支持任意数组类型，并可以指定比较维度，返回逻辑数组
