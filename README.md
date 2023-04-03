@@ -14,6 +14,7 @@
 	- [+IOFun](#IOFun)
 	- [+Lang](#Lang)
 	- [+Ops](#Ops)
+	- [+RandFun](#RandFun)
 	- [+SpecFun](#SpecFun)
 	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
 	- [+UITools](#UITools)
@@ -36,8 +37,6 @@ function Arrows = LineFollowingArrow(XYCoordinates,options)
 function ProjectPaths = ListAllProjectPaths(Project)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
-%生成任意概率分布密度的随机数
-function varargout = RandAnyDist(PDF,Size,Range)
 %将任意维度的RGB图像转换为灰度图
 function Image = Rgb2Gray(Image,Dimension)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
@@ -240,6 +239,13 @@ function [Diff,IA] = SetDiffN(SetA,SetB,Dimension)
 function USet = UnionN(Dimension,varargin)
 %内置unique的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [C,ia,ic] = UniqueN(A,Dimension)
+```
+## +RandFun
+```MATLAB
+%生成任意概率分布密度的随机数
+function varargout = RandAnyDist(PDF,Size,Range)
+%生成单位球面上均匀分布的随机点
+function [X,Y,Z] = RandOnSphere(varargin)
 ```
 ## +SpecFun
 ```MATLAB

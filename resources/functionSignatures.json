@@ -854,19 +854,19 @@
 			}
 		]
 	},
-	"MATLAB.ElMat.CutCat":{
-		"inputs":[
+	"MATLAB.ElMat.CutCat": {
+		"inputs": [
 			{
-				"name":"Dimension",
-				"kind":"required",
-				"type":"positive",
-				"purpose":"拼接维度"
+				"name": "Dimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "拼接维度"
 			},
 			{
-				"name":"Array",
-				"kind":"required",
-				"repeating":true,
-				"purpose":"要拼接的数组"
+				"name": "Array",
+				"kind": "required",
+				"repeating": true,
+				"purpose": "要拼接的数组"
 			}
 		]
 	},
@@ -2595,6 +2595,106 @@
 			}
 		]
 	},
+	"MATLAB.RandFun.RandAnyDist": {
+		"inputs": [
+			{
+				"name": "PDF",
+				"kind": "required",
+				"type": [
+					[
+						"function_handle"
+					],
+					[
+						"symfun"
+					]
+				],
+				"purpose": "联合概率密度函数"
+			},
+			{
+				"name": "Size",
+				"kind": "required",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "要返回的随机数组的各维尺寸"
+			},
+			{
+				"name": "Range",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"vector"
+				],
+				"repeating": true,
+				"purpose": "每个随机变量的数值范围和数据类型"
+			}
+		]
+	},
+	"MATLAB.RandFun.RandOnSphere": {
+		"inputs": [
+			{
+				"name": "s",
+				"kind": "ordered",
+				"type": "RandStream"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					{
+						"name": "sz",
+						"kind": "required",
+						"type": [
+							"numeric",
+							"scalar",
+							"integer",
+							">=0"
+						],
+						"repeating": true
+					},
+					{
+						"name": "sz",
+						"kind": "required",
+						"type": [
+							"numeric",
+							"vector",
+							"integer",
+							">=0"
+						]
+					},
+					{
+						"name": "n",
+						"kind": "ordered",
+						"type": [
+							"numeric",
+							"scalar",
+							"integer",
+							">=0"
+						]
+					}
+				]
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					{
+						"name": "classname",
+						"kind": "ordered",
+						"type": "choices={'double', 'single'}"
+					},
+					[
+						{
+							"name": "'like'",
+							"kind": "required",
+							"type": "choices={'like'}"
+						},
+						{
+							"name": "p",
+							"kind": "required"
+						}
+					]
+				]
+			}
+		]
+	},
 	"MATLAB.SpecFun.LogicalExhaustion": {
 		"inputs": [
 			{
@@ -3018,42 +3118,6 @@
 					"vector"
 				],
 				"purpose": "每条线的线型"
-			}
-		]
-	},
-	"MATLAB.RandAnyDist": {
-		"inputs": [
-			{
-				"name": "PDF",
-				"kind": "required",
-				"type": [
-					[
-						"function_handle"
-					],
-					[
-						"symfun"
-					]
-				],
-				"purpose": "联合概率密度函数"
-			},
-			{
-				"name": "Size",
-				"kind": "required",
-				"type": [
-					"real",
-					"vector"
-				],
-				"purpose": "要返回的随机数组的各维尺寸"
-			},
-			{
-				"name": "Range",
-				"kind": "ordered",
-				"type": [
-					"real",
-					"vector"
-				],
-				"repeating": true,
-				"purpose": "每个随机变量的数值范围和数据类型"
 			}
 		]
 	},
