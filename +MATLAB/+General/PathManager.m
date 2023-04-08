@@ -19,8 +19,7 @@
 	% 我们希望的搜索路径，应当由3部分组成：
 	%  - 内置和工具箱函数路径，这些路径应当仅在安装时允许修改，因此应放在%ProgramFiles%目录下
 	%  - 用户之间共享的第三方函数路径，这些路径应当只允许管理员修改，一般用户只能读取，因此应放在%ProgramData%目录下
-	%  - 用户自己使用的代码路径，这些路径应当允许用户自己修改，但是不应影响到其他用户，因此应放在%APPDATA%下。但是因为MATLAB恰好支持更方便的%MATLABPATH%环境变量，所
-	%   以使用该变量实现用户私有路径。
+	%  - 用户自己使用的代码路径，这些路径应当允许用户自己修改，但是不应影响到其他用户，因此应放在%APPDATA%下。
 	% 而MATLAB是怎么做的呢？它彻底无视了上述规范，将上述三种路径通通存放在%ProgramFiles%的pathdef.m下。因为%ProgramFiles%被认为是只有在安装时才允许修改的，因此一般用
 	%  户无法修改它，也就无法设置自己需要的路径。如果管理员修改了权限，允许一般用户修改它，那么任何一个用户的改动都会影响到其他用户，导致其他用户出现无法访问别人的私有
 	%  目录的问题。
@@ -81,7 +80,7 @@
 			%See also MATLAB.General.PathManager.AddSharedPaths
 			persistent SharedPath
 			if isempty(SharedPath)
-				SharedPath=fullfile(getenv('ProgramData'),'MathWorks\PathManager\共享路径.txt');
+				SharedPath=fullfile(getenv('ProgramData'),'MathWorks\埃博拉酱\共享路径.txt');
 			end
 			if nargin
 				SP=char(strip(join(SP,pathsep),pathsep));
