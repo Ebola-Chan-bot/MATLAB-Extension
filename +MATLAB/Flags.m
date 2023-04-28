@@ -172,6 +172,11 @@ classdef Flags<uint32
 		Do_not_restart(0)%不要重启
 		Restart_now(1)%立刻重启
 		Inquire(2)%询问是否重启
+
+		%% FigureAspectRatio
+
+		Narrow(0)
+		Amplify(1)
 	end
 	methods
 		function Combination=or(Flag1,Flag2)

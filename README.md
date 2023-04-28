@@ -1,25 +1,27 @@
-埃博拉酱的MATLAB扩展工具包，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。还替官方修复了许多内置函数的bug。
+埃博拉酱的MATLAB扩展工具箱，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。还替官方修复了许多内置函数的bug。
 
 [![View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://ww2.mathworks.cn/matlabcentral/fileexchange/96344-matlab-extension)
 # 目录
 本包中所有函数均在MATLAB命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
 - [+MATLAB](#MATLAB)
-	- [+Containers](#Containers)
-	- [+DataFun](#DataFun)
-	- [+DataTypes](#DataTypes)
-	- [+ElFun](#ElFun)
-	- [+ElMat](#ElMat)
-	- [+General](#General)
-	- [+IO](#IO)
-	- [+IOFun](#IOFun)
-	- [+Lang](#Lang)
-	- [+Ops](#Ops)
-	- [+RandFun](#RandFun)
-	- [+SpecFun](#SpecFun)
+	- [+Containers](#Containers) 实现多种STL容器
+	- [+DataFun](#DataFun) 数值统计操作
+	- [+DataTypes](#DataTypes) 元胞、表格、结构等特殊容器类型的复杂操作
+	- [+ElFun](#ElFun) 计算两个N维空间向量的夹角弧度
+	- [+ElMat](#ElMat) 数组元素变换
+	- [+General](#General) 文件、路径、工作区操作
+	- [+Graphics](#Graphics) 图窗和绘图操作
+	- [+IO](#IO) ZIP档案操作
+	- [+IOFun](#IOFun) 文件、网络、内存读写相关
+	- [+Lang](#Lang) 函数使用、定义、异常工具
+	- [+Ops](#Ops) 逻辑和集合操作
+	- [+RandFun](#RandFun) 随机概率分布
+	- [+SpecFun](#SpecFun) 穷举
 	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
-	- [+UITools](#UITools)
+	- [+UITools](#UITools) 文件打开和保存对话框
+	- 还有一些尚未归类的工具函数直接放在MATLAB包下
 
-每个代码文件内部都有详细文档，可以用doc命令查看，此处仅列出函数签名、类公开接口和功能简介。
+每个代码文件内部都有详细文档，可以用doc命令查看，此处仅列出函数签名和类功能简介。
 # +MATLAB
 类
 ```MATLAB
@@ -29,14 +31,10 @@ end
 ```
 函数
 ```MATLAB
-%设置当前图窗的纵横比
-function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,Scale,options)
 %绘制跟随曲线方向的箭头
 function Arrows = LineFollowingArrow(XYCoordinates,options)
 %列出指定工程所添加的搜索路径
 function ProjectPaths = ListAllProjectPaths(Project)
-%绘制多条误差阴影线图
-function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
 %将任意维度的RGB图像转换为灰度图
 function Image = Rgb2Gray(Image,Dimension)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
@@ -169,6 +167,20 @@ classdef Pointer<uint64
 end
 classdef SharedPtr<handle
 	%将引用计数智能指针回绕在动态分配的对象周围。
+end
+```
+## Graphics
+函数
+```MATLAB
+%设置当前图窗的纵横比
+function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,varargin)
+%绘制多条误差阴影线图
+function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
+```
+类
+```MATLAB
+classdef Window<handle
+	%创建一个全透明Windows窗口，可以在其上显示图像
 end
 ```
 ## +IO

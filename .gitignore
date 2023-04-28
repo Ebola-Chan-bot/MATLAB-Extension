@@ -6,6 +6,7 @@ packages
 **/*.exp
 **/*.lib
 **/*.pdb
+**/*.pri
 **/x64
 **/bin
 **/My Project

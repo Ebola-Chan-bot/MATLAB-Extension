@@ -1,6 +1,5 @@
 #pragma once
 #include <Mex工具.h>
-using namespace Mex工具;
 
 //SHFileOperation
 
@@ -51,6 +50,16 @@ API声明(Pointer_Read);
 API声明(Pointer_Write);
 API声明(Pointer_Copy);
 API声明(Pointer_Release);
+
+//Window
+
+API声明(Window_Create);
+API声明(Window_Destroy);
+API声明(Window_Image);
+API声明(Window_Screens);
+API声明(Window_Clear);
+API声明(Window_Fill);
+API声明(Window_RemoveVisual);
 
 //杂项
 

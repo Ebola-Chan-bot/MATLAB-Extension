@@ -2,6 +2,7 @@
 #include "MexAPI.h"
 #include <shellapi.h>
 #include "MATLAB异常.h"
+using namespace Mex工具;
 void 字符串转换(Array& 输入, String& 输出)
 {
 	switch (输入.getType())
@@ -27,7 +28,7 @@ TypedArray<bool> 执行操作(SHFILEOPSTRUCTW& 操作结构)
 	if (异常 && 异常 != ERROR_CANCELLED)
 		throw MATLAB异常(MATLAB异常类型::文件操作失败, 内部异常类型::Win32异常, 异常);
 	else
-		return 数组工厂.createScalar<bool>(操作结构.fAnyOperationsAborted);
+		return 万能转码<bool>(操作结构.fAnyOperationsAborted);
 }
 TypedArray<bool> CopyMove(ArgumentList& inputs, UINT wFunc)
 {

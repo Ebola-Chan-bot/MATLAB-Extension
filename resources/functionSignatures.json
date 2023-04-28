@@ -1671,6 +1671,203 @@
 			}
 		]
 	},
+	"MATLAB.Graphics.FigureAspectRatio": {
+		"inputs": [
+			{
+				"name": "HorizontalProportion",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "宽度比值。例如如果你希望图窗为4:3，则此值给4"
+			},
+			{
+				"name": "VerticalProportion",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "高度比值。例如如果你希望图窗为4:3，则此值给3"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "ScaleFactor",
+							"kind": "ordered",
+							"type": "positive",
+							"purpose": "缩放倍率"
+						}
+					],
+					[
+						{
+							"name": "ScaleMode",
+							"kind": "ordered",
+							"type": "MATLAB.Flags",
+							"purpose": "缩放模式"
+						}
+					]
+				]
+			},
+			{
+				"name": "Fig",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"matlab.ui.Figure"
+				],
+				"purpose": "图窗对象。如果指定该参数，将对指定的图窗进行操作，而不一定是当前图窗"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Fig",
+				"type": [
+					"scalar",
+					"matlab.ui.Figure"
+				]
+			}
+		]
+	},
+	"MATLAB.Graphics.MultiShadowedLines": {
+		"inputs": [
+			{
+				"name": "Y",
+				"kind": "required",
+				"type": [
+					[
+						"real",
+						"2d"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "每个点的Y坐标"
+			},
+			{
+				"name": "ShadowHeights",
+				"kind": "ordered",
+				"type": [
+					[
+						"real",
+						"2d"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "每个点的阴影高度，阴影范围为Y±ShadowHeights"
+			},
+			{
+				"name": "FaceAlpha",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "阴影的不透明度。0为完全透明，1为完全不透明。"
+			},
+			{
+				"name": "X",
+				"kind": "namevalue",
+				"type": [
+					[
+						"real",
+						"2d"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "每个点的X坐标"
+			},
+			{
+				"name": "EdgeColors",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"size=:,3"
+				],
+				"purpose": "每条线的颜色。第1维是不同的线，第2维是RGB颜色通道，范围[0,1]。"
+			},
+			{
+				"name": "LineStyles",
+				"kind": "namevalue",
+				"type": [
+					"string",
+					"vector"
+				],
+				"purpose": "每条线的线型"
+			}
+		]
+	},
+	"MATLAB.Graphics.Window.Create":{
+		"inputs":[
+			{
+				"name":"DeviceName",
+				"kind":"namevalue",
+				"type":[["string","scalar"],["char","row"]],
+				"purpose":"显示器设备名"
+			},
+			{
+				"name":"PositionXY",
+				"kind":"namevalue",
+				"type":["vector","real"],
+				"purpose":"窗口左上角坐标"
+			},
+			{
+				"name":"SizeWH",
+				"kind":"namevalue",
+				"type":["vector","real"],
+				"purpose":"窗口的宽度和高度"
+			}
+		]
+	},
+	"MATLAB.Graphics.Window.Fill":{
+		"inputs":[
+			{
+				"name":"obj"
+			},
+			{
+				"name":"Color",
+				"kind":"required",
+				"type":["vector","real"],
+				"purpose":"颜色的ARGB"
+			}
+		]
+	},
+	"MATLAB.Graphics.Window.Image":{
+		"inputs":[
+			{
+				"name":"obj"
+			},
+			{
+				"name":"BGRAp",
+				"kind":"required",
+				"type":["size=4,:,:","uint8"],
+				"purpose":"BGRAp图像数组"
+			},
+			{
+				"name":"Rectangle",
+				"kind":"ordered",
+				"type":["vector","real"],
+				"purpose":"要显示图像位置的矩形框"
+			}
+		]
+	},
+	"MATLAB.Graphics.Window.RemoveVisual":{
+		"inputs":[
+			{
+				"name":"obj"
+			},
+			{
+				"name":"Visual",
+				"kind":"required",
+				"type":"real",
+				"purpose":"指向要移除的视觉元素的指针"
+			}
+		]
+	},
 	"MATLAB.General.Which": {
 		"inputs": [
 			{
@@ -2933,60 +3130,6 @@
 			}
 		]
 	},
-	"MATLAB.FigureAspectRatio": {
-		"inputs": [
-			{
-				"name": "HorizontalProportion",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "宽度比值。例如如果你希望图窗为4:3，则此值给4"
-			},
-			{
-				"name": "VerticalProportion",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "高度比值。例如如果你希望图窗为4:3，则此值给3"
-			},
-			{
-				"mutuallyExclusiveGroup": [
-					[
-						{
-							"name": "ScaleFactor",
-							"kind": "ordered",
-							"type": "positive",
-							"purpose": "缩放倍率"
-						}
-					],
-					[
-						{
-							"name": "ScaleMode",
-							"kind": "ordered",
-							"type": "choices={'Amplify','Narrow'}",
-							"purpose": "缩放模式"
-						}
-					]
-				]
-			},
-			{
-				"name": "Fig",
-				"kind": "namevalue",
-				"type": [
-					"scalar",
-					"matlab.ui.Figure"
-				],
-				"purpose": "图窗对象。如果指定该参数，将对指定的图窗进行操作，而不一定是当前图窗"
-			}
-		],
-		"outputs": [
-			{
-				"name": "Fig",
-				"type": [
-					"scalar",
-					"matlab.ui.Figure"
-				]
-			}
-		]
-	},
 	"MATLAB.LineFollowingArrow": {
 		"inputs": [
 			{
@@ -3042,82 +3185,6 @@
 					"row"
 				],
 				"purpose": "要传递给plot的其它参数"
-			}
-		]
-	},
-	"MATLAB.MultiShadowedLines": {
-		"inputs": [
-			{
-				"name": "Y",
-				"kind": "required",
-				"type": [
-					[
-						"real",
-						"2d"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "每个点的Y坐标"
-			},
-			{
-				"name": "ShadowHeights",
-				"kind": "ordered",
-				"type": [
-					[
-						"real",
-						"2d"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "每个点的阴影高度，阴影范围为Y±ShadowHeights"
-			},
-			{
-				"name": "FaceAlpha",
-				"kind": "ordered",
-				"type": [
-					"real",
-					"scalar"
-				],
-				"purpose": "阴影的不透明度。0为完全透明，1为完全不透明。"
-			},
-			{
-				"name": "X",
-				"kind": "namevalue",
-				"type": [
-					[
-						"real",
-						"2d"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "每个点的X坐标"
-			},
-			{
-				"name": "EdgeColors",
-				"kind": "namevalue",
-				"type": [
-					"real",
-					"size=:,3"
-				],
-				"purpose": "每条线的颜色。第1维是不同的线，第2维是RGB颜色通道，范围[0,1]。"
-			},
-			{
-				"name": "LineStyles",
-				"kind": "namevalue",
-				"type": [
-					"string",
-					"vector"
-				],
-				"purpose": "每条线的线型"
 			}
 		]
 	},

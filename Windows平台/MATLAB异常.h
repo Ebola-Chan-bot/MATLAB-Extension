@@ -32,6 +32,10 @@ enum class MATLAB异常类型 :uint8_t
 	Mex异常,
 	填充数据超出内存范围,
 	打开文件映射失败,
+	指定设备未找到,
+	填充颜色数据类型错误,
+	无效指针,
+	未知异常,
 };
 enum class 内部异常类型 :uint8_t
 {
@@ -39,11 +43,13 @@ enum class 内部异常类型 :uint8_t
 	Win32异常,
 	LibZip异常,
 	Mex异常,
+	COM异常,
 };
 struct MATLAB异常
 {
 	MATLAB异常类型 异常类型 = MATLAB异常类型::成功;
 	内部异常类型 内部异常 = 内部异常类型::无;
+	//不能用long，因为MATLAB不支持
 	int 错误代码 = 0;
 	size_t 第几个 = -1;
 	constexpr MATLAB异常() {}
