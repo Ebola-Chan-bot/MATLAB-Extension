@@ -30,6 +30,10 @@ classdef WindowsAPI<uint8
 		Pointer_Copy(27)
 		Pointer_Release(28)
 		TypeCast(29)
+		Window_Create(30)
+		Window_Destroy(31)
+		Window_Image(32)
+		Window_Screens(33)
 	end
 	methods
 		function varargout=Call(obj,varargin)
@@ -42,8 +46,8 @@ classdef WindowsAPI<uint8
 				switch InnerException(Error.InnerException)
 					case InnerException.None
 						ExceptionType.Throw;
-					case InnerException.Win32Exception
-						Detail.InnerException=WindowsErrorCode(Error.ErrorCode);
+					case {InnerException.Win32Exception,InnerException.ComException}
+						Detail.InnerException=WindowsErrorCode(typecast(Error.ErrorCode,'uint32'));
 					case InnerException.LibzipException
 						Detail.InnerException=MATLAB.IO.LibzipException(Error.ErrorCode);
 					case InnerException.MexException

@@ -1,7 +1,10 @@
 #include "pch.h"
-#include "MATLAB异常.h"
-#include "MexAPI.h"
-#include <Mex实现.h>
+#include"MexAPI.h"
+#include"MATLAB异常.h"
+#include"窗口.h"
+#include<Mex实现.h>
+#include<Mex工具.h>
+using namespace Mex工具; 
 void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 {
 	static const StructArray 异常结构 = 数组工厂.createStructArray({ 1 }, { "ExceptionType","WindowsErrorCode" });
@@ -36,7 +39,11 @@ void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 		Pointer_Write,
 		Pointer_Copy,
 		Pointer_Release,
-		TypeCast
+		TypeCast,
+		Window_Create,
+		Window_Destroy,
+		Window_Image,
+		Window_Screens,
 	};
 	try
 	{
@@ -56,4 +63,8 @@ void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 	}
 	static const StructArray 成功结构 = MATLAB异常();
 	outputs[0] = 成功结构;
+}
+MexFunction::~MexFunction()
+{
+	窗口::销毁所有();
 }

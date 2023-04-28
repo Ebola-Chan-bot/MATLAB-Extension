@@ -2,19 +2,20 @@
 #include "MexAPI.h"
 #include"MATLAB异常.h"
 #include <limits>
+using namespace Mex工具;
 API声明(File_Create)
 {
 	const String FileName = 万能转码<String>(std::move(inputs[1]));
 	const HANDLE 文件句柄 = CreateFileW((LPCWSTR)FileName.c_str(), 万能转码<uint32_t>(std::move(inputs[2])), 万能转码<uint32_t>(std::move(inputs[3])), NULL, 万能转码<uint32_t>(std::move(inputs[4])), 万能转码<uint32_t>(std::move(inputs[5])), NULL);
 	if (文件句柄 == INVALID_HANDLE_VALUE)
 		throw MATLAB异常(MATLAB异常类型::文件创建失败, 内部异常类型::Win32异常, GetLastError());
-	outputs[1] = 数组工厂.createScalar(uint64_t(文件句柄));
+	outputs[1] = 万能转码(文件句柄);
 }
 API声明(File_GetSize)
 {
 	LARGE_INTEGER 文件大小;
-	if (GetFileSizeEx((HANDLE)万能转码<uint64_t>(std::move(inputs[1])), &文件大小))
-		outputs[1] = 数组工厂.createScalar(文件大小.QuadPart);
+	if (GetFileSizeEx(万能转码<HANDLE>(std::move(inputs[1])), &文件大小))
+		outputs[1] = 万能转码(文件大小.QuadPart);
 	else
 		throw MATLAB异常(MATLAB异常类型::获取文件大小失败, 内部异常类型::Win32异常, GetLastError());
 }
@@ -28,7 +29,8 @@ API声明(File_Read)
 	GetFileSizeEx(文件句柄, &文件大小);
 	const uint64_t 可读入个数 = (文件大小.QuadPart - 文件指针.QuadPart) / 类型尺寸[(int)读入类型];
 	const uint64_t 读入个数 = 万能转码<uint64_t>(std::move(inputs[2]));
-	const std::unique_ptr<无类型缓冲>输出 = 无类型缓冲::创建(读入类型, min(读入个数, 可读入个数));
+	
+	const std::unique_ptr<动态类型缓冲>输出 = 动态类型缓冲::创建(读入类型, min(读入个数, 可读入个数));
 	if (输出->字节数 < UINT32_MAX)
 	{
 		DWORD 实际读入数;
@@ -72,8 +74,8 @@ API声明(File_SetEnd)
 API声明(File_SetPointer)
 {
 	LARGE_INTEGER 位置{ .QuadPart = 万能转码<LONGLONG>(std::move(inputs[2])) };
-	if (SetFilePointerEx((HANDLE)万能转码<uint64_t>(std::move(inputs[1])), 位置, &位置, 万能转码<uint32_t>(std::move(inputs[3]))))
-		outputs[1] = 数组工厂.createScalar(位置.QuadPart);
+	if (SetFilePointerEx(万能转码<HANDLE>(std::move(inputs[1])), 位置, &位置, 万能转码<uint32_t>(std::move(inputs[3]))))
+		outputs[1] = 万能转码(位置.QuadPart);
 	else
 		throw MATLAB异常(MATLAB异常类型::设置文件指针失败, 内部异常类型::Win32异常, GetLastError());
 }
@@ -81,11 +83,10 @@ API声明(File_Write)
 {
 	const HANDLE 文件句柄 = (HANDLE)万能转码<uint64_t>(std::move(inputs[1]));
 	const uint8_t 输入个数 = inputs[2].getNumberOfElements();
-	const std::unique_ptr<std::unique_ptr<无类型数组>[]>无类型输入 = std::make_unique_for_overwrite<std::unique_ptr<无类型数组>[]>(输入个数);
 	const CellArray 所有输入(std::move(inputs[2]));
 	uint64_t 字节数 = 0;
-	for (uint8_t a = 0; a < 输入个数; ++a)
-		字节数 += (无类型输入[a] = 无类型数组::创建(std::move(所有输入[a])))->字节数;
+	for (const Array& a : 所有输入)
+		字节数 += 数组字节数(a);
 	//这里必须用内存映射文件，不考虑WriteFile，因为数据来源不是指针，只能用迭代器拷贝到内存
 	LARGE_INTEGER 文件指针{ .QuadPart = 0 };
 	SetFilePointerEx(文件句柄, 文件指针, &文件指针, FILE_CURRENT);
@@ -102,12 +103,9 @@ API声明(File_Write)
 	}
 	try
 	{
-		char* 写出头 = (char*)映射指针;
-		for (uint8_t a = 0; a < 输入个数; ++a)
-		{
-			无类型输入[a]->拷贝(写出头);
-			写出头 += 无类型输入[a]->字节数;
-		}
+		void* 写出头 = 映射指针;
+		for (Array&& a : 所有输入)
+			万能转码(std::move(a), 写出头);
 	}
 	catch (Mex异常 异常)
 	{
