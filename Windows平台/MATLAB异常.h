@@ -36,6 +36,7 @@ enum class MATLAB异常类型 :uint8_t
 	填充颜色数据类型错误,
 	无效指针,
 	未知异常,
+	保存快捷方式失败,
 };
 enum class 内部异常类型 :uint8_t
 {

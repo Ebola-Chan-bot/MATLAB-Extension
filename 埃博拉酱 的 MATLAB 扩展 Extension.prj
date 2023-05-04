@@ -4,7 +4,7 @@
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company>一致行动党</param.company>
-    <param.summary>提供许多内置函数的bug修复（是的，我们有在替官方修bug）、功能升级版，以及一系列内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，创建透明Windows窗口以绘图，强行拼接尺寸不兼容的数组，尺寸生成球面上均匀分布的随机点，任意分布的随机数……</param.summary>
+    <param.summary>提供许多内置函数的bug修复（是的，我们有在替官方修bug）、功能升级版，以及一系列内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，创建Windows快捷方式，创建透明Windows窗口以绘图，强行拼接尺寸不兼容的数组……</param.summary>
     <param.description>埃博拉酱的MATLAB扩展工具箱，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。还替官方修复了许多内置函数的bug。
 
 View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange
@@ -18,9 +18,9 @@ View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange
 +DataTypes 元胞、表格、结构等特殊容器类型的复杂操作
 +ElFun 计算两个N维空间向量的夹角弧度
 +ElMat 数组元素变换
-+General 文件、路径、工作区操作
++General 变量、路径、工作区操作
 +Graphics 图窗和绘图操作
-+IO ZIP档案操作
++IO 文件和ZIP档案操作
 +IOFun 文件、网络、内存读写相关
 +Lang 函数使用、定义、异常工具
 +Ops 逻辑和集合操作
@@ -31,7 +31,7 @@ View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange
 还有一些尚未归类的工具函数直接放在MATLAB包下
 每个代码文件内部都有详细文档，可以用doc命令查看，此处仅列出函数签名和类功能简介。</param.description>
     <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
-    <param.version>13.0.0</param.version>
+    <param.version>14.0.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />

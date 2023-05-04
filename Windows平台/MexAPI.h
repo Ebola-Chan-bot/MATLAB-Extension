@@ -64,3 +64,4 @@ API声明(Window_RemoveVisual);
 //杂项
 
 API声明(TypeCast);
+API声明(LnkShortcut);

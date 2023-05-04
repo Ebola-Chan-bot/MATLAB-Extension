@@ -9,9 +9,9 @@
 	- [+DataTypes](#DataTypes) 元胞、表格、结构等特殊容器类型的复杂操作
 	- [+ElFun](#ElFun) 计算两个N维空间向量的夹角弧度
 	- [+ElMat](#ElMat) 数组元素变换
-	- [+General](#General) 文件、路径、工作区操作
+	- [+General](#General) 变量、路径、工作区操作
 	- [+Graphics](#Graphics) 图窗和绘图操作
-	- [+IO](#IO) ZIP档案操作
+	- [+IO](#IO) 文件和ZIP档案操作
 	- [+IOFun](#IOFun) 文件、网络、内存读写相关
 	- [+Lang](#Lang) 函数使用、定义、异常工具
 	- [+Ops](#Ops) 逻辑和集合操作
@@ -138,16 +138,10 @@ function varargout = UniformSize(varargin)
 function Paths = BuiltinPaths
 %内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
 function OldDirectory = CD(NewDirectory)
-%调用 Win32 ShellAPI 执行可撤销的批量文件复制
-function AnyOperationCanceled = CopyFile(Source,Destination)
-%调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
-function AnyOperationCanceled=Delete(Paths)
 %内置javaaddpath的升级版，自动添加目录下的所有jar
 function JavaAddPath(Paths)
 %内置load函数的魔改版，取消适用场合限制，支持直接输出变量
 function varargout = Load(Path,VariableName)
-%调用 Win32 ShellAPI 执行可撤销的批量文件移动
-function AnyOperationCanceled = MoveFile(Source,Destination)
 %内置save函数的魔改版，采用名称值参数保存变量，可以在parfor循环中使用。
 function Save(MatPath,Variable)
 %在工作区或复合变量中搜索变量名、结构体字段、表格列或对象属性
@@ -184,6 +178,18 @@ classdef Window<handle
 end
 ```
 ## +IO
+函数
+```MATLAB
+%调用 Win32 ShellAPI 执行可撤销的批量文件复制
+function AnyOperationCanceled = CopyFile(Source,Destination)
+%调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
+function AnyOperationCanceled=Delete(Paths)
+%创建 Windows lnk 快捷方式
+function LnkShortcut(varargin)
+%调用 Win32 ShellAPI 执行可撤销的批量文件移动
+function AnyOperationCanceled = MoveFile(Source,Destination)
+```
+类
 ```MATLAB
 classdef ZipFileReader
 	%ZIP文件批量读入器，直接从ZIP档案中读入，不会向磁盘写出解压文件

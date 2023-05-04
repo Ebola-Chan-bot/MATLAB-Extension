@@ -47,6 +47,7 @@ void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 		Window_Clear,
 		Window_Fill,
 		Window_RemoveVisual,
+		LnkShortcut,
 	};
 	try
 	{

@@ -1150,86 +1150,6 @@
 			}
 		]
 	},
-	"MATLAB.General.CopyFile": {
-		"inputs": [
-			{
-				"name": "Source",
-				"kind": "required",
-				"type": [
-					[
-						"file"
-					],
-					[
-						"folder"
-					],
-					[
-						"char",
-						"vector"
-					],
-					[
-						"string",
-						"vector"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "源路径，可以是多个文件、目录的混合，也可以使用通配符"
-			},
-			{
-				"name": "Destination",
-				"kind": "required",
-				"type": [
-					[
-						"file"
-					],
-					[
-						"char",
-						"vector"
-					],
-					[
-						"string",
-						"vector"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "目标路径，可以是多个文件、目录的混合。"
-			}
-		]
-	},
-	"MATLAB.General.Delete": {
-		"inputs": [
-			{
-				"name": "Paths",
-				"kind": "required",
-				"type": [
-					[
-						"file"
-					],
-					[
-						"folder"
-					],
-					[
-						"char",
-						"vector"
-					],
-					[
-						"string",
-						"vector"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "要删除的所有文件、目录路径。"
-			}
-		]
-	},
 	"MATLAB.General.JavaAddPath": {
 		"inputs": [
 			{
@@ -1294,57 +1214,6 @@
 				],
 				"repeating": true,
 				"purpose": "要载入的变量名"
-			}
-		]
-	},
-	"MATLAB.General.MoveFile": {
-		"inputs": [
-			{
-				"name": "Source",
-				"kind": "required",
-				"type": [
-					[
-						"file"
-					],
-					[
-						"folder"
-					],
-					[
-						"char",
-						"vector"
-					],
-					[
-						"string",
-						"vector"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "源路径，可以是多个文件、目录的混合，也可以使用通配符"
-			},
-			{
-				"name": "Destination",
-				"kind": "required",
-				"type": [
-					[
-						"file"
-					],
-					[
-						"char",
-						"vector"
-					],
-					[
-						"string",
-						"vector"
-					],
-					[
-						"cell",
-						"vector"
-					]
-				],
-				"purpose": "目标路径，可以是多个文件、目录的混合。"
 			}
 		]
 	},
@@ -1801,70 +1670,94 @@
 			}
 		]
 	},
-	"MATLAB.Graphics.Window.Create":{
-		"inputs":[
+	"MATLAB.Graphics.Window.Create": {
+		"inputs": [
 			{
-				"name":"DeviceName",
-				"kind":"namevalue",
-				"type":[["string","scalar"],["char","row"]],
-				"purpose":"显示器设备名"
+				"name": "DeviceName",
+				"kind": "namevalue",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "显示器设备名"
 			},
 			{
-				"name":"PositionXY",
-				"kind":"namevalue",
-				"type":["vector","real"],
-				"purpose":"窗口左上角坐标"
+				"name": "PositionXY",
+				"kind": "namevalue",
+				"type": [
+					"vector",
+					"real"
+				],
+				"purpose": "窗口左上角坐标"
 			},
 			{
-				"name":"SizeWH",
-				"kind":"namevalue",
-				"type":["vector","real"],
-				"purpose":"窗口的宽度和高度"
+				"name": "SizeWH",
+				"kind": "namevalue",
+				"type": [
+					"vector",
+					"real"
+				],
+				"purpose": "窗口的宽度和高度"
 			}
 		]
 	},
-	"MATLAB.Graphics.Window.Fill":{
-		"inputs":[
+	"MATLAB.Graphics.Window.Fill": {
+		"inputs": [
 			{
-				"name":"obj"
+				"name": "obj"
 			},
 			{
-				"name":"Color",
-				"kind":"required",
-				"type":["vector","real"],
-				"purpose":"颜色的ARGB"
+				"name": "Color",
+				"kind": "required",
+				"type": [
+					"vector",
+					"real"
+				],
+				"purpose": "颜色的ARGB"
 			}
 		]
 	},
-	"MATLAB.Graphics.Window.Image":{
-		"inputs":[
+	"MATLAB.Graphics.Window.Image": {
+		"inputs": [
 			{
-				"name":"obj"
+				"name": "obj"
 			},
 			{
-				"name":"BGRAp",
-				"kind":"required",
-				"type":["size=4,:,:","uint8"],
-				"purpose":"BGRAp图像数组"
+				"name": "BGRAp",
+				"kind": "required",
+				"type": [
+					"size=4,:,:",
+					"uint8"
+				],
+				"purpose": "BGRAp图像数组"
 			},
 			{
-				"name":"Rectangle",
-				"kind":"ordered",
-				"type":["vector","real"],
-				"purpose":"要显示图像位置的矩形框"
+				"name": "Rectangle",
+				"kind": "ordered",
+				"type": [
+					"vector",
+					"real"
+				],
+				"purpose": "要显示图像位置的矩形框"
 			}
 		]
 	},
-	"MATLAB.Graphics.Window.RemoveVisual":{
-		"inputs":[
+	"MATLAB.Graphics.Window.RemoveVisual": {
+		"inputs": [
 			{
-				"name":"obj"
+				"name": "obj"
 			},
 			{
-				"name":"Visual",
-				"kind":"required",
-				"type":"real",
-				"purpose":"指向要移除的视觉元素的指针"
+				"name": "Visual",
+				"kind": "required",
+				"type": "real",
+				"purpose": "指向要移除的视觉元素的指针"
 			}
 		]
 	},
@@ -1938,6 +1831,183 @@
 						}
 					]
 				]
+			}
+		]
+	},
+	"MATLAB.IO.CopyFile": {
+		"inputs": [
+			{
+				"name": "Source",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "源路径，可以是多个文件、目录的混合，也可以使用通配符"
+			},
+			{
+				"name": "Destination",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "目标路径，可以是多个文件、目录的混合。"
+			}
+		]
+	},
+	"MATLAB.IO.Delete": {
+		"inputs": [
+			{
+				"name": "Paths",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "要删除的所有文件、目录路径。"
+			}
+		]
+	},
+	"MATLAB.IO.LnkShortcut": {
+		"inputs": [
+			{
+				"name": "From",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"folder"
+					],
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "要创建快捷方式的文件或目录路径"
+			},
+			{
+				"name": "To",
+				"kind": "ordered",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"folder"
+					],
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "快捷方式保存到的路径"
+			}
+		]
+	},
+	"MATLAB.IO.MoveFile": {
+		"inputs": [
+			{
+				"name": "Source",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"folder"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "源路径，可以是多个文件、目录的混合，也可以使用通配符"
+			},
+			{
+				"name": "Destination",
+				"kind": "required",
+				"type": [
+					[
+						"file"
+					],
+					[
+						"char",
+						"vector"
+					],
+					[
+						"string",
+						"vector"
+					],
+					[
+						"cell",
+						"vector"
+					]
+				],
+				"purpose": "目标路径，可以是多个文件、目录的混合。"
 			}
 		]
 	},

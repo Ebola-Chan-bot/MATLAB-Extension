@@ -37,6 +37,7 @@ classdef WindowsAPI<uint8
 		Window_Clear(34)
 		Window_Fill(35)
 		Window_RemoveVisual(36)
+		LnkShortcut(37)
 	end
 	methods
 		function varargout=Call(obj,varargin)
@@ -49,12 +50,24 @@ classdef WindowsAPI<uint8
 				switch InnerException(Error.InnerException)
 					case InnerException.None
 						ExceptionType.Throw;
-					case {InnerException.Win32Exception,InnerException.ComException}
+					case InnerException.Win32Exception
 						Detail.InnerException=WindowsErrorCode(typecast(Error.ErrorCode,'uint32'));
 					case InnerException.LibzipException
 						Detail.InnerException=MATLAB.IO.LibzipException(Error.ErrorCode);
 					case InnerException.MexException
 						Detail.InnerException=MexException(Error.ErrorCode);
+					case InnerException.ComException
+						ErrorCode=typecast(Error.ErrorCode,'uint32');
+						try
+							ErrorCode=WindowsErrorCode(ErrorCode);
+						catch ME
+							if ME.identifier=="MATLAB:class:InvalidEnum"
+								ErrorCode=WindowsErrorCode(bitand(ErrorCode,0x0000ffff));
+							else
+								ME.rethrow;
+							end
+						end
+						Detail.InnerException=ErrorCode;
 				end
 				if Error.Index
 					Detail.Index=Error.Index;
