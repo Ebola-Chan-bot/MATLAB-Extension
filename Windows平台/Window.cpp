@@ -75,11 +75,8 @@ API声明(Window_Create)
 }
 API声明(Window_Destroy)
 {
-	try
-	{
-		窗口::销毁(万能转码<窗口*>(std::move(inputs[1])));
-	}
-	catch (...) {}
+	//销毁函数本身不会抛出异常，不需要额外try
+	窗口::销毁(万能转码<窗口*>(std::move(inputs[1])));
 }
 API声明(Window_Image)
 {
@@ -177,14 +174,18 @@ API声明(Window_Fill)
 API声明(Window_RemoveVisual)
 {
 	const 窗口* const 窗口指针 = 万能转码<窗口*>(std::move(inputs[1]));
-	for (size_t a : TypedArray<size_t>(std::move(inputs[2])))
+	const TypedArray<size_t> 数组(std::move(inputs[2]));
+	const uint8_t 个数 = 数组.getNumberOfElements();
+	winrt::SpriteVisual 精灵视觉(nullptr);
+	for (size_t a : 数组)
 	{
-		winrt::SpriteVisual 精灵视觉(nullptr);
 		winrt::attach_abi(精灵视觉, (void*)a);
 		try
 		{
 			窗口指针->视觉集合.Remove(精灵视觉);
 		}
 		catch (...) {}
+		//不做这一步可能导致Release析构时出错
+		winrt::detach_abi(精灵视觉);
 	}
 }
