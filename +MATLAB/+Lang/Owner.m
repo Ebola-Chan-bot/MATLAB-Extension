@@ -21,7 +21,7 @@ classdef Owner<handle&matlab.mixin.indexing.RedefinesDot
 			if isa(Object,'handle')
 				obj.iObject=Object;
 			else
-				MATLAB.MatlabException.Cannot_own_a_non_handle_value.Throw;
+				MATLAB.Lang.MatlabException.Cannot_own_a_non_handle_value.Throw;
 			end
 		end
 		function obj = Owner(Object)
