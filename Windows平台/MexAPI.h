@@ -65,3 +65,5 @@ API声明(Window_RemoveVisual);
 
 API声明(TypeCast);
 API声明(LnkShortcut);
+API声明(Crash);
+API声明(Pause);

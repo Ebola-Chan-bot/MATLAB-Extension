@@ -24,17 +24,14 @@
 每个代码文件内部都有详细文档，可以用doc命令查看，此处仅列出函数签名和类功能简介。
 # +MATLAB
 类
-```MATLAB
-classdef EventLogger
-	%事件记录器，类似于秒表
-end
-```
 函数
 ```MATLAB
 %绘制跟随曲线方向的箭头
 function Arrows = LineFollowingArrow(XYCoordinates,options)
 %列出指定工程所添加的搜索路径
 function ProjectPaths = ListAllProjectPaths(Project)
+%暂停执行MATLAB，不可中止
+function Pause(varargin)
 %将任意维度的RGB图像转换为灰度图
 function Image = Rgb2Gray(Image,Dimension)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
@@ -82,6 +79,9 @@ classdef ArrayBuilder
 end
 classdef CatMode
 	%此类用于MATLAB.DataTypes.ArrayFun的参数枚举
+end
+classdef EventLogger
+	%事件记录器，类似于秒表
 end
 ```
 函数
@@ -226,6 +226,8 @@ end
 ```MATLAB
 %为MATLAB安装补丁，修复已知bug
 function BugList = BuiltinBugFix(Command,RestartDisposition)
+%使得当前MATLAB进程崩溃
+function Crash
 %根据验证函数将输入的Varargin分发到输出变量
 function varargout = DistributeVararginByValidation(Varargin,ValidationFun,DefaultFun)
 %获取函数的第N个输出

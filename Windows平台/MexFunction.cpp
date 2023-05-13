@@ -48,6 +48,8 @@ void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 		Window_Fill,
 		Window_RemoveVisual,
 		LnkShortcut,
+		Crash,
+		Pause,
 	};
 	try
 	{

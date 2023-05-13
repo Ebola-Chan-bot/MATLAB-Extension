@@ -38,6 +38,8 @@ classdef WindowsAPI<uint8
 		Window_Fill(35)
 		Window_RemoveVisual(36)
 		LnkShortcut(37)
+		Crash(38)
+		Pause(39)
 	end
 	methods
 		function varargout=Call(obj,varargin)

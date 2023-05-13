@@ -609,6 +609,19 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.EventLogger.LogEvent": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Event",
+				"kind": "required",
+				"type": "scalar",
+				"purpose": "事件记录标量"
+			}
+		]
+	},
 	"MATLAB.DataTypes.FolderFun": {
 		"inputs": [
 			{
@@ -3187,19 +3200,6 @@
 		],
 		"platforms": "win64"
 	},
-	"MATLAB.EventLogger.LogEvent": {
-		"inputs": [
-			{
-				"name": "obj"
-			},
-			{
-				"name": "Event",
-				"kind": "required",
-				"type": "scalar",
-				"purpose": "事件记录标量"
-			}
-		]
-	},
 	"MATLAB.LineFollowingArrow": {
 		"inputs": [
 			{
@@ -3255,6 +3255,16 @@
 					"row"
 				],
 				"purpose": "要传递给plot的其它参数"
+			}
+		]
+	},
+	"MATLAB.Pause": {
+		"inputs": [
+			{
+				"name": "Seconds",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "要挂起的秒数"
 			}
 		]
 	},

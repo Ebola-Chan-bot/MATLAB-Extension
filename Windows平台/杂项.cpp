@@ -4,6 +4,8 @@
 #include<ShlObj.h>
 #include<wrl/client.h>
 #include<filesystem>
+#include<chrono>
+#include<thread>
 using namespace Mex工具;
 API声明(TypeCast)
 {
@@ -42,4 +44,21 @@ API声明(LnkShortcut)
 	const HRESULT 结果 = 持久文件->Save((LPCOLESTR)目标路径.c_str(), TRUE);
 	if (FAILED(结果))
 		throw MATLAB异常(MATLAB异常类型::保存快捷方式失败, 内部异常类型::COM异常, 结果);
+}
+[[noreturn]] API声明(Crash)
+{
+	throw;
+}
+API声明(Pause)
+{
+	if (inputs.size() > 1)
+	{
+		double 秒数 = 万能转码<double>(std::move(inputs[1]));
+		if (秒数 < std::numeric_limits<double>::infinity())
+			std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)(秒数 * 1000)));
+		return;
+	}
+	while (true)
+#undef max
+		std::this_thread::sleep_for(std::chrono::years::max());
 }
