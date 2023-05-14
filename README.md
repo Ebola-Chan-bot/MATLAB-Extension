@@ -2,7 +2,7 @@
 
 [![View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://ww2.mathworks.cn/matlabcentral/fileexchange/96344-matlab-extension)
 # 目录
-本包中所有函数均在MATLAB命名空间下，使用前需import。使用命名空间是一个好习惯，可以有效防止命名冲突，避免编码时不必要的代码提示干扰。
+本包中所有函数均在MATLAB命名空间下，使用前需import。
 - [+MATLAB](#MATLAB)
 	- [+Containers](#Containers) 实现多种STL容器
 	- [+DataFun](#DataFun) 数值统计操作
@@ -15,6 +15,7 @@
 	- [+IOFun](#IOFun) 文件、网络、内存读写相关
 	- [+Lang](#Lang) 函数使用、定义、异常工具
 	- [+Ops](#Ops) 逻辑和集合操作
+	- [+Project](#Project) 工程相关
 	- [+RandFun](#RandFun) 随机概率分布
 	- [+SpecFun](#SpecFun) 穷举
 	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
@@ -27,8 +28,6 @@
 ```MATLAB
 %绘制跟随曲线方向的箭头
 function Arrows = LineFollowingArrow(XYCoordinates,options)
-%列出指定工程所添加的搜索路径
-function ProjectPaths = ListAllProjectPaths(Project)
 %暂停执行MATLAB，不可中止
 function Pause(varargin)
 %将任意维度的RGB图像转换为灰度图
@@ -258,6 +257,13 @@ function [Diff,IA] = SetDiffN(SetA,SetB,Dimension)
 function USet = UnionN(Dimension,varargin)
 %内置unique的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [C,ia,ic] = UniqueN(A,Dimension)
+```
+## Project
+```MATLAB
+%为Windows添加.prj文件扩展名关联
+function AssociatePrjExtension
+%列出指定工程所添加的搜索路径
+function ProjectPaths = ListAllProjectPaths(Project)
 ```
 ## +RandFun
 ```MATLAB

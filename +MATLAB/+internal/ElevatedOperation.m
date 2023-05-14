@@ -6,6 +6,7 @@ classdef ElevatedOperation<uint8
 		Add_shared_path(3)
 		Remove_shared_path(4)
 		Builtin_bug_fix(5)
+		Associate_prj_extension(6)
 	end
 	methods
 		function Call(obj,varargin)

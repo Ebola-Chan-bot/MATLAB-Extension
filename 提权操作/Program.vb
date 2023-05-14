@@ -20,6 +20,7 @@ Module Program
 		Add_shared_path
 		Remove_shared_path
 		Builtin_bug_fix
+		Associate_prj_extension
 	End Enum
 
 	Private Sub 公开只读权限(路径 As String)
@@ -74,17 +75,17 @@ Module Program
 					File.WriteAllText(共享路径, String.Join(";", 移除路径))
 				End If
 			Case 提权操作.Builtin_bug_fix
+				Dim 读入器 As New BinaryReader(参数流)
 				Static 文件名 As String() = {"getDocumentationXML.m", "CshDocPageHandler.m", "Document.m", "ToolboxConfigurationReader.m", "getReferencePage.m"}
 				Static 目标目录 As String() = {
-					"toolbox\matlab\helptools\+matlab\+internal\+doc",
-					"toolbox\matlab\helptools\+matlab\+internal\+doc\+ui\@CshDocPageHandler",
-					"toolbox\matlab\codetools\+matlab\+desktop\+editor\@Document",
-					"toolbox\matlab\toolbox_packaging\+matlab\+internal\+addons\+metadata",
-					"toolbox\matlab\helptools\+matlab\+internal\+doc\+reference"
-				}
+						"toolbox\matlab\helptools\+matlab\+internal\+doc",
+						"toolbox\matlab\helptools\+matlab\+internal\+doc\+ui\@CshDocPageHandler",
+						"toolbox\matlab\codetools\+matlab\+desktop\+editor\@Document",
+						"toolbox\matlab\toolbox_packaging\+matlab\+internal\+addons\+metadata",
+						"toolbox\matlab\helptools\+matlab\+internal\+doc\+reference"
+					}
 				Static 包目录 As String = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\..\+internal")
 				Dim MatlabRoot As String = 读入字符串(参数流)
-				Dim 读入器 As New BinaryReader(参数流)
 				For C As Byte = 1 To 读入器.ReadByte
 					Dim 命令 As SByte = 读入器.ReadSByte
 					If 命令 > 0 Then
@@ -97,6 +98,30 @@ Module Program
 						Throw New ArgumentNullException("Command不能为0")
 					End If
 				Next
+			Case 提权操作.Associate_prj_extension
+				Dim 键A As RegistryKey = Registry.ClassesRoot.CreateSubKey(".prj")
+				Dim MATLAB版本 As String = 读入字符串(参数流)
+				Dim prj类 As String = $"MATLAB.prj.{MATLAB版本}.0"
+				键A.SetValue(Nothing, prj类)
+				键A.SetValue("PerceivedType", "mwopc")
+				键A.CreateSubKey("OpenWithProgids").SetValue(prj类, "", RegistryValueKind.String)
+				Dim 键B As RegistryKey = 键A.CreateSubKey("ShellEx")
+				键B.CreateSubKey("{BB2E617C-0920-11d1-9A0B-00C04FC2D6C1}").SetValue(Nothing, "{44121072-A222-48f2-A58A-6D9AD51EBBE9}")
+				键B.CreateSubKey("{E357FCCD-A995-4576-B01F-234630154E96}").SetValue(Nothing, "{44121072-A222-48f2-A58A-6D9AD51EBBE9}")
+				键B = 键A.CreateSubKey("Versions").CreateSubKey(prj类)
+				键B.SetValue("FileVersionLS", 0, RegistryValueKind.DWord)
+				Dim 子版本号 As String() = MATLAB版本.Split(".")
+				键B.SetValue("FileVersionMS", (CUInt(子版本号(0)) << 16) + CUInt(子版本号(1)), RegistryValueKind.DWord)
+				键A = Registry.ClassesRoot.CreateSubKey(prj类)
+				Dim MatlabRoot As String = 读入字符串(参数流)
+				键A.CreateSubKey("DefaultIcon").SetValue(Nothing, $"""{Path.Combine(MatlabRoot, "bin\win64\osintegplugins\osintegplugins\mlproj\mwmlprojfaplugin.dll")}"",0")
+				键A = 键A.CreateSubKey("Shell").CreateSubKey("Open")
+				键A.SetValue(Nothing, "Open")
+				键A.CreateSubKey("command").SetValue(Nothing, $"""{Path.Combine(MatlabRoot, "bin\win64\matlab.exe")}"" -r ""uiopen('%1',1)""")
+				键A = 键A.CreateSubKey("ddeexec")
+				键A.SetValue(Nothing, "uiopen('%1',1)")
+				键A.CreateSubKey("application").SetValue(Nothing, $"ShellVerbs.MATLAB.{MATLAB版本}.0")
+				键A.CreateSubKey("topic").SetValue(Nothing, "system")
 		End Select
 	End Sub
 End Module
