@@ -177,6 +177,11 @@ classdef Flags<uint32
 
 		Narrow(0)
 		Amplify(1)
+
+		%% Delete
+
+		%对于显示的任何对话框，都对 “是”进行 响应。
+		FOF_NOCONFIRMATION         (0x0010)
 	end
 	methods
 		function Combination=or(Flag1,Flag2)

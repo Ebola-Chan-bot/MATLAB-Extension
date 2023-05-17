@@ -1924,6 +1924,15 @@
 					]
 				],
 				"purpose": "要删除的所有文件、目录路径。"
+			},
+			{
+				"name": "Flags",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"MATLAB.Flags"
+				],
+				"purpose": "额外指定的旗帜选项"
 			}
 		]
 	},

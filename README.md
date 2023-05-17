@@ -181,7 +181,7 @@ end
 %调用 Win32 ShellAPI 执行可撤销的批量文件复制
 function AnyOperationCanceled = CopyFile(Source,Destination)
 %调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
-function AnyOperationCanceled=Delete(Paths)
+function AnyOperationCanceled=Delete(Paths,Flags)
 %创建 Windows lnk 快捷方式
 function LnkShortcut(varargin)
 %调用 Win32 ShellAPI 执行可撤销的批量文件移动

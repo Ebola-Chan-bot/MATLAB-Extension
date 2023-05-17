@@ -51,7 +51,7 @@ API声明(Delete)
 {
 	String From;
 	字符串转换(inputs[1],From);
-	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FOF_ALLOWUNDO };
+	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FILEOP_FLAGS(FOF_ALLOWUNDO | 万能转码<uint32_t>(std::move(inputs[2]))) };
 	outputs[1] = 执行操作(操作结构);
 }
 API声明(MoveFile)
