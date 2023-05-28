@@ -35,6 +35,8 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Unknown_exception(32)
 		Failed_to_save_shortcut(33)
 
+		Dot_reference_is_unsupported(236)
+		Specified_name_was_not_found(237)
 		Example_exception(238)
 		NumWantNew_is_too_big(239)
 		Range_is_not_a_numerical_type(240)
