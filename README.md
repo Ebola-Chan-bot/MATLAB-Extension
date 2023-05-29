@@ -81,6 +81,9 @@ end
 classdef EventLogger
 	%事件记录器，类似于秒表
 end
+classdef NDTable
+	%N维表格，相当于支持字符串索引的N维数组
+end
 ```
 函数
 ```MATLAB

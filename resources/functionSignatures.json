@@ -736,6 +736,39 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.NDTable": {
+		"inputs": [
+			{
+				"name": "Data",
+				"kind": "required",
+				"purpose": "填充NDTable的原始数据"
+			},
+			{
+				"name": "Dimensions",
+				"kind": "ordered",
+				"type": [
+					"cell",
+					"column"
+				],
+				"purpose": "各维各位置允许使用的字符串索引"
+			},
+			{
+				"name": "DimensionNames",
+				"kind": "ordered",
+				"type": [
+					[
+						"string",
+						"column"
+					],
+					[
+						"cell",
+						"column"
+					]
+				],
+				"purpose": "各维度名称"
+			}
+		]
+	},
 	"MATLAB.DataTypes.RepeatingFun": {
 		"inputs": [
 			{
@@ -2706,7 +2739,7 @@
 				"name": "obj"
 			},
 			{
-				"mutuallyExclusiveGroup":[
+				"mutuallyExclusiveGroup": [
 					[
 						{
 							"name": "Message",
@@ -2726,7 +2759,10 @@
 						{
 							"name": "BackTrace",
 							"kind": "ordered",
-							"type":["logical","scalar"],
+							"type": [
+								"logical",
+								"scalar"
+							],
 							"purpose": "是否显示堆栈跟踪"
 						}
 					],
@@ -2734,7 +2770,10 @@
 						{
 							"name": "BackTrace",
 							"kind": "ordered",
-							"type":["logical","scalar"],
+							"type": [
+								"logical",
+								"scalar"
+							],
 							"purpose": "是否显示堆栈跟踪"
 						},
 						{
