@@ -245,7 +245,7 @@ classdef MException
 	%内置MException的扩展，支持更灵活的构造和额外的Detail属性
 end
 classdef Owner
-	%为句柄对象制定一个所有者，托管其生命周期
+	%为句柄对象指定一个所有者，托管其生命周期
 end
 ```
 ## +Ops
