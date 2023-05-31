@@ -747,25 +747,10 @@
 				"name": "Dimensions",
 				"kind": "ordered",
 				"type": [
-					"cell",
-					"column"
+					"table",
+					"size=:,2"
 				],
-				"purpose": "各维各位置允许使用的字符串索引"
-			},
-			{
-				"name": "DimensionNames",
-				"kind": "ordered",
-				"type": [
-					[
-						"string",
-						"column"
-					],
-					[
-						"cell",
-						"column"
-					]
-				],
-				"purpose": "各维度名称"
+				"purpose": "各维度的名称和维度内索引名称"
 			}
 		]
 	},

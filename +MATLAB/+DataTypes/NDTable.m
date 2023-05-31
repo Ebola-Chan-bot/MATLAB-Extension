@@ -23,8 +23,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	%     3×2×1×7 NDTable 数组 - 属性:
 	%
 	%                 Data: [3×2×1×7 double]
-	%           Dimensions: {4×1 cell}
-	%       DimensionNames: [1×0 string]
+	%           Dimensions: [4×2 table]
 	%  %}
 	%  obj(2:4,["F","H"],6,7:-1:1,:,1)=Slice
 	%  %{
@@ -33,8 +32,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	%     4×5×6×7 NDTable 数组 - 属性:
 	%
 	%                 Data: [4×5×6×7 double]
-	%           Dimensions: {4×1 cell}
-	%       DimensionNames: [1×0 string]
+	%           Dimensions: [4×2 table]
 	%  %}
 	%  ObjToTruncate=obj;
 	%  ObjToTruncate(:,"F",:,:)=[]
@@ -44,8 +42,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	%     4×4×6×7 NDTable 数组 - 属性:
 	%
 	%                 Data: [4×4×6×7 double]
-	%           Dimensions: {4×1 cell}
-	%       DimensionNames: [1×0 string]
+	%           Dimensions: [4×2 table]
 	%  %}
 	%  ```
 	% ## 输入参数
@@ -80,8 +77,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	%     4×5×6×7 NDTable 数组 - 属性:
 	%
 	%                 Data: [4×5×6×7 double]
-	%           Dimensions: {4×1 cell}
-	%       DimensionNames: [1×0 string]
+	%           Dimensions: [4×2 table]
 	%  %}
 	%  ```
 	% ## 输入参数
@@ -116,8 +112,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	%     4×5×6×7 NDTable 数组 - 属性:
 	%
 	%                 Data: [4×5×6×7 double]
-	%           Dimensions: {4×1 cell}
-	%       DimensionNames: [1×0 string]
+	%           Dimensions: [4×2 table]
 	%  %}
 	%  Slice=obj.(["A","P"]);
 	%  size(Slice)
@@ -137,12 +132,16 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	%  Slice，索引取值得到的切片结果，返回原始数据类型数组，而不是NDTable。
 	%See also MATLAB.DataTypes.NDTable/NDTable
 	properties
+
 		%实际存储数据的高维数组，可以为任意类型
 		Data
-		%各维度的索引名称，元胞列向量，每个元胞对应一个维度，元胞内是(1,:)string，指示该维度上每个位置的名称，可以用该名称索引到此位置。
-		Dimensions(:,1)cell
-		%各维度的名称，为每个维度赋予一个名称字符串。
-		DimensionNames(1,:)string
+
+		%各维度的名称和维度内索引名称
+		%每行一个维度，必需包含以下列：
+		%- DimensionName(:,1)string，维度名称。此参数对索引操作无实际用途，主要供人类阅读。没有名称的维度一般设为missing。
+		%- IndexNames(:,1)cell，维度内的各个位置索引名称，元胞内是(1,:)string，可以用名称索引到维度内的此位置。可以不指定或仅指定一部分，未指定的部分将只能用数值索引。
+		% 可用missing填充表示不指定此位置的名称。
+		Dimensions table
 	end
 	methods(Access=private)
 		function [obj,indexOp]=IndexToAssign(obj,indexOp)
@@ -150,13 +149,14 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			for D=1:numel(indexOp)
 				Index=indexOp{D};
 				if ~(isreal(Index)||isequal(Index,":"))
-					if numel(obj.Dimensions)<D
-						obj.Dimensions{D}=unique(Index,'stable');
+					obj.Dimensions.IndexNames{D}=string(obj.Dimensions.IndexNames{D});
+					if height(obj.Dimensions)<D
+						obj.Dimensions.IndexNames{D}=unique(Index,'stable');
 					else
-						obj.Dimensions{D}=union(obj.Dimensions{D},Index,"stable");
+						obj.Dimensions.IndexNames{D}=union(obj.Dimensions.IndexNames{D},Index,'stable');
 					end
 					%考虑到Index中可能有重复值，必须用ismember确认
-					[~,Index]=ismember(Index,obj.Dimensions{D});
+					[~,Index]=ismember(Index,obj.Dimensions.IndexNames{D});
 					indexOp{D}=Index;
 				end
 			end
@@ -175,17 +175,18 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			for I=1:numel(Indices)
 				Index=Indices{I};
 				if ~(isreal(Index)||isequal(Index,":"))
-					[~,Index]=ismember(Index,obj.Dimensions{I});
+					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
+					[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
 					Indices{I}=Index;
 				end
-				if numel(obj.Dimensions)>=I
-					ValidIndexLogical=Index<=numel(obj.Dimensions{I});
+				if height(obj.Dimensions)>=I
+					ValidIndexLogical=Index<=numel(obj.Dimensions.IndexNames{I});
 					if any(ValidIndexLogical)
 						NewStrings=repmat(string(missing),1,find(ValidIndexLogical,1,'last'));
-						NewStrings(ValidIndexLogical)=obj.Dimensions{I}(Index(ValidIndexLogical));
-						obj.Dimensions{I}=NewStrings;
+						NewStrings(ValidIndexLogical)=obj.Dimensions.IndexNames{I}(Index(ValidIndexLogical));
+						obj.Dimensions.IndexNames{I}=NewStrings;
 					else
-						obj.Dimensions{I}=strings(1,0);
+						obj.Dimensions.IndexNames{I}=strings(1,0);
 					end
 				end
 			end
@@ -201,7 +202,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			for I=1:numel(Indices)
 				Index=Indices{I};
 				if ~(isreal(Index)||isequal(Index,":"))
-					[~,Index]=ismember(Index,obj.Dimensions{I});
+					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
+					[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
 					Indices{I}=Index;
 				end
 			end
@@ -215,9 +217,10 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		function varargout=dotReference(obj,indexOp)
 			Names=indexOp(1).Name;
 			Indices=repmat({':'},1,ndims(obj.Data));
-			for I=1:numel(obj.Dimensions)
-				if ~isempty(obj.Dimensions{I})
-					[Exist,Index]=ismember(Names,obj.Dimensions{I});
+			for I=1:height(obj.Dimensions)
+				if ~isempty(obj.Dimensions.IndexNames{I})
+					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
+					[Exist,Index]=ismember(Names,obj.Dimensions.IndexNames{I});
 					if any(Exist)
 						Indices{I}=Index(Exist);
 					end
@@ -235,7 +238,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			[obj,Indices]=obj.IndexToAssign(indexOp);
 			NewObj=varargin{1};
 			obj.Data(Indices{:})=NewObj.Data;
-			obj.DimensionNames(1:numel(NewObj.DimensionNames))=NewObj.DimensionNames;
+			obj.Dimensions.DimensionName(1:height(NewObj.Dimensions))=NewObj.Dimensions.DimensionName;
 		end
 		function obj = braceAssign(obj,indexOp,varargin)
 			[obj,Indices]=obj.IndexToAssign(indexOp(1));
@@ -249,9 +252,10 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			Names=indexOp(1).Name;
 			Indices=repmat({':'},1,ndims(obj.Data));
 			AnyExist=false(numel(Names),1);
-			for I=1:numel(obj.Dimensions)
-				if ~isempty(obj.Dimensions{I})
-					[Exist,Index]=ismember(Names,obj.Dimensions{I});
+			for I=1:height(obj.Dimensions)
+				if ~isempty(obj.Dimensions.IndexNames{I})
+					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
+					[Exist,Index]=ismember(Names,obj.Dimensions.IndexNames{I});
 					if any(Exist)
 						Indices{I}=Index(Exist);
 					end
@@ -261,8 +265,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			Names=Names(~AnyExist);
 			NumNewFields=numel(Names);
 			if NumNewFields
-				NewIndex=numel(obj.Dimensions{1});
-				obj.Dimensions{1}=[reshape(obj.Dimensions{1},1,[]),reshape(Names,1,[])];
+				NewIndex=numel(obj.Dimensions.IndexNames{1});
+				obj.Dimensions.IndexNames{1}=[reshape(string(obj.Dimensions.IndexNames{1}),1,[]),reshape(Names,1,[])];
 				NewIndex=NewIndex+1:NewIndex+NumNewFields;
 				if isequal(Indices{1},':')
 					Indices{1}=NewIndex;
@@ -292,11 +296,12 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 					Index=Indices{I};
 					if ~isequal(Index,":")
 						if ~isreal(Index)
-							[~,Index]=ismember(Index,obj.Dimensions{I});
+							obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
+							[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
 							Indices{I}=Index;
 						end
-						if numel(obj.Dimensions)>=I
-							obj.Dimensions{I}(Index(Index<=numel(obj.Dimensions{I})))=[];
+						if height(obj.Dimensions)>=I
+							obj.Dimensions.IndexNames{I}(Index(Index<=numel(obj.Dimensions.IndexNames{I})))=[];
 						end
 						break;
 					end
@@ -307,7 +312,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				for I=1:numel(Indices)
 					Index=Indices{I};
 					if ~(isreal(Index)||isequal(Index,":"))
-						[~,Index]=ismember(Index,obj.Dimensions{I});
+						[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
 						Indices{I}=Index;
 					end
 				end
@@ -316,44 +321,43 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		end
 	end
 	methods
-		function obj=NDTable(Data,Dimensions,DimensionNames)
+		function obj=NDTable(Data,Dimensions)
 			%从原始数据新建NDTable
 			%# 语法
 			% ```
-			% import MATLAB.DataTypes.NDTable
-			%
-			% obj=NDTable(Data);
+			% obj=MATLAB.DataTypes.NDTable(Data);
 			% %用指定的多维数组构造NDTable
 			%
-			% obj=NDTable(Data,Dimensions);
-			% %额外指定各维度可用的字符串索引
-			%
-			% obj=NDTable(Data,Dimensions,DimensionNames);
-			% %额外指定各维度的名称
+			% obj=MATLAB.DataTypes.NDTable(Data,Dimensions);
+			% %额外指定各维度名称和可用的字符串索引
 			% ```
 			%# 示例
 			% ```
 			% Data=rand(4,5,6,7);
-			% Dimensions={["A","B","C","D"];["E","F","G","H","I"];[];["M","N","O","P"]};
-			% obj=MATLAB.DataTypes.NDTable(Data,Dimensions);
+			% IndexNames={["A","B","C","D"];["E","F","G","H","I"];[];["M","N","O","P"]};
+			% obj=MATLAB.DataTypes.NDTable(Data,table(IndexNames));
 			% ```
 			% 上述代码创建了一个4维表，其中1、2、4维允许用字符串索引，第3维未指定字符串索引因此只能用数值索引。第4维长度为7但仅指定了前4个字符串索引，要访问后面的位置
 			%  仍只能用数值索引。可以看到，必须在Dimensions中指定允许的字符串索引才能在该维度使用字符串索引，但无论是否指定，或不完全指定，永远可以用数值索引。具体索
 			%  引语法见NDTable类文档。
 			%# 输入参数
-			% Data，填充NDTable的原始数据，可以是任意维度的数组。
-			% Dimensions(:,1)cell=cell(0,1)，各维各位置允许使用的字符串索引，每个元胞一个维度，元胞内是索引该维度各个位置的字符串。可以不指定或仅指定一部分，未指定的
-			%  部分将只能用数值索引。
-			% DimensionNames(:,1)string=strings(0,1)，各维度名称。此参数对索引操作无实际用途，主要供人类阅读。
-			%See also MATLAB.DataTypes.NDTable
+			% Data，即本类的Data属性值，详见此属性文档
+			% Dimensions，即本类的Dimensions属性值，详见此属性文档。如果缺少任何一个必需列，将会自动添加，不会出错。
+			%See also MATLAB.DataTypes.NDTable MATLAB.DataTypes.NDTable.Data MATLAB.DataTypes.NDTable.Dimensions
 			arguments
 				Data
-				Dimensions=cell(0,1)
-				DimensionNames=strings(0,1)
+				Dimensions=table('Size',[0,2],'VariableTypes',["string","cell"],'VariableNames',["DimensionName","IndexNames"]);
 			end
 			obj.Data=Data;
+			Dimensions.Properties.DimensionNames(1)="维度";
+			ColumnLogical=~ismember(["DimensionName","IndexNames"],Dimensions.Properties.VariableNames);
+			if ColumnLogical(1)
+				Dimensions.DimensionName(:)=string(missing);
+			end
+			if ColumnLogical(2)
+				Dimensions.IndexNames(:)={[]};
+			end
 			obj.Dimensions=Dimensions;
-			obj.DimensionNames=DimensionNames;
 		end
 		function varargout = size(obj,varargin)
 			[varargout{1:nargout}]=size(obj.Data,varargin{:});
@@ -361,24 +365,30 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		function out = cat(dim,varargin)
 			Arg=varargin{1};
 			CatDimensions=Arg.Dimensions;
-			CatDimensionNames=Arg.DimensionNames;
 			NumArgs=numel(varargin);
 			[CatData,CatDim]=deal(cell(NumArgs,1));
 			CatData{1}=Arg.Data;
-			if numel(CatDimensions)>=dim
-				CatDim{1}=reshape(CatDimensions{dim},1,[]);
+			if height(CatDimensions)>=dim
+				CatDim{1}=reshape(CatDimensions.IndexNames{dim},1,[]);
 			end
 			for V=2:NumArgs
 				Arg=varargin{V};
-				CatDimensionNames(end+1:numel(Arg.DimensionNames))=Arg.DimensionNames(numel(CatDimensionNames)+1:end);
-				CatDimensions(end+1:numel(Arg.Dimensions))=Arg.Dimensions(numel(CatDimensions)+1:end);
-				if numel(Arg.Dimensions)>=dim
-					CatDim{V}=reshape(Arg.Dimensions{dim},1,[]);
+				CatHeight=height(CatDimensions);
+				ArgHeight=height(Arg.Dimensions);
+				CatDimensions.DimensionName(end+1:ArgHeight)=Arg.Dimensions.DimensionName(CatHeight+1:end);
+				CatDimensions.IndexNames(end+1:ArgHeight)=Arg.Dimensions.IndexNames(CatHeight+1:end);
+				if ArgHeight>=dim
+					CatDim{V}=reshape(string(Arg.Dimensions{dim}),1,[]);
+					CatDim{V}(end+1:size(Arg.Data,dim))=missing;
 				end
 				CatData{V}=Arg.Data;
 			end
-			CatDimensions{dim}=[CatDim{:}];
-			out=MATLAB.DataTypes.NDTable(cat(dim,CatData{:}),CatDimensions,CatDimensionNames);
+			CatDimensions.IndexNames{dim}=[CatDim{:}];
+			out=MATLAB.DataTypes.NDTable(cat(dim,CatData{:}),CatDimensions);
+		end
+		function obj=reshape(obj,varargin)
+			%此操作仅影响Data属性，对Dimensions不做修改
+			obj.Data=reshape(obj.Data,varargin{:});
 		end
 	end
 end
