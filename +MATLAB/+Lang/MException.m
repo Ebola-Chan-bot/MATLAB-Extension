@@ -28,7 +28,7 @@ classdef MException<MException
 				options.Causes(1,:)
 				options.Correction
 			end
-			obj@MException(options.Identifier,options.Message);
+			obj@MException(options.Identifier,'%s',options.Message);
 			HasNames=num2cell(ismember(["Detail","Causes","Correction"],fieldnames(options)));
 			[HasDetail,HasCauses,HasCorrection]=HasNames{:};
 			if HasDetail
