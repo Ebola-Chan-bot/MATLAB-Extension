@@ -258,8 +258,8 @@ function Array = LogicalAssign(Array,Logical,Value)
 function [Diff,IA] = SetDiffN(SetA,SetB,Dimension)
 %内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
 function USet = UnionN(Dimension,varargin)
-%内置unique的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
-function [C,ia,ic] = UniqueN(A,Dimension)
+%内置unique的升级版，支持任意数组和表格类型，并可以指定拆分维度，missing类值视为相等的有效数据
+function [Set,InputIndex,UniqueIndex] = UniqueN(Collection,Dimension)
 ```
 ## Project
 ```MATLAB
