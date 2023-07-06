@@ -754,6 +754,30 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.OptimizeQueryGraph": {
+		"inputs": [
+			{
+				"name": "ColumnsOfInterest",
+				"kind": "required",
+				"type": [
+					[
+						"string"
+					],
+					[
+						"cell"
+					]
+				],
+				"purpose": "感兴趣的列"
+			},
+			{
+				"name": "Table",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "要优化查询的表",
+				"repeating": true
+			}
+		]
+	},
 	"MATLAB.DataTypes.RepeatingFun": {
 		"inputs": [
 			{
@@ -787,6 +811,22 @@
 								]
 							],
 							"purpose": "要返回的列名"
+						}
+					],
+					[]
+				]
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "NoOptimization",
+							"kind": "required",
+							"type": [
+								"MATLAB.Flags",
+								"scalar"
+							],
+							"purpose": "指定不做图论优化旗帜"
 						}
 					],
 					[]

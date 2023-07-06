@@ -182,6 +182,9 @@ classdef Flags<uint32
 
 		%对于显示的任何对话框，都对 “是”进行 响应。
 		FOF_NOCONFIRMATION         (0x0010)
+
+		%% DataTypes.Select
+		NoOptimization(0)
 	end
 	methods
 		function Combination=or(Flag1,Flag2)
