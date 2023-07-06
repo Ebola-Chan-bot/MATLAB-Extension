@@ -773,23 +773,31 @@
 	"MATLAB.DataTypes.Select": {
 		"inputs": [
 			{
-				"name": "From",
-				"kind": "required",
-				"type": "cell",
-				"purpose": "包含要内联的表的元胞数组"
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Columns",
+							"kind": "required",
+							"type": [
+								[
+									"string"
+								],
+								[
+									"cell"
+								]
+							],
+							"purpose": "要返回的列名"
+						}
+					],
+					[]
+				]
 			},
 			{
-				"name": "Fields",
+				"name": "Table",
 				"kind": "required",
-				"type": [
-					[
-						"string"
-					],
-					[
-						"cell"
-					]
-				],
-				"purpose": "要返回的变量名"
+				"type": "tabular",
+				"purpose": "要内联的表",
+				"repeating": true
 			}
 		]
 	},

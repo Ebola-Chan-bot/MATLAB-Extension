@@ -35,6 +35,8 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Unknown_exception(32)
 		Failed_to_save_shortcut(33)
 
+		Selected_tables_not_sharing_key_columns(234)
+		Two_columns_not_connected(235)
 		Dot_reference_is_unsupported(236)
 		Specified_name_was_not_found(237)
 		Example_exception(238)
@@ -51,7 +53,7 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Vector_is_empty(249)
 		Index_exceeds_vector_size(250)
 		Missing_matching_key(251)
-		Fields_not_found_in_tables(252)
+		Column_not_found_in_tables(252)
 		Error_copying_file(253)
 		Error_deleting_file(254)
 		Error_moving_file(255)
