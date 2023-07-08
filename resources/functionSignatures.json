@@ -484,6 +484,27 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.XCorr": {
+		"inputs": [
+			{
+				"name": "X",
+				"kind": "required"
+			},
+			{
+				"name": "Y",
+				"kind": "required"
+			},
+			{
+				"name": "Dimensions",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "指定要计算互相关的维度"
+			}
+		]
+	},
 	"MATLAB.DataTypes.ArrayBuilder": {
 		"inputs": [
 			{

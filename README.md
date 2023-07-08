@@ -68,6 +68,8 @@ function [Mean,SEM]=MeanSem(Data,Dimensions)
 function [Value,varargout] = MinSubs(Data,Dimensions)
 %数组元素沿指定维度的缩放范围
 function Array = Rescale(Array,LowerBound,UpperBound,Dimensions)
+%在任意维度上计算互相关
+function [C,Lag] = XCorr(X,Y,Dimensions)
 ```
 ## +DataTypes
 类
@@ -166,7 +168,7 @@ classdef SharedPtr<handle
 	%将引用计数智能指针回绕在动态分配的对象周围。
 end
 ```
-## Graphics
+## +Graphics
 函数
 ```MATLAB
 %设置当前图窗的纵横比
