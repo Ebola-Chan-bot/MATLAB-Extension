@@ -169,14 +169,14 @@ classdef Flags<uint32
 
 		%% RestartDisposition
 
-		Do_not_restart(0)%不要重启
-		Restart_now(1)%立刻重启
-		Inquire(2)%询问是否重启
+		Do_not_restart(1)%不要重启
+		Restart_now(2)%立刻重启
+		Inquire(3)%询问是否重启
 
 		%% FigureAspectRatio
 
-		Narrow(0)
-		Amplify(1)
+		Narrow(4)
+		Amplify(5)
 
 		%% Delete
 
@@ -184,7 +184,10 @@ classdef Flags<uint32
 		FOF_NOCONFIRMATION         (0x0010)
 
 		%% DataTypes.Select
-		NoOptimization(0)
+		NoOptimization(6)
+
+		%% DataTypes.OptimizeQueryGraph
+		DisableLoops(7)
 	end
 	methods
 		function Combination=or(Flag1,Flag2)

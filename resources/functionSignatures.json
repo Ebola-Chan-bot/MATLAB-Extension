@@ -791,6 +791,19 @@
 				"purpose": "感兴趣的列"
 			},
 			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "DisableLoops",
+							"kind": "required",
+							"type": "MATLAB.Flags",
+							"purpose": "指定MATLAB.Flags.DisableLoops以禁止循环连接"
+						}
+					],
+					[]
+				]
+			},
+			{
 				"name": "Table",
 				"kind": "required",
 				"type": "tabular",

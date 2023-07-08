@@ -35,6 +35,7 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Unknown_exception(32)
 		Failed_to_save_shortcut(33)
 
+		Query_graph_contains_cycles(233)
 		Selected_tables_not_sharing_key_columns(234)
 		Two_columns_not_connected(235)
 		Dot_reference_is_unsupported(236)
