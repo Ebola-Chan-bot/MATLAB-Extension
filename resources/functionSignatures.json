@@ -778,17 +778,24 @@
 	"MATLAB.DataTypes.OptimizeQueryGraph": {
 		"inputs": [
 			{
-				"name": "ColumnsOfInterest",
-				"kind": "required",
-				"type": [
+				"mutuallyExclusiveGroup": [
 					[
-						"string"
+						{
+							"name": "ColumnsOfInterest",
+							"kind": "required",
+							"type": [
+								[
+									"string"
+								],
+								[
+									"cell"
+								]
+							],
+							"purpose": "感兴趣的列"
+						}
 					],
-					[
-						"cell"
-					]
-				],
-				"purpose": "感兴趣的列"
+					[]
+				]
 			},
 			{
 				"mutuallyExclusiveGroup": [
