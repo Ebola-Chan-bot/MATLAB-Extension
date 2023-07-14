@@ -102,9 +102,9 @@ function Merged = MergeTables(KeyColumns,varargin)
 %重复多次调用函数，为每个重复参数生成一个返回值
 function varargout = RepeatingFun(Function,Arguments)
 %对内联表查询进行图论优化
-function OptimizedTables = OptimizeQueryGraph(varargin)
+function [OptimizedTables,TableGraph] = OptimizeQueryGraph(Tables,ColumnsOfInterest,Flags)
 %对多张表格实施类似于 SQL SELECT 的查询操作
-function Result = Select(From,Fields,Where)
+function ResultTable = Select(varargin)
 %内置typecast的升级版，支持多维数组，需指定转换维度
 function Y = TypeCast(X,Type,Dimension)
 ```

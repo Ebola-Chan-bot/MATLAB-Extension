@@ -188,6 +188,7 @@ classdef Flags<uint32
 
 		%% DataTypes.OptimizeQueryGraph
 		DisableLoops(7)
+		DisableLinkerOptimize(8)
 	end
 	methods
 		function Combination=or(Flag1,Flag2)
