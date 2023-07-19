@@ -40,6 +40,7 @@ classdef WindowsAPI<uint8
 		LnkShortcut(37)
 		Crash(38)
 		Pause(39)
+		PFS_Create(40)
 	end
 	methods
 		function varargout=Call(obj,varargin)

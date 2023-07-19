@@ -1,8 +1,9 @@
 #include "pch.h"
-#include "MexAPI.h"
 #include "MATLAB异常.h"
-#include"实用工具.h"
+#include<Mex工具.h>
 using namespace Mex工具;
+CellArray 元胞字节化(Array&& 输入, size_t& 总字节数);
+void 安全拷贝(void* 目标, const void* 来自, size_t 字节数);
 API声明(Pointer_Allocate)
 {
 	size_t NumBytes = 万能转码<size_t>(std::move(inputs[1]));

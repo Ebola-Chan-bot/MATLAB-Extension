@@ -1,11 +1,11 @@
 #include"pch.h"
-#include"MexAPI.h"
 #include"MATLAB异常.h"
 #include<ShlObj.h>
 #include<wrl/client.h>
 #include<filesystem>
 #include<chrono>
 #include<thread>
+#include<Mex工具.h>
 using namespace Mex工具;
 API声明(TypeCast)
 {

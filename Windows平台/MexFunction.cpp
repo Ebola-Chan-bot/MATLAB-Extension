@@ -1,10 +1,84 @@
 #include "pch.h"
-#include"MexAPI.h"
 #include"MATLAB异常.h"
 #include"窗口.h"
 #include<Mex实现.h>
 #include<Mex工具.h>
-using namespace Mex工具; 
+//SHFileOperation
+
+#ifdef CopyFile
+#undef CopyFile
+#endif
+API声明(CopyFile);
+API声明(Delete);
+#ifdef MoveFile
+#undef MoveFile
+#endif
+API声明(MoveFile);
+
+//LibZip
+
+API声明(ZipOpen);
+API声明(ZipNameLocate);
+API声明(ZipFopen);
+API声明(ZipFread);
+API声明(ZipFclose);
+API声明(ZipDiscard);
+API声明(ZipGetSize);
+API声明(ZipGetName);
+API声明(ZipGetNumEntries);
+
+//File
+
+API声明(File_Create);
+API声明(File_GetSize);
+API声明(File_Read);
+API声明(File_SetEnd);
+API声明(File_SetPointer);
+API声明(File_Write);
+API声明(File_Close);
+
+//MemoryMapping
+
+API声明(MemoryMapping_Create);
+API声明(MemoryMapping_Open);
+API声明(MemoryMapping_View);
+API声明(MemoryMapping_Unview);
+API声明(MemoryMapping_Close);
+
+//Pointer
+
+API声明(Pointer_Allocate);
+API声明(Pointer_Read);
+API声明(Pointer_Write);
+API声明(Pointer_Copy);
+API声明(Pointer_Release);
+
+//Window
+
+API声明(Window_Create);
+API声明(Window_Destroy);
+API声明(Window_Image);
+API声明(Window_Screens);
+API声明(Window_Clear);
+API声明(Window_Fill);
+API声明(Window_RemoveVisual);
+
+//ProjectFileSystem
+API声明(PFS_Create);
+
+//杂项
+
+API声明(TypeCast);
+API声明(LnkShortcut);
+API声明(Crash);
+API声明(Pause);
+
+using namespace Mex工具;
+std::shared_ptr<matlab::engine::MATLABEngine>MATLAB引擎;
+MexFunction::MexFunction()
+{
+	MATLAB引擎 = getEngine();
+}
 void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 {
 	static const StructArray 异常结构 = 数组工厂.createStructArray({ 1 }, { "ExceptionType","WindowsErrorCode" });
@@ -50,6 +124,7 @@ void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 		LnkShortcut,
 		Crash,
 		Pause,
+		PFS_Create,
 	};
 	try
 	{

@@ -35,6 +35,9 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Unknown_exception(32)
 		Failed_to_save_shortcut(33)
 
+		PrjWritePlaceholderInfo_failed(229)
+		DirectoryEnumeration_unexpected_output(230)
+		DirectoryEnumeration_unexpected_exception(231)
 		Empty_inputs_may_return_unexpected_types(232)
 		Query_graph_contains_cycles(233)
 		Selected_tables_not_sharing_key_columns(234)

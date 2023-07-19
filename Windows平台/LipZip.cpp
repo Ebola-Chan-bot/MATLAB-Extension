@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "MexAPI.h"
-#include <zip.h>
 #include "MATLAB异常.h"
+#include <zip.h>
+#include<Mex工具.h>
 using namespace Mex工具;
 zip_int64_t 取文件数目(zip_t* Zip)
 {

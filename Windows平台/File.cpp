@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "MexAPI.h"
 #include"MATLAB异常.h"
 #include <limits>
+#include<Mex工具.h>
 using namespace Mex工具;
 API声明(File_Create)
 {

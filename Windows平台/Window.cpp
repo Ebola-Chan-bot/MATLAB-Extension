@@ -1,7 +1,7 @@
 #include"pch.h"
-#include"MexAPI.h"
 #include"MATLAB异常.h"
 #include"窗口.h"
+#include<Mex工具.h>
 using namespace Mex工具;
 struct 设备查询_s
 {

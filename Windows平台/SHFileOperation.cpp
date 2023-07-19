@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "MexAPI.h"
-#include <shellapi.h>
 #include "MATLAB异常.h"
+#include<Mex工具.h>
+#include <shellapi.h>
 using namespace Mex工具;
 void 字符串转换(Array& 输入, String& 输出)
 {
@@ -33,13 +33,13 @@ TypedArray<bool> 执行操作(SHFILEOPSTRUCTW& 操作结构)
 TypedArray<bool> CopyMove(ArgumentList& inputs, UINT wFunc)
 {
 	String From;
-	字符串转换(inputs[1],From);
+	字符串转换(inputs[1], From);
 	FILEOP_FLAGS Flags = FOF_ALLOWUNDO;
 	Array& ArrayTo = inputs[2];
 	if (ArrayTo.getNumberOfElements() > 1 && ArrayTo.getType() != ArrayType::CHAR)
 		Flags |= FOF_MULTIDESTFILES;
 	String To;
-	字符串转换(ArrayTo,To);
+	字符串转换(ArrayTo, To);
 	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = wFunc,.pFrom = (wchar_t*)From.c_str() ,.pTo = (wchar_t*)To.c_str(),.fFlags = Flags };
 	return 执行操作(操作结构);
 }
@@ -50,7 +50,7 @@ API声明(CopyFile)
 API声明(Delete)
 {
 	String From;
-	字符串转换(inputs[1],From);
+	字符串转换(inputs[1], From);
 	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FILEOP_FLAGS(FOF_ALLOWUNDO | 万能转码<uint32_t>(std::move(inputs[2]))) };
 	outputs[1] = 执行操作(操作结构);
 }

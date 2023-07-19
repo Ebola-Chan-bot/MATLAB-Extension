@@ -24,13 +24,10 @@
     <ClInclude Include="MATLAB异常.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="实用工具.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="窗口.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MexAPI.h">
+    <ClInclude Include="投影文件系统.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -72,6 +69,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="窗口.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectFileSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="投影文件系统.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

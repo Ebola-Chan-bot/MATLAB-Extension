@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "MexAPI.h"
 #include "MATLAB异常.h"
-#include"实用工具.h"
-using namespace Mex工具;
+#include<Mex工具.h>
+using namespace Mex工具; 
+CellArray 元胞字节化(Array&& 输入, size_t& 总字节数);
 API声明(MemoryMapping_Create)
 {
 	LPCWSTR Name = nullptr;
