@@ -1,7 +1,7 @@
 #include"pch.h"
-#include"MexAPI.h"
 #include"MATLAB异常.h"
 #include"窗口.h"
+#include<Mex工具.h>
 using namespace Mex工具;
 struct 设备查询_s
 {
@@ -40,16 +40,16 @@ API声明(Window_Create)
 	std::optional<WH_s>WH;
 	for (uint8_t a = 1; a < inputs.size(); a += 2)
 	{
-		const String 参数名 = 万能转码<String>(std::move(inputs[a]));
+		const String 参数名 = 万能转码<String>(inputs[a]);
 		const wchar_t* const 参数名指针 = (wchar_t*)参数名.c_str();
 		if (!wcscmp(参数名指针, L"DeviceName"))
-			显示器名 = 万能转码<String>(std::move(inputs[a + 1]));
+			显示器名 = 万能转码<String>(inputs[a + 1]);
 		else if (!wcscmp(参数名指针, L"PositionXY"))
-			万能转码(std::move(inputs[a + 1]), (int16_t*)&XY);
+			万能转码(inputs[a + 1], (int16_t*)&XY);
 		else if (!wcscmp(参数名指针, L"SizeWH"))
 		{
 			WH_s 缓冲;
-			万能转码(std::move(inputs[a + 1]),(uint16_t*)&缓冲);
+			万能转码(inputs[a + 1],(uint16_t*)&缓冲);
 			WH = 缓冲;
 		}
 	}
@@ -76,14 +76,14 @@ API声明(Window_Create)
 API声明(Window_Destroy)
 {
 	//销毁函数本身不会抛出异常，不需要额外try
-	窗口::销毁(万能转码<窗口*>(std::move(inputs[1])));
+	窗口::销毁(万能转码<窗口*>(inputs[1]));
 }
 API声明(Window_Image)
 {
 	const ArrayDimensions 图像尺寸 = inputs[2].getDimensions();	
 	const buffer_ptr_t<uint8_t>像素缓冲 = TypedArray<uint8_t>(std::move(inputs[2])).release();
 	const buffer_ptr_t<float>图像位置 = TypedArray<float>(std::move(inputs[3])).release();
-	const 窗口* const 窗口指针 = 万能转码<窗口*>(std::move(inputs[1]));
+	const 窗口* const 窗口指针 = 万能转码<窗口*>(inputs[1]);
 	const uint8_t* const 像素指针 = 像素缓冲.get();
 	const D2D1_SIZE_U D2D尺寸 = D2D1::SizeU(图像尺寸[1], 图像尺寸[2]);
 	const D2D1_RECT_F& D2D矩形 = *(D2D1_RECT_F*)图像位置.get();
@@ -129,11 +129,11 @@ API声明(Window_Screens)
 				break;
 			}
 	}
-	outputs[1] = std::move(输出结构);
+	outputs[1] = 输出结构;
 }
 API声明(Window_Clear)
 {
-	const 窗口* const 窗口指针 = 万能转码<窗口*>(std::move(inputs[1]));
+	const 窗口* const 窗口指针 = 万能转码<窗口*>(inputs[1]);
 	try
 	{
 		窗口指针->视觉集合.RemoveAll();
@@ -145,17 +145,17 @@ API声明(Window_Clear)
 }
 API声明(Window_Fill)
 {
-	const 窗口* const 窗口指针 = 万能转码<窗口*>(std::move(inputs[1]));
+	const 窗口* const 窗口指针 = 万能转码<窗口*>(inputs[1]);
 	winrt::Windows::UI::Color 颜色;
 	switch (inputs[2].getType())
 	{
 	case ArrayType::UINT8:
 		if (inputs[2].getNumberOfElements() > 4)
 			throw MATLAB异常(MATLAB异常类型::填充颜色数据类型错误);
-		万能转码(std::move(inputs[2]), (void*)&颜色);
+		万能转码(inputs[2], (void*)&颜色);
 		break;
 	case ArrayType::UINT32:
-		*(uint32_t*)&颜色 = 万能转码<uint32_t>(std::move(inputs[2]));
+		*(uint32_t*)&颜色 = 万能转码<uint32_t>(inputs[2]);
 		break;
 	default:
 		throw MATLAB异常(MATLAB异常类型::填充颜色数据类型错误);
@@ -173,8 +173,8 @@ API声明(Window_Fill)
 }
 API声明(Window_RemoveVisual)
 {
-	const 窗口* const 窗口指针 = 万能转码<窗口*>(std::move(inputs[1]));
-	const TypedArray<size_t> 数组(std::move(inputs[2]));
+	const 窗口* const 窗口指针 = 万能转码<窗口*>(inputs[1]);
+	const TypedArray<size_t> 数组(inputs[2]);
 	const uint8_t 个数 = 数组.getNumberOfElements();
 	winrt::SpriteVisual 精灵视觉(nullptr);
 	for (size_t a : 数组)

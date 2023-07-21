@@ -35,6 +35,20 @@ classdef ArrayType<int32
 		SPARSE_COMPLEX_DOUBLE(31)
 		UNKNOWN(32)
 	end
+	methods(Static)
+		function obj=FromData(Data)
+			%从实际数据取得其类型枚举
+			%# 语法
+			% ```
+			% Type=MATLAB.DataTypes.ArrayType.FromData(Data);
+			% ```
+			%# 输入参数
+			% Data，要取类型的数据
+			%# 返回值
+			% Type(1,1)MATLAB.DataTypes.ArrayType，数据类型枚举
+			obj=MATLAB.DataTypes.ArrayType(MATLAB.internal.WindowsAPI.ArrayType_FromData.Call(Data));
+		end
+	end
 	methods
 		function Size=TypeSize(obj)
 			%获取POD类型的字节数

@@ -1,27 +1,27 @@
 #include"pch.h"
-#include"MexAPI.h"
 #include"MATLAB异常.h"
 #include<ShlObj.h>
 #include<wrl/client.h>
 #include<filesystem>
 #include<chrono>
 #include<thread>
+#include<Mex工具.h>
 using namespace Mex工具;
 API声明(TypeCast)
 {
-	const ArrayType 类型 = 万能转码<ArrayType>(std::move(inputs[2]));
+	const ArrayType 类型 = 万能转码<ArrayType>(inputs[2]);
 	const std::unique_ptr<动态类型缓冲>输出 = 动态类型缓冲::创建(类型, 数组字节数(inputs[1]) / 类型尺寸[(int)类型]);
-	万能转码(std::move(inputs[1]), 输出->指针);
+	万能转码(inputs[1], 输出->指针);
 	outputs[1] = 输出->打包();
 }
 API声明(LnkShortcut)
 {
 	constexpr char16_t 扩展名[] = u".lnk";
-	const String 来源路径 = 万能转码<String>(std::move(inputs[1]));
+	const String 来源路径 = 万能转码<String>(inputs[1]);
 	String 目标路径;
 	if (inputs.size() > 2)
 	{
-		目标路径 = 万能转码<String>(std::move(inputs[2]));
+		目标路径 = 万能转码<String>(inputs[2]);
 		const std::filesystem::path 目标(目标路径);
 		if (std::filesystem::is_directory(目标))
 		{
@@ -53,7 +53,7 @@ API声明(Pause)
 {
 	if (inputs.size() > 1)
 	{
-		double 秒数 = 万能转码<double>(std::move(inputs[1]));
+		double 秒数 = 万能转码<double>(inputs[1]);
 		if (秒数 < std::numeric_limits<double>::infinity())
 			std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)(秒数 * 1000)));
 		return;
@@ -61,4 +61,8 @@ API声明(Pause)
 	while (true)
 #undef max
 		std::this_thread::sleep_for(std::chrono::years::max());
+}
+API声明(ArrayType_FromData)
+{
+	outputs[1] = 数组工厂.createScalar<uint8_t>((int)inputs[1].getType());
 }

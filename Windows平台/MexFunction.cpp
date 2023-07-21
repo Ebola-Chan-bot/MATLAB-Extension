@@ -1,18 +1,78 @@
 #include "pch.h"
-#include"MexAPI.h"
 #include"MATLAB异常.h"
 #include"窗口.h"
 #include<Mex实现.h>
 #include<Mex工具.h>
-using namespace Mex工具; 
+
+//SHFileOperation
+API声明(SHFile_Copy);
+API声明(SHFile_Delete);
+API声明(SHFile_Move);
+
+//LibZip
+
+API声明(ZipOpen);
+API声明(ZipNameLocate);
+API声明(ZipFopen);
+API声明(ZipFread);
+API声明(ZipFclose);
+API声明(ZipDiscard);
+API声明(ZipGetSize);
+API声明(ZipGetName);
+API声明(ZipGetNumEntries);
+
+//File
+
+API声明(File_Create);
+API声明(File_GetSize);
+API声明(File_Read);
+API声明(File_SetEnd);
+API声明(File_SetPointer);
+API声明(File_Write);
+API声明(File_Close);
+
+//MemoryMapping
+
+API声明(MemoryMapping_Create);
+API声明(MemoryMapping_Open);
+API声明(MemoryMapping_View);
+API声明(MemoryMapping_Unview);
+API声明(MemoryMapping_Close);
+
+//Pointer
+
+API声明(Pointer_Allocate);
+API声明(Pointer_Read);
+API声明(Pointer_Write);
+API声明(Pointer_Copy);
+API声明(Pointer_Release);
+
+//Window
+
+API声明(Window_Create);
+API声明(Window_Destroy);
+API声明(Window_Image);
+API声明(Window_Screens);
+API声明(Window_Clear);
+API声明(Window_Fill);
+API声明(Window_RemoveVisual);
+
+//杂项
+
+API声明(TypeCast);
+API声明(LnkShortcut);
+API声明(Crash);
+API声明(Pause);
+API声明(ArrayType_FromData);
+using namespace Mex工具;
 void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 {
 	static const StructArray 异常结构 = 数组工厂.createStructArray({ 1 }, { "ExceptionType","WindowsErrorCode" });
 	API索引
 	{
-		CopyFile,
-		Delete,
-		MoveFile,
+		SHFile_Copy,
+		SHFile_Delete,
+		SHFile_Move,
 		ZipOpen,
 		ZipNameLocate,
 		ZipFopen,
@@ -50,6 +110,7 @@ void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 		LnkShortcut,
 		Crash,
 		Pause,
+		ArrayType_FromData,
 	};
 	try
 	{

@@ -135,6 +135,7 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <EnableModules>true</EnableModules>
       <ExceptionHandling>Async</ExceptionHandling>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +160,7 @@
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <EnableModules>true</EnableModules>
       <ExceptionHandling>Async</ExceptionHandling>
+      <BuildStlModules>false</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,7 +174,6 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="MATLAB异常.h" />
-    <ClInclude Include="MexAPI.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="实用工具.h" />
     <ClInclude Include="窗口.h" />

@@ -1,12 +1,12 @@
 #include "pch.h"
-#include "MexAPI.h"
 #include"MATLAB异常.h"
 #include <limits>
+#include<Mex工具.h>
 using namespace Mex工具;
 API声明(File_Create)
 {
-	const String FileName = 万能转码<String>(std::move(inputs[1]));
-	const HANDLE 文件句柄 = CreateFileW((LPCWSTR)FileName.c_str(), 万能转码<uint32_t>(std::move(inputs[2])), 万能转码<uint32_t>(std::move(inputs[3])), NULL, 万能转码<uint32_t>(std::move(inputs[4])), 万能转码<uint32_t>(std::move(inputs[5])), NULL);
+	const String FileName = 万能转码<String>(inputs[1]);
+	const HANDLE 文件句柄 = CreateFileW((LPCWSTR)FileName.c_str(), 万能转码<uint32_t>(inputs[2]), 万能转码<uint32_t>(inputs[3]), NULL, 万能转码<uint32_t>(inputs[4]), 万能转码<uint32_t>(inputs[5]), NULL);
 	if (文件句柄 == INVALID_HANDLE_VALUE)
 		throw MATLAB异常(MATLAB异常类型::文件创建失败, 内部异常类型::Win32异常, GetLastError());
 	outputs[1] = 万能转码(文件句柄);
@@ -14,7 +14,7 @@ API声明(File_Create)
 API声明(File_GetSize)
 {
 	LARGE_INTEGER 文件大小;
-	if (GetFileSizeEx(万能转码<HANDLE>(std::move(inputs[1])), &文件大小))
+	if (GetFileSizeEx(万能转码<HANDLE>(inputs[1]), &文件大小))
 		outputs[1] = 万能转码(文件大小.QuadPart);
 	else
 		throw MATLAB异常(MATLAB异常类型::获取文件大小失败, 内部异常类型::Win32异常, GetLastError());
@@ -22,13 +22,13 @@ API声明(File_GetSize)
 API声明(File_Read)
 {
 	LARGE_INTEGER 文件指针{ .QuadPart = 0 };
-	const HANDLE 文件句柄 = (HANDLE)万能转码<uint64_t>(std::move(inputs[1]));
+	const HANDLE 文件句柄 = (HANDLE)万能转码<uint64_t>(inputs[1]);
 	SetFilePointerEx(文件句柄, 文件指针, &文件指针, FILE_CURRENT);
-	const ArrayType 读入类型 = (ArrayType)万能转码<int>(std::move(inputs[3]));
+	const ArrayType 读入类型 = (ArrayType)万能转码<int>(inputs[3]);
 	LARGE_INTEGER 文件大小;
 	GetFileSizeEx(文件句柄, &文件大小);
 	const uint64_t 可读入个数 = (文件大小.QuadPart - 文件指针.QuadPart) / 类型尺寸[(int)读入类型];
-	const uint64_t 读入个数 = 万能转码<uint64_t>(std::move(inputs[2]));
+	const uint64_t 读入个数 = 万能转码<uint64_t>(inputs[2]);
 	
 	const std::unique_ptr<动态类型缓冲>输出 = 动态类型缓冲::创建(读入类型, min(读入个数, 可读入个数));
 	if (输出->字节数 < UINT32_MAX)
@@ -68,22 +68,22 @@ API声明(File_Read)
 }
 API声明(File_SetEnd)
 {
-	if (!SetEndOfFile((HANDLE)万能转码<uint64_t>(std::move(inputs[1]))))
+	if (!SetEndOfFile((HANDLE)万能转码<uint64_t>(inputs[1])))
 		throw MATLAB异常(MATLAB异常类型::设置文件结束失败, 内部异常类型::Win32异常, GetLastError());
 }
 API声明(File_SetPointer)
 {
-	LARGE_INTEGER 位置{ .QuadPart = 万能转码<LONGLONG>(std::move(inputs[2])) };
-	if (SetFilePointerEx(万能转码<HANDLE>(std::move(inputs[1])), 位置, &位置, 万能转码<uint32_t>(std::move(inputs[3]))))
+	LARGE_INTEGER 位置{ .QuadPart = 万能转码<LONGLONG>(inputs[2]) };
+	if (SetFilePointerEx(万能转码<HANDLE>(inputs[1]), 位置, &位置, 万能转码<uint32_t>(inputs[3])))
 		outputs[1] = 万能转码(位置.QuadPart);
 	else
 		throw MATLAB异常(MATLAB异常类型::设置文件指针失败, 内部异常类型::Win32异常, GetLastError());
 }
 API声明(File_Write)
 {
-	const HANDLE 文件句柄 = (HANDLE)万能转码<uint64_t>(std::move(inputs[1]));
+	const HANDLE 文件句柄 = (HANDLE)万能转码<uint64_t>(inputs[1]);
 	const uint8_t 输入个数 = inputs[2].getNumberOfElements();
-	const CellArray 所有输入(std::move(inputs[2]));
+	const CellArray 所有输入(inputs[2]);
 	uint64_t 字节数 = 0;
 	for (const Array& a : 所有输入)
 		字节数 += 数组字节数(a);
@@ -104,8 +104,8 @@ API声明(File_Write)
 	try
 	{
 		void* 写出头 = 映射指针;
-		for (Array&& a : 所有输入)
-			万能转码(std::move(a), 写出头);
+		for (const Array& a : 所有输入)
+			万能转码(a, 写出头);
 	}
 	catch (Mex异常 异常)
 	{
@@ -119,5 +119,5 @@ API声明(File_Write)
 }
 API声明(File_Close)
 {
-	CloseHandle((HANDLE)万能转码<uint64_t>(std::move(inputs[1])));
+	CloseHandle((HANDLE)万能转码<uint64_t>(inputs[1]));
 }

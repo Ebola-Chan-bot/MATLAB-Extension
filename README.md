@@ -77,6 +77,9 @@ function [C,Lag] = XCorr(X,Y,Dimensions)
 classdef ArrayBuilder
 	%数组累加器
 end
+classdef ArrayType
+	%枚举MATLAB所有基本数据类型
+end
 classdef CatMode
 	%此类用于MATLAB.DataTypes.ArrayFun的参数枚举
 end
@@ -255,7 +258,7 @@ end
 ## +Ops
 ```MATLAB
 %内置ismember的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
-function [Is,Location] = IsMemberN(Member,Set,Dimension)
+function [IsIn,Location] = IsMemberN(Target,Source,Dimension)
 %维度化的逻辑赋值
 function Array = LogicalAssign(Array,Logical,Value)
 %内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据

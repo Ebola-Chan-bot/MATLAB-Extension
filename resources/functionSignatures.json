@@ -311,15 +311,29 @@
 	"MATLAB.DataFun.FindGroupsN": {
 		"inputs": [
 			{
-				"name": "A",
-				"kind": "required",
-				"purpose": "分组变量"
-			},
-			{
-				"name": "Dimension",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "拆分维度"
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Array",
+							"kind": "required",
+							"purpose": "分组变量"
+						},
+						{
+							"name": "Dimension",
+							"kind": "required",
+							"type": "positive",
+							"purpose": "拆分维度"
+						}
+					],
+					[
+						{
+							"name": "Table",
+							"kind": "required",
+							"type": "tabular",
+							"purpose": "分组表格"
+						}
+					]
+				]
 			}
 		]
 	},
@@ -617,6 +631,15 @@
 				],
 				"purpose": "如果输入参数只有一个且为空，是否显示警告",
 				"default": true
+			}
+		]
+	},
+	"MATLAB.DataTypes.ArrayType.FromData": {
+		"inputs": [
+			{
+				"name": "Data",
+				"kind": "required",
+				"purpose": "要取类型枚举的数据"
 			}
 		]
 	},
@@ -2930,20 +2953,40 @@
 	"MATLAB.Ops.IsMemberN": {
 		"inputs": [
 			{
-				"name": "Member",
-				"kind": "required",
-				"purpose": "要寻找的目标集合"
-			},
-			{
-				"name": "Set",
-				"kind": "required",
-				"purpose": "要在其中寻找的范围集合"
-			},
-			{
-				"name": "Dimension",
-				"kind": "ordered",
-				"type": "positive",
-				"purpose": "拆分维度"
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "TargetArray",
+							"kind": "required",
+							"purpose": "要寻找的目标集合"
+						},
+						{
+							"name": "SourceArray",
+							"kind": "required",
+							"purpose": "要在其中寻找的源集合"
+						},
+						{
+							"name": "Dimension",
+							"kind": "ordered",
+							"type": "positive",
+							"purpose": "拆分维度"
+						}
+					],
+					[
+						{
+							"name": "TargetTable",
+							"kind": "required",
+							"type": "tabular",
+							"purpose": "要寻找的目标表"
+						},
+						{
+							"name": "SourceTable",
+							"kind": "required",
+							"type": "tabular",
+							"purpose": "要在其中寻找的源表"
+						}
+					]
+				]
 			}
 		]
 	},
@@ -2970,36 +3013,71 @@
 	"MATLAB.Ops.SetDiffN": {
 		"inputs": [
 			{
-				"name": "SetA",
-				"kind": "required",
-				"purpose": "被减的集合"
-			},
-			{
-				"name": "SetB",
-				"kind": "required",
-				"purpose": "要减去的集合"
-			},
-			{
-				"name": "Dimension",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "拆分维度"
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "SetA",
+							"kind": "required",
+							"purpose": "被减的集合"
+						},
+						{
+							"name": "SetB",
+							"kind": "required",
+							"purpose": "要减去的集合"
+						},
+						{
+							"name": "Dimension",
+							"kind": "required",
+							"type": "positive",
+							"purpose": "拆分维度"
+						}
+					],
+					[
+						{
+							"name": "TableA",
+							"kind": "required",
+							"type": "tabular",
+							"purpose": "被减的表"
+						},
+						{
+							"name": "TableB",
+							"kind": "required",
+							"type": "tabular",
+							"purpose": "要减去的表"
+						}
+					]
+				]
 			}
 		]
 	},
 	"MATLAB.Ops.UnionN": {
 		"inputs": [
 			{
-				"name": "Dimension",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "拆分维度"
-			},
-			{
-				"name": "Set",
-				"kind": "ordered",
-				"repeating": true,
-				"purpose": "参与合并的集合"
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Dimension",
+							"kind": "required",
+							"type": "positive",
+							"purpose": "拆分维度"
+						},
+						{
+							"name": "Set",
+							"kind": "required",
+							"repeating": true,
+							"purpose": "参与合并的集合"
+						}
+					],
+					[
+						{
+							"name": "Table",
+							"kind": "required",
+							"type": "tabular",
+							"repeating": true,
+							"purpose": "参与合并的表"
+						}
+					]
+				]
 			}
 		]
 	},

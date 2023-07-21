@@ -1,21 +1,21 @@
 #include "pch.h"
-#include "MexAPI.h"
-#include <shellapi.h>
 #include "MATLAB异常.h"
+#include <shellapi.h>
+#include<Mex工具.h>
 using namespace Mex工具;
-void 字符串转换(Array& 输入, String& 输出)
+void 字符串转换(const Array& 输入, String& 输出)
 {
 	switch (输入.getType())
 	{
 	case ArrayType::CHAR:
-		输出.append(CharArray(std::move(输入)).toUTF16()).push_back(0);
+		输出.append(CharArray(输入).toUTF16()).push_back(0);
 		break;
 	case ArrayType::MATLAB_STRING:
-		for (const String& 元素 : StringArray(std::move(输入)))
+		for (const String& 元素 : StringArray(输入))
 			输出.append(元素).push_back(0);
 		break;
 	case ArrayType::CELL:
-		for (const CharArrayRef& 元素 : CellArray(std::move(输入)))
+		for (const CharArrayRef& 元素 : CellArray(输入))
 			输出.append(元素.toUTF16()).push_back(0);
 		break;
 	default:
@@ -43,18 +43,18 @@ TypedArray<bool> CopyMove(ArgumentList& inputs, UINT wFunc)
 	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = wFunc,.pFrom = (wchar_t*)From.c_str() ,.pTo = (wchar_t*)To.c_str(),.fFlags = Flags };
 	return 执行操作(操作结构);
 }
-API声明(CopyFile)
+API声明(SHFile_Copy)
 {
 	outputs[1] = CopyMove(inputs, FO_COPY);
 }
-API声明(Delete)
+API声明(SHFile_Delete)
 {
 	String From;
 	字符串转换(inputs[1],From);
-	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FILEOP_FLAGS(FOF_ALLOWUNDO | 万能转码<uint32_t>(std::move(inputs[2]))) };
+	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FILEOP_FLAGS(FOF_ALLOWUNDO | 万能转码<uint32_t>(inputs[2])) };
 	outputs[1] = 执行操作(操作结构);
 }
-API声明(MoveFile)
+API声明(SHFile_Move)
 {
 	outputs[1] = CopyMove(inputs, FO_MOVE);
 }

@@ -30,9 +30,6 @@
     <ClInclude Include="窗口.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MexAPI.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

@@ -1,8 +1,8 @@
 classdef WindowsAPI<uint8
 	enumeration
-		CopyFile(0)
-		Delete(1)
-		MoveFile(2)	
+		SHFile_Copy(0)
+		SHFile_Delete(1)
+		SHFile_Move(2)	
 		ZipOpen(3)
 		ZipNameLocate(4)
 		ZipFopen(5)
@@ -40,6 +40,7 @@ classdef WindowsAPI<uint8
 		LnkShortcut(37)
 		Crash(38)
 		Pause(39)
+		ArrayType_FromData(40)
 	end
 	methods
 		function varargout=Call(obj,varargin)
