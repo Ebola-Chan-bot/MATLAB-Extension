@@ -52,6 +52,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	% ## 返回值
 	%  Slice NDTable，索引取值得到的切片结果。除了Data数组被切片外，包含字符串的Dimensions各维也将按照索引被切片。如果对某个维度使用了大于字符串个数的数值索引，Slice
 	%   的Dimensions中的那个位置将用一个missing作为占位符。
+	% ## 局限性
+	%  如果使用名为i的工作区变量进行圆括号索引，将返回表中的原始值而不是NDTable。这是为了工作区中的变量编辑器优化。
 	%# 花括号索引
 	% ## 语法
 	%  ```
@@ -171,6 +173,11 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	end
 	methods(Access=protected)
 		function varargout=parenReference(obj,indexOp)
+			if inputname(1)=="i"&&isscalar(indexOp)
+				%变量编辑器专用
+				varargout{1}=obj.Data.(indexOp);
+				return;
+			end
 			Indices=indexOp(1).Indices;
 			for I=1:numel(Indices)
 				Index=Indices{I};
@@ -359,6 +366,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			end
 			obj.Dimensions=Dimensions;
 		end
+	end
+	methods(Hidden)
 		function varargout = size(obj,varargin)
 			[varargout{1:nargout}]=size(obj.Data,varargin{:});
 		end

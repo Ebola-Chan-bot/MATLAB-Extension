@@ -59,7 +59,7 @@ end
 ## +DataFun
 ```MATLAB
 %内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
-function [G,ID] = FindGroupsN(A,Dimension)
+function [G,ID] = FindGroupsN(Collection,Dimension)
 %返回数组的最大值以及所在的坐标。
 function [Value,varargout] = MaxSubs(Data,Dimensions)
 %一次性高效算出数据沿维度的平均值和标准误
@@ -266,7 +266,7 @@ function [Diff,IA] = SetDiffN(SetA,SetB,Dimension)
 %内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
 function USet = UnionN(Dimension,varargin)
 %内置unique的升级版，支持任意数组和表格类型，并可以指定拆分维度，missing类值视为相等的有效数据
-function [Set,InputIndex,UniqueIndex] = UniqueN(Collection,Dimension)
+function [Set,InputIndex,UniqueIndex] = UniqueN(Set,varargin)
 ```
 ## Project
 ```MATLAB
