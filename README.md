@@ -3,23 +3,23 @@
 [![View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://ww2.mathworks.cn/matlabcentral/fileexchange/96344-matlab-extension)
 # 目录
 本包中所有函数均在MATLAB命名空间下，使用前需import。
-- [+MATLAB](#MATLAB)
-	- [+Containers](#Containers) 实现多种STL容器
-	- [+DataFun](#DataFun) 数值统计操作
-	- [+DataTypes](#DataTypes) 元胞、表格、结构等特殊容器类型的复杂操作
-	- [+ElFun](#ElFun) 计算两个N维空间向量的夹角弧度
-	- [+ElMat](#ElMat) 数组元素变换
-	- [+General](#General) 变量、路径、工作区操作
-	- [+Graphics](#Graphics) 图窗和绘图操作
-	- [+IO](#IO) 文件和ZIP档案操作
-	- [+IOFun](#IOFun) 文件、网络、内存读写相关
-	- [+Lang](#Lang) 函数使用、定义、异常工具
-	- [+Ops](#Ops) 逻辑和集合操作
-	- [+Project](#Project) 工程相关
-	- [+RandFun](#RandFun) 随机概率分布
-	- [+SpecFun](#SpecFun) 穷举
-	- [+SupportPkg](#SupportPkg) 一键获取MATLAB硬件支持包
-	- [+UITools](#UITools) 文件打开和保存对话框
+- [+MATLAB](#matlab)
+	- [+Containers](#containers) 实现多种STL容器
+	- [+DataFun](#datafun) 数值统计操作
+	- [+DataTypes](#datatypes) 元胞、表格、结构等特殊容器类型的复杂操作
+	- [+ElFun](#elfun) 计算两个N维空间向量的夹角弧度
+	- [+ElMat](#elmat) 数组元素变换
+	- [+General](#general) 变量、路径、工作区操作
+	- [+Graphics](#graphics) 图窗和绘图操作
+	- [+IO](#io) 文件和ZIP档案操作
+	- [+IOFun](#iofun) 文件、网络、内存读写相关
+	- [+Lang](#lang) 函数使用、定义、异常工具
+	- [+Ops](#ops) 逻辑和集合操作
+	- [+Project](#project) 工程相关
+	- [+RandFun](#randfun) 随机概率分布
+	- [+SpecFun](#specfun) 穷举
+	- [+SupportPkg](#supportpkg) 一键获取MATLAB硬件支持包
+	- [+UITools](#uitools) 文件打开和保存对话框
 	- 还有一些尚未归类的工具函数直接放在MATLAB包下
 
 每个代码文件内部都有详细文档，可以用doc命令查看，此处仅列出函数签名和类功能简介。
