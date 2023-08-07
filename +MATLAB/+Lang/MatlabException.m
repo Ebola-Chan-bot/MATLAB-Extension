@@ -34,6 +34,9 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Invalid_pointer(31)
 		Unknown_exception(32)
 		Failed_to_save_shortcut(33)
+		Failed_to_open_the_file(34)
+		Failed_to_obtain_metadata(35)
+		Failed_to_decode_pixel_data(36)
 
 		Empty_inputs_may_return_unexpected_types(232)
 		Query_graph_contains_cycles(233)

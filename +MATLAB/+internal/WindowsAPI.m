@@ -41,6 +41,7 @@ classdef WindowsAPI<uint8
 		Crash(38)
 		Pause(39)
 		ArrayType_FromData(40)
+		WebpRead(41)
 	end
 	methods
 		function varargout=Call(obj,varargin)
@@ -71,6 +72,8 @@ classdef WindowsAPI<uint8
 							end
 						end
 						Detail.InnerException=ErrorCode;
+					case InnerException.LibWebpException
+						Detail.InnerException=MATLAB.ImageSci.VP8StatusCode(Error.ErrorCode);
 				end
 				if Error.Index
 					Detail.Index=Error.Index;

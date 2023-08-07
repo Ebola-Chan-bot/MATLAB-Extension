@@ -11,6 +11,7 @@
 	- [+ElMat](#elmat) 数组元素变换
 	- [+General](#general) 变量、路径、工作区操作
 	- [+Graphics](#graphics) 图窗和绘图操作
+	- [+ImageSci](#imagesci) 读入图像
 	- [+IO](#io) 文件和ZIP档案操作
 	- [+IOFun](#iofun) 文件、网络、内存读写相关
 	- [+Lang](#lang) 函数使用、定义、异常工具
@@ -184,6 +185,11 @@ function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
 classdef Window<handle
 	%创建一个全透明Windows窗口，可以在其上显示图像
 end
+```
+## ImageSci
+```MATLAB
+%内置imread的升级版，额外支持WebP格式图像
+function varargout = ImRead(varargin)
 ```
 ## +IO
 函数

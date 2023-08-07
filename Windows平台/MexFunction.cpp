@@ -64,6 +64,7 @@ API声明(LnkShortcut);
 API声明(Crash);
 API声明(Pause);
 API声明(ArrayType_FromData);
+API声明(WebpRead);
 using namespace Mex工具;
 void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 {
@@ -111,6 +112,7 @@ void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
 		Crash,
 		Pause,
 		ArrayType_FromData,
+		WebpRead,
 	};
 	try
 	{

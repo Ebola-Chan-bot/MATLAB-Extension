@@ -6,6 +6,7 @@
 #include<chrono>
 #include<thread>
 #include<Mex工具.h>
+#include<webp/decode.h>
 using namespace Mex工具;
 API声明(TypeCast)
 {
@@ -65,4 +66,42 @@ API声明(Pause)
 API声明(ArrayType_FromData)
 {
 	outputs[1] = 数组工厂.createScalar<uint8_t>((int)inputs[1].getType());
+}
+API声明(WebpRead)
+{
+	const String 路径 = 万能转码<String>(inputs[1]);
+	void* 句柄 = CreateFileW((LPCWSTR)路径.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (句柄 == INVALID_HANDLE_VALUE)
+		throw MATLAB异常(MATLAB异常类型::打开文件失败, 内部异常类型::Win32异常, GetLastError());
+	const std::unique_ptr<void, decltype(&CloseHandle)>文件句柄(句柄, CloseHandle);
+	LARGE_INTEGER 文件大小;
+	GetFileSizeEx(句柄, &文件大小);
+	句柄 = CreateFileMapping(句柄, NULL, PAGE_READONLY, 0, 0, nullptr);
+	if (!句柄)
+		throw MATLAB异常(MATLAB异常类型::打开文件失败, 内部异常类型::Win32异常, GetLastError());
+	const std::unique_ptr<void, decltype(&CloseHandle)>映射句柄(句柄, CloseHandle);
+	句柄 = MapViewOfFile(句柄, FILE_MAP_READ, 0, 0, 0);
+	if (!句柄)
+		throw MATLAB异常(MATLAB异常类型::打开文件失败, 内部异常类型::Win32异常, GetLastError());
+	const std::unique_ptr<uint8_t, decltype(&UnmapViewOfFile)>映射指针((uint8_t*)句柄, UnmapViewOfFile);
+	WebPBitstreamFeatures 元数据;
+	const VP8StatusCode 结果 = WebPGetFeatures(映射指针.get(), 文件大小.QuadPart, &元数据);
+	if (结果)
+		throw MATLAB异常(MATLAB异常类型::获取元数据失败, 内部异常类型::LibWebP异常, 结果);
+	if (元数据.has_alpha)
+	{
+		const int 字节数 = 元数据.height * 元数据.width * 4;
+		buffer_ptr_t<uint8_t>缓冲 = 数组工厂.createBuffer<uint8_t>(字节数);
+		if (!WebPDecodeRGBAInto(映射指针.get(), 文件大小.QuadPart, 缓冲.get(), 字节数, 元数据.width * 4))
+			throw MATLAB异常(MATLAB异常类型::解码像素值失败);
+		outputs[1] = 数组工厂.createArrayFromBuffer({ 4,(size_t)元数据.width,(size_t)元数据.height }, std::move(缓冲));
+	}
+	else
+	{
+		const int 字节数 = 元数据.height * 元数据.width * 3;
+		buffer_ptr_t<uint8_t>缓冲 = 数组工厂.createBuffer<uint8_t>(字节数);
+		if (!WebPDecodeRGBInto(映射指针.get(), 文件大小.QuadPart, 缓冲.get(), 字节数, 元数据.width * 3))
+			throw MATLAB异常(MATLAB异常类型::解码像素值失败);
+		outputs[1] = 数组工厂.createArrayFromBuffer({ 3,(size_t)元数据.width,(size_t)元数据.height }, std::move(缓冲));
+	}
 }

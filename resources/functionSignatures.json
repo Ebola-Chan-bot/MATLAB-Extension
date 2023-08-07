@@ -1661,6 +1661,79 @@
 			}
 		]
 	},
+	"MATLAB.General.Which": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "'-all'",
+							"kind": "ordered",
+							"type": "choices={'-all'}"
+						},
+						{
+							"name": "item",
+							"kind": "required",
+							"type": [
+								[
+									"identifier=variable,function,localfunction,package,classdef"
+								],
+								[
+									"file=*.m,*.mlx,*.mdl,*.slx"
+								],
+								[
+									"char"
+								]
+							]
+						}
+					],
+					[
+						{
+							"name": "item",
+							"kind": "required",
+							"type": [
+								[
+									"identifier=variable,function,localfunction,package,classdef"
+								],
+								[
+									"file=*.m,*.mlx,*.mdl,*.slx"
+								],
+								[
+									"char"
+								]
+							]
+						},
+						{
+							"name": "'-all'",
+							"kind": "ordered",
+							"type": "choices={'-all'}"
+						}
+					],
+					[
+						{
+							"name": "fun1",
+							"kind": "required",
+							"type": [
+								"char"
+							]
+						},
+						{
+							"name": "'in'",
+							"kind": "required",
+							"type": "choices={'in'}"
+						},
+						{
+							"name": "fun2",
+							"kind": "required",
+							"type": [
+								"identifier=function"
+							]
+						}
+					]
+				]
+			}
+		]
+	},
 	"MATLAB.Graphics.FigureAspectRatio": {
 		"inputs": [
 			{
@@ -1882,75 +1955,451 @@
 			}
 		]
 	},
-	"MATLAB.General.Which": {
+	"MATLAB.ImageSci.ImRead": {
 		"inputs": [
 			{
 				"mutuallyExclusiveGroup": [
 					[
 						{
-							"name": "'-all'",
-							"kind": "ordered",
-							"type": "choices={'-all'}"
-						},
-						{
-							"name": "item",
+							"name": "filename",
 							"kind": "required",
 							"type": [
 								[
-									"identifier=variable,function,localfunction,package,classdef"
+									"file=*.bmp"
 								],
 								[
-									"file=*.m,*.mlx,*.mdl,*.slx"
+									"matlabpathfile=*.bmp"
 								],
 								[
-									"char"
+									"char",
+									"@(x) endsWith(x,'.bmp')"
+								]
+							]
+						},
+						{
+							"name": "fmt",
+							"kind": "ordered",
+							"type": [
+								"char",
+								"choices={'bmp'}"
+							]
+						}
+					],
+					[
+						{
+							"name": "filename",
+							"kind": "required",
+							"type": [
+								[
+									"file=*.cur"
+								],
+								[
+									"matlabpathfile=*.cur"
+								],
+								[
+									"char",
+									"@(x) endsWith(x,'.cur')"
+								]
+							]
+						},
+						{
+							"name": "fmt",
+							"kind": "ordered",
+							"type": [
+								"char",
+								"choices={'cur'}"
+							]
+						},
+						{
+							"name": "idx",
+							"kind": "ordered",
+							"type": [
+								"numeric",
+								"vector",
+								">=1"
+							]
+						}
+					],
+					[
+						{
+							"name": "filename",
+							"kind": "required",
+							"type": [
+								[
+									"file=*.gif"
+								],
+								[
+									"matlabpathfile=*.gif"
+								],
+								[
+									"char",
+									"@(x) endsWith(x,'.gif')"
+								]
+							]
+						},
+						{
+							"name": "fmt",
+							"kind": "ordered",
+							"type": [
+								"char",
+								"choices={'gif'}"
+							]
+						},
+						{
+							"name": "idx",
+							"kind": "ordered",
+							"type": [
+								"numeric",
+								"vector",
+								">=1"
+							]
+						},
+						{
+							"name": "Frames",
+							"kind": "namevalue",
+							"type": [
+								[
+									"numeric",
+									"vector",
+									">=1"
+								],
+								[
+									"char",
+									"choices={'all'}"
 								]
 							]
 						}
 					],
 					[
 						{
-							"name": "item",
+							"name": "filename",
 							"kind": "required",
 							"type": [
 								[
-									"identifier=variable,function,localfunction,package,classdef"
+									"file=*.hdf"
 								],
 								[
-									"file=*.m,*.mlx,*.mdl,*.slx"
+									"matlabpathfile=*.hdf"
 								],
 								[
-									"char"
+									"char",
+									"@(x) endsWith(x,'.hdf')"
 								]
 							]
 						},
 						{
-							"name": "'-all'",
+							"name": "fmt",
 							"kind": "ordered",
-							"type": "choices={'-all'}"
+							"type": [
+								"char",
+								"choices={'hdf'}"
+							]
+						},
+						{
+							"name": "idx",
+							"kind": "ordered",
+							"type": [
+								"numeric",
+								"vector",
+								">=1"
+							]
 						}
 					],
 					[
 						{
-							"name": "fun1",
+							"name": "filename",
 							"kind": "required",
 							"type": [
-								"char"
+								[
+									"file=*.ico"
+								],
+								[
+									"matlabpathfile=*.ico"
+								],
+								[
+									"char",
+									"@(x) endsWith(x,'.ico')"
+								]
 							]
 						},
 						{
-							"name": "'in'",
-							"kind": "required",
-							"type": "choices={'in'}"
+							"name": "fmt",
+							"kind": "ordered",
+							"type": [
+								"char",
+								"choices={'ico'}"
+							]
 						},
 						{
-							"name": "fun2",
+							"name": "idx",
+							"kind": "ordered",
+							"type": [
+								"numeric",
+								"vector",
+								">=1"
+							]
+						}
+					],
+					[
+						{
+							"name": "filename",
 							"kind": "required",
 							"type": [
-								"identifier=function"
+								[
+									"file=*.jpg,*.jpeg"
+								],
+								[
+									"matlabpathfile=*.jpg,*.jpeg"
+								],
+								[
+									"char",
+									"@(x) endsWith(x,{'.jpg','.jpeg'})"
+								]
+							]
+						},
+						{
+							"name": "fmt",
+							"kind": "ordered",
+							"type": [
+								"char",
+								"choices={'jpg','jpeg'}"
+							]
+						}
+					],
+					[
+						{
+							"name": "filename",
+							"kind": "required",
+							"type": [
+								[
+									"file=*.jp2,*.jpx,*.j2c,*.j2k,*.jpf"
+								],
+								[
+									"matlabpathfile=*.jp2,*.jpx,*.j2c,*.j2k,*.jpf"
+								],
+								[
+									"char",
+									"@(x) endsWith(x,{'*.jp2','*.jpx','*.j2c','*.j2k','*.jpf'})"
+								]
+							]
+						},
+						{
+							"name": "fmt",
+							"kind": "ordered",
+							"type": [
+								"char",
+								"choices={'jp2','jpx','j2c','j2k','jpf'}"
+							]
+						},
+						{
+							"name": "PixelRegion",
+							"kind": "namevalue",
+							"type": "cell"
+						},
+						{
+							"name": "ReductionLevel",
+							"kind": "namevalue",
+							"type": [
+								"numeric",
+								"scalar"
+							]
+						},
+						{
+							"name": "V79Compatible",
+							"kind": "namevalue",
+							"type": [
+								"logical",
+								"scalar"
+							]
+						}
+					],
+					[
+						{
+							"name": "filename",
+							"kind": "required",
+							"type": [
+								[
+									"file=*.png"
+								],
+								[
+									"matlabpathfile=*.png"
+								],
+								[
+									"char",
+									"@(x) endsWith(x,'.png')"
+								]
+							]
+						},
+						{
+							"name": "fmt",
+							"kind": "ordered",
+							"type": [
+								"char",
+								"choices={'png'}"
+							]
+						},
+						{
+							"name": "BackgroundColor",
+							"kind": "namevalue",
+							"type": [
+								[
+									"numeric"
+								],
+								[
+									"char",
+									"choices={'none'}"
+								]
+							]
+						}
+					],
+					[
+						{
+							"name": "filename",
+							"kind": "required",
+							"type": [
+								[
+									"file=*.tif,*.tiff"
+								],
+								[
+									"matlabpathfile=*.tif,*.tiff"
+								],
+								[
+									"char",
+									"@(x) endsWith(x,{'.tif','tiff'})"
+								]
+							]
+						},
+						{
+							"name": "fmt",
+							"kind": "ordered",
+							"type": [
+								"char",
+								"choices={'tif','tiff'}"
+							]
+						},
+						{
+							"name": "Index",
+							"kind": "namevalue",
+							"type": [
+								"numeric",
+								">=1"
+							]
+						},
+						{
+							"name": "Info",
+							"kind": "namevalue",
+							"type": [
+								"struct"
+							]
+						},
+						{
+							"name": "PixelRegion",
+							"kind": "namevalue",
+							"type": [
+								"cell"
+							]
+						}
+					],
+					[
+						{
+							"name": "filename",
+							"kind": "required",
+							"type": [
+								[
+									"file=*.fts,*.fits,*.pbm,*.pcx,*.pgm,*.pnm,*.ppm,*.ras,*.xwd"
+								],
+								[
+									"matlabpathfile=*.fts,*.fits,*.pbm,*.pcx,*.pgm,*.pnm,*.ppm,*.ras,*.xwd"
+								]
+							]
+						},
+						{
+							"name": "fmt",
+							"kind": "ordered",
+							"type": "char"
+						},
+						{
+							"name": "idx",
+							"kind": "ordered",
+							"type": [
+								"numeric",
+								"vector",
+								">=1"
+							]
+						}
+					],
+					[
+						{
+							"name": "filename",
+							"kind": "required",
+							"type": [
+								"char",
+								"file"
+							]
+						},
+						{
+							"name": "fmt",
+							"kind": "ordered",
+							"type": [
+								[
+									"char"
+								],
+								[
+									"char",
+									"choices={'bmp','cur','fts','fits','gif','hdf','ico','j2c','j2k','jp2','jpf','jpx','jpg','jpeg','pbm','pcx','pgm','png','pnm','ppm','ras','tif','tiff','xwd'}"
+								]
+							]
+						},
+						{
+							"name": "idx",
+							"kind": "ordered",
+							"type": [
+								"numeric",
+								"vector",
+								">=1"
 							]
 						}
 					]
+				]
+			}
+		],
+		"outputs": [
+			{
+				"name": "A",
+				"type": [
+					[
+						"uint8",
+						"size=:,:,3"
+					],
+					[
+						"uint16",
+						"size=:,:,3"
+					],
+					[
+						"uint8",
+						"2d"
+					],
+					[
+						"uint16",
+						"2d"
+					],
+					[
+						"logical",
+						"2d"
+					]
+				]
+			},
+			{
+				"name": "map",
+				"type": [
+					"double",
+					"size=:,3"
+				]
+			},
+			{
+				"name": "transparency",
+				"type": [
+					"numeric"
 				]
 			}
 		]

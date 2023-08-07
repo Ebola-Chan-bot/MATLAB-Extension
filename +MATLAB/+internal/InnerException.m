@@ -5,5 +5,6 @@ classdef InnerException<uint8
 		LibzipException(2)
 		MexException(3)
 		ComException(4)
+		LibWebpException(5)
 	end
 end
