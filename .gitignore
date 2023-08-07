@@ -12,3 +12,4 @@ packages
 **/My Project
 **/obj
 **/*.deps.json
+/+MATLAB/+internal/private/libwebp_debug.dll
