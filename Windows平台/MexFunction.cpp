@@ -66,80 +66,84 @@ API声明(Pause);
 API声明(ArrayType_FromData);
 API声明(WebpRead);
 using namespace Mex工具;
-void MexFunction::operator()(ArgumentList& outputs, ArgumentList& inputs)
+struct MexFunction :public Function //必须命名为MexFunction，public继承Function
 {
-	static const StructArray 异常结构 = 数组工厂.createStructArray({ 1 }, { "ExceptionType","WindowsErrorCode" });
-	API索引
+	void operator()(ArgumentList& outputs, ArgumentList& inputs)override
 	{
-		SHFile_Copy,
-		SHFile_Delete,
-		SHFile_Move,
-		ZipOpen,
-		ZipNameLocate,
-		ZipFopen,
-		ZipFread,
-		ZipFclose,
-		ZipDiscard,
-		ZipGetSize,
-		ZipGetName,
-		ZipGetNumEntries,
-		File_Create,
-		File_GetSize,
-		File_Read,
-		File_SetEnd,
-		File_SetPointer,
-		File_Write,
-		File_Close,
-		MemoryMapping_Create,
-		MemoryMapping_Open,
-		MemoryMapping_View,
-		MemoryMapping_Unview,
-		MemoryMapping_Close,
-		Pointer_Allocate,
-		Pointer_Read,
-		Pointer_Write,
-		Pointer_Copy,
-		Pointer_Release,
-		TypeCast,
-		Window_Create,
-		Window_Destroy,
-		Window_Image,
-		Window_Screens,
-		Window_Clear,
-		Window_Fill,
-		Window_RemoveVisual,
-		LnkShortcut,
-		Crash,
-		Pause,
-		ArrayType_FromData,
-		WebpRead,
-	};
-	try
-	{
-		API调用;
+		static const StructArray 异常结构 = 数组工厂.createStructArray({ 1 }, { "ExceptionType","WindowsErrorCode" });
+		API索引
+		{
+			SHFile_Copy,
+			SHFile_Delete,
+			SHFile_Move,
+			ZipOpen,
+			ZipNameLocate,
+			ZipFopen,
+			ZipFread,
+			ZipFclose,
+			ZipDiscard,
+			ZipGetSize,
+			ZipGetName,
+			ZipGetNumEntries,
+			File_Create,
+			File_GetSize,
+			File_Read,
+			File_SetEnd,
+			File_SetPointer,
+			File_Write,
+			File_Close,
+			MemoryMapping_Create,
+			MemoryMapping_Open,
+			MemoryMapping_View,
+			MemoryMapping_Unview,
+			MemoryMapping_Close,
+			Pointer_Allocate,
+			Pointer_Read,
+			Pointer_Write,
+			Pointer_Copy,
+			Pointer_Release,
+			TypeCast,
+			Window_Create,
+			Window_Destroy,
+			Window_Image,
+			Window_Screens,
+			Window_Clear,
+			Window_Fill,
+			Window_RemoveVisual,
+			LnkShortcut,
+			Crash,
+			Pause,
+			ArrayType_FromData,
+			WebpRead,
+		};
+		try
+		{
+			API调用;
+		}
+		catch (MATLAB异常 异常)
+		{
+			outputs[0] = 异常;
+			异常输出补全(outputs);
+			return;
+		}
+		catch (Mex异常 异常)
+		{
+			outputs[0] = MATLAB异常(MATLAB异常类型::Mex异常, 内部异常类型::Mex异常, 异常);
+			异常输出补全(outputs);
+			return;
+		}
+		catch (...)
+		{
+			outputs[0] = MATLAB异常(MATLAB异常类型::未知异常);
+			异常输出补全(outputs);
+			return;
+		}
+		static const StructArray 成功结构 = MATLAB异常();
+		outputs[0] = 成功结构;
 	}
-	catch (MATLAB异常 异常)
+	virtual ~MexFunction()
 	{
-		outputs[0] = 异常;
-		异常输出补全(outputs);
-		return;
+		窗口::销毁所有();
 	}
-	catch (Mex异常 异常)
-	{
-		outputs[0] = MATLAB异常(MATLAB异常类型::Mex异常, 内部异常类型::Mex异常, 异常);
-		异常输出补全(outputs);
-		return;
-	}
-	catch (...)
-	{
-		outputs[0] = MATLAB异常(MATLAB异常类型::未知异常);
-		异常输出补全(outputs);
-		return;
-	}
-	static const StructArray 成功结构 = MATLAB异常();
-	outputs[0] = 成功结构;
-}
-MexFunction::~MexFunction()
-{
-	窗口::销毁所有();
-}
+};
+Function* const 函数对象 = new MexFunction(); //必须用new创建此对象指针，因为 clear mex 时将用delete析构
