@@ -67,7 +67,8 @@ packages
 Windows平台
 **/*.sln
 提权操作
-**/*.deps.json</param.exclude.filters>
+**/*.deps.json
+**/*_debug.dll</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
     <param.examples />
     <param.demosxml />
