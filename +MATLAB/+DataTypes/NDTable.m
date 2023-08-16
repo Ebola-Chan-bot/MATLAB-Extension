@@ -1,6 +1,7 @@
 classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.RedefinesBrace&matlab.mixin.indexing.RedefinesDot
 	%N维表格，相当于支持字符串索引的N维数组
-	%内置table本质上是个矩阵，提供了将行和列的名称作为索引来访问矩阵的方法，但它只有2维。NDTable提供通过行列名访问高维数组的方法，即多维表格。
+	%内置table本质上是个矩阵，提供了将行和列的名称作为索引来访问矩阵的方法，但它只有2维。NDTable提供通过行列名访问高维数组的方法，即多维表格。此外，它还支持常规的数组
+	% 操作，包括 size cat permute reshape
 	%构造方法的文档中描述了构造NDTable的方法。我们假设用文档中的示例代码，已构造了一个NDTable对象名为obj。
 	%# 圆括号索引
 	% ## 语法
@@ -398,6 +399,14 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		function obj=reshape(obj,varargin)
 			%此操作仅影响Data属性，对Dimensions不做修改
 			obj.Data=reshape(obj.Data,varargin{:});
+		end
+		function obj=permute(obj,DimensionOrder)
+			obj.Data=permute(obj.Data,DimensionOrder);
+			NDims=numel(DimensionOrder);
+			if height(obj.Dimensions)<NDims
+				obj.Dimensions.DimensionName(end+1:NDims)=missing;
+			end
+			obj.Dimensions(1:NDims,:)=obj.Dimensions(DimensionOrder,:);
 		end
 	end
 end
