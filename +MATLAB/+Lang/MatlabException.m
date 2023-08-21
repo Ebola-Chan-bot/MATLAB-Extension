@@ -38,6 +38,8 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Failed_to_obtain_metadata(35)
 		Failed_to_decode_pixel_data(36)
 
+		Size_not_compatible_with_array(230)
+		Invalid_Alignment(231)
 		Empty_inputs_may_return_unexpected_types(232)
 		Query_graph_contains_cycles(233)
 		Selected_tables_not_sharing_key_columns(234)

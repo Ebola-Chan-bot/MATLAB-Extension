@@ -141,9 +141,13 @@ struct MexFunction :public Function //必须命名为MexFunction，public继承F
 		static const StructArray 成功结构 = MATLAB异常();
 		outputs[0] = 成功结构;
 	}
-	virtual ~MexFunction()
-	{
-		窗口::销毁所有();
-	}
 };
-Function* const 函数对象 = new MexFunction(); //必须用new创建此对象指针，因为 clear mex 时将用delete析构
+Function* 创建Mex函数()
+{
+	return new MexFunction();
+}
+void 销毁Mex函数(Function* 函数指针)
+{
+	窗口::销毁所有();
+	delete 函数指针;
+}

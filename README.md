@@ -132,7 +132,7 @@ function ActualIndexArrayByArbitrarySubs = OrderedDimensionSize2IndexArray(Dimen
 %根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 function varargout = OrderedDimensionSize2SubsVectors(DimensionSize,DSOrderArbitrary,options)
 %内置cat函数的魔改版，可以给不兼容数组自动补全空值
-function Array = PadCat(Dimension,Padder,varargin)
+function Array = PadCat(Dimension,Arrays,options)
 %内置rot90函数的升级版，支持指定任意两个维度组成的旋转平面
 function A = Rot90(A,varargin)
 %内置transpose函数的升级版，支持转置任意两个维度

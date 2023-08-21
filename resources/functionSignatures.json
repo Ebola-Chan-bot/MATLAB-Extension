@@ -1146,16 +1146,25 @@
 				"purpose": "拼接维度"
 			},
 			{
-				"name": "Padder",
-				"kind": "required",
-				"type": "scalar",
-				"purpose": "补全子"
-			},
-			{
 				"name": "Array",
 				"kind": "required",
 				"purpose": "要拼接的数组",
 				"repeating": true
+			},
+			{
+				"name": "Padder",
+				"kind": "namevalue",
+				"type": "scalar",
+				"purpose": "补全子"
+			},
+			{
+				"name": "Alignment",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "对齐策略"
 			}
 		]
 	},
