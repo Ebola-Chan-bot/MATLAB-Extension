@@ -27,6 +27,8 @@
 # +MATLAB
 函数
 ```MATLAB
+%在系统浏览器中打开附加功能资源管理器
+function BrowseAddonsExplorer
 %绘制跟随曲线方向的箭头
 function Arrows = LineFollowingArrow(XYCoordinates,options)
 %暂停执行MATLAB，不可中止
@@ -151,6 +153,8 @@ function OldDirectory = CD(NewDirectory)
 function JavaAddPath(Paths)
 %内置load函数的魔改版，取消适用场合限制，支持直接输出变量
 function varargout = Load(Path,VariableName)
+%重启MATLAB
+function Restart
 %内置save函数的魔改版，采用名称值参数保存变量，可以在parfor循环中使用。
 function Save(MatPath,Variable)
 %在工作区或复合变量中搜索变量名、结构体字段、表格列或对象属性
