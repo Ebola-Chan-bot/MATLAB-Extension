@@ -975,6 +975,25 @@
 			}
 		]
 	},
+	"MATLAB.ElFun.IntegerAllocate": {
+		"inputs": [
+			{
+				"name": "Resources",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "整数资源个数"
+			},
+			{
+				"name": "Weights",
+				"kind": "required",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "每个分配对象的权重"
+			}
+		]
+	},
 	"MATLAB.ElMat.CutCat": {
 		"inputs": [
 			{

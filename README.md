@@ -7,8 +7,8 @@
 	- [+Containers](#containers) 实现多种STL容器
 	- [+DataFun](#datafun) 数值统计操作
 	- [+DataTypes](#datatypes) 元胞、表格、结构等特殊容器类型的复杂操作
-	- [+ElFun](#elfun) 计算两个N维空间向量的夹角弧度
-	- [+ElMat](#elmat) 数组元素变换
+	- [+ElFun](#elfun) 数值变换
+	- [+ElMat](#elmat) 数组形状变换
 	- [+General](#general) 变量、路径、工作区操作
 	- [+Graphics](#graphics) 图窗和绘图操作
 	- [+ImageSci](#imagesci) 读入图像
@@ -118,6 +118,8 @@ function Y = TypeCast(X,Type,Dimension)
 ```MATLAB
 %计算两个N维空间向量的夹角弧度
 function A=AngleND(varargin)
+%将有限的整数资源按照权重尽可能公平分配
+function Allocation = IntegerAllocate(Resources,Weights)
 ```
 ## +ElMat
 ```MATLAB
