@@ -54,7 +54,7 @@ Module Program
 			Case 提权操作.Uninstall_Path_Manager
 				Dim Matlab路径 As String = 读入字符串(参数流)
 				'原版savepath直接放在internal目录下以便调用
-				File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\savepath.m"), Path.Combine(Matlab路径, "toolbox\matlab\general\savepath.m"), True)
+				File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly.Location), "..\原文件\savepath.m"), Path.Combine(Matlab路径, "toolbox\matlab\general\savepath.m"), True)
 				Matlab路径 = Path.Combine(Matlab路径, "toolbox\local\matlabrc.m")
 				File.WriteAllLines(Matlab路径, From 行 As String In File.ReadAllLines(Matlab路径) Select 行 Where Not 行.EndsWith("%埃博拉酱"))
 			Case 提权操作.Set_shared_path
