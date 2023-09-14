@@ -184,11 +184,18 @@ classdef Flags<uint32
 		FOF_NOCONFIRMATION         (0x0010)
 
 		%% DataTypes.Select
+
 		NoOptimization(12)
 
 		%% DataTypes.OptimizeQueryGraph
+
 		DisableLoops(13)
 		DisableLinkerOptimize(14)
+
+		%% DataTypes.Methods
+
+		TextIsObject(15)
+		Full(16)
 	end
 	methods
 		function Combination=or(Flag1,Flag2)

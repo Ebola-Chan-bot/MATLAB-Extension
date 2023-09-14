@@ -14,10 +14,10 @@
 	- [+ImageSci](#imagesci) 读入图像
 	- [+IO](#io) 文件和ZIP档案操作
 	- [+IOFun](#iofun) 文件、网络、内存读写相关
-	- [+Lang](#lang) 函数使用、定义、异常工具
+	- [+Lang](#lang) 函数使用、定义、异常工具、语言功能
 	- [+Ops](#ops) 逻辑和集合操作
 	- [+Project](#project) 工程相关
-	- [+RandFun](#randfun) 随机概率分布
+	- [+RandFun](#randfun) 随机概率分布洗牌
 	- [+SpecFun](#specfun) 穷举
 	- [+SupportPkg](#supportpkg) 一键获取MATLAB硬件支持包
 	- [+UITools](#uitools) 文件打开和保存对话框
@@ -246,6 +246,8 @@ end
 ```MATLAB
 %为MATLAB安装补丁，修复已知bug
 function BugList = BuiltinBugFix(Command,RestartDisposition)
+%收集无法返回的过程值
+function Value = Capture(Value,Receiver,Property)
 %使得当前MATLAB进程崩溃
 function Crash
 %根据验证函数将输入的Varargin分发到输出变量
@@ -263,8 +265,14 @@ end
 classdef MException
 	%内置MException的扩展，支持更灵活的构造和额外的Detail属性
 end
+classdef Optional
+	%一个值的句柄容器，可选为空。
+end
 classdef Owner
 	%为句柄对象指定一个所有者，托管其生命周期
+end
+classdef Referable
+	%为值创建引用源，然后可以创建同步更改的引用
 end
 ```
 ## +Ops
@@ -293,6 +301,8 @@ function ProjectPaths = ListAllProjectPaths(Project)
 function varargout = RandAnyDist(PDF,Size,Range)
 %生成单位球面上均匀分布的随机点
 function [X,Y,Z] = RandOnSphere(varargin)
+%洗牌算法，支持设定最大连续重复数
+function [Array,CountCache] = Shuffle(Array,options)
 ```
 ## +SpecFun
 ```MATLAB

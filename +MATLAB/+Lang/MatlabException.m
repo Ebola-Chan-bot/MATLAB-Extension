@@ -38,6 +38,12 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Failed_to_obtain_metadata(35)
 		Failed_to_decode_pixel_data(36)
 
+		Container_must_specify_PropertyName_or_MethodName(224)
+		Static_argument_not_supported_for_the_specified_type(225)
+		Owner_not_modifiable(226)
+		Optional_value_not_set(227)
+		Impossible_MaxConsecutiveRepeats(228)
+		Cannot_change_type_of_Referable_value(229)
 		Size_not_compatible_with_array(230)
 		Invalid_Alignment(231)
 		Empty_inputs_may_return_unexpected_types(232)

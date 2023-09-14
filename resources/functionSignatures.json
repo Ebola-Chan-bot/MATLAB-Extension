@@ -3204,6 +3204,53 @@
 			}
 		]
 	},
+	"MATLAB.Lang.Capture": {
+		"inputs": [
+			{
+				"name": "Value",
+				"kind": "required",
+				"purpose": "要捕获或显示的值"
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Function",
+							"kind": "ordered",
+							"type": "function_handle",
+							"purpose": "接受输入值的函数"
+						}
+					],
+					[
+						{
+							"name": "Container",
+							"kind": "required",
+							"type": [
+								"handle",
+								"scalar"
+							],
+							"purpose": "接受输入值的句柄对象"
+						},
+						{
+							"name": "Property",
+							"kind": "required",
+							"type": [
+								[
+									"char",
+									"row"
+								],
+								[
+									"string",
+									"scalar"
+								]
+							],
+							"purpose": "Container将要接受输入值的属性名称"
+						}
+					]
+				]
+			}
+		]
+	},
 	"MATLAB.Lang.DistributeVararginByValidation": {
 		"inputs": [
 			{
@@ -3424,6 +3471,63 @@
 					"matlab.lang.correction.Correction"
 				],
 				"purpose": "异常的建议修复"
+			}
+		]
+	},
+	"MATLAB.Lang.Optional": {
+		"inputs": [
+			{
+				"name": "Value",
+				"kind": "ordered",
+				"purpose": "容器包含的初始值"
+			}
+		]
+	},
+	"MATLAB.Lang.Optional.ValueOr": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Default",
+				"kind": "required",
+				"purpose": "如果容器为空，将返回此默认值"
+			}
+		]
+	},
+	"MATLAB.Lang.Owner": {
+		"inputs": [
+			{
+				"name": "Object",
+				"kind": "required",
+				"type": "handle",
+				"purpose": "要自动delete的句柄对象"
+			}
+		]
+	},
+	"MATLAB.Lang.Referable": {
+		"inputs": [
+			{
+				"name": "Value",
+				"kind": "required",
+				"purpose": "要创建引用的值"
+			}
+		]
+	},
+	"MATLAB.Lang.Referable.CreateReference": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "UpdateClass",
+				"kind": "ordered",
+				"type": [
+					"logical",
+					"scalar"
+				],
+				"purpose": "是否更新动态类型缓存",
+				"default": false
 			}
 		]
 	},
@@ -3698,6 +3802,27 @@
 						}
 					]
 				]
+			}
+		]
+	},
+	"MATLAB.RandFun.Shuffle": {
+		"inputs": [
+			{
+				"name": "Array",
+				"kind": "required",
+				"purpose": "要洗牌的数组"
+			},
+			{
+				"name": "Dimension",
+				"kind": "namevalue",
+				"type": "positive",
+				"purpose": "洗牌维度"
+			},
+			{
+				"name": "MaxConsecutiveRepeats",
+				"kind": "namevalue",
+				"type": "positive",
+				"purpose": "最大连续重复数"
 			}
 		]
 	},
