@@ -58,7 +58,7 @@ classdef Vector<handle
 			obj.Size=0;
 		end
 		function D=get.Data(obj)
-			%以MATLAB数组形式返回向量中所有元素
+			%以MATLAB行向量形式返回向量中所有元素
 			D=obj.Container(1:obj.Size);
 		end
 		function Erase(obj,Index)
@@ -121,7 +121,7 @@ classdef Vector<handle
 			% obj.PushBack(Values);
 			% ```
 			%# 输入参数
-			% Values(1,:)，要追加的元素
+			% Values(1,:)，要追加的元素。可以追加多个元素，排列成行向量。
 			ValueSize=numel(Values);
 			if isempty(obj.Container)
 				obj.Container=Values;
