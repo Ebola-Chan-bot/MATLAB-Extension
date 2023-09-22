@@ -40,8 +40,18 @@ classdef EventLogger<handle
 		end
 		function TT=GetTimeTable(obj)
 			%返回事件记录时间表
-			%表包含一个Time列，记录每个事件相对于上次Reset或创建对象时经过的时间；以及一个Event列，包含LogEvent所记录的每个事件。
-			TT=obj.RawLog(1:obj.NumEvents,:);
-		end
+            %# 语法
+            % ```
+            % TT=obj.GetTimeTable;
+            % ```
+            %# 返回值
+            % TT timetable，表包含一个Time列，记录每个事件相对于上次Reset或创建对象时经过的时间；以及一个Event列，包含LogEvent所记录的每个事件。如果没有记录任何事件，
+            %  将返回一个(0,0)timetable。
+            if isempty(obj.RawLog)
+                TT=timetable;
+            else
+    			TT=obj.RawLog(1:obj.NumEvents,:);
+            end
+        end
 	end
 end
