@@ -18,7 +18,7 @@
 	- [+Ops](#ops) 逻辑和集合操作
 	- [+Project](#project) 工程相关
 	- [+RandFun](#randfun) 随机概率分布洗牌
-	- [+SpecFun](#specfun) 穷举
+	- [+SpecFun](#specfun) 穷举、椭圆周长
 	- [+SupportPkg](#supportpkg) 一键获取MATLAB硬件支持包
 	- [+UITools](#uitools) 文件打开和保存对话框
 	- 还有一些尚未归类的工具函数直接放在MATLAB包下
@@ -306,6 +306,8 @@ function [Array,CountCache] = Shuffle(Array,options)
 ```
 ## +SpecFun
 ```MATLAB
+%计算椭圆周长
+function P = EllipticPerimeter(a,b)
 %穷举一定长度的所有可能的逻辑向量
 function Exhaustion = LogicalExhaustion(Length)
 %列出集合的所有子集

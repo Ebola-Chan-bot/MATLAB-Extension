@@ -3826,6 +3826,22 @@
 			}
 		]
 	},
+	"MATLAB.SpecFun.EllipticPerimeter": {
+		"inputs": [
+			{
+				"name": "a",
+				"kind": "required",
+				"type": "real",
+				"purpose": "椭圆长半轴"
+			},
+			{
+				"name": "b",
+				"kind": "required",
+				"type": "real",
+				"purpose": "椭圆短半轴"
+			}
+		]
+	},
 	"MATLAB.SpecFun.LogicalExhaustion": {
 		"inputs": [
 			{
@@ -3842,6 +3858,15 @@
 					"logical",
 					"2d"
 				]
+			}
+		]
+	},
+	"MATLAB.SpecFun.SubSets": {
+		"inputs": [
+			{
+				"name": "Set",
+				"kind": "required",
+				"purpose": "集合"
 			}
 		]
 	},
