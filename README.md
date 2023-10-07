@@ -101,6 +101,8 @@ function varargout=ArrayFun(Function,Arguments,options)
 function Cells = Cell2Mat(Cells)
 %取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数
 function varargout = FolderFun(Function,Directory,options)
+%检查表中所有全等的列，将它们合并成一列
+function Table = MergeCongruentColumns(Table)
 %将多个结构体标量按字段合并，重复的字段将取第一个值
 function Merged = MergeStructs(varargin)
 %按照键列合并表

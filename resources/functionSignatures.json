@@ -729,6 +729,16 @@
 		],
 		"platforms": "win64"
 	},
+	"MATLAB.DataTypes.MergeCongruentColumns": {
+		"inputs": [
+			{
+				"name": "Table",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "要合并全等列的表"
+			}
+		]
+	},
 	"MATLAB.DataTypes.MergeStructs": {
 		"inputs": [
 			{
