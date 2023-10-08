@@ -6,7 +6,9 @@ classdef Owner<handle&matlab.mixin.indexing.RedefinesDot
 	%使用Owner可以解决此问题。将句柄对象托管在Owner中，Owner本身应当只存在于工作区而不被任何其它对象引用。这样清除工作区中的Owner变量时，Owner引用计数就会归零，自动触
 	% 发delete，而Owner的delete函数只做一件事，就是强制delete它所持有的对象，而无论其引用计数是否为0。
 	%为了方便使用，Owner支持对对象的透明访问。即你可以直接对Owner使用其所拥有对象的点索引属性和方法，但与Owner自身相冲突的属性和方法除外。
-	properties(SetAccess=immutable)
+	
+	%不能设为immutable，否则内部访问Object将造成无限递归
+	properties(SetAccess=protected)
 		%Owner所持有的句柄对象。Owner被delete时，该对象将强制被delete。
 		Object
 	end
