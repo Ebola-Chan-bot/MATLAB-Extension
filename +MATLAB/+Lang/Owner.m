@@ -26,19 +26,19 @@ classdef Owner<handle&matlab.mixin.indexing.RedefinesDot
 			delete(obj.Object);
 		end
 		function C=class(obj)
-			C=split(class(obj.iObject),'.');
+			C=split(class(obj.Object),'.');
 			C=['Owner<' C{end} '>'];
 		end
 	end
 	methods(Access=protected)
         function varargout = dotReference(obj,indexOp)
-            [varargout{1:nargout}] = obj.iObject.(indexOp);
+            [varargout{1:nargout}] = obj.Object.(indexOp);
 		end
         function obj = dotAssign(obj,indexOp,varargin)
-            [obj.iObject.(indexOp)] = varargin{:};
+            [obj.Object.(indexOp)] = varargin{:};
 		end        
         function n = dotListLength(obj,indexOp,indexContext)
-            n = listLength(obj.iObject,indexOp,indexContext);
+            n = listLength(obj.Object,indexOp,indexContext);
         end
 	end
 end
