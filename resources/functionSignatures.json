@@ -3405,6 +3405,39 @@
 			}
 		]
 	},
+	"MATLAB.Lang.IEnumerableException.Assert": {
+		"inputs": [
+			{
+				"name": "Condition",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"logical"
+				],
+				"purpose": "断言条件"
+			},
+			{
+				"name": "Message",
+				"kind": "ordered",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "错误相关的文字消息"
+			},
+			{
+				"name": "Detail",
+				"kind": "namevalue",
+				"purpose": "错误的其它详细信息"
+			}
+		]
+	},
 	"MATLAB.Lang.Input": {
 		"inputs": [
 			{

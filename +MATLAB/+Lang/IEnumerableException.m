@@ -108,5 +108,28 @@ classdef IEnumerableException
 				warning(State,'backtrace');
 			end
 		end
+		function Assert(obj,Condition,varargin)
+			%断言条件，如果为false就抛出异常
+			%# 语法
+			% ```
+			% obj.Assert(Condition);
+			% %如果条件为false就抛出异常，否则什么都不做
+			%
+			% obj.Assert(Condition,Message);
+			% %额外指定抛出异常时显示的消息
+			%
+			% obj.Assert(___,Detail=Detail);
+			% %与上述任意语法组合使用，抛出额外的附加信息
+			% ```
+			%# 输入参数
+			% Condition(1,1)logical，断言条件，为false时抛出异常
+			% Message(1,1)string，错误相关的文字消息
+			% ## 名称值参数
+			%  Detail，错误的其它详细信息，作为抛出MATLAB.Lang.MException的Detail属性值
+			%See also MATLAB.Lang.IEnumerableException.Throw
+			if(~Condition)
+				obj.Throw(varargin{:});
+			end
+		end
 	end
 end
