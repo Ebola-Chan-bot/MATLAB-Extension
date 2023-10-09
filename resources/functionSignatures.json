@@ -3408,6 +3408,9 @@
 	"MATLAB.Lang.IEnumerableException.Assert": {
 		"inputs": [
 			{
+				"name":"obj"
+			},
+			{
 				"name": "Condition",
 				"kind": "required",
 				"type": [
