@@ -38,6 +38,10 @@ classdef ReferenceBase
 			varargin=MATLAB.internal.ReferenceBase.ArgsDeref(varargin);
 			obj.Referable.Value=subsasgn(obj.Referable.Value,varargin{:});
 		end
+		function varargout=colstyle(varargin)
+			varargin=MATLAB.internal.ReferenceBase.ArgsDeref(varargin);
+			[varargout{1:nargout}]=colstyle(varargin{:});
+		end
 		function varargout=class(varargin)
 			varargin=MATLAB.internal.ReferenceBase.ArgsDeref(varargin);
 			[varargout{1:nargout}]=class(varargin{:});
