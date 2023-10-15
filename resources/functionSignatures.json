@@ -879,8 +879,7 @@
 				"name": "Tables",
 				"kind": "required",
 				"type": "cell",
-				"purpose": "要内联的表",
-				"repeating": true
+				"purpose": "要内联的表"
 			},
 			{
 				"name": "Flags",
