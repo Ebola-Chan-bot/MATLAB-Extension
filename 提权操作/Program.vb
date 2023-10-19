@@ -21,6 +21,7 @@ Module Program
 		Remove_shared_path
 		Builtin_bug_fix
 		Associate_prj_extension
+		Get_pathdef_permission
 	End Enum
 
 	Private Sub 公开只读权限(路径 As String)
@@ -122,6 +123,11 @@ Module Program
 				键A.SetValue(Nothing, "uiopen('%1',1)")
 				键A.CreateSubKey("application").SetValue(Nothing, $"ShellVerbs.MATLAB.{MATLAB版本}.0")
 				键A.CreateSubKey("topic").SetValue(Nothing, "system")
+			Case 提权操作.Get_pathdef_permission
+				Dim 文件信息 As New FileInfo(读入字符串(参数流))
+				Dim 访问控制 = 文件信息.GetAccessControl
+				访问控制.SetAccessRule(New FileSystemAccessRule(Environment.UserName, FileSystemRights.FullControl, AccessControlType.Allow))
+				文件信息.SetAccessControl(访问控制)
 		End Select
 	End Sub
 End Module
