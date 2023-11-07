@@ -7,6 +7,7 @@ classdef ElevatedOperation<uint8
 		Remove_shared_path(4)
 		Builtin_bug_fix(5)
 		Associate_prj_extension(6)
+		Get_pathdef_permission(7)
 	end
 	methods
 		function Call(obj,varargin)
@@ -17,6 +18,6 @@ classdef ElevatedOperation<uint8
 			Name=char(matlab.lang.internal.uuid);
 			MM=MATLAB.IOFun.MemoryMapping.Create(Name=Name,FillData=[{uint8(obj)},varargin]);
 			system([Operator Name],'-runAsAdmin');
-		end
+		end 
 	end
 end
