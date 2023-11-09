@@ -188,7 +188,7 @@ function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,varargin)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
 %列出内置作图函数允许使用的Marker字符
-function VMC = ValidMarkerChars
+function VMC = ValidMarkerChars(Index)
 ```
 类
 ```MATLAB

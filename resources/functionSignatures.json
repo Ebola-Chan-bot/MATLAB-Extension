@@ -1901,6 +1901,15 @@
 			}
 		]
 	},
+	"MATLAB.ValidMarkerChars":{
+		"inputs":[
+			{
+				"name":"Index",
+				"kind":"ordered",
+				"purpose":"要返回的Marker索引"
+			}
+		]
+	},
 	"MATLAB.Graphics.Window.Create": {
 		"inputs": [
 			{
