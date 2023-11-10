@@ -225,14 +225,19 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		function varargout=dotReference(obj,indexOp)
 			Names=indexOp(1).Name;
 			Indices=repmat({':'},1,ndims(obj.Data));
+			NoSuchName=true;
 			for I=1:height(obj.Dimensions)
 				if ~isempty(obj.Dimensions.IndexNames{I})
 					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
 					[Exist,Index]=ismember(Names,obj.Dimensions.IndexNames{I});
 					if any(Exist)
+						NoSuchName=false;
 						Indices{I}=Index(Exist);
 					end
 				end
+			end
+			if NoSuchName
+				MATLAB.Lang.MatlabException.NDTable_does_not_contain_these_IndexNames.Throw(join(Names,' '));
 			end
 			obj=obj.Data(Indices{:});
 			if isscalar(indexOp)
