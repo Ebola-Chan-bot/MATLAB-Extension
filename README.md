@@ -64,11 +64,11 @@ end
 %内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [G,ID] = FindGroupsN(Collection,Dimension)
 %返回数组的最大值以及所在的坐标。
-function [Value,varargout] = MaxSubs(Data,Dimensions)
+function [Value,varargout] = MaxSubs(Data,Dimensions,K)
 %一次性高效算出数据沿维度的平均值和标准误
 function [Mean,SEM]=MeanSem(Data,Dimensions)
 %返回数组的最小值以及所在的坐标。
-function [Value,varargout] = MinSubs(Data,Dimensions)
+function [Value,varargout] = MinSubs(Data,Dimensions,K)
 %数组元素沿指定维度的缩放范围
 function Array = Rescale(Array,LowerBound,UpperBound,Dimensions)
 %在任意维度上计算互相关

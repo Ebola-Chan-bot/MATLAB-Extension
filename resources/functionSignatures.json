@@ -353,6 +353,12 @@
 					"vector"
 				],
 				"purpose": "要取最大值的维度"
+			},
+			{
+				"name": "K",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "要取几个最大值"
 			}
 		],
 		"outputs": [
@@ -418,6 +424,12 @@
 					"vector"
 				],
 				"purpose": "要取最小值的维度"
+			},
+			{
+				"name": "K",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "要取几个最小值"
 			}
 		],
 		"outputs": [
@@ -1901,12 +1913,12 @@
 			}
 		]
 	},
-	"MATLAB.ValidMarkerChars":{
-		"inputs":[
+	"MATLAB.ValidMarkerChars": {
+		"inputs": [
 			{
-				"name":"Index",
-				"kind":"ordered",
-				"purpose":"要返回的Marker索引"
+				"name": "Index",
+				"kind": "ordered",
+				"purpose": "要返回的Marker索引"
 			}
 		]
 	},
@@ -3416,7 +3428,7 @@
 	"MATLAB.Lang.IEnumerableException.Assert": {
 		"inputs": [
 			{
-				"name":"obj"
+				"name": "obj"
 			},
 			{
 				"name": "Condition",
