@@ -35,6 +35,8 @@ function Arrows = LineFollowingArrow(XYCoordinates,options)
 function Pause(varargin)
 %将任意维度的RGB图像转换为灰度图
 function Image = Rgb2Gray(Image,Dimension)
+%将数值转换为具有指定有效位数的定点计数法字符串
+function Fixedpoints = SignificantFixedpoint(Numbers,Significance)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
 function Graph = TtrtnWbgc(Graph,ToRemove)
 ```

@@ -38,6 +38,7 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Failed_to_obtain_metadata(35)
 		Failed_to_decode_pixel_data(36)
 
+		Index_name_not_found(220)
 		NDTable_does_not_contain_these_IndexNames(221)
 		Parameter_parsing_failure(222)
 		Input_not_tabular(223)

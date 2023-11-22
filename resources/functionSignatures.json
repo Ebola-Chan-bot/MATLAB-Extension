@@ -4226,6 +4226,22 @@
 			}
 		]
 	},
+	"MATLAB.SignificantFixedpoint": {
+		"inputs": [
+			{
+				"name": "Numbers",
+				"kind": "required",
+				"type": "real",
+				"purpose": "要转换的数组"
+			},
+			{
+				"name": "Significance",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "有效数字位数"
+			}
+		]
+	},
 	"MATLAB.TtrtnWbgc": {
 		"inputs": [
 			{

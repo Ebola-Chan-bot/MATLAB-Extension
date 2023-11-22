@@ -183,9 +183,14 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			for I=1:numel(Indices)
 				Index=Indices{I};
 				if ~(isreal(Index)||isequal(Index,":"))
+					IndexNames=Index;
 					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
-					[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
-					Indices{I}=Index;
+					[Exist,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
+					if all(Index)
+						Indices{I}=Index;
+					else
+						MATLAB.Lang.MatlabException.Index_name_not_found.Throw(join(IndexNames(~Exist),' '));
+					end
 				end
 				if height(obj.Dimensions)>=I
 					ValidIndexLogical=Index<=numel(obj.Dimensions.IndexNames{I});
