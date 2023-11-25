@@ -418,5 +418,14 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			end
 			obj.Dimensions(1:NDims,:)=obj.Dimensions(DimensionOrder,:);
 		end
+		function obj=sum(obj,varargin)
+			%因求和而发生缩减的维度将不再具有索引名称
+			Sizes=size(obj.Data);
+			obj.Data=sum(obj.Data,varargin{:});
+			obj.Dimensions.IndexNames(size(obj.Data,1:numel(Sizes))<Sizes)={strings(1,0)};
+		end
+		function obj1=rdivide(obj1,obj2)
+			obj1.Data=obj1.Data./obj2;
+		end
 	end
 end
