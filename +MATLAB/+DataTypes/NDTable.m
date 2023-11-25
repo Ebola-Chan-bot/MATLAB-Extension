@@ -192,7 +192,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 						MATLAB.Lang.MatlabException.Index_name_not_found.Throw(join(IndexNames(~Exist),' '));
 					end
 				end
-				if height(obj.Dimensions)>=I
+				if height(obj.Dimensions)>=I&&~islogical(Index)
 					ValidIndexLogical=Index<=numel(obj.Dimensions.IndexNames{I});
 					if any(ValidIndexLogical)
 						NewStrings=repmat(string(missing),1,find(ValidIndexLogical,1,'last'));
