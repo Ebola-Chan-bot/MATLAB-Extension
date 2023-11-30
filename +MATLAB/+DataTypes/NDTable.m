@@ -216,7 +216,12 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				Index=Indices{I};
 				if ~(isreal(Index)||isequal(Index,":"))
 					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
-					[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
+					IndexNames=Index;
+					[~,Index]=ismember(IndexNames,obj.Dimensions.IndexNames{I});
+					IndexNames=IndexNames(~Index);
+					if ~isempty(IndexNames)
+						MATLAB.Lang.MatlabException.Index_name_not_found.Throw(join(IndexNames,' '));
+					end
 					Indices{I}=Index;
 				end
 			end
@@ -407,8 +412,11 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			out=MATLAB.DataTypes.NDTable(cat(dim,CatData{:}),CatDimensions);
 		end
 		function obj=reshape(obj,varargin)
-			%此操作仅影响Data属性，对Dimensions不做修改
-			obj.Data=reshape(obj.Data,varargin{:});
+			%因此操作发生改变的维度，其索引名称变为空
+			NewData=reshape(obj.Data,varargin{:});
+			Dims=1:max(ndims(obj.Data),ndims(NewData));
+			obj.Data=NewData;
+			obj.Dimensions.IndexNames(size(NewData,Dims)~=size(obj.Data,Dims))={strings(1,0)};
 		end
 		function obj=permute(obj,DimensionOrder)
 			obj.Data=permute(obj.Data,DimensionOrder);
@@ -419,13 +427,25 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			obj.Dimensions(1:NDims,:)=obj.Dimensions(DimensionOrder,:);
 		end
 		function obj=sum(obj,varargin)
-			%因求和而发生缩减的维度将不再具有索引名称
+			%因运算而发生缩减的维度将不再具有索引名称
 			Sizes=size(obj.Data);
 			obj.Data=sum(obj.Data,varargin{:});
 			obj.Dimensions.IndexNames(size(obj.Data,1:numel(Sizes))<Sizes)={strings(1,0)};
 		end
 		function obj1=rdivide(obj1,obj2)
-			obj1.Data=obj1.Data./obj2;
+			%因运算发生标量自动扩增的维度，其索引名称如果是标量也会随之扩增
+			NewData=obj1.Data./obj2;
+			Dims=1:max(ndims(obj1.Data),ndims(NewData));
+			NewSizes=size(NewData,Dims);
+			Dims=NewSizes>size(obj1.Data,Dims)&cellfun(@isscalar,obj1.Dimensions.IndexNames)';
+			obj1.Data=NewData;
+			obj1.Dimensions.IndexNames(Dims)=arrayfun(@(D,S)repmat(D{1},1,S),obj1.Dimensions.IndexNames(Dims),NewSizes(Dims)',UniformOutput=false);
+		end
+		function obj=median(obj,varargin)
+			%因运算而发生缩减的维度将不再具有索引名称
+			Sizes=size(obj.Data);
+			obj.Data=median(obj.Data,varargin{:});
+			obj.Dimensions.IndexNames(size(obj.Data,1:numel(Sizes))<Sizes)={strings(1,0)};
 		end
 	end
 end

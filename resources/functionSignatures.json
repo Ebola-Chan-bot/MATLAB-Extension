@@ -628,11 +628,10 @@
 				"name": "CatMode",
 				"kind": "namevalue",
 				"type": [
-					"MATLAB.DataTypes.CatMode",
+					"MATLAB.Flags",
 					"scalar"
 				],
-				"purpose": "返回值拼接选项",
-				"default": "MATLAB.DataTypes.CatMode.Scalar"
+				"purpose": "返回值拼接选项"
 			},
 			{
 				"name": "Warning",
