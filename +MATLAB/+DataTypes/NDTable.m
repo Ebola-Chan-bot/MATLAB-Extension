@@ -182,24 +182,26 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			Indices=indexOp(1).Indices;
 			for I=1:numel(Indices)
 				Index=Indices{I};
-				if ~(isreal(Index)||isequal(Index,":"))
-					IndexNames=Index;
-					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
-					[Exist,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
-					if all(Index)
-						Indices{I}=Index;
-					else
-						MATLAB.Lang.MatlabException.Index_name_not_found.Throw(join(IndexNames(~Exist),' '));
+				if ~isequal(Index,':')
+					if ~isreal(Index)
+						IndexNames=Index;
+						obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
+						[Exist,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
+						if all(Index)
+							Indices{I}=Index;
+						else
+							MATLAB.Lang.MatlabException.Index_name_not_found.Throw(join(IndexNames(~Exist),' '));
+						end
 					end
-				end
-				if height(obj.Dimensions)>=I&&~islogical(Index)
-					ValidIndexLogical=Index<=numel(obj.Dimensions.IndexNames{I});
-					if any(ValidIndexLogical)
-						NewStrings=repmat(string(missing),1,find(ValidIndexLogical,1,'last'));
-						NewStrings(ValidIndexLogical)=obj.Dimensions.IndexNames{I}(Index(ValidIndexLogical));
-						obj.Dimensions.IndexNames{I}=NewStrings;
-					else
-						obj.Dimensions.IndexNames{I}=strings(1,0);
+					if height(obj.Dimensions)>=I&&~islogical(Index)
+						ValidIndexLogical=Index<=numel(obj.Dimensions.IndexNames{I});
+						if any(ValidIndexLogical)
+							NewStrings=repmat(string(missing),1,find(ValidIndexLogical,1,'last'));
+							NewStrings(ValidIndexLogical)=obj.Dimensions.IndexNames{I}(Index(ValidIndexLogical));
+							obj.Dimensions.IndexNames{I}=NewStrings;
+						else
+							obj.Dimensions.IndexNames{I}=strings(1,0);
+						end
 					end
 				end
 			end
