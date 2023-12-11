@@ -819,6 +819,45 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.NDTable.ReduceDimension": {
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Reducer",
+				"kind": "required",
+				"type": "function_handle",
+				"purpose": "降维运算的函数句柄"
+			},
+			{
+				"name": "ReduceArgument",
+				"kind": "ordered",
+				"purpose": "需要交给Reducer的其它参数",
+				"repeating": true
+			}
+		]
+	},
+	"MATLAB.DataTypes.NDTable.Operate": {
+		"inputs": [
+			{
+				"name": "obj1",
+				"kind": "required",
+				"purpose": "第一个操作数"
+			},
+			{
+				"name": "obj2",
+				"kind": "required",
+				"purpose": "第二个操作数"
+			},
+			{
+				"name": "Operator",
+				"kind": "required",
+				"type": "function_handle",
+				"purpose": "二元操作函数句柄"
+			}
+		]
+	},
 	"MATLAB.DataTypes.OptimizeQueryGraph": {
 		"inputs": [
 			{

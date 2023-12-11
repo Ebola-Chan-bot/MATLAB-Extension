@@ -133,6 +133,19 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	%  Slice，赋值时使用的数据源，尺寸必须和对应的索引取值操作得到的数组相同。
 	% ## 返回值
 	%  Slice，索引取值得到的切片结果，返回原始数据类型数组，而不是NDTable。
+	%# 运算
+	% NDTable支持一些简单的运算。
+	% ## 二元运算
+	%  目前支持的运算：plus(+) minus(-) times(.*) rdivide(./) gt(>) lt(<) ge(>=) le(<=) eq(==) ne(~=) and(&) or(|) xor
+	%  维度规则：
+	%  - 如果两个操作数只有一个是NDTable，则返回的NDTable具有与那个NDTable相同的Dimensions；但如果返回Data发生了单一维度自动隐式扩展，且那个维度的IndexNames只有1个，
+	%   则此维度的IndexNames也将被自动扩展。
+	%  - 如果两个操作数都是NDTable，则它们的Dimensions必须完全相同，返回值也将拥有相同的Dimensions。
+	% ## 降维运算
+	%  目前支持的运算：sum mean median min max std var
+	%  维度规则：
+	%  - 发生降维的维度，其IndexNames将被清空，但如果那个维度本身长度就是1则不受影响
+	%  - 对于min和max，其第2个返回值也将是具有相同Dimensions的NDTable。
 	%See also MATLAB.DataTypes.NDTable/NDTable
 	properties
 
@@ -146,7 +159,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		% 可用missing填充表示不指定此位置的名称。
 		Dimensions table
 	end
-	methods(Access=private)
+	methods(Access=protected)
 		function [obj,indexOp]=IndexToAssign(obj,indexOp)
 			indexOp=indexOp.Indices;
 			for D=1:numel(indexOp)
@@ -171,8 +184,6 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				n=listLength(obj.(indexOp(1)),indexOp(2:end),Context);
 			end
 		end
-	end
-	methods(Access=protected)
 		function varargout=parenReference(obj,indexOp)
 			if inputname(1)=="i"&&isscalar(indexOp)
 				%变量编辑器专用
@@ -345,6 +356,46 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			end
 		end
 	end
+	methods(Static)
+		function obj1=Operate(obj1,obj2,Operator)
+			%执行自定义二元运算操作
+			%# 语法
+			% ```
+			% import MATLAB.DataTypes.NDTable.Operate
+			%
+			% obj=Operate(obj1,Data2,Operator);
+			% %将NDTable与数值数组执行运算。
+			%
+			% obj=Operate(Data1,obj2,Operator);
+			% %将数值数组与NDTable执行运算
+			%
+			% obj=Operate(obj1,obj2,Operator);
+			% %将两个NDTable执行运算。使用此语法时，两个NDTable必须具有完全相同的Dimensions
+			% ```
+			%# 输入参数
+			% obj1 NDTable，第一个操作数
+			% obj2 NDTable，第二个操作数
+			% Data1，第一个操作数
+			% Data2，第二个操作数
+			% Operator function_handle，二元操作函数句柄。如 @plus(+) @minus(-) @times(.*) @rdivide(./) 等。
+			%# 返回值
+			% obj NDTable，具有与输入NDTable相同的Dimensions。但如果运算中发生了单一维度自动隐式扩展，且那个维度的IndexNames只有1个，则此维度的IndexNames也将被自动
+			%  扩展。
+			if isa(obj1,'MATLAB.DataTypes.NDTable')
+				if isa(obj2,'MATLAB.DataTypes.NDTable')
+					if isequaln(obj1.Dimensions,obj2.Dimensions)
+						obj1.Data=Operator(obj1.Data,obj2.Data);
+					else
+						UniExp.UniExpException.Cannot_operate_on_NDTables_with_different_Dimensions.Throw;
+					end
+				else
+					obj1=RepeatDimension(obj1,Operator(obj1.Data,obj2));
+				end
+			else
+				obj1=RepeatDimension(obj2,Operator(obj1,obj2.Data));
+			end
+		end
+	end
 	methods
 		function obj=NDTable(Data,Dimensions)
 			%从原始数据新建NDTable
@@ -384,8 +435,6 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			end
 			obj.Dimensions=Dimensions;
 		end
-	end
-	methods(Hidden)
 		function varargout = size(obj,varargin)
 			[varargout{1:nargout}]=size(obj.Data,varargin{:});
 		end
@@ -421,6 +470,10 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			obj.Dimensions.IndexNames(size(NewData,Dims)~=size(obj.Data,Dims))={strings(1,0)};
 		end
 		function obj=permute(obj,DimensionOrder)
+			%如果所有维度都具有维度名称，可以指定维度名称作为新的维度顺序
+			if ~isreal(DimensionOrder)
+				[~,DimensionOrder]=ismember(DimensionOrder,obj.Dimensions.DimensionName);
+			end
 			obj.Data=permute(obj.Data,DimensionOrder);
 			NDims=numel(DimensionOrder);
 			if height(obj.Dimensions)<NDims
@@ -428,26 +481,93 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			end
 			obj.Dimensions(1:NDims,:)=obj.Dimensions(DimensionOrder,:);
 		end
-		function obj=sum(obj,varargin)
-			%因运算而发生缩减的维度将不再具有索引名称
-			Sizes=size(obj.Data);
-			obj.Data=sum(obj.Data,varargin{:});
-			obj.Dimensions.IndexNames(size(obj.Data,1:numel(Sizes))<Sizes)={strings(1,0)};
+		%% 二元运算
+		function obj=plus(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@plus);
 		end
-		function obj1=rdivide(obj1,obj2)
-			%因运算发生标量自动扩增的维度，其索引名称如果是标量也会随之扩增
-			NewData=obj1.Data./obj2;
-			Dims=1:max(ndims(obj1.Data),ndims(NewData));
-			NewSizes=size(NewData,Dims);
-			Dims=NewSizes>size(obj1.Data,Dims)&cellfun(@isscalar,obj1.Dimensions.IndexNames)';
-			obj1.Data=NewData;
-			obj1.Dimensions.IndexNames(Dims)=arrayfun(@(D,S)repmat(D{1},1,S),obj1.Dimensions.IndexNames(Dims),NewSizes(Dims)',UniformOutput=false);
+		function obj=minus(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@minus);
+		end
+		function obj=times(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@times);
+		end
+		function obj=rdivide(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@rdivide);
+		end
+		function obj=gt(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@gt);
+		end
+		function obj=lt(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@lt);
+		end
+		function obj=ge(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@ge);
+		end
+		function obj=le(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@le);
+		end
+		function obj=eq(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@eq);
+		end
+		function obj=ne(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@ne);
+		end
+		function obj=and(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@and);
+		end
+		function obj=or(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@or);
+		end
+		function obj=xor(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@xor);
+		end
+		%% 降维操作
+		function varargout=ReduceDimension(obj,Reducer,varargin)
+			%执行自定义降维运算
+			%# 语法
+			% ```
+			% varargout=obj.ReduceDimension(Reducer,varargin);
+			% ```
+			%# 输入参数
+			% Reducer function_handle，降维运算的函数句柄，如 @mean @std @min @max 等
+			% varargin，需要交给Reducer的其它参数。注意Reducer不能获取NDTable的维度名称，所以只能用数字指定维度参数。
+			%# 返回值
+			% varargout NDTable，每个返回值都是降维后的NDTable，发生降维的维度的IndexNames变为空。
+			%See also MATLAB.DataTypes.NDTable.Operate
+			if nargout
+				Sizes=size(obj.Data);
+				[varargout{1:nargout}]=Reducer(obj.Data,varargin{:});
+				obj.Dimensions.IndexNames(size(obj.Data,1:numel(Sizes))<Sizes)={strings(1,0)};
+				cellfun(@(Data)MATLAB.DataTypes.NDTable(Data,obj.Dimensions),varargout,UniformOutput=false);
+			end
+		end
+		function obj=sum(obj,varargin)
+			obj=obj.ReduceDimension(@sum,varargin{:});
+		end
+		function obj=mean(obj,varargin)
+			obj=obj.ReduceDimension(@mean,varargin{:});
 		end
 		function obj=median(obj,varargin)
-			%因运算而发生缩减的维度将不再具有索引名称
-			Sizes=size(obj.Data);
-			obj.Data=median(obj.Data,varargin{:});
-			obj.Dimensions.IndexNames(size(obj.Data,1:numel(Sizes))<Sizes)={strings(1,0)};
+			obj=obj.ReduceDimension(@median,varargin{:});
+		end
+		function obj=std(obj,varargin)
+			obj=obj.ReduceDimension(@std,varargin{:});
+		end
+		function obj=var(obj,varargin)
+			obj=obj.ReduceDimension(@var,varargin{:});
+		end
+		function [M,I]=max(obj,varargin)
+			[M,I]=obj.ReduceDimension(@max,varargin{:});
+		end
+		function [M,I]=min(obj,varargin)
+			[M,I]=obj.ReduceDimension(@min,varargin{:});
 		end
 	end
+end
+function obj=RepeatDimension(obj,NewData)
+Dims=1:max(ndims(obj.Data),ndims(NewData));
+NewSizes=size(NewData,Dims);
+Dims=NewSizes>size(obj.Data,Dims)&cellfun(@isscalar,obj.Dimensions.IndexNames)';
+obj.Data=NewData;
+obj.Dimensions.IndexNames(Dims)=arrayfun(@(D,S)repmat(D{1},1,S),obj.Dimensions.IndexNames(Dims),NewSizes(Dims)',UniformOutput=false);
 end
