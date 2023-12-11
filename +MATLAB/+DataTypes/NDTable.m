@@ -386,7 +386,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 					if isequaln(obj1.Dimensions,obj2.Dimensions)
 						obj1.Data=Operator(obj1.Data,obj2.Data);
 					else
-						UniExp.UniExpException.Cannot_operate_on_NDTables_with_different_Dimensions.Throw;
+						MATLAB.Lang.MatlabException.Cannot_operate_on_NDTables_with_different_Dimensions.Throw;
 					end
 				else
 					obj1=RepeatDimension(obj1,Operator(obj1.Data,obj2));
