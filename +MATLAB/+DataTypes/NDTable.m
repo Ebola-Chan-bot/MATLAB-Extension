@@ -538,7 +538,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				Sizes=size(obj.Data);
 				[varargout{1:nargout}]=Reducer(obj.Data,varargin{:});
 				obj.Dimensions.IndexNames(size(obj.Data,1:numel(Sizes))<Sizes)={strings(1,0)};
-				cellfun(@(Data)MATLAB.DataTypes.NDTable(Data,obj.Dimensions),varargout,UniformOutput=false);
+				varargout=cellfun(@(Data)MATLAB.DataTypes.NDTable(Data,obj.Dimensions),varargout,UniformOutput=false);
 			end
 		end
 		function obj=sum(obj,varargin)
