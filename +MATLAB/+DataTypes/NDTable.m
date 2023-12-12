@@ -142,7 +142,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	%   则此维度的IndexNames也将被自动扩展。
 	%  - 如果两个操作数都是NDTable，则它们的Dimensions必须完全相同，返回值也将拥有相同的Dimensions。
 	% ## 降维运算
-	%  目前支持的运算：sum mean median min max std var
+	%  目前支持的运算：sum mean median min max std var any all
 	%  维度规则：
 	%  - 发生降维的维度，其IndexNames将被清空，但如果那个维度本身长度就是1则不受影响
 	%  - 对于min和max，其第2个返回值也将是具有相同Dimensions的NDTable。
@@ -561,6 +561,12 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		end
 		function [M,I]=min(obj,varargin)
 			[M,I]=obj.ReduceDimension(@min,varargin{:});
+		end
+		function obj=any(obj,varargin)
+			obj=obj.ReduceDimension(@any,varargin{:});
+		end
+		function obj=all(obj,varargin)
+			obj=obj.ReduceDimension(@all,varargin{:});
 		end
 	end
 end
