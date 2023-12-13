@@ -38,6 +38,7 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Failed_to_obtain_metadata(35)
 		Failed_to_decode_pixel_data(36)
 
+		Lack_of_high_dimensional_index(218)
 		Cannot_operate_on_NDTables_with_different_Dimensions(219)
 		Index_name_not_found(220)
 		NDTable_does_not_contain_these_IndexNames(221)

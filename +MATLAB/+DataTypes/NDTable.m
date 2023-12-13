@@ -191,7 +191,11 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				return;
 			end
 			Indices=indexOp(1).Indices;
-			for I=1:numel(Indices)
+			NDims=numel(Indices);
+			if NDims<ndims(obj.Data)&&~isvector(obj.Data)
+				MATLAB.Lang.MatlabException.Lack_of_high_dimensional_index.Throw(sprintf('必须为维度%u指定索引',NDims+1));
+			end
+			for I=1:NDims
 				Index=Indices{I};
 				if ~isequal(Index,':')
 					if ~isreal(Index)
