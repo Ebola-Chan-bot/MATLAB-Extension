@@ -191,11 +191,12 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				return;
 			end
 			Indices=indexOp(1).Indices;
-			NDims=numel(Indices);
-			if NDims<ndims(obj.Data)&&~isvector(obj.Data)
-				MATLAB.Lang.MatlabException.Lack_of_high_dimensional_index.Throw(sprintf('必须为维度%u指定索引',NDims+1));
+			NumIndices=numel(Indices);
+			if NumIndices<find(size(obj.Data)==1,1)-1
+				%索引不足的情况不能报错也不能警告，因为表格展示时会用到这种索引
+				obj.Dimensions(NumIndices+1:end,:)=[];
 			end
-			for I=1:NDims
+			for I=1:NumIndices
 				Index=Indices{I};
 				if ~isequal(Index,':')
 					if ~isreal(Index)
@@ -332,7 +333,12 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		function obj = parenDelete(obj,indexOp)
 			if isscalar(indexOp)
 				Indices=indexOp.Indices;
-				for I=1:numel(Indices)
+				NumIndices=numel(Indices);
+				if NumIndices<find(size(obj.Data)==1,1)-1
+					%索引不足的情况不能报错也不能警告，因为表格展示时会用到这种索引
+					obj.Dimensions(NumIndices+1:end,:)=[];
+				end
+				for I=1:NumIndices
 					Index=Indices{I};
 					if ~isequal(Index,":")
 						if ~isreal(Index)
