@@ -47,7 +47,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 	%  %}
 	%  ```
 	% ## 输入参数
-	%  Index1,Index2,…，各维索引，可以为数值索引，或在Dimensions属性中指定的对应维度使用字符串索引，也可以使用冒号。超出数组实际维度的部分可以使用1或冒号索引。
+	%  Index1,Index2,…，各维索引，可以为数值索引，或在Dimensions属性中指定的对应维度使用字符串索引，也可以使用冒号。超出数组实际维度的部分可以使用1或冒号索引。但如果
+	%   索引维数少于NDTable的实际维数，高维部分将被展开，其IndexNames将丢失。
 	%  Slice NDTable，在赋值时使用的数据源。此NDTable将仅作为一般数组使用，它的Dimensions将被忽略，不会对结果数组的Dimensions进行修改。
 	%  TruncateIndex，要截断的维度索引，可以为数值索引，或在Dimensions属性中指定的对应维度使用字符串索引。只能在一个维度使用具体索引值，其它维度必须使用冒号。
 	% ## 返回值
