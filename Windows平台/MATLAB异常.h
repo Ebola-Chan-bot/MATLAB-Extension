@@ -40,6 +40,8 @@ enum class MATLAB异常类型 :uint8_t
 	打开文件失败,
 	获取元数据失败,
 	解码像素值失败,
+	特权服务器启动失败,
+	特权服务器连接失败,
 };
 enum class 内部异常类型 :uint8_t
 {

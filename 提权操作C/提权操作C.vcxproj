@@ -145,6 +145,9 @@
   <ItemGroup>
     <ClCompile Include="提权操作C.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="提权操作.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

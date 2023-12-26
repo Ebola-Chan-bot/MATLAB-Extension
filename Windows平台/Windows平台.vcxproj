@@ -347,6 +347,7 @@
     <ClCompile Include="SHFileOperation.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="实用工具.cpp" />
+    <ClCompile Include="提权操作.cpp" />
     <ClCompile Include="杂项.cpp" />
     <ClCompile Include="窗口.cpp" />
   </ItemGroup>

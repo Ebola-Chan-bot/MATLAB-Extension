@@ -146,8 +146,10 @@ Function* 创建Mex函数()
 {
 	return new MexFunction();
 }
+void 关闭特权服务器()noexcept;
 void 销毁Mex函数(Function* 函数指针)
 {
 	窗口::销毁所有();
+	关闭特权服务器();
 	delete 函数指针;
 }
