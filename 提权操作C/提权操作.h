@@ -1,13 +1,6 @@
 #pragma once
 #include<stdint.h>
-namespace 提权操作
-{
-	namespace 内部
-	{
-
-	}
-}
-enum class 提权操作 :uint8_t
+enum class 提权操作 
 {
 	Install_Path_Manager,
 	Uninstall_Path_Manager,
@@ -17,4 +10,9 @@ enum class 提权操作 :uint8_t
 	Builtin_bug_fix,
 	Associate_prj_extension,
 	Get_pathdef_permission,
+};
+enum class 提权操作异常
+{
+	Operation_succeeded,
+	Builtin_bug_fix_command_is_0,
 };
