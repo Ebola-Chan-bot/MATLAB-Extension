@@ -130,6 +130,7 @@
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
     <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    <ExternalIncludePath>$(SolutionDir)提权操作C;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug.Mex工具测试|x64'">
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>
@@ -144,6 +145,7 @@
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
     <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    <ExternalIncludePath>$(SolutionDir)提权操作C;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release.Mex工具测试|x64'">
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>

@@ -1,7 +1,7 @@
 #pragma once
 #include <Mex类型.h>
 using namespace matlab::data;
-enum class MATLAB异常类型 :uint8_t
+enum class MATLAB异常类型
 {
 	成功,
 	输入不是字符串,
@@ -43,7 +43,7 @@ enum class MATLAB异常类型 :uint8_t
 	特权服务器启动失败,
 	特权服务器连接失败,
 };
-enum class 内部异常类型 :uint8_t
+enum class 内部异常类型
 {
 	无,
 	Win32异常,
@@ -51,6 +51,7 @@ enum class 内部异常类型 :uint8_t
 	Mex异常,
 	COM异常,
 	LibWebP异常,
+	提权操作异常,
 };
 struct MATLAB异常
 {

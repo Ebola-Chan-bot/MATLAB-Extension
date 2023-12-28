@@ -6,20 +6,7 @@
 #include<unordered_set>
 #include<functional>
 using namespace std::filesystem;
-template<typename 值类型>
-struct 懒加载
-{
-	值类型 (*取值方法)();
-	懒加载(值类型(*)()) :取值方法(取值方法) {}
-	值类型& operator()()noexcept
-	{
-		if (!容器.has_value())
-			容器 = 取值方法();
-		return 容器.value();
-	}
-protected:
-	std::optional<值类型>容器;
-};
+using namespace 提权操作;
 static 懒加载<path>安装目录([]()noexcept
 	{
 		constexpr auto 函数 = [](wchar_t* 指针, size_t 尺寸)noexcept {return GetModuleFileNameW(NULL, 指针, 尺寸); };
@@ -130,10 +117,10 @@ static void Install_path_manager()noexcept
 }
 static void Uninstall_path_manager()noexcept
 {
-	path Matlab路径(读入UTF16字符串());
-	copy_file(安装目录() / L"原文件\savepath.m", Matlab路径 / L"toolbox\matlab\general\savepath.m", copy_options::overwrite_existing);
-	Matlab路径 /= L"toolbox\local\matlabrc.m";
-	std::ofstream(Matlab路径) << RC输出流(Matlab路径).str();
+	path MatlabRoot(读入UTF16字符串());
+	copy_file(安装目录() / L"原文件\savepath.m", MatlabRoot / L"toolbox\matlab\general\savepath.m", copy_options::overwrite_existing);
+	MatlabRoot /= L"toolbox\local\matlabrc.m";
+	std::ofstream(MatlabRoot) << RC输出流(MatlabRoot).str();
 }
 static std::unordered_set<std::string>输入路径集合()noexcept
 {
@@ -307,17 +294,17 @@ int wmain(int argc, wchar_t* argv[])
 	WaitNamedPipeW(NamedPipeName.c_str(), NMPWAIT_WAIT_FOREVER);
 	const std::unique_ptr<std::remove_pointer_t<HANDLE>, decltype(CloseHandle)*>Object(File = CreateFileW(NamedPipeName.c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL), CloseHandle);
 	constexpr void(*操作列表[])() = { Install_path_manager,Uninstall_path_manager,Set_shared_path,Add_shared_path,Remove_shared_path,Builtin_bug_fix,Associate_prj_extension,Get_pathdef_permission };
-	uint8_t 函数序号;
+	提权操作函数 函数序号;
 	DWORD NumberOfBytesRead;
 	for (;;)
 	{
 		ReadFile(File, &函数序号, sizeof(函数序号), &NumberOfBytesRead, NULL);
-		if (函数序号 == std::extent_v<decltype(操作列表)>)
+		if ((size_t)函数序号 == std::extent_v<decltype(操作列表)>)
 			break;
 		DWORD NumberOfBytesWritten;
 		try
 		{
-			操作列表[函数序号]();
+			操作列表[(size_t)函数序号]();
 		}
 		catch (提权操作异常 ex)
 		{
