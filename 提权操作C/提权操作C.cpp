@@ -198,6 +198,7 @@ static void Remove_shared_path()noexcept
 }
 static void Builtin_bug_fix()
 {
+	const path MatlabRoot(读入UTF16字符串());
 	constexpr wchar_t 文件名[][32] = { L"getDocumentationXML.m", L"CshDocPageHandler.m", L"Document.m", L"ToolboxConfigurationReader.m", L"getReferencePage.m" };
 	constexpr wchar_t 目标目录[][64] =
 	{
@@ -214,7 +215,6 @@ static void Builtin_bug_fix()
 	ReadFile(File, &命令数, sizeof(命令数), &NumberOfBytes, NULL);
 	std::unique_ptr<int8_t[]>所有命令 = std::make_unique_for_overwrite<int8_t[]>(命令数);
 	ReadFile(File, 所有命令.get(), 命令数, &NumberOfBytes, NULL);
-	const path MatlabRoot(读入UTF16字符串());
 	for (size_t C = 0; C < 命令数; ++C)
 	{
 		int8_t 命令 = 所有命令[C];

@@ -53,8 +53,26 @@ void 启动特权服务器()
 	}
 }
 extern std::shared_ptr<matlab::engine::MATLABEngine> Engine;
+template<typename T>
+struct 序列化数组
+{
+	const size_t 元素数;
+	static 序列化数组* 创建(size_t 元素数)
+	{
+		size_t* 返回值 = (size_t*) new char[sizeof(元素数) + 元素数 * sizeof(T)];
+		*返回值 = 元素数;
+		return(序列化数组*)返回值;
+	}
+	static void 释放(序列化数组* 数组)
+	{
+		delete[](char*)数组;
+	}
+	序列化数组() = delete;
+	~序列化数组() = delete;
+};
 API声明(Install_path_manager)
 {
+	序列化数组<char16_t>* 字符数组 = 序列化数组<char16_t>::创建(10);
 	启动特权服务器();
 	static const String MatlabRoot = Engine->feval<CharArray>("matlabroot").toUTF16();
 	static const size_t Size = MatlabRoot.size();
@@ -66,6 +84,8 @@ API声明(Install_path_manager)
 			*(提权操作函数*)指针 = 提权操作函数::Install_Path_Manager;
 			*(size_t*)(指针 = (提权操作函数*)指针 + 1) = Size;
 			std::copy_n(MatlabRoot.c_str(), Size, (char16_t*)((size_t*)指针 + 1));
+			std::vector<int>v;
+			v.
 			return 返回值;
 		}();
 	static DWORD NumberOfBytes;
