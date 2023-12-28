@@ -1,5 +1,6 @@
 #include"pch.h"
 #include"MATLAB异常.h"
+#include<提权操作>
 #include<Mex工具.h>
 #include<shellapi.h>
 #pragma comment(lib,"Shell32.lib")
@@ -9,7 +10,7 @@
 #include<objbase.h>
 #pragma comment(lib,"Ole32.lib")
 RPC_WSTR Parameters = nullptr;
-HANDLE 特权服务器 = 0;
+HANDLE 特权服务器 = nullptr;
 bool COM已初始化 = false;
 void 关闭特权服务器()noexcept
 {
@@ -58,7 +59,13 @@ void 启动特权服务器()
 	if (!ConnectNamedPipe(特权服务器, NULL))
 		throw MATLAB异常(MATLAB异常类型::特权服务器连接失败, 内部异常类型::Win32异常, GetLastError());
 }
+extern std::shared_ptr<matlab::engine::MATLABEngine> Engine;
 API声明(Install_path_manager)
 {
-
+	static const String MatlabRoot = Engine->feval<CharArray>("matlabroot").toUTF16();
+	static const size_t Size = MatlabRoot.size();
+	static DWORD NumberOfBytesWritten;
+	WriteFile(特权服务器, &Size, sizeof(Size), &NumberOfBytesWritten, NULL);
+	WriteFile(特权服务器, MatlabRoot.c_str(), Size * sizeof(char16_t), &NumberOfBytesWritten, NULL);
+	提权操作异常 结果
 }

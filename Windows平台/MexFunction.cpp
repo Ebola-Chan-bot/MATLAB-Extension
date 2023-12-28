@@ -66,6 +66,7 @@ API声明(Pause);
 API声明(ArrayType_FromData);
 API声明(WebpRead);
 using namespace Mex工具;
+std::shared_ptr<matlab::engine::MATLABEngine> Engine;
 struct MexFunction :public Function //必须命名为MexFunction，public继承Function
 {
 	void operator()(ArgumentList& outputs, ArgumentList& inputs)override
@@ -140,6 +141,10 @@ struct MexFunction :public Function //必须命名为MexFunction，public继承F
 		}
 		static const StructArray 成功结构 = MATLAB异常();
 		outputs[0] = 成功结构;
+	}
+	MexFunction()
+	{
+		Engine = getEngine();
 	}
 };
 Function* 创建Mex函数()
