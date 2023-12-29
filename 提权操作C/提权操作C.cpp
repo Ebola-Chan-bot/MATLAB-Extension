@@ -236,9 +236,10 @@ static void Builtin_bug_fix()
 }
 static void Associate_prj_extension()noexcept
 {
+	const path MatlabRoot(读入UTF16字符串());
+	const std::wstring MATLAB版本 = 读入UTF16字符串();
 	系统指针<HKEY, decltype(RegCloseKey)*>键A(RegCloseKey);
 	RegCreateKeyExW(HKEY_CLASSES_ROOT, L".prj", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_CREATE_SUB_KEY | KEY_SET_VALUE, NULL, &键A, NULL);
-	const std::wstring MATLAB版本 = 读入UTF16字符串();
 	const std::wstring prj类 = L"MATLAB.prj." + MATLAB版本 + L".0";
 	RegSetValueExW(键A, NULL, 0, REG_SZ, (const BYTE*)prj类.c_str(), (prj类.size() + 1) * sizeof(wchar_t));
 	constexpr wchar_t mwopc[] = L"mwopc";
@@ -261,7 +262,6 @@ static void Associate_prj_extension()noexcept
 	FileVersionMS += std::stoi(RegSz);
 	RegSetValueExW(键B, L"FileVersionMS", 0, REG_DWORD, (const BYTE*)&FileVersionMS, sizeof(FileVersionMS));
 	RegCreateKeyExW(HKEY_CLASSES_ROOT, prj类.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_CREATE_SUB_KEY | KEY_SET_VALUE, NULL, &键A, NULL);
-	const path MatlabRoot(读入UTF16字符串());
 	RegSz = L"\"" + (MatlabRoot / L"bin\win64\osintegplugins\osintegplugins\mlproj\mwmlprojfaplugin.dll").native() + L"\",0";
 	RegSetKeyValueW(键A, L"DefaultIcon", NULL, REG_SZ, RegSz.c_str(), (RegSz.size() + 1) * sizeof(wchar_t));
 	RegCreateKeyExW(键A, L"Shell\\Open", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_CREATE_SUB_KEY | KEY_SET_VALUE, NULL, &键B, NULL);
