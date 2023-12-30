@@ -42,6 +42,15 @@ classdef WindowsAPI<uint8
 		Pause(39)
 		ArrayType_FromData(40)
 		WebpRead(41)
+		Install_path_manager(42)
+		Uninstall_path_manager(43)
+		Set_shared_path(44)
+		Add_shared_path(45)
+		Remove_shared_path(46)
+		Builtin_bug_fix(47)
+		Associate_prj_extension(48)
+		Get_pathdef_permission(49)
+		Serialport_snatch(50)
 	end
 	methods
 		function varargout=Call(obj,varargin)

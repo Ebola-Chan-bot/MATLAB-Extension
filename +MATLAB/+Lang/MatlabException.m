@@ -37,6 +37,11 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		Failed_to_open_the_file(34)
 		Failed_to_obtain_metadata(35)
 		Failed_to_decode_pixel_data(36)
+		Privilege_server_failed_to_start(37)
+		Privilege_server_connection_failed(38)
+		Elevated_operation_succeeded(39)
+		Builtin_bug_fix_command_is_0(40)
+		COM_number_not_found(41)
 
 		Lack_of_high_dimensional_index(218)
 		Cannot_operate_on_NDTables_with_different_Dimensions(219)

@@ -65,6 +65,19 @@ API声明(Crash);
 API声明(Pause);
 API声明(ArrayType_FromData);
 API声明(WebpRead);
+
+//提权操作
+
+API声明(Install_path_manager);
+API声明(Uninstall_path_manager);
+API声明(Set_shared_path);
+API声明(Add_shared_path);
+API声明(Remove_shared_path);
+API声明(Builtin_bug_fix);
+API声明(Associate_prj_extension);
+API声明(Get_pathdef_permission);
+API声明(Serialport_snatch);
+
 using namespace Mex工具;
 std::shared_ptr<matlab::engine::MATLABEngine> Engine;
 struct MexFunction :public Function //必须命名为MexFunction，public继承Function
@@ -116,6 +129,15 @@ struct MexFunction :public Function //必须命名为MexFunction，public继承F
 			Pause,
 			ArrayType_FromData,
 			WebpRead,
+			Install_path_manager,
+			Uninstall_path_manager,
+			Set_shared_path,
+			Add_shared_path,
+			Remove_shared_path,
+			Builtin_bug_fix,
+			Associate_prj_extension,
+			Get_pathdef_permission,
+			Serialport_snatch,
 		};
 		try
 		{

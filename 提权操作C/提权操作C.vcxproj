@@ -148,7 +148,17 @@
   <ItemGroup>
     <ClInclude Include="提权操作.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\PHNT.1.0.0\build\native\PHNT.targets" Condition="Exists('..\packages\PHNT.1.0.0\build\native\PHNT.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\PHNT.1.0.0\build\native\PHNT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PHNT.1.0.0\build\native\PHNT.targets'))" />
+  </Target>
 </Project>

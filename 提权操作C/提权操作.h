@@ -1,5 +1,6 @@
 #pragma once
-#include<stdint.h>
+#include<optional>
+#include<functional>
 namespace 提权操作
 {
 	enum class 提权操作函数
@@ -12,18 +13,20 @@ namespace 提权操作
 		Builtin_bug_fix,
 		Associate_prj_extension,
 		Get_pathdef_permission,
+		Serialport_snatch,
 		Shutdown_server
 	};
 	enum class 提权操作异常
 	{
 		Operation_succeeded,
 		Builtin_bug_fix_command_is_0,
+		COM_number_not_found,
 	};
 	template<typename 值类型>
 	struct 懒加载
 	{
-		值类型(*取值方法)();
-		懒加载(值类型(*)()) :取值方法(取值方法) {}
+		const std::function<值类型()>取值方法;
+		懒加载(std::function<值类型()>&&取值方法) :取值方法(std::move(取值方法)) {}
 		值类型& operator()()noexcept
 		{
 			if (!容器.has_value())
