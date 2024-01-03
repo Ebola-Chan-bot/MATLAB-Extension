@@ -1,4 +1,5 @@
-﻿#include"提权操作.h"
+﻿#include"共享头.h"
+#include"MATLAB异常类型.h"
 #include<phnt_windows.h>
 #define PHNT_VERSION 114
 #include<phnt.h>
@@ -8,11 +9,10 @@
 #include<unordered_set>
 #include<functional>
 using namespace std::filesystem;
-using namespace 提权操作;
 static const wchar_t* EXE路径;
 static 懒加载<path>安装目录([]()noexcept
 	{
-		return  path(EXE路径).parent_path() / L"安装";
+		return path(EXE路径).parent_path() / L"安装";
 	});
 static 懒加载<path>数据目录([]()noexcept
 	{
@@ -94,9 +94,10 @@ static std::string 读入UTF8字符串()noexcept
 {
 	const std::wstring UTF16 = 读入UTF16字符串();
 	std::string UTF8;
-	UTF8.resize_and_overwrite(UTF16.size() * 3, [&UTF16](char* 指针, size_t 尺寸) {return WideCharToMultiByte(CP_UTF8, NULL, UTF16.c_str(), UTF16.size(), 指针, 尺寸, NULL, NULL) - 1; });
+	UTF8.resize_and_overwrite(UTF16.size() * 3, [&UTF16](char* 指针, size_t 尺寸) {return WideCharToMultiByte(CP_UTF8, NULL, UTF16.c_str(), UTF16.size(), 指针, 尺寸, NULL, NULL); });
 	return UTF8;
 }
+//此函数假定文件存在
 static void 设置文件权限(LPWSTR ObjectName, LPWSTR TrusteeName, DWORD AccessPermissions)
 {
 	PACL Dacl;
@@ -111,7 +112,8 @@ static void 设置文件权限(LPWSTR ObjectName, LPWSTR TrusteeName, DWORD Acce
 	SetNamedSecurityInfoW(ObjectName, SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, Dacl, NULL);
 	LocalFree(Dacl);
 }
-static void Install_path_manager()noexcept
+#define API(名称) static void 名称(std::ostringstream&输出)
+API(Install_path_manager)noexcept
 {
 	const path MatlabRoot(读入UTF16字符串());
 	const path MatlabSavePath = MatlabRoot / L"toolbox\\matlab\\general\\savepath.m";
@@ -137,7 +139,7 @@ static void Install_path_manager()noexcept
 	static wchar_t TrusteeName[] = L"Users";
 	设置文件权限(路径缓冲.get(), TrusteeName, GENERIC_READ);
 }
-static void Uninstall_path_manager()noexcept
+API(Uninstall_path_manager)noexcept
 {
 	path MatlabRoot(读入UTF16字符串());
 	rename(原文件目录() / L"savepath.m", MatlabRoot / L"toolbox\\matlab\\general\\savepath.m");
@@ -153,9 +155,9 @@ static std::unordered_set<std::string>输入路径集合()noexcept
 		路径集合.insert(std::move(路径));
 	return 路径集合;
 }
-static void 开放新路径权限(const std::unordered_set<std::string>&新路径集合)noexcept
+static void 开放新路径权限(const std::unordered_set<std::string>&新路径集合)
 {
-	系统指针<PACL, decltype(LocalFree)*>Dacl(LocalFree);
+	PACL Dacl;
 	系统指针<PSECURITY_DESCRIPTOR, decltype(LocalFree)*>SecurityDescriptor(LocalFree);
 	EXPLICIT_ACCESS_A ExplicitAccess;
 	static char Users[] = "Users";
@@ -166,10 +168,18 @@ static void 开放新路径权限(const std::unordered_set<std::string>&新路�
 		if (路径.size() + 1 > 缓冲区大小)
 			路径缓冲 = std::make_unique_for_overwrite<char[]>(缓冲区大小 = 路径.size() + 1);
 		strcpy(路径缓冲.get(), 路径.c_str());
-		GetNamedSecurityInfoA(路径缓冲.get(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, &Dacl, NULL, &SecurityDescriptor);
+		switch (GetNamedSecurityInfoA(路径缓冲.get(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, &Dacl, NULL, &SecurityDescriptor))
+		{
+		case ERROR_FILE_NOT_FOUND:
+			throw MATLAB异常类型::File_not_found;
+		case ERROR_BAD_PATHNAME:
+			throw MATLAB异常类型::Bad_pathname;
+		}
+		//这一步取得的ACL不能释放
 		BuildExplicitAccessWithNameA(&ExplicitAccess, Users, GENERIC_READ | GENERIC_EXECUTE, GRANT_ACCESS, SUB_CONTAINERS_AND_OBJECTS_INHERIT);
 		SetEntriesInAclA(1, &ExplicitAccess, Dacl, &Dacl);
 		SetNamedSecurityInfoA(路径缓冲.get(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, Dacl, NULL);
+		LocalFree(Dacl);
 	}
 }
 static void 写出路径(const std::unordered_set<std::string>& 新路径集合)noexcept
@@ -178,7 +188,7 @@ static void 写出路径(const std::unordered_set<std::string>& 新路径集合)
 	for (const std::string& 路径 : 新路径集合)
 		输出流 << 路径 << ';';
 }
-static void Set_shared_path()noexcept
+API(Set_shared_path)
 {
 	const std::unordered_set<std::string>输入集合 = 输入路径集合();
 	std::unordered_set<std::string>新路径集合 = 输入集合;
@@ -190,7 +200,7 @@ static void Set_shared_path()noexcept
 	开放新路径权限(新路径集合);
 	写出路径(输入集合);
 }
-static void Add_shared_path()noexcept
+API(Add_shared_path)
 {
 	std::unordered_set<std::string>新路径集合 = 输入路径集合();
 	std::unordered_set<std::string>输出路径集合 = 新路径集合;
@@ -205,7 +215,7 @@ static void Add_shared_path()noexcept
 	开放新路径权限(新路径集合);
 	写出路径(输出路径集合);
 }
-static void Remove_shared_path()noexcept
+API(Remove_shared_path)noexcept
 {
 	std::unordered_set<std::string>路径集合;
 	std::ifstream 旧路径(共享路径());
@@ -218,7 +228,7 @@ static void Remove_shared_path()noexcept
 		路径集合.erase(路径);
 	写出路径(路径集合);
 }
-static void Builtin_bug_fix()
+API(Builtin_bug_fix)
 {
 	const path MatlabRoot(读入UTF16字符串());
 	constexpr wchar_t 文件名[][32] = { L"getDocumentationXML.m", L"CshDocPageHandler.m", L"Document.m", L"ToolboxConfigurationReader.m", L"getReferencePage.m" };
@@ -252,16 +262,16 @@ static void Builtin_bug_fix()
 			copy_file(原文件目录() / 文件名[命令], MatlabRoot / 目标目录[命令] / 文件名[命令], copy_options::overwrite_existing);
 		}
 		else
-			throw 提权操作异常::Builtin_bug_fix_command_is_0;
+			throw MATLAB异常类型::Builtin_bug_fix_command_is_0;
 	}
 }
-static void Associate_prj_extension()noexcept
+API(Associate_prj_extension)noexcept
 {
 	const path MatlabRoot(读入UTF16字符串());
-	const std::wstring MATLAB版本 = 读入UTF16字符串();
+	const std::wstring MATLAB版本 = 读入UTF16字符串() + L".0";
 	系统指针<HKEY, decltype(RegCloseKey)*>键A(RegCloseKey);
 	RegCreateKeyExW(HKEY_CLASSES_ROOT, L".prj", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_CREATE_SUB_KEY | KEY_SET_VALUE, NULL, &键A, NULL);
-	const std::wstring prj类 = L"MATLAB.prj." + MATLAB版本 + L".0";
+	const std::wstring prj类 = L"MATLAB.prj." + MATLAB版本;
 	RegSetValueExW(键A, NULL, 0, REG_SZ, (const BYTE*)prj类.c_str(), (prj类.size() + 1) * sizeof(wchar_t));
 	constexpr wchar_t mwopc[] = L"mwopc";
 	RegSetValueExW(键A, L"PerceivedType", 0, REG_SZ, (const BYTE*)mwopc, sizeof(mwopc));
@@ -293,12 +303,12 @@ static void Associate_prj_extension()noexcept
 	RegCreateKeyExW(键B, L"ddeexec", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_CREATE_SUB_KEY | KEY_SET_VALUE, NULL, &键A, NULL);
 	constexpr wchar_t uiopen[] = L"uiopen('%1',1)";
 	RegSetValueExW(键A, NULL, 0, REG_SZ, (const BYTE*)uiopen, sizeof(uiopen));
-	RegSz = L"ShellVerbs.MATLAB." + MATLAB版本 + L".0";
+	RegSz = L"ShellVerbs.MATLAB." + MATLAB版本;
 	RegSetKeyValueW(键A, L"application", NULL, REG_SZ, RegSz.c_str(), (RegSz.size() + 1) * sizeof(wchar_t));
 	constexpr wchar_t system[] = L"system";
 	RegSetKeyValueW(键A, L"topic", NULL, REG_SZ, system, sizeof(system));
 }
-static void Get_pathdef_permission()noexcept
+API(Get_pathdef_permission)noexcept
 {
 	const std::wstring PathDef = 读入UTF16字符串();
 	const std::unique_ptr<wchar_t[]>ObjectName = std::make_unique_for_overwrite<wchar_t[]>(PathDef.size() + 1);
@@ -310,10 +320,10 @@ static void Get_pathdef_permission()noexcept
 	设置文件权限(ObjectName.get(), Buffer.get(), GENERIC_READ | GENERIC_WRITE);
 }
 using UniqueHandle = 系统指针<HANDLE, decltype(CloseHandle)*>;
+static const HANDLE ProcessHandle = GetCurrentProcess();
 static bool 句柄不可用(const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* 系统句柄表条目信息头, UniqueHandle& SourceProcessHandle, UniqueHandle& TargetHandle)
 {
 	static std::unordered_set<ULONG_PTR>无效进程;
-	static const HANDLE TargetProcessHandle = GetCurrentProcess();
 	if (无效进程.contains(系统句柄表条目信息头->UniqueProcessId))
 		return true;
 	if (!(SourceProcessHandle = OpenProcess(PROCESS_DUP_HANDLE, FALSE, 系统句柄表条目信息头->UniqueProcessId)))
@@ -321,7 +331,7 @@ static bool 句柄不可用(const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* 系统句�
 		无效进程.insert(系统句柄表条目信息头->UniqueProcessId);
 		return true;
 	}
-	DuplicateHandle(SourceProcessHandle, (HANDLE)系统句柄表条目信息头->HandleValue, TargetProcessHandle, &TargetHandle, NULL, FALSE, DUPLICATE_SAME_ACCESS);
+	DuplicateHandle(SourceProcessHandle, (HANDLE)系统句柄表条目信息头->HandleValue, ProcessHandle, &TargetHandle, NULL, FALSE, DUPLICATE_SAME_ACCESS);
 	if (!TargetHandle)
 	{
 		无效进程.insert(系统句柄表条目信息头->UniqueProcessId);
@@ -329,8 +339,11 @@ static bool 句柄不可用(const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* 系统句�
 	}
 	return false;
 }
-static void Serialport_snatch()
+API(Serialport_snatch)
 {
+	DWORD 调用进程ID;
+	DWORD NumberOfBytesRead;
+	ReadFile(File, &调用进程ID, sizeof(调用进程ID), &NumberOfBytesRead, NULL);
 	const std::wstring COM = 读入UTF16字符串();
 	static const 系统指针<HKEY, decltype(RegCloseKey)*>SERIALCOMM = []()
 		{
@@ -347,14 +360,26 @@ static void Serialport_snatch()
 		DWORD ValueNameLen = MaxValueNameLen;
 		DWORD ValueLen = MaxValueLen;
 		RegEnumValueW(SERIALCOMM, Index, ValueName.get(), &ValueNameLen, NULL, NULL, Data.get(), &ValueLen);
-		const std::wstring DataString((wchar_t*)Data.get(), (wchar_t*)(Data.get() + ValueLen));
-		if (COM == DataString)
+		if (COM == (wchar_t*)Data.get())
 		{
 			static const HMODULE Ntdll = GetModuleHandleA("ntdll.dll");
 			static decltype(NtQuerySystemInformation)* const 查询系统信息 = (decltype(NtQuerySystemInformation)*)GetProcAddress(Ntdll, "NtQuerySystemInformation");
 			static ULONG SystemInformationLength = sizeof(SYSTEM_HANDLE_INFORMATION_EX);
 			static std::unique_ptr<char[]>SystemInformation = std::make_unique_for_overwrite<char[]>(SystemInformationLength);
 			ULONG ReturnLength;
+			static bool 未获取特权 = true;
+			if (未获取特权)
+			{
+				//必须获取此特权，否则NtQuerySystemInformation无法返回Object，PROCEXP152拒绝访问
+				LUID Luid;
+				LookupPrivilegeValueW(NULL, SE_DEBUG_NAME, &Luid);
+				TOKEN_PRIVILEGES NewState{ 1,{Luid,2} };
+				HANDLE TokenHandle;
+				OpenProcessToken(ProcessHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &TokenHandle);
+				AdjustTokenPrivileges(TokenHandle, FALSE, &NewState, sizeof(NewState), NULL, NULL);
+				CloseHandle(TokenHandle);
+				未获取特权 = false;
+			}
 			while (查询系统信息(SystemExtendedHandleInformation, SystemInformation.get(), SystemInformationLength, &ReturnLength))
 				SystemInformation = std::make_unique_for_overwrite<char[]>(SystemInformationLength = ReturnLength);
 			const SYSTEM_HANDLE_INFORMATION_EX* const 系统句柄信息 = (SYSTEM_HANDLE_INFORMATION_EX*)SystemInformation.get();
@@ -376,8 +401,7 @@ static void Serialport_snatch()
 						ULONG ReturnLength;
 						while (查询对象(TargetHandle, ObjectTypeInformation, ObjectInformation.get(), ObjectInformationLength, &ReturnLength))
 							ObjectInformation = std::make_unique_for_overwrite<char[]>(ObjectInformationLength = ReturnLength);
-						const OBJECT_TYPE_INFORMATION* const 对象类型信息 = (OBJECT_TYPE_INFORMATION*)ObjectInformation.get();
-						if (wcscmp(对象类型信息->TypeName.Buffer, L"File"))
+						if (wcscmp(((OBJECT_TYPE_INFORMATION*)ObjectInformation.get())->TypeName.Buffer, L"File"))
 							非文件类型.insert(返回值);
 						else
 							break;
@@ -404,23 +428,29 @@ static void Serialport_snatch()
 						ULONG ShareAccess;
 						wchar_t* 文件名()const noexcept { return (wchar_t*)(this + 1); }
 					};
-					static DWORD OutBufferSize = sizeof(ProcExp_OutBuffer);
+					static DWORD OutBufferSize = 32;//初始大小不能太小，否则DeviceIoControl会报ERROR_MORE_DATA以外的错
 					static std::unique_ptr<char[]>OutBuffer = std::make_unique_for_overwrite<char[]>(OutBufferSize);
 					static const HANDLE ProExp152 = CreateFileW(L"\\\\.\\PROCEXP152", GENERIC_READ | GENERIC_WRITE, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 					for (;; OutBuffer = std::make_unique_for_overwrite<char[]>(OutBufferSize *= 2))
 					{
 						if (DeviceIoControl(ProExp152, 0x83350048, &InBuffer, sizeof(InBuffer), OutBuffer.get(), OutBufferSize, nullptr, nullptr))
 						{
-							const wchar_t* const 文件名 = ((ProcExp_OutBuffer*)OutBuffer.get())->文件名();
-							if (DataString == 文件名)
+							if (!wcscmp(ValueName.get(), ((ProcExp_OutBuffer*)OutBuffer.get())->文件名()))
 							{
+								if (系统句柄表条目信息头->UniqueProcessId == 调用进程ID)
+									throw MATLAB异常类型::Attempt_to_snatch_the_serialport_occupied_by_yourself;
 								DuplicateHandle(SourceProcessHandle, (HANDLE)系统句柄表条目信息头->HandleValue, NULL, &TargetHandle, NULL, FALSE, DUPLICATE_CLOSE_SOURCE);
+								输出.write((char*)&系统句柄表条目信息头->UniqueProcessId, sizeof(系统句柄表条目信息头->UniqueProcessId));
 								return;
 							}
 							break;
 						}
-						else if (GetLastError() != ERROR_MORE_DATA)
-							break;
+						else
+						{
+							DWORD 结果 = GetLastError();
+							if (结果 != ERROR_MORE_DATA)
+								break;
+						}
 					}
 					do
 						if (++系统句柄表条目信息头 >= 系统句柄表条目信息尾)
@@ -430,7 +460,7 @@ static void Serialport_snatch()
 				break;
 		}
 	}
-	throw 提权操作异常::COM_number_not_found;
+	throw MATLAB异常类型::COM_number_not_found;
 }
 int wmain(int argc, wchar_t* argv[])
 {
@@ -438,7 +468,7 @@ int wmain(int argc, wchar_t* argv[])
 	const path NamedPipeName = path(L"\\\\.\\pipe") / argv[1];
 	WaitNamedPipeW(NamedPipeName.c_str(), NMPWAIT_WAIT_FOREVER);
 	File = CreateFileW(NamedPipeName.c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
-	constexpr void(*操作列表[])() = { Install_path_manager,Uninstall_path_manager,Set_shared_path,Add_shared_path,Remove_shared_path,Builtin_bug_fix,Associate_prj_extension,Get_pathdef_permission,Serialport_snatch };
+	constexpr void(*操作列表[])(std::ostringstream&输出) = { Install_path_manager,Uninstall_path_manager,Set_shared_path,Add_shared_path,Remove_shared_path,Builtin_bug_fix,Associate_prj_extension,Get_pathdef_permission,Serialport_snatch };
 	提权操作函数 函数序号;
 	DWORD NumberOfBytesRead;
 	for (;;)
@@ -447,16 +477,20 @@ int wmain(int argc, wchar_t* argv[])
 		if ((size_t)函数序号 == std::extent_v<decltype(操作列表)>)
 			break;
 		DWORD NumberOfBytesWritten;
+		constexpr MATLAB异常类型 操作成功 = MATLAB异常类型::成功;
+		static const std::string 成功输出((char*)&操作成功, sizeof(操作成功));
+		std::ostringstream 输出(成功输出);
+		输出.seekp(sizeof(MATLAB异常类型), std::ios_base::beg);
 		try
 		{
-			操作列表[(size_t)函数序号]();
+			操作列表[(size_t)函数序号](输出);
 		}
-		catch (提权操作异常 ex)
+		catch (MATLAB异常类型 ex)
 		{
 			WriteFile(File, &ex, sizeof(ex), &NumberOfBytesWritten, NULL);
 			continue;
 		}
-		constexpr 提权操作异常 操作成功 = 提权操作异常::Operation_succeeded;
-		WriteFile(File, &操作成功, sizeof(操作成功), &NumberOfBytesWritten, NULL);
+		const std::string 输出缓冲 = 输出.str();
+		WriteFile(File, 输出缓冲.data(), 输出缓冲.size(), &NumberOfBytesWritten, NULL);
 	}
 }

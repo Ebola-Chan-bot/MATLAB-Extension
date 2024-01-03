@@ -130,7 +130,8 @@
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
     <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-    <ExternalIncludePath>$(SolutionDir)提权操作C;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
+    <IncludePath>$(SolutionDir)共享头文件;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug.Mex工具测试|x64'">
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>
@@ -139,13 +140,15 @@
     <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     <ExternalIncludePath>C:\Users\vhtmf\source\repos\MexTools\nuget\build\native\include;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Users\vhtmf\source\repos\MexTools\nuget\build\native\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)共享头文件;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
     <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-    <ExternalIncludePath>$(SolutionDir)提权操作C;$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
+    <IncludePath>$(SolutionDir)共享头文件;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release.Mex工具测试|x64'">
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>
@@ -154,6 +157,7 @@
     <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     <ExternalIncludePath>C:\Users\vhtmf\source\repos\MexTools\nuget\build\native\include;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Users\vhtmf\source\repos\MexTools\nuget\build\native\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)共享头文件;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -355,6 +359,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\提权操作C\提权操作C.vcxproj">
+      <Project>{e84a0d79-b413-4096-8db9-1c5f0ae5919b}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
