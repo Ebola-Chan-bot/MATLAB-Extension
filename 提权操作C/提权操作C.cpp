@@ -370,14 +370,19 @@ API(Serialport_snatch)
 			static bool 未获取特权 = true;
 			if (未获取特权)
 			{
-				//必须获取此特权，否则NtQuerySystemInformation无法返回Object，PROCEXP152拒绝访问
-				LUID Luid;
-				LookupPrivilegeValueW(NULL, SE_DEBUG_NAME, &Luid);
-				TOKEN_PRIVILEGES NewState{ 1,{Luid,2} };
+				constexpr DWORD BufferLength = sizeof(TOKEN_PRIVILEGES) + sizeof(LUID_AND_ATTRIBUTES);
+				TOKEN_PRIVILEGES* const NewState = (TOKEN_PRIVILEGES*)malloc(BufferLength);
+				NewState->PrivilegeCount = 2;
+				LUID_AND_ATTRIBUTES* const Privileges = NewState->Privileges;
+				LookupPrivilegeValueW(NULL, SE_DEBUG_NAME, &Privileges[0].Luid);
+				Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+				LookupPrivilegeValueW(NULL, SE_LOAD_DRIVER_NAME, &Privileges[1].Luid);
+				Privileges[1].Attributes = SE_PRIVILEGE_ENABLED;
 				HANDLE TokenHandle;
 				OpenProcessToken(ProcessHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &TokenHandle);
-				AdjustTokenPrivileges(TokenHandle, FALSE, &NewState, sizeof(NewState), NULL, NULL);
+				AdjustTokenPrivileges(TokenHandle, FALSE, NewState, BufferLength, NULL, NULL);
 				CloseHandle(TokenHandle);
+				free(NewState);
 				未获取特权 = false;
 			}
 			while (查询系统信息(SystemExtendedHandleInformation, SystemInformation.get(), SystemInformationLength, &ReturnLength))
