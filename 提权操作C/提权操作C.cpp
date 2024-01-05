@@ -9,10 +9,10 @@
 #include<unordered_set>
 #include<functional>
 using namespace std::filesystem;
-static const wchar_t* EXE路径;
+static path EXE目录;
 static 懒加载<path>安装目录([]()noexcept
 	{
-		return path(EXE路径).parent_path() / L"安装";
+		return path(EXE目录) / L"安装";
 	});
 static 懒加载<path>数据目录([]()noexcept
 	{
@@ -349,6 +349,8 @@ API(Serialport_snatch)
 		{
 			系统指针<HKEY, decltype(RegCloseKey)*>返回值(RegCloseKey);
 			RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"HARDWARE\\DEVICEMAP\\SERIALCOMM", 0, KEY_READ, &返回值);
+			if (!返回值)
+				throw MATLAB异常类型::COM_number_not_found;
 			return 返回值;
 		}();
 	DWORD Values, MaxValueNameLen, MaxValueLen;
@@ -435,7 +437,30 @@ API(Serialport_snatch)
 					};
 					static DWORD OutBufferSize = 32;//初始大小不能太小，否则DeviceIoControl会报ERROR_MORE_DATA以外的错
 					static std::unique_ptr<char[]>OutBuffer = std::make_unique_for_overwrite<char[]>(OutBufferSize);
-					static const HANDLE ProExp152 = CreateFileW(L"\\\\.\\PROCEXP152", GENERIC_READ | GENERIC_WRITE, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+					static const HANDLE ProExp152 = []()
+						{
+							HANDLE 返回值 = CreateFileW(L"\\\\.\\PROCEXP152", GENERIC_READ | GENERIC_WRITE, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+							if (返回值 == INVALID_HANDLE_VALUE)
+							{
+								HKEY PROCEXP152;
+								RegCreateKeyW(HKEY_LOCAL_MACHINE, L"System\\CurrentControlSet\\Services\\PROCEXP152", &PROCEXP152);
+								DWORD Data = 1;
+								RegSetValueExW(PROCEXP152, L"Type", 0, REG_DWORD, (BYTE*)&Data, sizeof(Data));
+								RegSetValueExW(PROCEXP152, L"ErrorControl", 0, REG_DWORD, (BYTE*)&Data, sizeof(Data));
+								Data = 3;
+								RegSetValueExW(PROCEXP152, L"Start", 0, REG_DWORD, (BYTE*)&Data, sizeof(Data));
+								const std::wstring PROCEXP152_SYS = L"\\??\\" + (EXE目录 / L"PROCEXP152.SYS").native();
+								RegSetValueExW(PROCEXP152, L"ImagePath", 0, REG_SZ, (BYTE*)PROCEXP152_SYS.c_str(), PROCEXP152_SYS.size() * sizeof(wchar_t));
+								RegCloseKey(PROCEXP152);
+								decltype(NtLoadDriver)* const 加载驱动 = (decltype(NtLoadDriver)*)GetProcAddress(Ntdll, "NtLoadDriver");
+								UNICODE_STRING DriverServiceName;
+								decltype(RtlInitUnicodeString)* const 初始化Unicode字符串 = (decltype(RtlInitUnicodeString)*)GetProcAddress(Ntdll, "RtlInitUnicodeString");
+								初始化Unicode字符串(&DriverServiceName, L"\\Registry\\Machine\\System\\CurrentControlSet\\Services\\PROCEXP152");
+								加载驱动(&DriverServiceName); 
+								返回值 = CreateFileW(L"\\\\.\\PROCEXP152", GENERIC_READ | GENERIC_WRITE, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+							}
+							return 返回值;
+						}();
 					for (;; OutBuffer = std::make_unique_for_overwrite<char[]>(OutBufferSize *= 2))
 					{
 						if (DeviceIoControl(ProExp152, 0x83350048, &InBuffer, sizeof(InBuffer), OutBuffer.get(), OutBufferSize, nullptr, nullptr))
@@ -469,7 +494,7 @@ API(Serialport_snatch)
 }
 int wmain(int argc, wchar_t* argv[])
 {
-	EXE路径 = argv[0];
+	EXE目录 = path(argv[0]).parent_path();
 	const path NamedPipeName = path(L"\\\\.\\pipe") / argv[1];
 	WaitNamedPipeW(NamedPipeName.c_str(), NMPWAIT_WAIT_FOREVER);
 	File = CreateFileW(NamedPipeName.c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
