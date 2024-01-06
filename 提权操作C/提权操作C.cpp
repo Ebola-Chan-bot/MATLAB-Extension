@@ -8,13 +8,15 @@
 #include<fstream>
 #include<unordered_set>
 #include<functional>
+#include<array>
+#include<codecvt>
 using namespace std::filesystem;
 static path EXE目录;
-static 懒加载<path>安装目录([]()noexcept
+static 懒加载 安装目录([]()noexcept
 	{
 		return path(EXE目录) / L"安装";
 	});
-static 懒加载<path>数据目录([]()noexcept
+static 懒加载 数据目录([]()noexcept
 	{
 		constexpr wchar_t ProgramData[] = L"ProgramData";
 		const DWORD Size = GetEnvironmentVariableW(ProgramData, nullptr, 0);
@@ -22,11 +24,11 @@ static 懒加载<path>数据目录([]()noexcept
 		GetEnvironmentVariableW(ProgramData, Buffer.get(), Size);
 		return path(Buffer.get()) / L"MathWorks\\埃博拉酱";
 	});
-static 懒加载<path>共享路径([]()noexcept
+static 懒加载 共享路径([]()noexcept
 	{
 		return 数据目录() / L"共享路径.txt";
 	});
-static 懒加载<path>原文件目录([]()noexcept
+static 懒加载 原文件目录([]()noexcept
 	{
 		return 数据目录() / L"原文件";
 	});
@@ -113,38 +115,60 @@ static void 设置文件权限(LPWSTR ObjectName, LPWSTR TrusteeName, DWORD Acce
 	LocalFree(Dacl);
 }
 #define API(名称) static void 名称(std::ostringstream&输出)
+static 懒加载 MatlabSavepath([](const path& MatlabRoot)
+	{
+		return MatlabRoot / L"toolbox\\matlab\\general\\savepath.m";
+	});
+static 懒加载 原Savepath([]()
+	{
+		return 原文件目录() / L"savepath.m";
+	});
+static 懒加载 MatlabRc([](const path& MatlabRoot)
+	{
+		return MatlabRoot / L"toolbox\\local\\matlabrc.m";
+	});
 API(Install_path_manager)noexcept
 {
 	const path MatlabRoot(读入UTF16字符串());
-	const path MatlabSavePath = MatlabRoot / L"toolbox\\matlab\\general\\savepath.m";
 	create_directories(原文件目录());
-	copy_file(MatlabSavePath, 原文件目录() / L"savepath.m", copy_options::overwrite_existing);
-	copy_file(安装目录() / L"savepath.m", MatlabSavePath, copy_options::overwrite_existing);
+	const path& MSP = MatlabSavepath(MatlabRoot);
+	copy_file(MSP, 原Savepath(), copy_options::overwrite_existing);
+	copy_file(安装目录() / L"savepath.m", MSP, copy_options::overwrite_existing);
 	static const path 可执行目录 = 数据目录() / L"可执行";
 	static const path internal目录 = 可执行目录 / L"+MATLAB\\+internal";
 	create_directories(internal目录);
 	copy_file(安装目录() / L"RcAddPath.m", internal目录 / L"RcAddPath.m", copy_options::overwrite_existing);
 	if (!is_regular_file(共享路径()))
 		std::ofstream(共享路径()).close();
-	const path MatlabRC = MatlabRoot / L"toolbox\\local\\matlabrc.m";
-	std::ostringstream 输出流 = RC输出流(MatlabRC);
-	const int MultiByte = 可执行目录.native().size() * 3 + 1;
-	std::unique_ptr<char[]>可执行目录UTF8 = std::make_unique_for_overwrite<char[]>(MultiByte);
-	WideCharToMultiByte(CP_UTF8, 0, 可执行目录.c_str(), -1, 可执行目录UTF8.get(), MultiByte, NULL, NULL);
-	输出流 << "addpath('" << 可执行目录UTF8.get() << "');MATLAB.internal.RcAddPath;%埃博拉酱";
-	std::ofstream(MatlabRC) << 输出流.str();
-	const path::string_type PathDef = (MatlabRoot / L"toolbox\\local\\pathdef.m").native();
-	const std::unique_ptr<wchar_t[]>路径缓冲 = std::make_unique_for_overwrite<wchar_t[]>(PathDef.size() + 1);
-	wcscpy(路径缓冲.get(), PathDef.c_str());
+	const path& MRC = MatlabRc(MatlabRoot);
+	std::ostringstream 输出流 = RC输出流(MRC);
+	static const std::string RC加尾 = []()
+		{
+			const int MultiByte = 可执行目录.native().size() * 3 + 1;
+			const std::unique_ptr<char[]>可执行目录UTF8 = std::make_unique_for_overwrite<char[]>(MultiByte);
+			WideCharToMultiByte(CP_UTF8, 0, 可执行目录.c_str(), -1, 可执行目录UTF8.get(), MultiByte, NULL, NULL);
+			std::ostringstream 返回值;
+			返回值 << "addpath('" << 可执行目录UTF8.get() << "');MATLAB.internal.RcAddPath;%埃博拉酱";
+			return 返回值.str();
+		}();
+	输出流 << RC加尾;
+	std::ofstream(MRC) << 输出流.str();
+	static const std::unique_ptr<wchar_t[]>路径缓冲 = [&MatlabRoot]()
+		{
+			const path::string_type PathDef = (MatlabRoot / L"toolbox\\local\\pathdef.m").native();
+			std::unique_ptr<wchar_t[]>返回值 = std::make_unique_for_overwrite<wchar_t[]>(PathDef.size() + 1);
+			wcscpy(路径缓冲.get(), PathDef.c_str());
+			return 返回值;
+		}(); 
 	static wchar_t TrusteeName[] = L"Users";
 	设置文件权限(路径缓冲.get(), TrusteeName, GENERIC_READ);
 }
 API(Uninstall_path_manager)noexcept
 {
 	path MatlabRoot(读入UTF16字符串());
-	rename(原文件目录() / L"savepath.m", MatlabRoot / L"toolbox\\matlab\\general\\savepath.m");
-	MatlabRoot /= L"toolbox\\local\\matlabrc.m";
-	std::ofstream(MatlabRoot) << RC输出流(MatlabRoot).str();
+	rename(原Savepath(), MatlabSavepath(MatlabRoot));
+	const path& MRC = MatlabRc(MatlabRoot);
+	std::ofstream(MRC) << RC输出流(MRC).str();
 }
 static std::unordered_set<std::string>输入路径集合()noexcept
 {
@@ -228,38 +252,144 @@ API(Remove_shared_path)noexcept
 		路径集合.erase(路径);
 	写出路径(路径集合);
 }
+bool 文件未修复(const path& Matlab文件路径)noexcept
+{
+	std::string 行;
+	while (std::getline(std::ifstream(Matlab文件路径), 行))
+		if (行 == "%埃博拉酱修复版")
+			return false;
+	return true;
+}
+DWORD 计算VersionMS(const std::wstring& MATLAB版本)
+{
+	std::wistringstream 版本号拆分(MATLAB版本);
+	std::wstring 号;
+	std::getline(版本号拆分, 号, L'.');
+	DWORD 返回值 = std::stoi(号) << 16;
+	std::getline(版本号拆分, 号, L'.');
+	返回值 += std::stoi(号);
+	return 返回值;
+}
+static 懒加载 当前VersionMS(计算VersionMS);
 API(Builtin_bug_fix)
 {
-	const path MatlabRoot(读入UTF16字符串());
-	constexpr wchar_t 文件名[][32] = { L"getDocumentationXML.m", L"CshDocPageHandler.m", L"Document.m", L"ToolboxConfigurationReader.m", L"getReferencePage.m" };
-	constexpr wchar_t 目标目录[][128] =
+	struct 补丁位置
 	{
-		L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc",
-		L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+ui\\@CshDocPageHandler",
-		L"toolbox\\matlab\\codetools\\+matlab\\+desktop\\+editor\\@Document",
-		L"toolbox\\matlab\\toolbox_packaging\\+matlab\\+internal\\+addons\\+metadata",
-		L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+reference"
+		wchar_t 文件名[32];
+		wchar_t 目标目录[128];
 	};
+	const path MatlabRoot(读入UTF16字符串());
+	const std::wstring MatlabVersion = 读入UTF16字符串();
+	static const std::array<补丁位置, 5>& 版本命令集 = [&MatlabVersion]()
+		{
+			static const std::unordered_map<std::wstring, std::array<补丁位置, 5>>补丁信息
+			{
+				{
+					L"23.2",
+					{{
+						{
+							L"getDocumentationXML.m",
+							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc"
+						},
+						{
+							L"CshDocPageHandler.m",
+							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+ui\\@CshDocPageHandler",
+						},
+						{
+							L"Document.m",
+							L"toolbox\\matlab\\codetools\\+matlab\\+desktop\\+editor\\@Document",
+						},
+						{
+							L"ToolboxConfigurationReader.m",
+							L"toolbox\\matlab\\toolbox_packaging\\+matlab\\+internal\\+addons\\+metadata",
+						},
+						{
+							L"getReferencePage.m",
+							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+reference"
+						}
+					}}
+				},
+				{
+					L"24.1",
+					{{
+						{
+							L"safeWhich.m",
+							L"toolbox\\matlab\\lang\\+matlab\\+lang\\+internal\\+introspective"
+						},
+						{
+							L"CshDocPageHandler.m",
+							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+ui\\@CshDocPageHandler",
+						},
+						{
+							L"Document.m",
+							L"toolbox\\matlab\\codetools\\+matlab\\+desktop\\+editor\\@Document",
+						},
+						{
+							L"ToolboxConfigurationReader.m",
+							L"toolbox\\matlab\\toolbox_packaging\\+matlab\\+internal\\+addons\\+metadata",
+						},
+						{
+							L"getReferencePage.m",
+							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+reference"
+						}
+					}}
+				}
+			};
+			const auto 返回值 = 补丁信息.find(MatlabVersion);
+			if (返回值 == 补丁信息.cend())
+				throw MATLAB异常类型::Current_MATLAB_version_not_supported;
+			return 返回值->second;
+		}();
 	size_t 命令数;
 	DWORD NumberOfBytes;
 	ReadFile(File, &命令数, sizeof(命令数), &NumberOfBytes, NULL);
 	std::unique_ptr<int8_t[]>所有命令 = std::make_unique_for_overwrite<int8_t[]>(命令数);
 	ReadFile(File, 所有命令.get(), 命令数, &NumberOfBytes, NULL);
-	create_directories(原文件目录());
+	static const path 版本原文件目录 = 原文件目录() / MatlabVersion;
+	create_directories(版本原文件目录);
 	for (size_t C = 0; C < 命令数; ++C)
 	{
 		int8_t 命令 = 所有命令[C];
 		if (命令 > 0)
 		{
 			命令--;
-			const path Matlab文件路径 = MatlabRoot / 目标目录[命令] / 文件名[命令];
-			copy_file(Matlab文件路径, 原文件目录() / 文件名[命令], copy_options::overwrite_existing);
-			copy_file(安装目录() / 文件名[命令], Matlab文件路径, copy_options::overwrite_existing);
+			const 补丁位置& 命令位置 = 版本命令集[命令];
+			const path Matlab文件路径 = MatlabRoot / 命令位置.目标目录 / 命令位置.文件名;
+			if (文件未修复(Matlab文件路径))
+				copy_file(Matlab文件路径, 版本原文件目录 / 命令位置.文件名, copy_options::overwrite_existing);
+			path 版本文件路径 = 安装目录() / MatlabVersion / 命令位置.文件名;
+			if (!exists(版本文件路径))
+			{
+				static const DWORD 版本值 = 当前VersionMS(MatlabVersion);
+				struct 版本名称值
+				{
+					std::wstring 版本名称;
+					DWORD 版本值;
+					版本名称值(const std::wstring& 版本名称) :版本名称(版本名称), 版本值(计算VersionMS(版本名称)) {}
+					版本名称值(std::wstring&& 版本名称) :版本名称(std::move(版本名称)), 版本值(计算VersionMS(版本名称)) {}
+				};
+				static const std::vector<版本名称值>所有版本 = []()
+					{
+						std::vector<版本名称值>返回值;
+						for (const directory_entry& 条目 : directory_iterator(安装目录()))
+							if (条目.is_directory())
+							{
+								const 版本名称值 名称值(条目.path().filename().native());
+								if (名称值.版本值 < 版本值)
+									返回值.push_back(名称值);
+							}
+						return 返回值;
+					}();
+			}
+			copy_file(版本文件路径, Matlab文件路径, copy_options::overwrite_existing);
 		}
 		else if (命令 < 0)
 		{
 			命令 = -1 - 命令;
-			copy_file(原文件目录() / 文件名[命令], MatlabRoot / 目标目录[命令] / 文件名[命令], copy_options::overwrite_existing);
+			const 补丁位置& 命令位置 = 版本命令集[命令];
+			const path Matlab文件路径 = MatlabRoot / 命令位置.目标目录 / 命令位置.文件名;
+			if (!文件未修复(Matlab文件路径))
+				copy_file(版本原文件目录 / 命令位置.文件名, Matlab文件路径, copy_options::overwrite_existing);
 		}
 		else
 			throw MATLAB异常类型::Builtin_bug_fix_command_is_0;
@@ -271,7 +401,7 @@ API(Associate_prj_extension)noexcept
 	const std::wstring MATLAB版本 = 读入UTF16字符串() + L".0";
 	系统指针<HKEY, decltype(RegCloseKey)*>键A(RegCloseKey);
 	RegCreateKeyExW(HKEY_CLASSES_ROOT, L".prj", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_CREATE_SUB_KEY | KEY_SET_VALUE, NULL, &键A, NULL);
-	const std::wstring prj类 = L"MATLAB.prj." + MATLAB版本;
+	static const std::wstring prj类 = L"MATLAB.prj." + MATLAB版本;
 	RegSetValueExW(键A, NULL, 0, REG_SZ, (const BYTE*)prj类.c_str(), (prj类.size() + 1) * sizeof(wchar_t));
 	constexpr wchar_t mwopc[] = L"mwopc";
 	RegSetValueExW(键A, L"PerceivedType", 0, REG_SZ, (const BYTE*)mwopc, sizeof(mwopc));
@@ -282,41 +412,45 @@ API(Associate_prj_extension)noexcept
 	constexpr wchar_t ShellEx[] = L"{44121072-A222-48f2-A58A-6D9AD51EBBE9}";
 	RegSetKeyValueW(键B, L"{BB2E617C-0920-11d1-9A0B-00C04FC2D6C1}", NULL, REG_SZ, ShellEx, sizeof(ShellEx));
 	RegSetKeyValueW(键B, L"{E357FCCD-A995-4576-B01F-234630154E96}", NULL, REG_SZ, ShellEx, sizeof(ShellEx));
-	std::wstring RegSz = L"Versions\\" + prj类;
-	RegCreateKeyExW(键A, RegSz.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, &键B, NULL);
+	static const std::wstring Versions = L"Versions\\" + prj类;
+	RegCreateKeyExW(键A, Versions.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE, NULL, &键B, NULL);
 	constexpr DWORD FileVersionLS = 0;
 	RegSetValueExW(键B, L"FileVersionLS", 0, REG_DWORD, (const BYTE*)&FileVersionLS, sizeof(FileVersionLS));
-	std::wistringstream 版本号拆分(MATLAB版本);
-	std::getline(版本号拆分, RegSz, L'.');
-	DWORD FileVersionMS = std::stoi(RegSz) << 16;
-	std::getline(版本号拆分, RegSz, L'.');
-	FileVersionMS += std::stoi(RegSz);
+	static const DWORD FileVersionMS = 当前VersionMS(MATLAB版本);
 	RegSetValueExW(键B, L"FileVersionMS", 0, REG_DWORD, (const BYTE*)&FileVersionMS, sizeof(FileVersionMS));
 	RegCreateKeyExW(HKEY_CLASSES_ROOT, prj类.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_CREATE_SUB_KEY | KEY_SET_VALUE, NULL, &键A, NULL);
-	RegSz = L"\"" + (MatlabRoot / L"bin\\win64\\osintegplugins\\osintegplugins\\mlproj\\mwmlprojfaplugin.dll").native() + L"\",0";
-	RegSetKeyValueW(键A, L"DefaultIcon", NULL, REG_SZ, RegSz.c_str(), (RegSz.size() + 1) * sizeof(wchar_t));
+	static const std::wstring DefaultIcon = L"\"" + (MatlabRoot / L"bin\\win64\\osintegplugins\\osintegplugins\\mlproj\\mwmlprojfaplugin.dll").native() + L"\",0";
+	RegSetKeyValueW(键A, L"DefaultIcon", NULL, REG_SZ, DefaultIcon.c_str(), (DefaultIcon.size() + 1) * sizeof(wchar_t));
 	RegCreateKeyExW(键A, L"Shell\\Open", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_CREATE_SUB_KEY | KEY_SET_VALUE, NULL, &键B, NULL);
 	constexpr wchar_t Open[] = L"Open";
 	RegSetValueExW(键B, NULL, 0, REG_SZ, (const BYTE*)Open, sizeof(Open));
-	RegSz = L"\"" + (MatlabRoot / L"bin\\win64\\matlab.exe").native() + L"\" -r \"uiopen('%1',1)\"";
-	RegSetKeyValueW(键B, L"command", NULL, REG_SZ, RegSz.c_str(), (RegSz.size() + 1) * sizeof(wchar_t));
+	static const std::wstring command = L"\"" + (MatlabRoot / L"bin\\win64\\matlab.exe").native() + L"\" -r \"uiopen('%1',1)\"";
+	RegSetKeyValueW(键B, L"command", NULL, REG_SZ, command.c_str(), (command.size() + 1) * sizeof(wchar_t));
 	RegCreateKeyExW(键B, L"ddeexec", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_CREATE_SUB_KEY | KEY_SET_VALUE, NULL, &键A, NULL);
 	constexpr wchar_t uiopen[] = L"uiopen('%1',1)";
 	RegSetValueExW(键A, NULL, 0, REG_SZ, (const BYTE*)uiopen, sizeof(uiopen));
-	RegSz = L"ShellVerbs.MATLAB." + MATLAB版本;
-	RegSetKeyValueW(键A, L"application", NULL, REG_SZ, RegSz.c_str(), (RegSz.size() + 1) * sizeof(wchar_t));
+	static const std::wstring application = L"ShellVerbs.MATLAB." + MATLAB版本;
+	RegSetKeyValueW(键A, L"application", NULL, REG_SZ, application.c_str(), (application.size() + 1) * sizeof(wchar_t));
 	constexpr wchar_t system[] = L"system";
 	RegSetKeyValueW(键A, L"topic", NULL, REG_SZ, system, sizeof(system));
 }
 API(Get_pathdef_permission)noexcept
 {
 	const std::wstring PathDef = 读入UTF16字符串();
-	const std::unique_ptr<wchar_t[]>ObjectName = std::make_unique_for_overwrite<wchar_t[]>(PathDef.size() + 1);
-	wcscpy(ObjectName.get(), PathDef.c_str());
-	constexpr wchar_t Name[] = L"USERNAME";
-	const DWORD Size = GetEnvironmentVariableW(Name, nullptr, 0);
-	std::unique_ptr<wchar_t[]>Buffer = std::make_unique_for_overwrite<wchar_t[]>(Size);
-	GetEnvironmentVariableW(Name, Buffer.get(), Size);
+	static const std::unique_ptr<wchar_t[]>ObjectName = [&PathDef]()
+		{
+			std::unique_ptr<wchar_t[]>返回值 = std::make_unique_for_overwrite<wchar_t[]>(PathDef.size() + 1);
+			wcscpy(返回值.get(), PathDef.c_str());
+			return 返回值;
+		}();
+		static const std::unique_ptr<wchar_t[]>Buffer = []()
+			{
+				constexpr wchar_t Name[] = L"USERNAME";
+				const DWORD Size = GetEnvironmentVariableW(Name, nullptr, 0);
+				std::unique_ptr<wchar_t[]>返回值 = std::make_unique_for_overwrite<wchar_t[]>(Size);
+				GetEnvironmentVariableW(Name, 返回值.get(), Size);
+				return 返回值;
+			}();
 	设置文件权限(ObjectName.get(), Buffer.get(), GENERIC_READ | GENERIC_WRITE);
 }
 using UniqueHandle = 系统指针<HANDLE, decltype(CloseHandle)*>;
@@ -416,7 +550,7 @@ API(Serialport_snatch)
 					return 返回值;
 				}();
 #pragma pack(push,8)
-				struct
+				static struct
 				{
 					const DWORD CurrentProcessId = GetCurrentProcessId();
 					PVOID Object;
@@ -435,8 +569,6 @@ API(Serialport_snatch)
 						ULONG ShareAccess;
 						wchar_t* 文件名()const noexcept { return (wchar_t*)(this + 1); }
 					};
-					static DWORD OutBufferSize = 32;//初始大小不能太小，否则DeviceIoControl会报ERROR_MORE_DATA以外的错
-					static std::unique_ptr<char[]>OutBuffer = std::make_unique_for_overwrite<char[]>(OutBufferSize);
 					static const HANDLE ProExp152 = []()
 						{
 							HANDLE 返回值 = CreateFileW(L"\\\\.\\PROCEXP152", GENERIC_READ | GENERIC_WRITE, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -461,11 +593,13 @@ API(Serialport_snatch)
 							}
 							return 返回值;
 						}();
-					for (;; OutBuffer = std::make_unique_for_overwrite<char[]>(OutBufferSize *= 2))
+					static DWORD OutBufferSize = 32;//初始大小不能太小，否则DeviceIoControl会报ERROR_MORE_DATA以外的错
+					static ProcExp_OutBuffer* OutBuffer = (ProcExp_OutBuffer*)malloc(OutBufferSize);
+					for (;;)
 					{
-						if (DeviceIoControl(ProExp152, 0x83350048, &InBuffer, sizeof(InBuffer), OutBuffer.get(), OutBufferSize, nullptr, nullptr))
+						if (DeviceIoControl(ProExp152, 0x83350048, &InBuffer, sizeof(InBuffer), OutBuffer, OutBufferSize, nullptr, nullptr))
 						{
-							if (!wcscmp(ValueName.get(), ((ProcExp_OutBuffer*)OutBuffer.get())->文件名()))
+							if (!wcscmp(ValueName.get(), OutBuffer->文件名()))
 							{
 								if (系统句柄表条目信息头->UniqueProcessId == 调用进程ID)
 									throw MATLAB异常类型::Attempt_to_snatch_the_serialport_occupied_by_yourself;
@@ -475,19 +609,20 @@ API(Serialport_snatch)
 							}
 							break;
 						}
-						else
-						{
-							DWORD 结果 = GetLastError();
-							if (结果 != ERROR_MORE_DATA)
-								break;
-						}
+						else if (GetLastError() != ERROR_MORE_DATA)
+							break;
+						free(OutBuffer);
+						OutBuffer = (ProcExp_OutBuffer*)malloc(OutBufferSize *= 2);
 					}
 					do
 						if (++系统句柄表条目信息头 >= 系统句柄表条目信息尾)
+						{
+							constexpr ULONG_PTR PID0 = 0;
+							输出.write((char*)&PID0, sizeof(PID0));
 							return;
+						}
 					while (OB_TYPE_FILE != 系统句柄表条目信息头->ObjectTypeIndex || 句柄不可用(系统句柄表条目信息头, SourceProcessHandle, TargetHandle));
 				}
-				break;
 		}
 	}
 	throw MATLAB异常类型::COM_number_not_found;

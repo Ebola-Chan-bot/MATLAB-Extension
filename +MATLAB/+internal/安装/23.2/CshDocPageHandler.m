@@ -1,3 +1,4 @@
+%埃博拉酱修复版
 classdef CshDocPageHandler < matlab.internal.doc.ui.DocPageHandler
 	properties
 		Size (1,2) double = [400 400];

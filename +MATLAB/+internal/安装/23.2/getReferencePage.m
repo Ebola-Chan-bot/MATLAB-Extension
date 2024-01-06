@@ -1,3 +1,4 @@
+%埃博拉酱修复版
 function [docPage, displayText, primitive] = getReferencePage(topics, allowSearch)
     arguments
         topics matlab.internal.doc.reference.ReferenceTopicInput

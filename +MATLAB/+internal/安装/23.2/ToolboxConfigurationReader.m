@@ -1,3 +1,4 @@
+%埃博拉酱修复版
 classdef ToolboxConfigurationReader < matlab.internal.addons.metadata.AddonMetadataReader
     
     properties

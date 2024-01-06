@@ -1,3 +1,4 @@
+%埃博拉酱修复版
 classdef (Sealed) Document < matlab.desktop.editor.DocumentInterface
 %matlab.desktop.editor.Document  Access documents in Editor.
 %   The matlab.desktop.editor package provides programmatic access to the

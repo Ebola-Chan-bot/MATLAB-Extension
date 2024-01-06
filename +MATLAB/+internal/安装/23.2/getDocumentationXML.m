@@ -1,3 +1,4 @@
+%埃博拉酱修复版
 function xmlString = getDocumentationXML(topic)
 %getDocumentationXML Extracts the documentation content from the live code file to be displayed in doc.
 %   getDocumentationXML(topic) topic is the file path of the live code file.

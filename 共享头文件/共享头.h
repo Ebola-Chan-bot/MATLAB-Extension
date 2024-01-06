@@ -14,17 +14,25 @@ enum class 提权操作函数
 	Serialport_snatch,
 	Shutdown_server
 };
-template<typename 值类型>
-struct 懒加载
+template<typename 取值方法类型>
+struct function类型转换_s
 {
-	const std::function<值类型()>取值方法;
-	懒加载(std::function<值类型()>&& 取值方法) :取值方法(std::move(取值方法)) {}
-	值类型& operator()()noexcept
+	取值方法类型 方法;
+	using 类型 = decltype(std::function(方法));
+};
+template<typename 取值方法类型>
+using function类型转换 = function类型转换_s<取值方法类型>::类型;
+template<typename 取值方法类型>
+struct 懒加载:function类型转换<取值方法类型>
+{
+	懒加载(取值方法类型 取值方法) :function类型转换<取值方法类型>(取值方法) {}
+	template<typename...参数类型>
+	function类型转换<取值方法类型>::result_type& operator()(参数类型...参数)
 	{
 		if (!容器.has_value())
-			容器 = 取值方法();
+			容器 = function类型转换<取值方法类型>::operator()(参数...);
 		return 容器.value();
 	}
 protected:
-	std::optional<值类型>容器;
+	std::optional<typename function类型转换<取值方法类型>::result_type>容器;
 };

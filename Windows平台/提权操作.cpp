@@ -10,6 +10,7 @@
 #pragma comment(lib,"Ole32.lib")
 #include<filesystem>
 #include<span>
+#include<functional>
 static HANDLE 特权服务器 = nullptr;
 static bool 已连接 = false;
 void 关闭特权服务器()noexcept
@@ -31,7 +32,7 @@ static void WriteString(std::ostringstream& 参数流, const String& 字符串)n
 	参数流.write((char*)&Size, sizeof(Size));
 	参数流.write((char*)字符串.data(), Size * sizeof(std::remove_pointer_t<decltype(字符串.data())>));
 }
-static 懒加载<std::string>MatlabRoot参数头([]()noexcept
+static 懒加载 MatlabRoot参数头([]()noexcept
 	{
 		std::ostringstream 返回值;
 		constexpr 提权操作函数 函数 = 提权操作函数::Shutdown_server;
@@ -119,6 +120,10 @@ API声明(Remove_shared_path)
 {
 	SAR_shared_path(inputs, 提权操作函数::Remove_shared_path);
 }
+static 懒加载 MatlabVersion([]()
+	{
+		return Mex工具::万能转码<String>(StructArray(Engine->feval("ver", Mex工具::万能转码<CharArray>(L"MATLAB")))[0]["Version"]);
+	});
 API声明(Builtin_bug_fix)
 {
 	TypedArray<int8_t>Command(inputs[1]);
@@ -126,6 +131,7 @@ API声明(Builtin_bug_fix)
 	constexpr 提权操作函数 函数 = 提权操作函数::Builtin_bug_fix;
 	参数.write((char*)&函数, sizeof(函数));
 	参数.seekp(0, std::ios_base::end);
+	WriteString(参数, MatlabVersion());
 	const size_t Size = Command.getNumberOfElements();
 	参数.write((char*)&Size, sizeof(Size));
 	const buffer_ptr_t<int8_t>Buffer = Command.release();
@@ -140,7 +146,7 @@ API声明(Associate_prj_extension)
 			constexpr 提权操作函数 函数 = 提权操作函数::Associate_prj_extension;
 			返回值.write((char*)&函数, sizeof(函数));
 			返回值.seekp(0, std::ios_base::end);
-			WriteString(返回值, Mex工具::万能转码<String>(StructArray(Engine->feval("ver", Mex工具::万能转码<CharArray>(L"MATLAB")))[0]["Version"]));
+			WriteString(返回值, MatlabVersion());
 			return 返回值.str();
 		}();
 		特权调用(参数);

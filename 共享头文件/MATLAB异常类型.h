@@ -45,5 +45,6 @@ enum class MATLAB异常类型
 	COM_number_not_found,
 	File_not_found,
 	Bad_pathname,
-	Attempt_to_snatch_the_serialport_occupied_by_yourself
+	Attempt_to_snatch_the_serialport_occupied_by_yourself,
+	Current_MATLAB_version_not_supported
 };

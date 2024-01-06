@@ -45,6 +45,7 @@ classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
 		File_not_found(42)
 		Bad_pathname(43)
 		Attempt_to_snatch_the_serialport_occupied_by_yourself(44)
+		Current_MATLAB_version_not_supported(45)
 
 		Lack_of_high_dimensional_index(218)
 		Cannot_operate_on_NDTables_with_different_Dimensions(219)
