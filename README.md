@@ -37,6 +37,8 @@ function Pause(varargin)
 function Image = Rgb2Gray(Image,Dimension)
 %将数值转换为具有指定有效位数的定点计数法字符串
 function Fixedpoints = SignificantFixedpoint(Numbers,Significance)
+%抢夺被占用的串口
+function [SP,PID] = SnatchSerialport(Port,Baudrate,NameValues)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
 function Graph = TtrtnWbgc(Graph,ToRemove)
 ```

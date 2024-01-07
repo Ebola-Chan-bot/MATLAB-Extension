@@ -474,13 +474,31 @@ static bool 句柄不可用(const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* 系统句�
 		return true;
 	if (!(SourceProcessHandle = OpenProcess(PROCESS_DUP_HANDLE, FALSE, 系统句柄表条目信息头->UniqueProcessId)))
 	{
-		无效进程.insert(系统句柄表条目信息头->UniqueProcessId);
+		switch (GetLastError())
+		{
+		case ERROR_ACCESS_DENIED:
+		case ERROR_INVALID_HANDLE:
+			无效进程.insert(系统句柄表条目信息头->UniqueProcessId);
+			break;
+		default:
+			throw MATLAB异常类型::Unexpected_error_in_DuplicateHandle;
+		}
 		return true;
 	}
 	DuplicateHandle(SourceProcessHandle, (HANDLE)系统句柄表条目信息头->HandleValue, ProcessHandle, &TargetHandle, NULL, FALSE, DUPLICATE_SAME_ACCESS);
 	if (!TargetHandle)
 	{
-		无效进程.insert(系统句柄表条目信息头->UniqueProcessId);
+		switch (GetLastError())
+		{
+		case ERROR_INVALID_HANDLE:
+			break;
+		case ERROR_ACCESS_DENIED:
+		case ERROR_NOT_SUPPORTED:
+			无效进程.insert(系统句柄表条目信息头->UniqueProcessId);
+			break;
+		default:
+			throw MATLAB异常类型::Unexpected_error_in_DuplicateHandle;
+		}
 		return true;
 	}
 	return false;
@@ -611,6 +629,8 @@ API(Serialport_snatch)
 					{
 						if (DeviceIoControl(ProExp152, 0x83350048, &InBuffer, sizeof(InBuffer), OutBuffer, OutBufferSize, nullptr, nullptr))
 						{
+							if (系统句柄表条目信息头->UniqueProcessId == 调用进程ID)
+								int a = 1;
 							if (!wcscmp(ValueName.get(), OutBuffer->文件名()))
 							{
 								if (系统句柄表条目信息头->UniqueProcessId == 调用进程ID)
