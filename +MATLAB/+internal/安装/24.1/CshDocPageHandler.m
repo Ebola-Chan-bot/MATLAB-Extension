@@ -19,16 +19,10 @@ classdef CshDocPageHandler < matlab.internal.doc.ui.DocPageHandler
 			if matlab.internal.doc.services.isOnline
 				matlab.internal.doc.java.initializeLoginServices;
 
-				if matlab.internal.web.isMatlabOnlineEnv
-					docviewerValue = 'ml_online';
-				else
-					docviewerValue = 'helpbrowser';
-				end
 				releaseVersion = strcat("R", version('-release'));
 				docLanguage = matlab.internal.doc.ui.CshDocPageHandler.getDocCenterLanguage;
 
 				url.Query = [url.Query ...
-					matlab.net.QueryParameter('docviewer',docviewerValue) ...
 					matlab.net.QueryParameter('docrelease',releaseVersion) ...
 					matlab.net.QueryParameter('doclanguage',docLanguage)];
 
@@ -77,8 +71,11 @@ classdef CshDocPageHandler < matlab.internal.doc.ui.DocPageHandler
 	methods (Access = private)
 		function cefWindow = openCshWebWindow(obj, help_path)
 			% Add winId so we can reuse the window.
+			winIdName = 'winid';
+			winIdValue = 'cshww';
+			url = matlab.internal.doc.ui.CshDocPageHandler.getUrl(help_path, winIdName, winIdValue);
 			%埃博拉酱修复版
-			cefWindow = matlab.internal.webwindow(matlab.internal.doc.ui.CshDocPageHandler.getUrl(help_path, 'winid', 'cshww'), matlab.internal.getDebugPort());
+			cefWindow = matlab.internal.webwindow(url, matlab.internal.getDebugPort());
 			cefWindow.Position = obj.Position;
 			cefWindow.show;
 
@@ -142,4 +139,4 @@ classdef CshDocPageHandler < matlab.internal.doc.ui.DocPageHandler
 	end
 end
 
-% Copyright 2021-2022 The MathWorks, Inc.
+% Copyright 2021-2023 The MathWorks, Inc.

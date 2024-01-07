@@ -256,7 +256,7 @@ bool 文件未修复(const path& Matlab文件路径)noexcept
 {
 	std::string 行;
 	while (std::getline(std::ifstream(Matlab文件路径), 行))
-		if (行 == "%埃博拉酱修复版")
+		if (行.contains("埃博拉酱修复版"))
 			return false;
 	return true;
 }
@@ -357,31 +357,39 @@ API(Builtin_bug_fix)
 			const path Matlab文件路径 = MatlabRoot / 命令位置.目标目录 / 命令位置.文件名;
 			if (文件未修复(Matlab文件路径))
 				copy_file(Matlab文件路径, 版本原文件目录 / 命令位置.文件名, copy_options::overwrite_existing);
-			path 版本文件路径 = 安装目录() / MatlabVersion / 命令位置.文件名;
-			if (!exists(版本文件路径))
+			static const DWORD 版本值 = 当前VersionMS(MatlabVersion);
+			struct 版本名称值
 			{
-				static const DWORD 版本值 = 当前VersionMS(MatlabVersion);
-				struct 版本名称值
+				std::wstring 版本名称;
+				DWORD 版本值;
+				版本名称值(const std::wstring& 版本名称) :版本名称(版本名称), 版本值(计算VersionMS(版本名称)) {}
+				版本名称值(std::wstring&& 版本名称) :版本名称(std::move(版本名称)), 版本值(计算VersionMS(版本名称)) {}
+			};
+			static const std::vector<版本名称值>所有版本 = []()
 				{
-					std::wstring 版本名称;
-					DWORD 版本值;
-					版本名称值(const std::wstring& 版本名称) :版本名称(版本名称), 版本值(计算VersionMS(版本名称)) {}
-					版本名称值(std::wstring&& 版本名称) :版本名称(std::move(版本名称)), 版本值(计算VersionMS(版本名称)) {}
-				};
-				static const std::vector<版本名称值>所有版本 = []()
+					std::vector<版本名称值>返回值;
+					for (const directory_entry& 条目 : directory_iterator(安装目录()))
+						if (条目.is_directory())
+						{
+							const 版本名称值 名称值(条目.path().filename().native());
+							if (名称值.版本值 <= 版本值)
+								返回值.push_back(名称值);
+						}
+					std::sort(返回值.begin(), 返回值.end(), [](const 版本名称值& a, const 版本名称值& b)
+						{
+							return a.版本值 > b.版本值;
+						});
+					return 返回值;
+				}();
+				for (const 版本名称值& 版本 : 所有版本)
+				{
+					const path 版本文件路径 = 安装目录() / 版本.版本名称 / 命令位置.文件名;
+					if (exists(版本文件路径))
 					{
-						std::vector<版本名称值>返回值;
-						for (const directory_entry& 条目 : directory_iterator(安装目录()))
-							if (条目.is_directory())
-							{
-								const 版本名称值 名称值(条目.path().filename().native());
-								if (名称值.版本值 < 版本值)
-									返回值.push_back(名称值);
-							}
-						return 返回值;
-					}();
-			}
-			copy_file(版本文件路径, Matlab文件路径, copy_options::overwrite_existing);
+						copy_file(版本文件路径, Matlab文件路径, copy_options::overwrite_existing);
+						break;
+					}
+				}
 		}
 		else if (命令 < 0)
 		{

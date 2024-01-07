@@ -1,3 +1,4 @@
+%埃博拉酱修复版
 function whichTopic = safeWhich(topic, isCaseSensitive, callingFunction)
     if nargin < 2
         isCaseSensitive = false;
@@ -91,6 +92,7 @@ function [result, descriptor] = casedWhich(topic, isCaseSensitive, callingFuncti
                     descriptor = allWhichDescriptors{1};
                 end
             elseif contains(topic, filemarker) || (callingFunction == "")
+				%埃博拉酱修复版
                 [result, descriptor] = EbolaChanWhich(topic);
             else
                 [result, descriptor] = which(topic, 'in', callingFunction);
@@ -100,7 +102,6 @@ function [result, descriptor] = casedWhich(topic, isCaseSensitive, callingFuncti
 end
 
 %   Copyright 2007-2023 The MathWorks, Inc.
-%% 埃博拉酱修复版Which
 function [Path, descriptor] = EbolaChanWhich(topic)
 [Path,descriptor]=which(topic);
 if isempty(Path)
