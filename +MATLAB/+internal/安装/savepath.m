@@ -1,3 +1,4 @@
+%埃博拉酱修复版
 function status=savepath(~)
 persistent PS SessionExclude AddonDirectory SharedPath UserPathFile SupportPackagesDirectory
 if isempty(PS)

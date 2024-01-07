@@ -127,12 +127,22 @@ static 懒加载 MatlabRc([](const path& MatlabRoot)
 	{
 		return MatlabRoot / L"toolbox\\local\\matlabrc.m";
 	});
+bool 文件未修复(const path& Matlab文件路径)noexcept
+{
+	std::string 行;
+	std::ifstream 输入流(Matlab文件路径);
+	while (std::getline(输入流, 行))
+		if (行.contains("埃博拉酱修复版"))
+			return false;
+	return true;
+}
 API(Install_path_manager)noexcept
 {
 	const path MatlabRoot(读入UTF16字符串());
 	create_directories(原文件目录());
-	const path& MSP = MatlabSavepath(MatlabRoot);
-	copy_file(MSP, 原Savepath(), copy_options::overwrite_existing);
+	static const path& MSP = MatlabSavepath(MatlabRoot);
+	if (文件未修复(MSP))
+		copy_file(MSP, 原Savepath(), copy_options::overwrite_existing);
 	copy_file(安装目录() / L"savepath.m", MSP, copy_options::overwrite_existing);
 	static const path 可执行目录 = 数据目录() / L"可执行";
 	static const path internal目录 = 可执行目录 / L"+MATLAB\\+internal";
@@ -166,8 +176,10 @@ API(Install_path_manager)noexcept
 API(Uninstall_path_manager)noexcept
 {
 	path MatlabRoot(读入UTF16字符串());
-	rename(原Savepath(), MatlabSavepath(MatlabRoot));
-	const path& MRC = MatlabRc(MatlabRoot);
+	static const path& MSP = MatlabSavepath(MatlabRoot);
+	if (!文件未修复(MSP))
+		rename(原Savepath(), MatlabSavepath(MatlabRoot));
+	static const path& MRC = MatlabRc(MatlabRoot);
 	std::ofstream(MRC) << RC输出流(MRC).str();
 }
 static std::unordered_set<std::string>输入路径集合()noexcept
@@ -251,14 +263,6 @@ API(Remove_shared_path)noexcept
 	while (std::getline(删除路径, 路径, ';'))
 		路径集合.erase(路径);
 	写出路径(路径集合);
-}
-bool 文件未修复(const path& Matlab文件路径)noexcept
-{
-	std::string 行;
-	while (std::getline(std::ifstream(Matlab文件路径), 行))
-		if (行.contains("埃博拉酱修复版"))
-			return false;
-	return true;
 }
 DWORD 计算VersionMS(const std::wstring& MATLAB版本)
 {
@@ -397,7 +401,7 @@ API(Builtin_bug_fix)
 			const 补丁位置& 命令位置 = 版本命令集[命令];
 			const path Matlab文件路径 = MatlabRoot / 命令位置.目标目录 / 命令位置.文件名;
 			if (!文件未修复(Matlab文件路径))
-				copy_file(版本原文件目录 / 命令位置.文件名, Matlab文件路径, copy_options::overwrite_existing);
+				rename(版本原文件目录 / 命令位置.文件名, Matlab文件路径);
 		}
 		else
 			throw MATLAB异常类型::Builtin_bug_fix_command_is_0;
