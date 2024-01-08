@@ -71,7 +71,8 @@ packages
 **/*.pri
 Windows平台
 **/*.sln
-提权操作
+提权操作C
+共享头文件
 **/*.deps.json
 **/*_debug.dll</param.exclude.filters>
     <param.exclude.pcodedmfiles>true</param.exclude.pcodedmfiles>
@@ -136,9 +137,7 @@ Windows平台
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
-      <file>${PROJECT_ROOT}\共享头文件</file>
       <file>${PROJECT_ROOT}\图标.png</file>
-      <file>${PROJECT_ROOT}\提权操作C</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
