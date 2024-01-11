@@ -1,4 +1,4 @@
-classdef MatlabException<uint8&MATLAB.Lang.IEnumerableException
+classdef Exceptions<uint8&MATLAB.Lang.IEnumerableException
 	enumeration
 		Success(0)
 		Input_is_not_a_string(1)

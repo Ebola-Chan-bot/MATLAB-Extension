@@ -58,8 +58,8 @@ classdef WindowsAPI<uint8
 			import MATLAB.Lang.*
 			varargout=cell(1,nargout);
 			[Error,varargout{:}]=WindowsCall(uint8(obj),varargin{:});
-			ExceptionType=MatlabException(Error.ExceptionType);
-			if ExceptionType~=MatlabException.Success
+			ExceptionType=MATLAB.Exceptions(Error.ExceptionType);
+			if ExceptionType~=MATLAB.Exceptions.Success
 				switch InnerException(Error.InnerException)
 					case InnerException.None
 						ExceptionType.Throw;
