@@ -32,7 +32,7 @@ View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange
 +UITools 文件打开和保存对话框
 还有一些尚未归类的工具函数直接放在MATLAB包下
 每个代码文件内部都有详细文档，可以用doc命令查看，此处仅列出函数签名和类功能简介。</param.description>
-    <param.screenshot>${PROJECT_ROOT}\图标.png</param.screenshot>
+    <param.screenshot>${PROJECT_ROOT}\工具箱图像.png</param.screenshot>
     <param.version>18.1.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
@@ -137,7 +137,7 @@ Windows平台
       <file>${PROJECT_ROOT}\doc</file>
       <file>${PROJECT_ROOT}\README.md</file>
       <file>${PROJECT_ROOT}\resources</file>
-      <file>${PROJECT_ROOT}\图标.png</file>
+      <file>${PROJECT_ROOT}\工具箱图像.png</file>
     </fileset.rootfiles>
     <fileset.depfun.included />
     <fileset.depfun.excluded />
