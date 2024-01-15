@@ -319,7 +319,9 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			if isscalar(indexOp)
 				obj.Data(Indices{:})=varargin{1};
 			else
-				obj.Data(Indices{:}).(indexOp(2:end))=varargin{:};
+				Temp=obj.Data(Indices{:});
+				Temp.(indexOp(2:end))=varargin{:};
+				obj.Data(Indices{:})=Temp;
 			end
 		end
 		function n = parenListLength(obj,indexOp,Context)
