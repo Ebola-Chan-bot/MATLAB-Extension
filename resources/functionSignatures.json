@@ -1948,6 +1948,15 @@
 					"vector"
 				],
 				"purpose": "每条线的线型"
+			},
+			{
+				"name": "Ax",
+				"kind": "namevalue",
+				"type": [
+					"scalar",
+					"matlab.graphics.axis.Axes"
+				],
+				"purpose": "作为绘图目标的坐标区"
 			}
 		]
 	},
