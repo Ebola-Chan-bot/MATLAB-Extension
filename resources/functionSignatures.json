@@ -3382,6 +3382,30 @@
 			}
 		]
 	},
+	"MATLAB.Lang.GlobalCache": {
+		"inputs": [
+			{
+				"name": "Key",
+				"kind": "ordered",
+				"type": [
+					[
+						"char",
+						"row"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
+				"purpose": "要查询或设置的键"
+			},
+			{
+				"name": "Value",
+				"kind": "ordered",
+				"purpose": "要设置的值"
+			}
+		]
+	},
 	"MATLAB.Lang.IEnumerableException.Throw": {
 		"inputs": [
 			{

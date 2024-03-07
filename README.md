@@ -262,6 +262,8 @@ function Crash
 function varargout = DistributeVararginByValidation(Varargin,ValidationFun,DefaultFun)
 %获取函数的第N个输出
 function varargout = GetNthOutputs(Function,OutputIndices)
+%设置或查询全局缓存键值对
+function Value = GlobalCache(Key,Value)
 %内置input函数的增强版，取消适用场合限制
 function X = Input(varargin)
 ```
