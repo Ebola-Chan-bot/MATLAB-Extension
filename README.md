@@ -41,6 +41,8 @@ function Fixedpoints = SignificantFixedpoint(Numbers,Significance)
 function [SP,PID] = SnatchSerialport(Port,Baudrate,NameValues)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
 function Graph = TtrtnWbgc(Graph,ToRemove)
+%统一各个坐标区的Y轴范围
+function UnifyYLims(Axes)
 ```
 ## +Containers
 ```MATLAB

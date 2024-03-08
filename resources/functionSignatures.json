@@ -4400,5 +4400,15 @@
 				"purpose": "尝试移除的节点"
 			}
 		]
+	},
+	"MATLAB.UnifyYLims": {
+		"inputs": [
+			{
+				"name": "Axes",
+				"kind": "required",
+				"type": "matlab.graphics.axis.Axes",
+				"purpose": "所有要统一的坐标区"
+			}
+		]
 	}
 }
