@@ -3668,6 +3668,37 @@
 			}
 		]
 	},
+	"MATLAB.Ops.IntersectN":{
+		"inputs":[
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Dimension",
+							"kind": "required",
+							"type": "positive",
+							"purpose": "拆分维度"
+						},
+						{
+							"name": "Set",
+							"kind": "required",
+							"repeating": true,
+							"purpose": "参与交叉的集合"
+						}
+					],
+					[
+						{
+							"name": "Table",
+							"kind": "required",
+							"type": "tabular",
+							"repeating": true,
+							"purpose": "参与交叉的表"
+						}
+					]
+				]
+			}
+		]
+	},
 	"MATLAB.Ops.IsMemberN": {
 		"inputs": [
 			{
