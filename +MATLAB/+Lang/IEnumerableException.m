@@ -123,7 +123,7 @@ classdef IEnumerableException
 			% ```
 			%# 输入参数
 			% Condition(1,1)logical，断言条件，为false时抛出异常
-			% Message(1,1)string，错误相关的文字消息
+			% Message(1,1)，错误相关的文字消息。如果此输入不是字符串，将自动转换为字符串。
 			% ## 名称值参数
 			%  Detail，错误的其它详细信息，作为抛出MATLAB.Lang.MException的Detail属性值
 			%See also MATLAB.Lang.IEnumerableException.Throw
