@@ -51,7 +51,7 @@ classdef IEnumerableException
 			% %包含额外的异常追溯信息，可以与上述任意语法结合使用
 			% ```
 			%# 输入参数
-			% Message(1,1)string，错误相关的文字说明
+			% Message(1,1)，错误相关的文字说明。如果此输入不是字符串，会自动转换成字符串。
 			% Detail，错误的其它详细信息，作为抛出MATLAB.Lang.MException的Detail属性值
 			%See also MATLAB.Lang.MException
 			arguments
@@ -64,7 +64,7 @@ classdef IEnumerableException
 			if isequaln(Message,missing)
 				MATLAB.Lang.MException(Identifier=Identifier,Message=Identifier,Detail=options.Detail).throwAsCaller;
 			else
-				MATLAB.Lang.MException(Identifier=Identifier,Message=sprintf('%s：%s',Identifier,Message),Detail=options.Detail).throwAsCaller;
+				MATLAB.Lang.MException(Identifier=Identifier,Message=sprintf('%s：%s',Identifier,formattedDisplayText(Message)),Detail=options.Detail).throwAsCaller;
 			end
 		end
 		function Warn(obj,varargin)
@@ -81,7 +81,7 @@ classdef IEnumerableException
 			% %与上述任意语法组合使用，额外指定是否显示堆栈跟踪
 			% ```
 			%# 输入参数
-			% Message(1,1)string，要显示的消息字符串，将接在标识符后面。
+			% Message(1,1)，要显示的消息字符串，将接在标识符后面。如果此输入不是字符串，将自动转换为字符串。
 			% BackTrace(1,1)logical，是否显示堆栈跟踪。如果不指定此参数，将使用MATLAB当前默认值。使用内置`warning query backtrace`命令查看当前默认值。
 			%See also warning
 			Identifier=replace(sprintf('%s:%s',class(obj),obj),'.',':');
@@ -91,7 +91,7 @@ classdef IEnumerableException
 				if islogical(varargin{V})
 					BackTrace=varargin{V};
 				else
-					Message=sprintf('%s：%s',Message,varargin{V});
+					Message=sprintf('%s：%s',Message,formattedDisplayText(varargin{V}));
 				end
 			end
 			HasBackTrace=~ismissing(BackTrace);
