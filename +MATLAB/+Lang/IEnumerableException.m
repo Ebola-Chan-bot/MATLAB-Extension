@@ -64,7 +64,7 @@ classdef IEnumerableException
 			if isequaln(Message,missing)
 				MATLAB.Lang.MException(Identifier=Identifier,Message=Identifier,Detail=options.Detail).throwAsCaller;
 			else
-				MATLAB.Lang.MException(Identifier=Identifier,Message=sprintf('%s：%s',Identifier,formattedDisplayText(Message)),Detail=options.Detail).throwAsCaller;
+				MATLAB.Lang.MException(Identifier=Identifier,Message=sprintf('%s：%s',Identifier,AnyToText(Message)),Detail=options.Detail).throwAsCaller;
 			end
 		end
 		function Warn(obj,varargin)
@@ -91,7 +91,7 @@ classdef IEnumerableException
 				if islogical(varargin{V})
 					BackTrace=varargin{V};
 				else
-					Message=sprintf('%s：%s',Message,formattedDisplayText(varargin{V}));
+					Message=sprintf('%s：%s',Message,AnyToText(varargin{V}));
 				end
 			end
 			HasBackTrace=~ismissing(BackTrace);
@@ -132,4 +132,10 @@ classdef IEnumerableException
 			end
 		end
 	end
+end
+function Text=AnyToText(Text)
+Text=formattedDisplayText(Text);
+if contains(Text,newline)
+	Text=newline+Text;
+end
 end
