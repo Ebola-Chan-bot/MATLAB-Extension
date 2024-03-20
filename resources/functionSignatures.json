@@ -3414,16 +3414,6 @@
 			{
 				"name": "Message",
 				"kind": "ordered",
-				"type": [
-					[
-						"string",
-						"scalar"
-					],
-					[
-						"char",
-						"row"
-					]
-				],
 				"purpose": "错误相关的文字说明"
 			},
 			{
@@ -3444,16 +3434,6 @@
 						{
 							"name": "Message",
 							"kind": "ordered",
-							"type": [
-								[
-									"string",
-									"scalar"
-								],
-								[
-									"char",
-									"row"
-								]
-							],
 							"purpose": "要显示的消息字符串"
 						},
 						{
@@ -3479,16 +3459,6 @@
 						{
 							"name": "Message",
 							"kind": "ordered",
-							"type": [
-								[
-									"string",
-									"scalar"
-								],
-								[
-									"char",
-									"row"
-								]
-							],
 							"purpose": "要显示的消息字符串"
 						}
 					]
@@ -3513,16 +3483,6 @@
 			{
 				"name": "Message",
 				"kind": "ordered",
-				"type": [
-					[
-						"string",
-						"scalar"
-					],
-					[
-						"char",
-						"row"
-					]
-				],
 				"purpose": "错误相关的文字消息"
 			},
 			{
