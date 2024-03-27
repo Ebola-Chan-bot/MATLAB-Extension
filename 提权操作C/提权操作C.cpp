@@ -284,9 +284,9 @@ API(Builtin_bug_fix)
 	};
 	const path MatlabRoot(读入UTF16字符串());
 	const std::wstring MatlabVersion = 读入UTF16字符串();
-	static const std::array<补丁位置, 5>& 版本命令集 = [&MatlabVersion]()
+	static const std::vector<补丁位置>& 版本命令集 = [&MatlabVersion]()
 		{
-			static const std::unordered_map<std::wstring, std::array<补丁位置, 5>>补丁信息
+			static const std::unordered_map<std::wstring, std::vector<补丁位置>>补丁信息
 			{
 				{
 					L"23.2",
@@ -331,10 +331,6 @@ API(Builtin_bug_fix)
 						{
 							L"ToolboxConfigurationReader.m",
 							L"toolbox\\matlab\\toolbox_packaging\\+matlab\\+internal\\+addons\\+metadata",
-						},
-						{
-							L"getReferencePage.m",
-							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+reference"
 						}
 					}}
 				}
