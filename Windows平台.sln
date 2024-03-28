@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "提权操作C", "提权操�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "共享头文件", "共享头文件\共享头文件.vcxitems", "{BDEBD86C-800B-4D67-8AAB-E472ED442753}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IconHandler", "IconHandler\IconHandler.vcxproj", "{009BEA20-FA0D-4614-A547-AF1A5193B69D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug.Mex工具测试|Any CPU = Debug.Mex工具测试|Any CPU
@@ -75,30 +73,6 @@ Global
 		{E84A0D79-B413-4096-8DB9-1C5F0AE5919B}.Release|x64.Build.0 = Release|x64
 		{E84A0D79-B413-4096-8DB9-1C5F0AE5919B}.Release|x86.ActiveCfg = Release|Win32
 		{E84A0D79-B413-4096-8DB9-1C5F0AE5919B}.Release|x86.Build.0 = Release|Win32
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug.Mex工具测试|Any CPU.ActiveCfg = Debug|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug.Mex工具测试|Any CPU.Build.0 = Debug|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug.Mex工具测试|x64.ActiveCfg = Debug|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug.Mex工具测试|x64.Build.0 = Debug|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug.Mex工具测试|x86.ActiveCfg = Debug|Win32
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug.Mex工具测试|x86.Build.0 = Debug|Win32
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug|Any CPU.Build.0 = Debug|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug|x64.ActiveCfg = Debug|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug|x64.Build.0 = Debug|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug|x86.ActiveCfg = Debug|Win32
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Debug|x86.Build.0 = Debug|Win32
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release.Mex工具测试|Any CPU.ActiveCfg = Release|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release.Mex工具测试|Any CPU.Build.0 = Release|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release.Mex工具测试|x64.ActiveCfg = Release|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release.Mex工具测试|x64.Build.0 = Release|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release.Mex工具测试|x86.ActiveCfg = Release|Win32
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release.Mex工具测试|x86.Build.0 = Release|Win32
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release|Any CPU.ActiveCfg = Release|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release|Any CPU.Build.0 = Release|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release|x64.ActiveCfg = Release|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release|x64.Build.0 = Release|x64
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release|x86.ActiveCfg = Release|Win32
-		{009BEA20-FA0D-4614-A547-AF1A5193B69D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
