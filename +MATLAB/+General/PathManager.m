@@ -32,12 +32,14 @@ classdef(Abstract,Sealed)PathManager
 			% 能不受影响），所有用户自定义搜索路径都会被删除。此操作将影响所有用户。
 			%See also MATLAB.General.PathManager.Uninstall
 			CurrentPaths=path;
-			restoredefaultpath;
 			MATLAB.internal.WindowsAPI.Get_pathdef_permission.Call;
+			%% 恢复默认路径到pathdef，无法调用任何非内置外部函数
+			restoredefaultpath;
 			%必须用私有函数，因为restoredefaultpath后找不到任何包路径
 			MatlabSavepath;
 			%必须先save再还原，否则会把工具箱路径也给写进pathdef
 			path(CurrentPaths);
+			%% 路径恢复，恢复调用外部函数
 			MATLAB.internal.WindowsAPI.Install_path_manager.Call;
 			clear savepath
 		end
