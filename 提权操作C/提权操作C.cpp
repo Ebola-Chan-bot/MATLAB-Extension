@@ -100,7 +100,7 @@ static std::string 读入UTF8字符串()noexcept
 	return UTF8;
 }
 //此函数假定文件存在
-static void 设置文件权限(LPWSTR ObjectName, LPWSTR TrusteeName, DWORD AccessPermissions)
+static void 设置文件权限(LPWSTR ObjectName, LPWSTR TrusteeName, DWORD AccessPermissions)noexcept
 {
 	PACL Dacl;
 	系统指针<PSECURITY_DESCRIPTOR, decltype(LocalFree)*>SecurityDescriptor(LocalFree);
@@ -115,15 +115,15 @@ static void 设置文件权限(LPWSTR ObjectName, LPWSTR TrusteeName, DWORD Acce
 	LocalFree(Dacl);
 }
 #define API(名称) static void 名称(std::ostringstream&输出)
-static 懒加载 MatlabSavepath([](const path& MatlabRoot)
+static 懒加载 MatlabSavepath([](const path& MatlabRoot)noexcept
 	{
 		return MatlabRoot / L"toolbox\\matlab\\general\\savepath.m";
 	});
-static 懒加载 原Savepath([]()
+static 懒加载 原Savepath([]()noexcept
 	{
 		return 原文件目录() / L"savepath.m";
 	});
-static 懒加载 MatlabRc([](const path& MatlabRoot)
+static 懒加载 MatlabRc([](const path& MatlabRoot)noexcept
 	{
 		return MatlabRoot / L"toolbox\\local\\matlabrc.m";
 	});
@@ -136,13 +136,48 @@ bool 文件未修复(const path& Matlab文件路径)noexcept
 			return false;
 	return true;
 }
+DWORD 计算VersionMS(const std::wstring& MATLAB版本)noexcept
+{
+	std::wistringstream 版本号拆分(MATLAB版本);
+	std::wstring 号;
+	std::getline(版本号拆分, 号, L'.');
+	DWORD 返回值 = std::stoi(号) << 16;
+	std::getline(版本号拆分, 号, L'.');
+	返回值 += std::stoi(号);
+	return 返回值;
+}
+struct 版本名称值
+{
+	std::wstring 版本名称;
+	DWORD 版本值;
+	版本名称值(const std::wstring& 版本名称) :版本名称(版本名称), 版本值(计算VersionMS(版本名称)) {}
+	版本名称值(std::wstring&& 版本名称) :版本名称(std::move(版本名称)), 版本值(计算VersionMS(版本名称)) {}
+};
+static 懒加载 所有版本([](DWORD 版本值)noexcept
+	{
+		std::vector<版本名称值>返回值;
+		for (const directory_entry& 条目 : directory_iterator(安装目录()))
+			if (条目.is_directory())
+			{
+				const 版本名称值 名称值(条目.path().filename().native());
+				if (名称值.版本值 <= 版本值)
+					返回值.push_back(名称值);
+			}
+		std::sort(返回值.begin(), 返回值.end(), [](const 版本名称值& a, const 版本名称值& b)
+			{
+				return a.版本值 > b.版本值;
+			});
+		return 返回值;
+	});
 API(Install_path_manager)noexcept
 {
 	const path MatlabRoot(读入UTF16字符串());
+	const std::wstring MatlabVersion = 读入UTF16字符串();
 	create_directories(原文件目录());
 	static const path& MSP = MatlabSavepath(MatlabRoot);
 	if (文件未修复(MSP))
 		copy_file(MSP, 原Savepath(), copy_options::overwrite_existing);
+	for(const 版本名称值&版本:所有版本())
 	copy_file(安装目录() / L"savepath.m", MSP, copy_options::overwrite_existing);
 	static const path 可执行目录 = 数据目录() / L"可执行";
 	static const path internal目录 = 可执行目录 / L"+MATLAB\\+internal";
@@ -191,7 +226,7 @@ static std::unordered_set<std::string>输入路径集合()noexcept
 		路径集合.insert(std::move(路径));
 	return 路径集合;
 }
-static void 开放新路径权限(const std::unordered_set<std::string>&新路径集合)
+static void 开放新路径权限(const std::unordered_set<std::string>&新路径集合)noexcept
 {
 	PACL Dacl;
 	系统指针<PSECURITY_DESCRIPTOR, decltype(LocalFree)*>SecurityDescriptor(LocalFree);
@@ -224,7 +259,7 @@ static void 写出路径(const std::unordered_set<std::string>& 新路径集合)
 	for (const std::string& 路径 : 新路径集合)
 		输出流 << 路径 << ';';
 }
-API(Set_shared_path)
+API(Set_shared_path)noexcept
 {
 	const std::unordered_set<std::string>输入集合 = 输入路径集合();
 	std::unordered_set<std::string>新路径集合 = 输入集合;
@@ -236,7 +271,7 @@ API(Set_shared_path)
 	开放新路径权限(新路径集合);
 	写出路径(输入集合);
 }
-API(Add_shared_path)
+API(Add_shared_path)noexcept
 {
 	std::unordered_set<std::string>新路径集合 = 输入路径集合();
 	std::unordered_set<std::string>输出路径集合 = 新路径集合;
@@ -263,16 +298,6 @@ API(Remove_shared_path)noexcept
 	while (std::getline(删除路径, 路径, ';'))
 		路径集合.erase(路径);
 	写出路径(路径集合);
-}
-DWORD 计算VersionMS(const std::wstring& MATLAB版本)
-{
-	std::wistringstream 版本号拆分(MATLAB版本);
-	std::wstring 号;
-	std::getline(版本号拆分, 号, L'.');
-	DWORD 返回值 = std::stoi(号) << 16;
-	std::getline(版本号拆分, 号, L'.');
-	返回值 += std::stoi(号);
-	return 返回值;
 }
 static 懒加载 当前VersionMS(计算VersionMS);
 API(Builtin_bug_fix)
@@ -358,30 +383,7 @@ API(Builtin_bug_fix)
 			if (文件未修复(Matlab文件路径))
 				copy_file(Matlab文件路径, 版本原文件目录 / 命令位置.文件名, copy_options::overwrite_existing);
 			static const DWORD 版本值 = 当前VersionMS(MatlabVersion);
-			struct 版本名称值
-			{
-				std::wstring 版本名称;
-				DWORD 版本值;
-				版本名称值(const std::wstring& 版本名称) :版本名称(版本名称), 版本值(计算VersionMS(版本名称)) {}
-				版本名称值(std::wstring&& 版本名称) :版本名称(std::move(版本名称)), 版本值(计算VersionMS(版本名称)) {}
-			};
-			static const std::vector<版本名称值>所有版本 = []()
-				{
-					std::vector<版本名称值>返回值;
-					for (const directory_entry& 条目 : directory_iterator(安装目录()))
-						if (条目.is_directory())
-						{
-							const 版本名称值 名称值(条目.path().filename().native());
-							if (名称值.版本值 <= 版本值)
-								返回值.push_back(名称值);
-						}
-					std::sort(返回值.begin(), 返回值.end(), [](const 版本名称值& a, const 版本名称值& b)
-						{
-							return a.版本值 > b.版本值;
-						});
-					return 返回值;
-				}();
-				for (const 版本名称值& 版本 : 所有版本)
+				for (const 版本名称值& 版本 : 所有版本(版本值))
 				{
 					const path 版本文件路径 = 安装目录() / 版本.版本名称 / 命令位置.文件名;
 					if (exists(版本文件路径))

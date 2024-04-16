@@ -40,6 +40,17 @@ static 懒加载 MatlabRoot参数头([]()noexcept
 		WriteString(返回值, CharArray(Engine->feval("matlabroot", std::vector<Array>())).toUTF16());
 		return 返回值.str();
 	});
+static 懒加载 MatlabVersion([]()
+	{
+		return Mex工具::万能转码<String>(StructArray(Engine->feval("ver", Mex工具::万能转码<CharArray>(L"MATLAB")))[0]["Version"]);
+	});
+static 懒加载 RootVersion参数头([]()noexcept
+	{
+		std::ostringstream 返回值(MatlabRoot参数头());
+		返回值.seekp(0, std::ios::end);
+		WriteString(返回值, MatlabVersion());
+		return 返回值.str();
+	});
 static void 特权调用(const std::string& 参数)
 {
 	static RPC_WSTR Parameters;
@@ -83,7 +94,7 @@ API声明(Install_path_manager)
 {
 	static const std::string 参数 = []()
 		{
-			std::ostringstream 返回值(MatlabRoot参数头());
+			std::ostringstream 返回值(RootVersion参数头());
 			constexpr 提权操作函数 函数 = 提权操作函数::Install_Path_Manager;
 			返回值.write((char*)&函数, sizeof(函数));
 			return 返回值.str();
@@ -120,10 +131,6 @@ API声明(Remove_shared_path)
 {
 	SAR_shared_path(inputs, 提权操作函数::Remove_shared_path);
 }
-static 懒加载 MatlabVersion([]()
-	{
-		return Mex工具::万能转码<String>(StructArray(Engine->feval("ver", Mex工具::万能转码<CharArray>(L"MATLAB")))[0]["Version"]);
-	});
 API声明(Builtin_bug_fix)
 {
 	TypedArray<int8_t>Command(inputs[1]);
