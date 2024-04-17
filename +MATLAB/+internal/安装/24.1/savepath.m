@@ -3,7 +3,7 @@ function status=savepath(~)
 %2024a开始，TEMP、工具箱和打开的项目路径直接用`matlab.internal.path.ExcludedPathStore.getCurrentExcludeList`取得
 persistent SessionExclude SharedPath UserPathFile SupportPackagesDirectory
 if isempty(SessionExclude)
-	SessionExclude=string(split(perl('getphlpaths.pl',matlabroot),pathsep));
+	SessionExclude=[string(split(perl('getphlpaths.pl',matlabroot),pathsep));fullfile(getenv("ProgramData"),"MathWorks\埃博拉酱\可执行")];
 	SharedPath=fullfile(getenv('ProgramData'),'MathWorks\埃博拉酱\共享路径.txt');
 	UserPathFile=fullfile(getenv('LOCALAPPDATA'),'埃博拉酱');
 	if ~isfolder(UserPathFile)
