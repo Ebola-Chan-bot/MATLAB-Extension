@@ -169,6 +169,7 @@ static 懒加载 所有版本([](DWORD 版本值)noexcept
 			});
 		return 返回值;
 	});
+static 懒加载 当前VersionMS(计算VersionMS);
 API(Install_path_manager)noexcept
 {
 	const path MatlabRoot(读入UTF16字符串());
@@ -177,8 +178,15 @@ API(Install_path_manager)noexcept
 	static const path& MSP = MatlabSavepath(MatlabRoot);
 	if (文件未修复(MSP))
 		copy_file(MSP, 原Savepath(), copy_options::overwrite_existing);
-	for(const 版本名称值&版本:所有版本())
-	copy_file(安装目录() / L"savepath.m", MSP, copy_options::overwrite_existing);
+	for (const 版本名称值& 版本 : 所有版本(当前VersionMS(MatlabVersion)))
+	{
+		const path 版本文件路径 = 安装目录() / 版本.版本名称 / L"savepath.m";
+		if (exists(版本文件路径))
+		{
+			copy_file(版本文件路径, MSP, copy_options::overwrite_existing);
+			break;
+		}
+	}
 	static const path 可执行目录 = 数据目录() / L"可执行";
 	static const path internal目录 = 可执行目录 / L"+MATLAB\\+internal";
 	create_directories(internal目录);
@@ -299,7 +307,6 @@ API(Remove_shared_path)noexcept
 		路径集合.erase(路径);
 	写出路径(路径集合);
 }
-static 懒加载 当前VersionMS(计算VersionMS);
 API(Builtin_bug_fix)
 {
 	struct 补丁位置
@@ -382,8 +389,7 @@ API(Builtin_bug_fix)
 			const path Matlab文件路径 = MatlabRoot / 命令位置.目标目录 / 命令位置.文件名;
 			if (文件未修复(Matlab文件路径))
 				copy_file(Matlab文件路径, 版本原文件目录 / 命令位置.文件名, copy_options::overwrite_existing);
-			static const DWORD 版本值 = 当前VersionMS(MatlabVersion);
-				for (const 版本名称值& 版本 : 所有版本(版本值))
+				for (const 版本名称值& 版本 : 所有版本(当前VersionMS(MatlabVersion)))
 				{
 					const path 版本文件路径 = 安装目录() / 版本.版本名称 / 命令位置.文件名;
 					if (exists(版本文件路径))
