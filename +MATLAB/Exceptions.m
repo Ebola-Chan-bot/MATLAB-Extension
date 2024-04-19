@@ -49,6 +49,7 @@ classdef Exceptions<uint8&MATLAB.Lang.IEnumerableException
 		Unexpected_error_in_DuplicateHandle(46)
 		Unexpected_error_in_OpenProcess(47)
 
+		Failed_to_split_out_enough_fields(216)
 		Unexpected_patch_number(217)
 		Lack_of_high_dimensional_index(218)
 		Cannot_operate_on_NDTables_with_different_Dimensions(219)
