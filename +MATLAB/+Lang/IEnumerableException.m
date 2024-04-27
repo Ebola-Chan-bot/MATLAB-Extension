@@ -103,7 +103,7 @@ classdef IEnumerableException
 					warning('off','backtrace');
 				end
 			end
-			warning(Identifier,Message);
+			warning(Identifier,'%s',Message);
 			if HasBackTrace
 				warning(State,'backtrace');
 			end
