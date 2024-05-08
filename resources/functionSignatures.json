@@ -1852,12 +1852,13 @@
 							"type": "MATLAB.Flags",
 							"purpose": "缩放模式"
 						}
-					]
+					],
+					[]
 				]
 			},
 			{
 				"name": "Fig",
-				"kind": "namevalue",
+				"kind": "ordered",
 				"type": [
 					"scalar",
 					"matlab.ui.Figure"
