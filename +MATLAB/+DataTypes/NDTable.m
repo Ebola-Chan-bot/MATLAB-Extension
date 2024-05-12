@@ -534,6 +534,9 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		function obj=xor(obj1,obj2)
 			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@xor);
 		end
+		function obj=power(obj1,obj2)
+			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@power);
+		end
 		%% 降维操作
 		function varargout=ReduceDimension(obj,Reducer,varargin)
 			%执行自定义降维运算
