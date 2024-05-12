@@ -29,6 +29,8 @@
 ```MATLAB
 %在系统浏览器中打开附加功能资源管理器
 function BrowseAddonsExplorer
+%斐波那契插值
+function QueryValues = FibonacciInterp(QueryIndices,ReferenceValues,ReferenceIndices)
 %绘制跟随曲线方向的箭头
 function Arrows = LineFollowingArrow(XYCoordinates,options)
 %暂停执行MATLAB，不可中止

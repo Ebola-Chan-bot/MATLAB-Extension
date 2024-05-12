@@ -3629,8 +3629,8 @@
 			}
 		]
 	},
-	"MATLAB.Ops.IntersectN":{
-		"inputs":[
+	"MATLAB.Ops.IntersectN": {
+		"inputs": [
 			{
 				"mutuallyExclusiveGroup": [
 					[
@@ -4204,6 +4204,27 @@
 			}
 		],
 		"platforms": "win64"
+	},
+	"MATLAB.FibonacciInterp": {
+		"inputs": [
+			{
+				"name": "QueryIndices",
+				"kind": "required",
+				"purpose": "斐波那契函数自变量值"
+			},
+			{
+				"name": "ReferenceValues",
+				"kind": "ordered",
+				"type": "numel=2",
+				"purpose": "指定两个参考值"
+			},
+			{
+				"name": "ReferenceIndex",
+				"kind": "ordered",
+				"type": "numel=2",
+				"purpose": "指定两个参考值的位置"
+			}
+		]
 	},
 	"MATLAB.LineFollowingArrow": {
 		"inputs": [
