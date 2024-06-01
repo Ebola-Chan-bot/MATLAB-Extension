@@ -17,7 +17,7 @@ classdef Vector<handle
 		Front
 		%在不分配更多的存储的情况下向量可以包含的元素数
 		Capacity
-		%向量中所有元素
+		%向量中所有元素，以行向量形式排列
 		Data
 	end
 	methods
@@ -58,7 +58,6 @@ classdef Vector<handle
 			obj.Size=0;
 		end
 		function D=get.Data(obj)
-			%以MATLAB行向量形式返回向量中所有元素
 			D=obj.Container(1:obj.Size);
 		end
 		function Erase(obj,Index)
