@@ -1883,7 +1883,6 @@
 				"kind": "required",
 				"type": [
 					[
-						"real",
 						"2d"
 					],
 					[
@@ -1898,7 +1897,6 @@
 				"kind": "ordered",
 				"type": [
 					[
-						"real",
 						"2d"
 					],
 					[
@@ -1922,7 +1920,6 @@
 				"kind": "namevalue",
 				"type": [
 					[
-						"real",
 						"2d"
 					],
 					[
