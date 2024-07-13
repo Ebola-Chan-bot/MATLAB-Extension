@@ -43,8 +43,6 @@ function Fixedpoints = SignificantFixedpoint(Numbers,Significance)
 function [SP,PID] = SnatchSerialport(Port,Baudrate,NameValues)
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
 function Graph = TtrtnWbgc(Graph,ToRemove)
-%统一各个坐标区的Y轴范围
-function UnifyYLims(Axes)
 ```
 ## +Containers
 ```MATLAB
@@ -195,6 +193,10 @@ end
 function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,varargin)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
+%统一各个坐标区的C轴范围
+function UnifyCLims(Axes)
+%统一各个坐标区的Y轴范围
+function UnifyYLims(Axes)
 %列出内置作图函数允许使用的Marker字符
 function VMC = ValidMarkerChars(Index)
 ```

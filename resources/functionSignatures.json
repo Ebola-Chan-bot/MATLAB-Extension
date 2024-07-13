@@ -1958,7 +1958,27 @@
 			}
 		]
 	},
-	"MATLAB.ValidMarkerChars": {
+	"MATLAB.Graphics.UnifyCLims": {
+		"inputs": [
+			{
+				"name": "Axes",
+				"kind": "required",
+				"type": "matlab.graphics.axis.Axes",
+				"purpose": "所有要统一的坐标区"
+			}
+		]
+	},
+	"MATLAB.Graphics.UnifyYLims": {
+		"inputs": [
+			{
+				"name": "Axes",
+				"kind": "required",
+				"type": "matlab.graphics.axis.Axes",
+				"purpose": "所有要统一的坐标区"
+			}
+		]
+	},
+	"MATLAB.Graphics.ValidMarkerChars": {
 		"inputs": [
 			{
 				"name": "Index",
@@ -4408,16 +4428,6 @@
 					]
 				],
 				"purpose": "尝试移除的节点"
-			}
-		]
-	},
-	"MATLAB.UnifyYLims": {
-		"inputs": [
-			{
-				"name": "Axes",
-				"kind": "required",
-				"type": "matlab.graphics.axis.Axes",
-				"purpose": "所有要统一的坐标区"
 			}
 		]
 	}
