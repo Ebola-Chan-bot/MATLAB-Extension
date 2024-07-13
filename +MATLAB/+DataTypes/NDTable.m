@@ -165,12 +165,12 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			indexOp=indexOp.Indices;
 			for D=1:numel(indexOp)
 				Index=indexOp{D};
-				if ~(isreal(Index)||isequal(Index,":"))
-					obj.Dimensions.IndexNames{D}=string(obj.Dimensions.IndexNames{D});
-					if height(obj.Dimensions)<D
+				if ~(isnumeric(Index)||isequal(Index,":"))
+					Index=string(Index);
+					if D>height(obj.Dimensions)
 						obj.Dimensions.IndexNames{D}=unique(Index,'stable');
 					else
-						obj.Dimensions.IndexNames{D}=union(obj.Dimensions.IndexNames{D},Index,'stable');
+						obj.Dimensions.IndexNames{D}=union(string(obj.Dimensions.IndexNames{D}),Index,'stable');
 					end
 					%考虑到Index中可能有重复值，必须用ismember确认
 					[~,Index]=ismember(Index,obj.Dimensions.IndexNames{D});
@@ -200,7 +200,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			for I=1:NumIndices
 				Index=Indices{I};
 				if ~isequal(Index,':')
-					if ~isreal(Index)
+					if ~isnumeric(Index)
+						Index=string(Index);
 						IndexNames=Index;
 						obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
 						[Exist,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
@@ -233,7 +234,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			Indices=indexOp(1).Indices;
 			for I=1:numel(Indices)
 				Index=Indices{I};
-				if ~(isreal(Index)||isequal(Index,":"))
+				if ~(isnumeric(Index)||isequal(Index,":"))
+					Index=string(Index);
 					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
 					IndexNames=Index;
 					[~,Index]=ismember(IndexNames,obj.Dimensions.IndexNames{I});
@@ -277,10 +279,15 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		end
 		%括号索引返回的还是NDTable，因此不允许级联赋值，没有意义
 		function obj = parenAssign(obj,indexOp,varargin)
-			[obj,Indices]=obj.IndexToAssign(indexOp);
-			NewObj=varargin{1};
-			obj.Data(Indices{:})=NewObj.Data;
-			obj.Dimensions.DimensionName(1:height(NewObj.Dimensions))=NewObj.Dimensions.DimensionName;
+			if isa(obj,'MATLAB.DataTypes.NDTable')
+				[obj,Indices]=obj.IndexToAssign(indexOp);
+				NewObj=varargin{1};
+				obj.Data(Indices{:})=NewObj.Data;
+				obj.Dimensions.DimensionName(1:height(NewObj.Dimensions))=NewObj.Dimensions.DimensionName;
+			else
+				%table struct 等新增字段列时会发生这种情况
+				obj=varargin{:};
+			end
 		end
 		function obj = braceAssign(obj,indexOp,varargin)
 			[obj,Indices]=obj.IndexToAssign(indexOp(1));
@@ -344,7 +351,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				for I=1:NumIndices
 					Index=Indices{I};
 					if ~isequal(Index,":")
-						if ~isreal(Index)
+						if ~isnumeric(Index)
+							Index=string(Index);
 							obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
 							[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
 							Indices{I}=Index;
@@ -360,7 +368,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				Indices=indexOp(1).Indices;
 				for I=1:numel(Indices)
 					Index=Indices{I};
-					if ~(isreal(Index)||isequal(Index,":"))
+					if ~(isnumeric(Index)||isequal(Index,":"))
+						Index=string(Index);
 						[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
 						Indices{I}=Index;
 					end
@@ -414,6 +423,9 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			%从原始数据新建NDTable
 			%# 语法
 			% ```
+			% obj=MATLAB.DataTypes.NDTable;
+			% %构造一个空的NDTable
+			%
 			% obj=MATLAB.DataTypes.NDTable(Data);
 			% %用指定的多维数组构造NDTable
 			%
@@ -434,7 +446,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			% Dimensions，即本类的Dimensions属性值，详见此属性文档。如果缺少任何一个必需列，将会自动添加，不会出错。
 			%See also MATLAB.DataTypes.NDTable MATLAB.DataTypes.NDTable.Data MATLAB.DataTypes.NDTable.Dimensions
 			arguments
-				Data
+				Data=[]
 				Dimensions=table('Size',[0,2],'VariableTypes',["string","cell"],'VariableNames',["DimensionName","IndexNames"]);
 			end
 			obj.Data=Data;
@@ -484,7 +496,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		end
 		function obj=permute(obj,DimensionOrder)
 			%如果所有维度都具有维度名称，可以指定维度名称作为新的维度顺序
-			if ~isreal(DimensionOrder)
+			if ~isnumeric(DimensionOrder)
 				[~,DimensionOrder]=ismember(DimensionOrder,obj.Dimensions.DimensionName);
 			end
 			obj.Data=permute(obj.Data,DimensionOrder);
