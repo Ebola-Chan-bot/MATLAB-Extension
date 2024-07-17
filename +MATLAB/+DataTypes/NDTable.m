@@ -165,7 +165,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			indexOp=indexOp.Indices;
 			for D=1:numel(indexOp)
 				Index=indexOp{D};
-				if ~(isnumeric(Index)||isequal(Index,":"))
+				if ~(isnumeric(Index)||islogical(Index)||isequal(Index,":"))
 					Index=string(Index);
 					if D>height(obj.Dimensions)
 						obj.Dimensions.IndexNames{D}=unique(Index,'stable');
@@ -200,7 +200,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			for I=1:NumIndices
 				Index=Indices{I};
 				if ~isequal(Index,':')
-					if ~isnumeric(Index)
+					if ~(isnumeric(Index)||islogical(Index))
 						Index=string(Index);
 						IndexNames=Index;
 						obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
@@ -234,7 +234,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			Indices=indexOp(1).Indices;
 			for I=1:numel(Indices)
 				Index=Indices{I};
-				if ~(isnumeric(Index)||isequal(Index,":"))
+				if ~(isnumeric(Index)||islogical(Index)||isequal(Index,':'))
 					Index=string(Index);
 					obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
 					IndexNames=Index;
@@ -243,8 +243,8 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 					if ~isempty(IndexNames)
 						MATLAB.Exceptions.Index_name_not_found.Throw(join(IndexNames,' '));
 					end
-					Indices{I}=Index;
 				end
+				Indices{I}=Index;
 			end
 			obj=obj.Data(Indices{:});
 			if isscalar(indexOp)
@@ -351,7 +351,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				for I=1:NumIndices
 					Index=Indices{I};
 					if ~isequal(Index,":")
-						if ~isnumeric(Index)
+						if ~(isnumeric(Index)||islogical(Index))
 							Index=string(Index);
 							obj.Dimensions.IndexNames{I}=string(obj.Dimensions.IndexNames{I});
 							[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
@@ -368,7 +368,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				Indices=indexOp(1).Indices;
 				for I=1:numel(Indices)
 					Index=Indices{I};
-					if ~(isnumeric(Index)||isequal(Index,":"))
+					if ~(isnumeric(Index)||islogical(Index)||isequal(Index,':'))
 						Index=string(Index);
 						[~,Index]=ismember(Index,obj.Dimensions.IndexNames{I});
 						Indices{I}=Index;
@@ -595,6 +595,9 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		end
 		function obj=all(obj,varargin)
 			obj=obj.ReduceDimension(@all,varargin{:});
+		end
+		function obj=vecnorm(obj,varargin)
+			obj=obj.ReduceDimension(@vecnorm,varargin{:});
 		end
 	end
 end
