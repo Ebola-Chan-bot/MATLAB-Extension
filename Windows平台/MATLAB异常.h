@@ -1,6 +1,6 @@
 #pragma once
 #include"MATLAB异常类型.h"
-import Mex工具;
+import MexTools;
 using namespace matlab::data;
 enum class 内部异常类型
 {
