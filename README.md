@@ -31,8 +31,6 @@
 function BrowseAddonsExplorer
 %斐波那契插值
 function QueryValues = FibonacciInterp(QueryIndices,ReferenceValues,ReferenceIndices)
-%绘制跟随曲线方向的箭头
-function Arrows = LineFollowingArrow(XYCoordinates,options)
 %暂停执行MATLAB，不可中止
 function Pause(varargin)
 %将任意维度的RGB图像转换为灰度图
@@ -191,6 +189,8 @@ end
 ```MATLAB
 %设置当前图窗的纵横比
 function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,varargin)
+%绘制跟随曲线方向的箭头
+function Arrows = LineFollowingArrow(XYCoordinates,options)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
 %统一各个坐标区的C轴范围
