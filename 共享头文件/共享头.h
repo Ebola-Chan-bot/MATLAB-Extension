@@ -1,6 +1,5 @@
 #pragma once
-#include<functional>
-#include<optional>
+import std;
 enum class 提权操作函数
 {
 	Install_Path_Manager,

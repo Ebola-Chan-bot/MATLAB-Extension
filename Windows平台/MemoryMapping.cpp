@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "MATLAB异常.h"
 #include"实用工具.h"
-#include<Mex工具.h>
 using namespace Mex工具;
 API声明(MemoryMapping_Create)
 {

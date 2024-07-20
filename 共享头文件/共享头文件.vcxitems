@@ -14,7 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)MATLAB异常类型.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MATLAB异常.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)共享头.h" />
   </ItemGroup>
 </Project>

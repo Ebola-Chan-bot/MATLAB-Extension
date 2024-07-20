@@ -1,7 +1,7 @@
 #include"pch.h"
-#include"MATLAB异常.h"
-#include"共享头.h"
-#include<Mex工具.h>
+#include<MATLAB异常.h>
+#include<共享头.h>
+#include<Mex工具.hpp>
 #include<shellapi.h>
 #pragma comment(lib,"Shell32.lib")
 #include<rpc.h>
@@ -90,7 +90,7 @@ static void 特权调用(const std::string& 参数)
 	if (结果 != MATLAB异常类型::成功)
 		throw MATLAB异常(结果);
 }
-API声明(Install_path_manager)
+Mex工具Api(Install_path_manager)
 {
 	static const std::string 参数 = []()
 		{
@@ -101,7 +101,7 @@ API声明(Install_path_manager)
 		}();
 		特权调用(参数);
 }
-API声明(Uninstall_path_manager)
+Mex工具Api(Uninstall_path_manager)
 {
 	static const std::string 参数 = []()
 		{
@@ -119,19 +119,19 @@ static void SAR_shared_path(ArgumentList& inputs, 提权操作函数 SAR)
 	WriteString(参数, Mex工具::万能转码<String>(inputs[1]));
 	特权调用(参数.str());
 }
-API声明(Set_shared_path)
+Mex工具Api(Set_shared_path)
 {
 	SAR_shared_path(inputs, 提权操作函数::Set_shared_path);
 }
-API声明(Add_shared_path)
+Mex工具Api(Add_shared_path)
 {
 	SAR_shared_path(inputs, 提权操作函数::Add_shared_path);
 }
-API声明(Remove_shared_path)
+Mex工具Api(Remove_shared_path)
 {
 	SAR_shared_path(inputs, 提权操作函数::Remove_shared_path);
 }
-API声明(Builtin_bug_fix)
+Mex工具Api(Builtin_bug_fix)
 {
 	TypedArray<int8_t>Command(inputs[1]);
 	std::ostringstream 参数(MatlabRoot参数头());
@@ -145,7 +145,7 @@ API声明(Builtin_bug_fix)
 	参数.write((char*)Buffer.get(), Size);
 	特权调用(参数.str());
 }
-API声明(Associate_prj_extension)
+Mex工具Api(Associate_prj_extension)
 {
 	static const std::string 参数 = []()
 		{
@@ -158,7 +158,7 @@ API声明(Associate_prj_extension)
 		}();
 		特权调用(参数);
 }
-API声明(Get_pathdef_permission)
+Mex工具Api(Get_pathdef_permission)
 {
 	static const std::string 参数 = []()
 		{
@@ -170,7 +170,7 @@ API声明(Get_pathdef_permission)
 		}();
 		特权调用(参数);
 }
-API声明(Serialport_snatch)
+Mex工具Api(Serialport_snatch)
 {
 	std::ostringstream 参数;
 	static const struct {

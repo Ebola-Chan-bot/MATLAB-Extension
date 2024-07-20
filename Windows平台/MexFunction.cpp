@@ -1,182 +1,146 @@
 #include "pch.h"
-#include"MATLAB异常.h"
 #include"窗口.h"
-#include<Mex实现.h>
-#include<Mex工具.h>
+#include<MATLAB异常.h>
+#include<magic_enum.hpp>
+#include<Mex工具.hpp>
 
 //SHFileOperation
-API声明(SHFile_Copy);
-API声明(SHFile_Delete);
-API声明(SHFile_Move);
+Mex工具API(SHFile_Copy);
+Mex工具API(SHFile_Delete);
+Mex工具API(SHFile_Move);
 
 //LibZip
 
-API声明(ZipOpen);
-API声明(ZipNameLocate);
-API声明(ZipFopen);
-API声明(ZipFread);
-API声明(ZipFclose);
-API声明(ZipDiscard);
-API声明(ZipGetSize);
-API声明(ZipGetName);
-API声明(ZipGetNumEntries);
+Mex工具API(ZipOpen);
+Mex工具API(ZipNameLocate);
+Mex工具API(ZipFopen);
+Mex工具API(ZipFread);
+Mex工具API(ZipFclose);
+Mex工具API(ZipDiscard);
+Mex工具API(ZipGetSize);
+Mex工具API(ZipGetName);
+Mex工具API(ZipGetNumEntries);
 
 //File
 
-API声明(File_Create);
-API声明(File_GetSize);
-API声明(File_Read);
-API声明(File_SetEnd);
-API声明(File_SetPointer);
-API声明(File_Write);
-API声明(File_Close);
+Mex工具API(File_Create);
+Mex工具API(File_GetSize);
+Mex工具API(File_Read);
+Mex工具API(File_SetEnd);
+Mex工具API(File_SetPointer);
+Mex工具API(File_Write);
+Mex工具API(File_Close);
 
 //MemoryMapping
 
-API声明(MemoryMapping_Create);
-API声明(MemoryMapping_Open);
-API声明(MemoryMapping_View);
-API声明(MemoryMapping_Unview);
-API声明(MemoryMapping_Close);
+Mex工具API(MemoryMapping_Create);
+Mex工具API(MemoryMapping_Open);
+Mex工具API(MemoryMapping_View);
+Mex工具API(MemoryMapping_Unview);
+Mex工具API(MemoryMapping_Close);
 
 //Pointer
 
-API声明(Pointer_Allocate);
-API声明(Pointer_Read);
-API声明(Pointer_Write);
-API声明(Pointer_Copy);
-API声明(Pointer_Release);
+Mex工具API(Pointer_Allocate);
+Mex工具API(Pointer_Read);
+Mex工具API(Pointer_Write);
+Mex工具API(Pointer_Copy);
+Mex工具API(Pointer_Release);
 
 //Window
 
-API声明(Window_Create);
-API声明(Window_Destroy);
-API声明(Window_Image);
-API声明(Window_Screens);
-API声明(Window_Clear);
-API声明(Window_Fill);
-API声明(Window_RemoveVisual);
+Mex工具API(Window_Create);
+Mex工具API(Window_Destroy);
+Mex工具API(Window_Image);
+Mex工具API(Window_Screens);
+Mex工具API(Window_Clear);
+Mex工具API(Window_Fill);
+Mex工具API(Window_RemoveVisual);
 
 //杂项
 
-API声明(TypeCast);
-API声明(LnkShortcut);
-API声明(Crash);
-API声明(Pause);
-API声明(ArrayType_FromData);
-API声明(WebpRead);
+Mex工具API(TypeCast);
+Mex工具API(LnkShortcut);
+Mex工具API(Crash);
+Mex工具API(Pause);
+Mex工具API(ArrayType_FromData);
+Mex工具API(WebpRead);
 
 //提权操作
 
-API声明(Install_path_manager);
-API声明(Uninstall_path_manager);
-API声明(Set_shared_path);
-API声明(Add_shared_path);
-API声明(Remove_shared_path);
-API声明(Builtin_bug_fix);
-API声明(Associate_prj_extension);
-API声明(Get_pathdef_permission);
-API声明(Serialport_snatch);
+Mex工具API(Install_path_manager);
+Mex工具API(Uninstall_path_manager);
+Mex工具API(Set_shared_path);
+Mex工具API(Add_shared_path);
+Mex工具API(Remove_shared_path);
+Mex工具API(Builtin_bug_fix);
+Mex工具API(Associate_prj_extension);
+Mex工具API(Get_pathdef_permission);
+Mex工具API(Serialport_snatch);
 
 using namespace Mex工具;
-std::shared_ptr<matlab::engine::MATLABEngine> Engine;
-struct MexFunction :public Function //必须命名为MexFunction，public继承Function
+void Mex工具::初始化()noexcept {}
+Mex工具API(Mex工具::执行)
 {
-	void operator()(ArgumentList& outputs, ArgumentList& inputs)override
+	constexpr Mex工具::API 跳转表[]=
 	{
-		static const StructArray 异常结构 = 数组工厂.createStructArray({ 1 }, { "ExceptionType","WindowsErrorCode" });
-		API索引
-		{
-			SHFile_Copy,
-			SHFile_Delete,
-			SHFile_Move,
-			ZipOpen,
-			ZipNameLocate,
-			ZipFopen,
-			ZipFread,
-			ZipFclose,
-			ZipDiscard,
-			ZipGetSize,
-			ZipGetName,
-			ZipGetNumEntries,
-			File_Create,
-			File_GetSize,
-			File_Read,
-			File_SetEnd,
-			File_SetPointer,
-			File_Write,
-			File_Close,
-			MemoryMapping_Create,
-			MemoryMapping_Open,
-			MemoryMapping_View,
-			MemoryMapping_Unview,
-			MemoryMapping_Close,
-			Pointer_Allocate,
-			Pointer_Read,
-			Pointer_Write,
-			Pointer_Copy,
-			Pointer_Release,
-			TypeCast,
-			Window_Create,
-			Window_Destroy,
-			Window_Image,
-			Window_Screens,
-			Window_Clear,
-			Window_Fill,
-			Window_RemoveVisual,
-			LnkShortcut,
-			Crash,
-			Pause,
-			ArrayType_FromData,
-			WebpRead,
-			Install_path_manager,
-			Uninstall_path_manager,
-			Set_shared_path,
-			Add_shared_path,
-			Remove_shared_path,
-			Builtin_bug_fix,
-			Associate_prj_extension,
-			Get_pathdef_permission,
-			Serialport_snatch,
-		};
-		try
-		{
-			API调用;
-		}
-		catch (MATLAB异常 异常)
-		{
-			outputs[0] = 异常;
-			异常输出补全(outputs);
-			return;
-		}
-		catch (Mex异常 异常)
-		{
-			outputs[0] = MATLAB异常(MATLAB异常类型::Mex异常, 内部异常类型::Mex异常, 异常);
-			异常输出补全(outputs);
-			return;
-		}
-		catch (...)
-		{
-			outputs[0] = MATLAB异常(MATLAB异常类型::未知异常);
-			异常输出补全(outputs);
-			return;
-		}
-		static const StructArray 成功结构 = MATLAB异常();
-		outputs[0] = 成功结构;
-	}
-	MexFunction()
-	{
-		Engine = getEngine();
-	}
+		SHFile_Copy,
+		SHFile_Delete,
+		SHFile_Move,
+		ZipOpen,
+		ZipNameLocate,
+		ZipFopen,
+		ZipFread,
+		ZipFclose,
+		ZipDiscard,
+		ZipGetSize,
+		ZipGetName,
+		ZipGetNumEntries,
+		File_Create,
+		File_GetSize,
+		File_Read,
+		File_SetEnd,
+		File_SetPointer,
+		File_Write,
+		File_Close,
+		MemoryMapping_Create,
+		MemoryMapping_Open,
+		MemoryMapping_View,
+		MemoryMapping_Unview,
+		MemoryMapping_Close,
+		Pointer_Allocate,
+		Pointer_Read,
+		Pointer_Write,
+		Pointer_Copy,
+		Pointer_Release,
+		TypeCast,
+		Window_Create,
+		Window_Destroy,
+		Window_Image,
+		Window_Screens,
+		Window_Clear,
+		Window_Fill,
+		Window_RemoveVisual,
+		LnkShortcut,
+		Crash,
+		Pause,
+		ArrayType_FromData,
+		WebpRead,
+		Install_path_manager,
+		Uninstall_path_manager,
+		Set_shared_path,
+		Add_shared_path,
+		Remove_shared_path,
+		Builtin_bug_fix,
+		Associate_prj_extension,
+		Get_pathdef_permission,
+		Serialport_snatch,
+	};
+	跳转表[万能转码<size_t>(std::move(输入[0]))](输出, 输入);
 };
-Function* 创建Mex函数()
-{
-	return new MexFunction();
-}
 void 关闭特权服务器()noexcept;
-void 销毁Mex函数(Function* 函数指针)
+void Mex工具::清理()noexcept
 {
 	窗口::销毁所有();
 	关闭特权服务器();
-	delete 函数指针;
 }

@@ -1,7 +1,7 @@
 #include"pch.h"
-#include"MATLAB异常.h"
+#include<MATLAB异常.h>
 #include"窗口.h"
-#include<Mex工具.h>
+#include<Mex工具.hpp>
 using namespace Mex工具;
 struct 设备查询_s
 {
@@ -24,7 +24,7 @@ BOOL CALLBACK 查找显示器(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMoni
 		return FALSE;
 	}
 }
-API声明(Window_Create)
+Mex工具Api(Window_Create)
 {
 	std::optional<String>显示器名;
 	struct
@@ -73,12 +73,12 @@ API声明(Window_Create)
 	const WH_s WH_v = WH.value();
 	outputs[1] = 万能转码(窗口::创建(XY.X, XY.Y, WH_v.W, WH_v.H));
 }
-API声明(Window_Destroy)
+Mex工具Api(Window_Destroy)
 {
 	//销毁函数本身不会抛出异常，不需要额外try
 	窗口::销毁(万能转码<窗口*>(inputs[1]));
 }
-API声明(Window_Image)
+Mex工具Api(Window_Image)
 {
 	const ArrayDimensions 图像尺寸 = inputs[2].getDimensions();	
 	const buffer_ptr_t<uint8_t>像素缓冲 = TypedArray<uint8_t>(std::move(inputs[2])).release();
@@ -105,7 +105,7 @@ BOOL CALLBACK 枚举显示器(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMoni
 	GetMonitorInfoW(hMonitor, 当前显示器);
 	return TRUE;
 }
-API声明(Window_Screens)
+Mex工具Api(Window_Screens)
 {
 	const uint8_t 显示器个数 = GetSystemMetrics(SM_CMONITORS);
 	const std::unique_ptr<MONITORINFOEXW[]>所有显示器 = std::make_unique<MONITORINFOEXW[]>(显示器个数);
@@ -131,7 +131,7 @@ API声明(Window_Screens)
 	}
 	outputs[1] = 输出结构;
 }
-API声明(Window_Clear)
+Mex工具Api(Window_Clear)
 {
 	const 窗口* const 窗口指针 = 万能转码<窗口*>(inputs[1]);
 	try
@@ -143,7 +143,7 @@ API声明(Window_Clear)
 		throw MATLAB异常(MATLAB异常类型::无效指针);
 	}
 }
-API声明(Window_Fill)
+Mex工具Api(Window_Fill)
 {
 	const 窗口* const 窗口指针 = 万能转码<窗口*>(inputs[1]);
 	winrt::Windows::UI::Color 颜色;
@@ -171,7 +171,7 @@ API声明(Window_Fill)
 	}
 	outputs[1] = 万能转码(winrt::get_abi(精灵视觉));
 }
-API声明(Window_RemoveVisual)
+Mex工具Api(Window_RemoveVisual)
 {
 	const 窗口* const 窗口指针 = 万能转码<窗口*>(inputs[1]);
 	const TypedArray<size_t> 数组(inputs[2]);

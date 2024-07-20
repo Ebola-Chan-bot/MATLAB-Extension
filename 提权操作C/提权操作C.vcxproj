@@ -118,6 +118,9 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableModules>true</EnableModules>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,6 +140,9 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableModules>true</EnableModules>
+      <BuildStlModules>true</BuildStlModules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

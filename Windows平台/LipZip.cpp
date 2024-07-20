@@ -1,7 +1,6 @@
 #include "pch.h"
-#include "MATLAB异常.h"
+#include <MATLAB异常.h>
 #include <zip.h>
-#include<Mex工具.h>
 using namespace Mex工具;
 zip_int64_t 取文件数目(zip_t* Zip)
 {
@@ -15,7 +14,7 @@ API声明(ZipOpen)
 	const std::string path = 万能转码(std::move(inputs[1]));
 	int 错误代码;
 	if (const zip_t* const Zip = zip_open(path.c_str(), ZIP_RDONLY, &错误代码))
-		outputs[1] = 万能转码(Zip);
+		输出[1] = 万能转码(Zip);
 	else
 		throw MATLAB异常(MATLAB异常类型::Zip打开失败, 内部异常类型::LibZip异常, 错误代码);
 }
@@ -34,7 +33,7 @@ API声明(ZipNameLocate)
 			if (错误代码 != ZIP_ER_NOENT) 
 				throw MATLAB异常(MATLAB异常类型::Zip文件名搜索失败, 内部异常类型::LibZip异常, 错误代码, a);
 		}
-	outputs[1] = Locate;
+	输出[1] = Locate;
 }
 API声明(ZipFopen)
 {
@@ -48,7 +47,7 @@ API声明(ZipFopen)
 		for (zip_int64_t a = 0; a < 文件数目; ++a)
 			if (!(返回列表[a] = (uint64_t)zip_fopen_index(Zip, a, 0))) [[unlikely]]
 				throw MATLAB异常(MATLAB异常类型::Zip文件打开失败, 内部异常类型::LibZip异常, zip_get_error(Zip)->zip_err, a);
-		outputs[1] = 返回列表;
+		输出[1] = 返回列表;
 	}
 	break;
 	case 3:
@@ -80,7 +79,7 @@ API声明(ZipFopen)
 		[[unlikely]] default:
 			throw MATLAB异常(MATLAB异常类型::输入参数类型错误, 2);
 		}
-		outputs[1] = 返回列表; 
+		输出[1] = 返回列表; 
 	}
 	break;
 	[[unlikely]] default:
@@ -102,8 +101,8 @@ API声明(ZipFread)
 				throw MATLAB异常(MATLAB异常类型::Zip文件读入失败, 内部异常类型::LibZip异常, zip_file_get_error(文件)->zip_err, a);
 		写出头 += nbytes;
 	}
-	outputs[1] = 数组工厂.createArrayFromBuffer({ nbytes,文件数目 }, std::move(读入字节));
-	outputs[2] = 实际读数;
+	输出[1] = 数组工厂.createArrayFromBuffer({ nbytes,文件数目 }, std::move(读入字节));
+	输出[2] = 实际读数;
 }
 API声明(ZipFclose)
 {
@@ -133,7 +132,7 @@ API声明(ZipGetSize)
 			else[[unlikely]]
 				throw MATLAB异常(MATLAB异常类型::Zip未记录文件大小, a);
 		}
-		outputs[1] = 返回列表;
+		输出[1] = 返回列表;
 	}
 	break;
 	case 3:
@@ -176,7 +175,7 @@ API声明(ZipGetSize)
 		[[unlikely]] default:
 			throw MATLAB异常(MATLAB异常类型::输入参数类型错误, 2);
 		}
-		outputs[1] = 返回列表;
+		输出[1] = 返回列表;
 	}
 	break;
 	[[unlikely]] default:
@@ -197,7 +196,7 @@ API声明(ZipGetName)
 				输出[a] = 万能转码<MATLABString>(文件名);
 			else
 				throw MATLAB异常(MATLAB异常类型::Zip文件名获取失败, 内部异常类型::LibZip异常, zip_get_error(Zip)->zip_err, a);
-		outputs[1] = 输出;
+		输出[1] = 输出;
 	}
 	break;
 	case 3:
@@ -210,7 +209,7 @@ API声明(ZipGetName)
 				文件名列表[a] = 万能转码<MATLABString>(文件名);
 			else
 				throw MATLAB异常(MATLAB异常类型::Zip文件名获取失败, 内部异常类型::LibZip异常, zip_get_error(Zip)->zip_err, a);
-		outputs[1] = 文件名列表;
+		输出[1] = 文件名列表;
 	}
 	break;
 	default:
@@ -219,5 +218,5 @@ API声明(ZipGetName)
 }
 API声明(ZipGetNumEntries)
 {
-	outputs[1] = 万能转码(取文件数目(万能转码<zip_t*>(inputs[1])));
+	输出[1] = 万能转码(取文件数目(万能转码<zip_t*>(inputs[1])));
 }
