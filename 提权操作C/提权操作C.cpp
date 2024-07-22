@@ -4,8 +4,6 @@
 #define PHNT_VERSION 114
 #include<phnt.h>
 #include<AclAPI.h>
-#include<stdint.h>
-#include<stdlib.h>
 import std;
 using namespace std::filesystem;
 static path EXE目录;
@@ -247,9 +245,9 @@ static void 开放新路径权限(const std::unordered_set<std::string>&新路�
 		switch (GetNamedSecurityInfoA(路径缓冲.get(), SE_FILE_OBJECT, DACL_SECURITY_INFORMATION, NULL, NULL, &Dacl, NULL, &SecurityDescriptor))
 		{
 		case ERROR_FILE_NOT_FOUND:
-			throw MATLAB异常::File_not_found;
+			throw MATLAB::Exception::File_not_found;
 		case ERROR_BAD_PATHNAME:
-			throw MATLAB异常::Bad_pathname;
+			throw MATLAB::Exception::Bad_pathname;
 		}
 		//这一步取得的ACL不能释放
 		BuildExplicitAccessWithNameA(&ExplicitAccess, Users, GENERIC_READ | GENERIC_EXECUTE, GRANT_ACCESS, SUB_CONTAINERS_AND_OBJECTS_INHERIT);
@@ -366,13 +364,13 @@ API(Builtin_bug_fix)
 			};
 			const auto 返回值 = 补丁信息.find(MatlabVersion);
 			if (返回值 == 补丁信息.cend())
-				throw MATLAB异常::Current_MATLAB_version_not_supported;
+				throw MATLAB::Exception::Current_MATLAB_version_not_supported;
 			return 返回值->second;
 		}();
 	size_t 命令数;
 	DWORD NumberOfBytes;
 	ReadFile(File, &命令数, sizeof(命令数), &NumberOfBytes, NULL);
-	std::unique_ptr<int8_t[]>所有命令 = std::make_unique_for_overwrite<int8_t[]>(命令数);
+	std::unique_ptr<std::int8_t[]>所有命令 = std::make_unique_for_overwrite<int8_t[]>(命令数);
 	ReadFile(File, 所有命令.get(), 命令数, &NumberOfBytes, NULL);
 	static const path 版本原文件目录 = 原文件目录() / MatlabVersion;
 	create_directories(版本原文件目录);
@@ -405,7 +403,7 @@ API(Builtin_bug_fix)
 				rename(版本原文件目录 / 命令位置.文件名, Matlab文件路径);
 		}
 		else
-			throw MATLAB异常::Builtin_bug_fix_command_is_0;
+			throw MATLAB::Exception::Builtin_bug_fix_command_is_0;
 	}
 }
 API(Associate_prj_extension)noexcept
@@ -482,7 +480,7 @@ static bool 句柄不可用(const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* 系统句�
 			无效进程.insert(系统句柄表条目信息头->UniqueProcessId);
 			break;
 		default:
-			throw MATLAB异常::Unexpected_error_in_DuplicateHandle;
+			throw MATLAB::Exception::Unexpected_error_in_DuplicateHandle;
 		}
 		return true;
 	}
@@ -498,7 +496,7 @@ static bool 句柄不可用(const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* 系统句�
 			无效进程.insert(系统句柄表条目信息头->UniqueProcessId);
 			break;
 		default:
-			throw MATLAB异常::Unexpected_error_in_DuplicateHandle;
+			throw MATLAB::Exception::Unexpected_error_in_DuplicateHandle;
 		}
 		return true;
 	}
@@ -515,7 +513,7 @@ API(Serialport_snatch)
 			系统指针<HKEY, decltype(RegCloseKey)*>返回值(RegCloseKey);
 			RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"HARDWARE\\DEVICEMAP\\SERIALCOMM", 0, KEY_READ, &返回值);
 			if (!返回值)
-				throw MATLAB异常::COM_number_not_found;
+				throw MATLAB::Exception::COM_number_not_found;
 			return 返回值;
 		}();
 	DWORD Values, MaxValueNameLen, MaxValueLen;
@@ -626,7 +624,7 @@ API(Serialport_snatch)
 						}();
 					static DWORD OutBufferSize = 32;//初始大小不能太小，否则DeviceIoControl会报ERROR_MORE_DATA以外的错
 
-					static ProcExp_OutBuffer* OutBuffer = (ProcExp_OutBuffer*)malloc(OutBufferSize);
+					static ProcExp_OutBuffer* OutBuffer = (ProcExp_OutBuffer*)std::malloc(OutBufferSize);
 					for (;;)
 					{
 						if (DeviceIoControl(ProExp152, 0x83350048, &InBuffer, sizeof(InBuffer), OutBuffer, OutBufferSize, nullptr, nullptr))
@@ -636,7 +634,7 @@ API(Serialport_snatch)
 							if (!wcscmp(ValueName.get(), OutBuffer->文件名()))
 							{
 								if (系统句柄表条目信息头->UniqueProcessId == 调用进程ID)
-									throw MATLAB异常::Attempt_to_snatch_the_serialport_occupied_by_yourself;
+									throw MATLAB::Exception::Attempt_to_snatch_the_serialport_occupied_by_yourself;
 								DuplicateHandle(SourceProcessHandle, (HANDLE)系统句柄表条目信息头->HandleValue, NULL, &TargetHandle, NULL, FALSE, DUPLICATE_CLOSE_SOURCE);
 								输出.write((char*)&系统句柄表条目信息头->UniqueProcessId, sizeof(系统句柄表条目信息头->UniqueProcessId));
 								return;
@@ -645,9 +643,9 @@ API(Serialport_snatch)
 						}
 						else if (GetLastError() != ERROR_MORE_DATA)
 							break;
-						OutBuffer = (ProcExp_OutBuffer*)realloc(OutBuffer, OutBufferSize *= 2);
+						OutBuffer = (ProcExp_OutBuffer*)std::realloc(OutBuffer, OutBufferSize *= 2);
 					}
-					free(OutBuffer);
+					std::free(OutBuffer);
 					do
 						if (++系统句柄表条目信息头 >= 系统句柄表条目信息尾)
 						{
@@ -659,7 +657,7 @@ API(Serialport_snatch)
 				}
 		}
 	}
-	throw MATLAB异常::COM_number_not_found;
+	throw MATLAB::Exception::COM_number_not_found;
 }
 int wmain(int argc, wchar_t* argv[])
 {
@@ -676,15 +674,15 @@ int wmain(int argc, wchar_t* argv[])
 		if ((size_t)函数序号 == std::extent_v<decltype(操作列表)>)
 			break;
 		DWORD NumberOfBytesWritten;
-		constexpr MATLAB异常 操作成功 = MATLAB异常::Successful;
+		constexpr MATLAB::Exception 操作成功 = MATLAB::Exception::Successful;
 		static const std::string 成功输出((char*)&操作成功, sizeof(操作成功));
 		std::ostringstream 输出(成功输出);
-		输出.seekp(sizeof(MATLAB异常), std::ios_base::beg);
+		输出.seekp(sizeof(MATLAB::Exception), std::ios_base::beg);
 		try
 		{
 			操作列表[(size_t)函数序号](输出);
 		}
-		catch (MATLAB异常 ex)
+		catch (MATLAB::Exception ex)
 		{
 			WriteFile(File, &ex, sizeof(ex), &NumberOfBytesWritten, NULL);
 			continue;

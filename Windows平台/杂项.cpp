@@ -1,21 +1,19 @@
 #include"pch.h"
 #include<MATLAB异常.h>
+#include<Mex工具.hpp>
 #include<ShlObj.h>
 #include<wrl/client.h>
-#include<filesystem>
-#include<chrono>
-#include<thread>
-#include<Mex工具.hpp>
 #include<webp/decode.h>
+import std;
 using namespace Mex工具;
-Mex工具Api(TypeCast)
+Mex工具API(TypeCast)
 {
 	const ArrayType 类型 = 万能转码<ArrayType>(inputs[2]);
 	const std::unique_ptr<动态类型缓冲>输出 = 动态类型缓冲::创建(类型, 数组字节数(inputs[1]) / 类型尺寸[(int)类型]);
 	万能转码(inputs[1], 输出->指针);
 	outputs[1] = 输出->打包();
 }
-Mex工具Api(LnkShortcut)
+Mex工具API(LnkShortcut)
 {
 	constexpr char16_t 扩展名[] = u".lnk";
 	const String 来源路径 = 万能转码<String>(inputs[1]);
@@ -46,11 +44,11 @@ Mex工具Api(LnkShortcut)
 	if (FAILED(结果))
 		throw MATLAB异常(MATLAB异常类型::保存快捷方式失败, 内部异常类型::COM异常, 结果);
 }
-[[noreturn]] Mex工具Api(Crash)
+[[noreturn]] Mex工具API(Crash)
 {
 	throw;
 }
-Mex工具Api(Pause)
+Mex工具API(Pause)
 {
 	if (inputs.size() > 1)
 	{
@@ -63,11 +61,11 @@ Mex工具Api(Pause)
 #undef max
 		std::this_thread::sleep_for(std::chrono::years::max());
 }
-Mex工具Api(ArrayType_FromData)
+Mex工具API(ArrayType_FromData)
 {
 	outputs[1] = 数组工厂.createScalar<uint8_t>((int)inputs[1].getType());
 }
-Mex工具Api(WebpRead)
+Mex工具API(WebpRead)
 {
 	const String 路径 = 万能转码<String>(inputs[1]);
 	void* 句柄 = CreateFileW((LPCWSTR)路径.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);

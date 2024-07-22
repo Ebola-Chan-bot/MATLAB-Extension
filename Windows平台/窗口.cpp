@@ -1,12 +1,11 @@
 #include "pch.h"
 #include "窗口.h"
-#include"MATLAB异常.h"
+#include<MATLAB异常.h>
 #include<windows.ui.composition.interop.h>
 #include<winrt/windows.system.h>
 #include<DispatcherQueue.h>
 #include<d3d11_4.h>
-#include<list>
-#include<memory>
+import std;
 #pragma comment(lib,"windowsapp.lib")
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"d2d1.lib")

@@ -10,7 +10,7 @@ void 安全拷贝(void* 目标, const void* 来自, size_t 字节数)
 	}
 	catch (...)
 	{
-		throw MATLAB异常(MATLAB异常类型::内存拷贝失败);
+		Mex工具::EnumThrow(MATLAB::Exception::Memory_copy_failed);
 	}
 }
 CellArray 元胞字节化(const Array& 输入, size_t& 总字节数)

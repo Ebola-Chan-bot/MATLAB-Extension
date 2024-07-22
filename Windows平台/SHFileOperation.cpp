@@ -1,7 +1,7 @@
 #include "pch.h"
 #include <MATLAB异常.h>
-#include <shellapi.h>
 #include<Mex工具.hpp>
+#include <shellapi.h>
 using namespace Mex工具;
 void 字符串转换(const Array& 输入, String& 输出)
 {
@@ -30,7 +30,7 @@ TypedArray<bool> 执行操作(SHFILEOPSTRUCTW& 操作结构)
 	else
 		return 万能转码<bool>(操作结构.fAnyOperationsAborted);
 }
-TypedArray<bool> CopyMove(ArgumentList& inputs, UINT wFunc)
+TypedArray<bool> CopyMove(matlab::mex::ArgumentList& inputs, UINT wFunc)
 {
 	String From;
 	字符串转换(inputs[1],From);
@@ -43,18 +43,18 @@ TypedArray<bool> CopyMove(ArgumentList& inputs, UINT wFunc)
 	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = wFunc,.pFrom = (wchar_t*)From.c_str() ,.pTo = (wchar_t*)To.c_str(),.fFlags = Flags };
 	return 执行操作(操作结构);
 }
-Mex工具Api(SHFile_Copy)
+Mex工具API(SHFile_Copy)
 {
 	outputs[1] = CopyMove(inputs, FO_COPY);
 }
-Mex工具Api(SHFile_Delete)
+Mex工具API(SHFile_Delete)
 {
 	String From;
 	字符串转换(inputs[1],From);
 	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FILEOP_FLAGS(FOF_ALLOWUNDO | 万能转码<uint32_t>(inputs[2])) };
 	outputs[1] = 执行操作(操作结构);
 }
-Mex工具Api(SHFile_Move)
+Mex工具API(SHFile_Move)
 {
 	outputs[1] = CopyMove(inputs, FO_MOVE);
 }

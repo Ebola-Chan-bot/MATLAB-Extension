@@ -1,7 +1,6 @@
 #include "pch.h"
 #include"窗口.h"
 #include<MATLAB异常.h>
-#include<magic_enum.hpp>
 #include<Mex工具.hpp>
 
 //SHFileOperation

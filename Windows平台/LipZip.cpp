@@ -1,5 +1,6 @@
 #include "pch.h"
 #include <MATLAB异常.h>
+#include <Mex工具.hpp>
 #include <zip.h>
 using namespace Mex工具;
 zip_int64_t 取文件数目(zip_t* Zip)
@@ -9,7 +10,7 @@ zip_int64_t 取文件数目(zip_t* Zip)
 		throw MATLAB异常(MATLAB异常类型::Zip档案无效);
 	return 数目;
 }
-API声明(ZipOpen)
+Mex工具API(ZipOpen)
 {
 	const std::string path = 万能转码(std::move(inputs[1]));
 	int 错误代码;
@@ -19,7 +20,7 @@ API声明(ZipOpen)
 		throw MATLAB异常(MATLAB异常类型::Zip打开失败, 内部异常类型::LibZip异常, 错误代码);
 }
 constexpr zip_flags_t 文件名旗帜 = ZIP_FL_NOCASE | ZIP_FL_ENC_UTF_8;
-API声明(ZipNameLocate)
+Mex工具API(ZipNameLocate)
 {
 	zip_t* const Zip = 万能转码<zip_t*>(inputs[1]);
 	const size_t 个数 = inputs[2].getNumberOfElements();
@@ -35,7 +36,7 @@ API声明(ZipNameLocate)
 		}
 	输出[1] = Locate;
 }
-API声明(ZipFopen)
+Mex工具API(ZipFopen)
 {
 	zip_t* const Zip = 万能转码<zip_t*>(inputs[1]);
 	switch(inputs.size())
@@ -86,7 +87,7 @@ API声明(ZipFopen)
 		throw MATLAB异常(MATLAB异常类型::输入参数数目错误);
 	}
 }
-API声明(ZipFread)
+Mex工具API(ZipFread)
 {
 	TypedArray<uint64_t>文件列表(inputs[1]);
 	const zip_uint64_t nbytes = 万能转码<uint64_t>(inputs[2]);
@@ -104,16 +105,16 @@ API声明(ZipFread)
 	输出[1] = 数组工厂.createArrayFromBuffer({ nbytes,文件数目 }, std::move(读入字节));
 	输出[2] = 实际读数;
 }
-API声明(ZipFclose)
+Mex工具API(ZipFclose)
 {
 	for (uint64_t 文件 : TypedArray<uint64_t>(inputs[1]))
 		zip_fclose((zip_file_t*)文件);
 }
-API声明(ZipDiscard)
+Mex工具API(ZipDiscard)
 {
 	zip_discard(万能转码<zip_t*>(inputs[1]));
 }
-API声明(ZipGetSize)
+Mex工具API(ZipGetSize)
 {
 	zip_t* const Zip = 万能转码<zip_t*>(inputs[1]);
 	zip_stat_t Stat;
@@ -182,7 +183,7 @@ API声明(ZipGetSize)
 		throw MATLAB异常(MATLAB异常类型::输入参数数目错误);
 	}
 }
-API声明(ZipGetName)
+Mex工具API(ZipGetName)
 {
 	zip_t* const Zip = 万能转码<zip_t*>(inputs[1]);
 	switch (inputs.size())
@@ -216,7 +217,7 @@ API声明(ZipGetName)
 		throw MATLAB异常(MATLAB异常类型::输入参数数目错误);
 	}
 }
-API声明(ZipGetNumEntries)
+Mex工具API(ZipGetNumEntries)
 {
 	输出[1] = 万能转码(取文件数目(万能转码<zip_t*>(inputs[1])));
 }

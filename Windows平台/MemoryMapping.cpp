@@ -1,8 +1,8 @@
 #include "pch.h"
-#include "MATLAB异常.h"
 #include"实用工具.h"
+#include <MATLAB异常.h>
 using namespace Mex工具;
-API声明(MemoryMapping_Create)
+Mex工具API(MemoryMapping_Create)
 {
 	LPCWSTR Name = nullptr;
 	String 名称;
@@ -49,7 +49,7 @@ API声明(MemoryMapping_Create)
 			UnmapViewOfFile(映射指针);
 	}
 }
-API声明(MemoryMapping_Open)
+Mex工具API(MemoryMapping_Open)
 {
 	const String Name = 万能转码<String>(inputs[2]);
 	const DWORD DesiredAccess = 万能转码<DWORD>(inputs[1]);
@@ -71,7 +71,7 @@ API声明(MemoryMapping_Open)
 		}
 	}
 }
-API声明(MemoryMapping_View)
+Mex工具API(MemoryMapping_View)
 {
 	const LARGE_INTEGER FileOffset{ .QuadPart = 万能转码<LONGLONG>(inputs[3]) };
 	const LPVOID 映射指针 = MapViewOfFile(万能转码<HANDLE>(inputs[1]), 万能转码<DWORD>(inputs[2]), FileOffset.HighPart, FileOffset.LowPart, 万能转码<SIZE_T>(inputs[4]));
@@ -80,11 +80,11 @@ API声明(MemoryMapping_View)
 	else
 		throw MATLAB异常(MATLAB异常类型::映射文件视图失败, 内部异常类型::Win32异常, GetLastError());
 }
-API声明(MemoryMapping_Unview)
+Mex工具API(MemoryMapping_Unview)
 {
 	UnmapViewOfFile(万能转码<LPCVOID>(inputs[1]));
 }
-API声明(MemoryMapping_Close)
+Mex工具API(MemoryMapping_Close)
 {
 	CloseHandle(万能转码<HANDLE>(inputs[1]));
 }
