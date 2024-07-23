@@ -6,6 +6,16 @@ import std;
 using namespace Mex工具;
 using namespace matlab::data;
 #undef min
+struct 文件
+{
+	~文件()
+	{
+		CloseHandle(映射句柄);
+		CloseHandle(文件句柄);
+	}
+	HANDLE 文件句柄;
+	HANDLE 映射句柄 = NULL;
+};
 struct UniqueHandle :std::unique_ptr<std::remove_pointer_t<HANDLE>, decltype(&CloseHandle)>
 {
 	using deleter = decltype(&CloseHandle);
@@ -16,55 +26,57 @@ struct UniqueHandle :std::unique_ptr<std::remove_pointer_t<HANDLE>, decltype(&Cl
 Mex工具API(File_Create)
 {
 	const String FileName = 万能转码<String>(输入[1]);
-	const UniqueHandle 文件句柄 = CreateFileW((LPCWSTR)FileName.c_str(), 万能转码<DWORD>(输入[2]), 万能转码<DWORD>(输入[3]), NULL, 万能转码<DWORD>(输入[4]), 万能转码<DWORD>(输入[5]), NULL);
-	if (文件句柄 == INVALID_HANDLE_VALUE)
+	const HANDLE 文件句柄 = CreateFileW((LPCWSTR)FileName.c_str(), 万能转码<DWORD>(输入[2]), 万能转码<DWORD>(输入[3]), NULL, 万能转码<DWORD>(输入[4]), 万能转码<DWORD>(输入[5]), NULL);
+	if (文件句柄 == INVALID_HANDLE_VALUE) [[unlikely]]
 		CheckLastError(MATLAB::Exception::File_creation_failed);
-	输出[1] = 万能转码(文件句柄);
+		文件* const 文件指针 = new 文件{ 文件句柄 };
+	自动析构(文件指针);
+	输出[0] = 万能转码(文件指针);
 }
 Mex工具API(File_GetSize)
 {
 	LARGE_INTEGER 文件大小;
-	if (GetFileSizeEx(万能转码<HANDLE>(输入[1]), &文件大小))
-		输出[1] = 万能转码(文件大小.QuadPart);
-	else
+	if (GetFileSizeEx(万能转码<文件*>(输入[1])->文件句柄, &文件大小))
+		输出[0] = 万能转码(文件大小.QuadPart);
+	else [[unlikely]]
 		CheckLastError(MATLAB::Exception::Failed_to_get_file_size);
 }
 Mex工具API(File_Read)
 {
 	LARGE_INTEGER 文件指针{ .QuadPart = 0 };
-	const UniqueHandle 文件句柄 = 万能转码<HANDLE>(输入[1]);
-	SetFilePointerEx(文件句柄, 文件指针, &文件指针, FILE_CURRENT);
+	文件* const 文件对象 = 万能转码<文件*>(输入[1]);
+	SetFilePointerEx(文件对象->文件句柄, 文件指针, &文件指针, FILE_CURRENT);
 	const ArrayType 读入类型 = 万能转码<ArrayType>(输入[3]);
 	LARGE_INTEGER 文件大小;
-	GetFileSizeEx(文件句柄, &文件大小);
+	GetFileSizeEx(文件对象->文件句柄, &文件大小);
 	const size_t 元素字节数 = 类型字节数(读入类型);
-	const size_t 应读入个数= std::min(万能转码<uint64_t>(输入[2]), (文件大小.QuadPart - 文件指针.QuadPart) / 元素字节数);
+	const size_t 应读入个数 = std::min(万能转码<uint64_t>(输入[2]), (文件大小.QuadPart - 文件指针.QuadPart) / 元素字节数);
 	const size_t 应读入字节数 = 应读入个数 * 元素字节数;
-		const UniqueHandle 映射句柄 = CreateFileMapping(文件句柄, nullptr, PAGE_READONLY, 0, 0, nullptr);
-		if (!映射句柄)
-			CheckLastError(MATLAB::Exception::Failed_to_create_a_file_mapping);
-		const LPVOID 映射指针 = MapViewOfFile(映射句柄, FILE_MAP_READ, 文件指针.HighPart, 文件指针.LowPart, 应读入字节数);
-		if (!映射指针)
-			CheckLastError(MATLAB::Exception::Failed_to_map_the_file_view);
-		文件指针.QuadPart = 应读入字节数;
-		SetFilePointerEx(文件句柄, 文件指针, &文件指针, FILE_CURRENT);
+	if (!文件对象->映射句柄) [[unlikely]]
+		文件对象->映射句柄 = CreateFileMapping(文件对象->文件句柄, nullptr, PAGE_READWRITE, 0, 0, nullptr);
+	if (!文件对象->映射句柄) [[unlikely]]
+		CheckLastError(MATLAB::Exception::Failed_to_create_a_file_mapping);
+	LPVOID 映射指针 = MapViewOfFile(文件对象->映射句柄, FILE_MAP_COPY, 文件指针.HighPart, 文件指针.LowPart, 应读入字节数);
+	if (!映射指针) [[unlikely]]
+		CheckLastError(MATLAB::Exception::Failed_to_map_the_file_view);
+	输出[0] = 万能转码(读入类型, 映射指针, { 应读入个数 }, [](LPVOID 指针) {UnmapViewOfFile(指针); });
 }
 Mex工具API(File_SetEnd)
 {
-	if (!SetEndOfFile((HANDLE)万能转码<uint64_t>(输入[1])))
-		throw MATLAB异常(MATLAB异常类型::设置文件结束失败, 内部异常类型::Win32异常, GetLastError());
+	if (!SetEndOfFile(万能转码<文件*>(输入[1])->文件句柄))
+		CheckLastError(MATLAB::Exception::Failed_to_set_end_of_file);
 }
 Mex工具API(File_SetPointer)
 {
 	LARGE_INTEGER 位置{ .QuadPart = 万能转码<LONGLONG>(输入[2]) };
-	if (SetFilePointerEx(万能转码<HANDLE>(输入[1]), 位置, &位置, 万能转码<uint32_t>(输入[3])))
-		输出[1] = 万能转码(位置.QuadPart);
+	if (SetFilePointerEx(万能转码<文件*>(输入[1])->文件句柄, 位置, &位置, 万能转码<DWORD>(输入[3])))
+		输出[0] = 万能转码(位置.QuadPart);
 	else
-		throw MATLAB异常(MATLAB异常类型::设置文件指针失败, 内部异常类型::Win32异常, GetLastError());
+		CheckLastError(MATLAB::Exception::Failed_to_set_the_file_pointer);
 }
 Mex工具API(File_Write)
 {
-	const HANDLE 文件句柄 = (HANDLE)万能转码<uint64_t>(输入[1]);
+	文件* const 文件对象 = 万能转码<文件*>(输入[1]);
 	const uint8_t 输入个数 = 输入[2].getNumberOfElements();
 	const CellArray 所有输入(输入[2]);
 	uint64_t 字节数 = 0;
