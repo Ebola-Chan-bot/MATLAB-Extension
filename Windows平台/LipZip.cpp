@@ -3,30 +3,37 @@
 #include <Mex工具.hpp>
 #include <zip.h>
 using namespace Mex工具;
+using namespace matlab::data;
 zip_int64_t 取文件数目(zip_t* Zip)
 {
 	const zip_int64_t 数目 = zip_get_num_entries(Zip, 0);
-	if (数目 == -1) 
-		throw MATLAB异常(MATLAB异常类型::Zip档案无效);
+	if (数目 == -1)[[unlikely]]
+		EnumThrow(MATLAB::Exception::The_Zip_file_is_invalid);
 	return 数目;
+}
+[[noreturn]] void ZipThrow(MATLAB::Exception 标识符, int 错误代码)
+{
+	std::unique_ptr<zip_error_t, decltype(&zip_error_fini)>错误结构(nullptr, zip_error_fini);
+	zip_error_init_with_code(错误结构.get(), 错误代码);
+	EnumThrow(标识符, zip_error_strerror(错误结构.get()));
 }
 Mex工具API(ZipOpen)
 {
-	const std::string path = 万能转码(std::move(inputs[1]));
+	const std::string path = 万能转码<std::string>(std::move(输入[1]));
 	int 错误代码;
 	if (const zip_t* const Zip = zip_open(path.c_str(), ZIP_RDONLY, &错误代码))
-		输出[1] = 万能转码(Zip);
-	else
-		throw MATLAB异常(MATLAB异常类型::Zip打开失败, 内部异常类型::LibZip异常, 错误代码);
+		输出[0] = 万能转码(Zip);
+	else[[unlikely]]
+		ZipThrow(MATLAB::Exception::Zip_failed_to_open, 错误代码);
 }
 constexpr zip_flags_t 文件名旗帜 = ZIP_FL_NOCASE | ZIP_FL_ENC_UTF_8;
 Mex工具API(ZipNameLocate)
 {
-	zip_t* const Zip = 万能转码<zip_t*>(inputs[1]);
-	const size_t 个数 = inputs[2].getNumberOfElements();
+	zip_t* const Zip = 万能转码<zip_t*>(输入[1]);
+	const size_t 个数 = 输入[2].getNumberOfElements();
 	TypedArray<zip_int64_t>Locate = 数组工厂.createArray<zip_int64_t>({ 个数 });
 	const std::unique_ptr<std::string[]>UTF8 = std::make_unique_for_overwrite<std::string[]>(个数);
-	万能转码(std::move(inputs[2]),UTF8.get());
+	万能转码(std::move(输入[2]),(std::string*&)UTF8.get());
 	for (size_t a = 0; a < 个数; ++a)
 		if ((Locate[a] = zip_name_locate(Zip, UTF8[a].c_str(), 文件名旗帜)) == -1) [[unlikely]]
 		{
@@ -38,8 +45,8 @@ Mex工具API(ZipNameLocate)
 }
 Mex工具API(ZipFopen)
 {
-	zip_t* const Zip = 万能转码<zip_t*>(inputs[1]);
-	switch(inputs.size())
+	zip_t* const Zip = 万能转码<zip_t*>(输入[1]);
+	switch(输入.size())
 	{
 	case 2:
 	{
@@ -53,7 +60,7 @@ Mex工具API(ZipFopen)
 	break;
 	case 3:
 	{
-		Array&& 文件参数 = std::move(inputs[2]);
+		Array&& 文件参数 = std::move(输入[2]);
 		const size_t 文件数目 = 文件参数.getNumberOfElements();
 		TypedArray<uint64_t>返回列表 = 数组工厂.createArray<uint64_t>({ 文件数目 });
 		switch (文件参数.getType())
@@ -89,8 +96,8 @@ Mex工具API(ZipFopen)
 }
 Mex工具API(ZipFread)
 {
-	TypedArray<uint64_t>文件列表(inputs[1]);
-	const zip_uint64_t nbytes = 万能转码<uint64_t>(inputs[2]);
+	TypedArray<uint64_t>文件列表(输入[1]);
+	const zip_uint64_t nbytes = 万能转码<uint64_t>(输入[2]);
 	const size_t 文件数目 = 文件列表.getNumberOfElements();
 	buffer_ptr_t<uint8_t>读入字节 = 数组工厂.createBuffer<uint8_t>(文件数目 * nbytes);
 	TypedArray<zip_int64_t>实际读数 = 数组工厂.createArray<zip_int64_t>({ 1,文件数目 });
@@ -107,18 +114,18 @@ Mex工具API(ZipFread)
 }
 Mex工具API(ZipFclose)
 {
-	for (uint64_t 文件 : TypedArray<uint64_t>(inputs[1]))
+	for (uint64_t 文件 : TypedArray<uint64_t>(输入[1]))
 		zip_fclose((zip_file_t*)文件);
 }
 Mex工具API(ZipDiscard)
 {
-	zip_discard(万能转码<zip_t*>(inputs[1]));
+	zip_discard(万能转码<zip_t*>(输入[1]));
 }
 Mex工具API(ZipGetSize)
 {
-	zip_t* const Zip = 万能转码<zip_t*>(inputs[1]);
+	zip_t* const Zip = 万能转码<zip_t*>(输入[1]);
 	zip_stat_t Stat;
-	switch (inputs.size())
+	switch (输入.size())
 	{
 	case 2:
 	{
@@ -138,7 +145,7 @@ Mex工具API(ZipGetSize)
 	break;
 	case 3:
 	{
-		Array& 文件参数 = inputs[2];
+		Array& 文件参数 = 输入[2];
 		const size_t 文件数目 = 文件参数.getNumberOfElements();
 		TypedArray<uint64_t>返回列表 = 数组工厂.createArray<uint64_t>({ 文件数目 });
 		switch (文件参数.getType())
@@ -185,8 +192,8 @@ Mex工具API(ZipGetSize)
 }
 Mex工具API(ZipGetName)
 {
-	zip_t* const Zip = 万能转码<zip_t*>(inputs[1]);
-	switch (inputs.size())
+	zip_t* const Zip = 万能转码<zip_t*>(输入[1]);
+	switch (输入.size())
 	{
 	case 2:
 	{
@@ -202,7 +209,7 @@ Mex工具API(ZipGetName)
 	break;
 	case 3:
 	{
-		TypedArray<uint64_t> 文件索引(inputs[2]);
+		TypedArray<uint64_t> 文件索引(输入[2]);
 		const size_t 文件数目 = 文件索引.getNumberOfElements();
 		StringArray 文件名列表 = 数组工厂.createArray<MATLABString>({ 文件数目 });
 		for (size_t a = 0; a < 文件数目; ++a)
@@ -219,5 +226,5 @@ Mex工具API(ZipGetName)
 }
 Mex工具API(ZipGetNumEntries)
 {
-	输出[1] = 万能转码(取文件数目(万能转码<zip_t*>(inputs[1])));
+	输出[1] = 万能转码(取文件数目(万能转码<zip_t*>(输入[1])));
 }
