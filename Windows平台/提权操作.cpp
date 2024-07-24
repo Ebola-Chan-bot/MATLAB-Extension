@@ -3,7 +3,6 @@
 #include<共享头.h>
 #include<Mex工具.hpp>
 #include<shellapi.h>
-import std;
 #pragma comment(lib,"Shell32.lib")
 #include<rpc.h>
 #pragma comment(lib,"Rpcrt4.lib")

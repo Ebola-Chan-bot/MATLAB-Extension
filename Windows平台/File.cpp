@@ -18,8 +18,8 @@ struct 文件
 };
 Mex工具API(File_Create)
 {
-	const String FileName = 万能转码<String>(输入[1]);
-	const HANDLE 文件句柄 = CreateFileW((LPCWSTR)FileName.c_str(), 万能转码<DWORD>(输入[2]), 万能转码<DWORD>(输入[3]), NULL, 万能转码<DWORD>(输入[4]), 万能转码<DWORD>(输入[5]), NULL);
+	const String FileName = 万能转码<String>(std::move(输入[1]));
+	const HANDLE 文件句柄 = CreateFileW((LPCWSTR)FileName.c_str(), 万能转码<DWORD>(std::move(输入[2])), 万能转码<DWORD>(std::move(输入[3])), NULL, 万能转码<DWORD>(std::move(输入[4])), 万能转码<DWORD>(std::move(输入[5])), NULL);
 	if (文件句柄 == INVALID_HANDLE_VALUE) [[unlikely]]
 		CheckLastError(MATLAB::Exception::File_creation_failed);
 		文件* const 文件指针 = new 文件{ 文件句柄 };
@@ -29,7 +29,7 @@ Mex工具API(File_Create)
 Mex工具API(File_GetSize)
 {
 	LARGE_INTEGER 文件大小;
-	if (GetFileSizeEx(万能转码<文件*>(输入[1])->文件句柄, &文件大小))
+	if (GetFileSizeEx(万能转码<文件*>(std::move(输入[1]))->文件句柄, &文件大小))
 		输出[0] = 万能转码(文件大小.QuadPart);
 	else [[unlikely]]
 		CheckLastError(MATLAB::Exception::Failed_to_get_file_size);
@@ -37,13 +37,13 @@ Mex工具API(File_GetSize)
 Mex工具API(File_Read)
 {
 	LARGE_INTEGER 文件指针{ .QuadPart = 0 };
-	文件* const 文件对象 = 万能转码<文件*>(输入[1]);
+	文件* const 文件对象 = 万能转码<文件*>(std::move(输入[1]));
 	SetFilePointerEx(文件对象->文件句柄, 文件指针, &文件指针, FILE_CURRENT);
-	const ArrayType 读入类型 = 万能转码<ArrayType>(输入[3]);
+	const ArrayType 读入类型 = 万能转码<ArrayType>(std::move(输入[3]));
 	LARGE_INTEGER 文件大小;
 	GetFileSizeEx(文件对象->文件句柄, &文件大小);
 	const size_t 元素字节数 = 类型字节数(读入类型);
-	const size_t 应读入个数 = std::min(万能转码<uint64_t>(输入[2]), (文件大小.QuadPart - 文件指针.QuadPart) / 元素字节数);
+	const size_t 应读入个数 = std::min(万能转码<uint64_t>(std::move(输入[2])), (文件大小.QuadPart - 文件指针.QuadPart) / 元素字节数);
 	const size_t 应读入字节数 = 应读入个数 * 元素字节数;
 	if (!文件对象->映射句柄) [[unlikely]]
 		文件对象->映射句柄 = CreateFileMapping(文件对象->文件句柄, nullptr, PAGE_READWRITE, 0, 0, nullptr);
@@ -56,21 +56,21 @@ Mex工具API(File_Read)
 }
 Mex工具API(File_SetEnd)
 {
-	if (!SetEndOfFile(万能转码<文件*>(输入[1])->文件句柄))[[unlikely]]
+	if (!SetEndOfFile(万能转码<文件*>(std::move(输入[1]))->文件句柄))[[unlikely]]
 		CheckLastError(MATLAB::Exception::Failed_to_set_end_of_file);
 }
 Mex工具API(File_SetPointer)
 {
-	LARGE_INTEGER 位置{ .QuadPart = 万能转码<LONGLONG>(输入[2]) };
-	if (SetFilePointerEx(万能转码<文件*>(输入[1])->文件句柄, 位置, &位置, 万能转码<DWORD>(输入[3])))
+	LARGE_INTEGER 位置{ .QuadPart = 万能转码<LONGLONG>(std::move(输入[2])) };
+	if (SetFilePointerEx(万能转码<文件*>(std::move(输入[1]))->文件句柄, 位置, &位置, 万能转码<DWORD>(std::move(输入[3]))))
 		输出[0] = 万能转码(位置.QuadPart);
 	else[[unlikely]]
 		CheckLastError(MATLAB::Exception::Failed_to_set_the_file_pointer);
 }
 Mex工具API(File_Write)
 {
-	文件* const 文件对象 = 万能转码<文件*>(输入[1]);
-	const CellArray 所有输入(输入[2]);
+	文件* const 文件对象 = 万能转码<文件*>(std::move(输入[1]));
+	const CellArray 所有输入(std::move(输入[2]));
 	uint64_t 字节数 = 0;
 	for (const Array& a : 所有输入)
 		字节数 += 数组字节数(a);
@@ -108,7 +108,7 @@ Mex工具API(File_Write)
 }
 Mex工具API(File_Close)
 {
-	文件*const 指针 = 万能转码<文件*>(输入[1]);
+	文件*const 指针 = 万能转码<文件*>(std::move(输入[1]));
 	if (手动析构(指针))
 		delete 指针;
 }

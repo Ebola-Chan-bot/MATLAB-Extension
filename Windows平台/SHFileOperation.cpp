@@ -51,7 +51,7 @@ Mex工具API(SHFile_Copy)
 Mex工具API(SHFile_Delete)
 {
 	const String From = 字符串转换(std::move(输入[1]));
-	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FOF_ALLOWUNDO | 万能转码<FILEOP_FLAGS>(std::move(输入[2])) };
+	SHFILEOPSTRUCTW 操作结构{ .hwnd = nullptr,.wFunc = FO_DELETE,.pFrom = (wchar_t*)From.c_str(),.fFlags = FILEOP_FLAGS(FOF_ALLOWUNDO | 万能转码<int>(std::move(输入[2]))) };//按位与运算总是用int类型，所以只能算完再转换
 	输出[0] = 执行操作(操作结构);
 }
 Mex工具API(SHFile_Move)

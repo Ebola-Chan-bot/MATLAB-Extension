@@ -8,7 +8,7 @@ Mex工具API(MemoryMapping_Create)
 	String 名称;
 	if (输入[4].getNumberOfElements())
 	{
-		名称 = 万能转码<String>(输入[4]);
+		名称 = 万能转码<String>(std::move(输入[4]));
 		Name = (LPCWSTR)名称.c_str();
 	}
 	size_t 总字节数; 

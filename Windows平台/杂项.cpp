@@ -6,21 +6,23 @@
 #include<webp/decode.h>
 import std;
 using namespace Mex工具;
+using namespace matlab::data;
 Mex工具API(TypeCast)
 {
-	const ArrayType 类型 = 万能转码<ArrayType>(inputs[2]);
-	const std::unique_ptr<动态类型缓冲>输出 = 动态类型缓冲::创建(类型, 数组字节数(inputs[1]) / 类型尺寸[(int)类型]);
-	万能转码(inputs[1], 输出->指针);
-	outputs[1] = 输出->打包();
+	const ArrayType 类型 = 万能转码<ArrayType>(std::move(输入[2]));
+	const size_t 元素数 = 数组字节数(输入[1]) / 类型字节数(类型);
+	const std::unique_ptr<动态类型缓冲>缓冲 = 动态类型缓冲::创建(类型, 元素数);
+	万能转码(std::move(输入[1]), 缓冲->get());
+	输出[0] = 缓冲->创建数组({ 元素数 });
 }
 Mex工具API(LnkShortcut)
 {
 	constexpr char16_t 扩展名[] = u".lnk";
-	const String 来源路径 = 万能转码<String>(inputs[1]);
+	const String 来源路径 = 万能转码<String>(std::move(输入[1]));
 	String 目标路径;
-	if (inputs.size() > 2)
+	if (输入.size() > 2)
 	{
-		目标路径 = 万能转码<String>(inputs[2]);
+		目标路径 = 万能转码<String>(std::move(输入[2]));
 		const std::filesystem::path 目标(目标路径);
 		if (std::filesystem::is_directory(目标))
 		{
@@ -41,8 +43,8 @@ Mex工具API(LnkShortcut)
 	Microsoft::WRL::ComPtr<IPersistFile>持久文件;
 	外壳链接->QueryInterface(IID_IPersistFile, (void**)持久文件.GetAddressOf());
 	const HRESULT 结果 = 持久文件->Save((LPCOLESTR)目标路径.c_str(), TRUE);
-	if (FAILED(结果))
-		throw MATLAB异常(MATLAB异常类型::保存快捷方式失败, 内部异常类型::COM异常, 结果);
+	if (FAILED(结果))[[unlikely]]
+		CheckLastError(MATLAB::Exception::Failed_to_save_the_shortcut);
 }
 [[noreturn]] Mex工具API(Crash)
 {
@@ -50,9 +52,9 @@ Mex工具API(LnkShortcut)
 }
 Mex工具API(Pause)
 {
-	if (inputs.size() > 1)
+	if (输入.size() > 1)
 	{
-		double 秒数 = 万能转码<double>(inputs[1]);
+		double 秒数 = 万能转码<double>(输入[1]);
 		if (秒数 < std::numeric_limits<double>::infinity())
 			std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)(秒数 * 1000)));
 		return;
@@ -63,43 +65,43 @@ Mex工具API(Pause)
 }
 Mex工具API(ArrayType_FromData)
 {
-	outputs[1] = 数组工厂.createScalar<uint8_t>((int)inputs[1].getType());
+	输出[0] = 数组工厂.createScalar<uint8_t>((int)输入[1].getType());
 }
 Mex工具API(WebpRead)
 {
-	const String 路径 = 万能转码<String>(inputs[1]);
-	void* 句柄 = CreateFileW((LPCWSTR)路径.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (句柄 == INVALID_HANDLE_VALUE)
-		throw MATLAB异常(MATLAB异常类型::打开文件失败, 内部异常类型::Win32异常, GetLastError());
+	const String 路径 = 万能转码<String>(std::move(输入[1]));
+	HANDLE 句柄 = CreateFileW((LPCWSTR)路径.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (句柄 == INVALID_HANDLE_VALUE)[[unlikely]]
+		CheckLastError(MATLAB::Exception::Failed_to_open_the_file);
 	const std::unique_ptr<void, decltype(&CloseHandle)>文件句柄(句柄, CloseHandle);
 	LARGE_INTEGER 文件大小;
 	GetFileSizeEx(句柄, &文件大小);
 	句柄 = CreateFileMapping(句柄, NULL, PAGE_READONLY, 0, 0, nullptr);
-	if (!句柄)
-		throw MATLAB异常(MATLAB异常类型::打开文件失败, 内部异常类型::Win32异常, GetLastError());
+	if (!句柄)[[unlikely]]
+		CheckLastError(MATLAB::Exception::Failed_to_open_the_file);
 	const std::unique_ptr<void, decltype(&CloseHandle)>映射句柄(句柄, CloseHandle);
 	句柄 = MapViewOfFile(句柄, FILE_MAP_READ, 0, 0, 0);
-	if (!句柄)
-		throw MATLAB异常(MATLAB异常类型::打开文件失败, 内部异常类型::Win32异常, GetLastError());
+	if (!句柄)[[unlikely]]
+		CheckLastError(MATLAB::Exception::Failed_to_open_the_file);
 	const std::unique_ptr<uint8_t, decltype(&UnmapViewOfFile)>映射指针((uint8_t*)句柄, UnmapViewOfFile);
 	WebPBitstreamFeatures 元数据;
 	const VP8StatusCode 结果 = WebPGetFeatures(映射指针.get(), 文件大小.QuadPart, &元数据);
-	if (结果)
-		throw MATLAB异常(MATLAB异常类型::获取元数据失败, 内部异常类型::LibWebP异常, 结果);
+	if (结果)[[unlikely]]
+		EnumThrow(结果);
 	if (元数据.has_alpha)
 	{
 		const int 字节数 = 元数据.height * 元数据.width * 4;
 		buffer_ptr_t<uint8_t>缓冲 = 数组工厂.createBuffer<uint8_t>(字节数);
-		if (!WebPDecodeRGBAInto(映射指针.get(), 文件大小.QuadPart, 缓冲.get(), 字节数, 元数据.width * 4))
-			throw MATLAB异常(MATLAB异常类型::解码像素值失败);
-		outputs[1] = 数组工厂.createArrayFromBuffer({ 4,(size_t)元数据.width,(size_t)元数据.height }, std::move(缓冲));
+		if (!WebPDecodeRGBAInto(映射指针.get(), 文件大小.QuadPart, 缓冲.get(), 字节数, 元数据.width * 4))[[unlikely]]
+			EnumThrow(MATLAB::Exception::Failed_to_decode_pixel_values);
+		输出[0] = 数组工厂.createArrayFromBuffer({ 4,(size_t)元数据.width,(size_t)元数据.height }, std::move(缓冲));
 	}
 	else
 	{
 		const int 字节数 = 元数据.height * 元数据.width * 3;
 		buffer_ptr_t<uint8_t>缓冲 = 数组工厂.createBuffer<uint8_t>(字节数);
-		if (!WebPDecodeRGBInto(映射指针.get(), 文件大小.QuadPart, 缓冲.get(), 字节数, 元数据.width * 3))
-			throw MATLAB异常(MATLAB异常类型::解码像素值失败);
-		outputs[1] = 数组工厂.createArrayFromBuffer({ 3,(size_t)元数据.width,(size_t)元数据.height }, std::move(缓冲));
+		if (!WebPDecodeRGBInto(映射指针.get(), 文件大小.QuadPart, 缓冲.get(), 字节数, 元数据.width * 3))[[unlikely]]
+			EnumThrow(MATLAB::Exception::Failed_to_decode_pixel_values);
+		输出[0] = 数组工厂.createArrayFromBuffer({ 3,(size_t)元数据.width,(size_t)元数据.height }, std::move(缓冲));
 	}
 }

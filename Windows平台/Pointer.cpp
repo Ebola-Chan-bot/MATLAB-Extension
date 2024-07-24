@@ -5,7 +5,7 @@
 using namespace Mex工具;
 Mex工具API(Pointer_Allocate)
 {
-	size_t NumBytes = 万能转码<size_t>(输入[1]);
+	size_t NumBytes = 万能转码<size_t>(std::move(输入[1]));
 	size_t 总字节数;
 	CellArray 输入元胞 = 元胞字节化(输入[2], 总字节数);
 	if (!NumBytes)

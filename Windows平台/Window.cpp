@@ -72,12 +72,15 @@ Mex工具API(Window_Create)
 	else if (!WH)
 		WH = { (uint16_t)GetSystemMetrics(SM_CXSCREEN), (uint16_t)GetSystemMetrics(SM_CYSCREEN) };
 	const WH_s WH_v = WH.value();
-	输出[0] = 万能转码(窗口::创建(XY.X, XY.Y, WH_v.W, WH_v.H));
+	窗口* const 指针 = 窗口::创建(XY.X, XY.Y, WH_v.W, WH_v.H);
+	自动析构(指针);
+	输出[0] = 万能转码(指针);
 }
 Mex工具API(Window_Destroy)
 {
-	//销毁函数本身不会抛出异常，不需要额外try
-	窗口::销毁(万能转码<窗口*>(输入[1]));
+	窗口* const 指针 = 万能转码<窗口*>(std::move(输入[1]));
+	if (手动析构(指针))
+		delete 指针;
 }
 Mex工具API(Window_Image)
 {

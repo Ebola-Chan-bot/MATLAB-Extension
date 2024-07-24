@@ -33,7 +33,7 @@ Mex工具API(ZipOpen)
 constexpr zip_flags_t 文件名旗帜 = ZIP_FL_NOCASE | ZIP_FL_ENC_UTF_8;
 Mex工具API(ZipNameLocate)
 {
-	zip_t* const Zip = 万能转码<zip_t*>(输入[1]);
+	zip_t* const Zip = 万能转码<zip_t*>(std::move(输入[1]));
 	const size_t 个数 = 输入[2].getNumberOfElements();
 	TypedArray<zip_int64_t>Locate = 数组工厂.createArray<zip_int64_t>({ 个数 });
 	const std::unique_ptr<std::string[]>UTF8 = std::make_unique_for_overwrite<std::string[]>(个数);
@@ -49,7 +49,7 @@ Mex工具API(ZipNameLocate)
 }
 Mex工具API(ZipFopen)
 {
-	zip_t* const Zip = 万能转码<zip_t*>(输入[1]);
+	zip_t* const Zip = 万能转码<zip_t*>(std::move(输入[1]));
 	switch(输入.size())
 	{
 	case 2:
