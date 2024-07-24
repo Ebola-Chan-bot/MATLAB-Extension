@@ -137,9 +137,7 @@ Mex工具API(Mex工具::执行)
 	};
 	跳转表[万能转码<size_t>(std::move(输入[0]))](输出, 输入);
 };
-void 关闭特权服务器()noexcept;
 void Mex工具::清理()noexcept
 {
 	窗口::销毁所有();
-	关闭特权服务器();
 }

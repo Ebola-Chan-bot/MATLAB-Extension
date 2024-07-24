@@ -16,13 +16,6 @@ struct 文件
 	HANDLE 文件句柄;
 	HANDLE 映射句柄 = NULL;
 };
-struct UniqueHandle :std::unique_ptr<std::remove_pointer_t<HANDLE>, decltype(&CloseHandle)>
-{
-	using deleter = decltype(&CloseHandle);
-	UniqueHandle(HANDLE h, deleter 删除器 = CloseHandle) :std::unique_ptr<std::remove_pointer_t<HANDLE>, deleter>(h, 删除器) {}
-	operator HANDLE()const noexcept { return get(); }
-	virtual ~UniqueHandle() = default;
-};
 Mex工具API(File_Create)
 {
 	const String FileName = 万能转码<String>(输入[1]);
@@ -115,5 +108,7 @@ Mex工具API(File_Write)
 }
 Mex工具API(File_Close)
 {
-	delete 万能转码<文件*>(输入[1]);
+	文件*const 指针 = 万能转码<文件*>(输入[1]);
+	if (手动析构(指针))
+		delete 指针;
 }

@@ -11,17 +11,6 @@ import std;
 #pragma comment(lib,"Ole32.lib")
 static HANDLE 特权服务器 = nullptr;
 static bool 已连接 = false;
-void 关闭特权服务器()noexcept
-{
-	if (已连接)
-	{
-		constexpr 提权操作函数 ShutdownServer = 提权操作函数::Shutdown_server;
-		DWORD NumberOfBytesWritten;
-		WriteFile(特权服务器, &ShutdownServer, sizeof(ShutdownServer), &NumberOfBytesWritten, NULL);
-	}
-	if (特权服务器)
-		CloseHandle(特权服务器);
-}
 extern HMODULE Module;
 extern std::shared_ptr<matlab::engine::MATLABEngine> Engine;
 static void WriteString(std::ostringstream& 参数流, const String& 字符串)noexcept
@@ -71,6 +60,17 @@ static void 特权调用(const std::string& 参数)
 				break;
 		}
 		CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+		自动析构(特权服务器, [](HANDLE 特权服务器)noexcept 
+			{
+				if (已连接)
+				{
+					constexpr 提权操作函数 ShutdownServer = 提权操作函数::Shutdown_server;
+					DWORD NumberOfBytesWritten;
+					WriteFile(特权服务器, &ShutdownServer, sizeof(ShutdownServer), &NumberOfBytesWritten, NULL);
+				}
+				if (特权服务器)
+					CloseHandle(特权服务器);
+			});
 	}
 	if (!已连接)
 	{
@@ -110,28 +110,28 @@ Mex工具API(Uninstall_path_manager)
 		}();
 		特权调用(参数);
 }
-static void SAR_shared_path(ArgumentList& inputs, 提权操作函数 SAR)
+static void SAR_shared_path(ArgumentList& 输入, 提权操作函数 SAR)
 {
 	std::ostringstream 参数;
 	参数.write((char*)&SAR, sizeof(SAR));
-	WriteString(参数, Mex工具::万能转码<String>(inputs[1]));
+	WriteString(参数, Mex工具::万能转码<String>(输入[1]));
 	特权调用(参数.str());
 }
 Mex工具API(Set_shared_path)
 {
-	SAR_shared_path(inputs, 提权操作函数::Set_shared_path);
+	SAR_shared_path(输入, 提权操作函数::Set_shared_path);
 }
 Mex工具API(Add_shared_path)
 {
-	SAR_shared_path(inputs, 提权操作函数::Add_shared_path);
+	SAR_shared_path(输入, 提权操作函数::Add_shared_path);
 }
 Mex工具API(Remove_shared_path)
 {
-	SAR_shared_path(inputs, 提权操作函数::Remove_shared_path);
+	SAR_shared_path(输入, 提权操作函数::Remove_shared_path);
 }
 Mex工具API(Builtin_bug_fix)
 {
-	TypedArray<int8_t>Command(inputs[1]);
+	TypedArray<int8_t>Command(输入[1]);
 	std::ostringstream 参数(MatlabRoot参数头());
 	constexpr 提权操作函数 函数 = 提权操作函数::Builtin_bug_fix;
 	参数.write((char*)&函数, sizeof(函数));
@@ -176,10 +176,10 @@ Mex工具API(Serialport_snatch)
 		DWORD CurrentProcessId = GetCurrentProcessId();
 	}固定参数头;
 	参数.write((char*)&固定参数头, sizeof(固定参数头));
-	WriteString(参数, Mex工具::万能转码<String>(inputs[1]));
+	WriteString(参数, Mex工具::万能转码<String>(输入[1]));
 	特权调用(参数.str());
 	uint64_t PID;
 	DWORD NumberOfBytesRead;
 	ReadFile(特权服务器, &PID, sizeof(PID), &NumberOfBytesRead, NULL);
-	outputs[1] = Mex工具::万能转码(PID);
+	输出[0] = Mex工具::万能转码(PID);
 }

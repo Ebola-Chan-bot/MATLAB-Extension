@@ -22,7 +22,6 @@ void 窗口::安全删除(窗口* 旧窗口)noexcept
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER) {}
 }
-std::list<窗口*>所有窗口;
 //不能在DllMain阶段初始化，但可以析构
 winrt::Compositor 合成器(nullptr);
 winrt::com_ptr<ABI::Desktop::ICompositorDesktopInterop>合成器互操作;
