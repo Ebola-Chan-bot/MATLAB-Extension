@@ -30,16 +30,17 @@ Mex工具API(MemoryMapping_Create)
 	const DWORD Protect = 万能转码<DWORD>(std::move(输入[2]));
 	std::unique_ptr<void, decltype(CloseHandle)*> 映射句柄{ CreateFileMapping(文件句柄, nullptr, Protect, 文件大小.HighPart, 文件大小.LowPart, Name),CloseHandle };
 	if (!映射句柄)[[unlikely]]
-		CheckLastError(MATLAB::Exception::Failed_to_create_a_file_mapping);
+		ThrowLastError(MATLAB::Exception::Failed_to_create_a_file_mapping);
 	输出[0] = 万能转码(映射句柄.get());
 	const bool 输出指针 = 输出.size() > 1;
 	if (!输入元胞.isEmpty() || 输出指针)
 	{
-		LPVOID 映射指针 = MapViewOfFile(映射句柄.get(), Protect == PAGE_READONLY ? FILE_MAP_READ : FILE_MAP_WRITE, 0, 0, 0);
+		const LPVOID 映射指针 = MapViewOfFile(映射句柄.get(), Protect == PAGE_READONLY ? FILE_MAP_READ : FILE_MAP_WRITE, 0, 0, 0);
 		if (!映射指针)[[unlikely]]
-			CheckLastError(MATLAB::Exception::Failed_to_map_the_file_view);
+			ThrowLastError(MATLAB::Exception::Failed_to_map_the_file_view);
+		LPVOID 输出头 = 映射指针;
 		for (Array 输入 : 输入元胞)
-			万能转码(std::move(输入), 映射指针);
+			万能转码(std::move(输入), 输出头);
 		if (输出指针)
 		{
 			输出[1] = 万能转码(映射指针);
@@ -58,8 +59,8 @@ Mex工具API(MemoryMapping_Open)
 	if (映射句柄)
 		输出[0] = 万能转码(映射句柄.get());
 	else[[unlikely]]
-		CheckLastError(MATLAB::Exception::Failed_to_open_file_mapping);
-	if (输出.size() > 2)
+		ThrowLastError(MATLAB::Exception::Failed_to_open_file_mapping);
+	if (输出.size() > 1)
 	{
 		const LPVOID 映射指针 = MapViewOfFile(映射句柄.get(), DesiredAccess, 0, 0, 0);
 		if (映射指针)
@@ -68,7 +69,7 @@ Mex工具API(MemoryMapping_Open)
 			自动析构(映射指针, UnmapViewOfFile);
 		}
 		else[[unlikely]]
-			CheckLastError(MATLAB::Exception::Failed_to_map_the_file_view);
+			ThrowLastError(MATLAB::Exception::Failed_to_map_the_file_view);
 	}
 	自动析构(映射句柄.release(), CloseHandle);
 }
@@ -82,7 +83,7 @@ Mex工具API(MemoryMapping_View)
 		自动析构(映射指针, UnmapViewOfFile);
 	}
 	else[[unlikely]]
-		CheckLastError(MATLAB::Exception::Failed_to_map_the_file_view);
+		ThrowLastError(MATLAB::Exception::Failed_to_map_the_file_view);
 }
 Mex工具API(MemoryMapping_Unview)
 {

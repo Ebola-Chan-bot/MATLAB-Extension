@@ -52,5 +52,6 @@ namespace MATLAB
 		Current_MATLAB_version_not_supported,
 		Unexpected_error_in_DuplicateHandle,
 		Unexpected_error_in_OpenProcess,
+		Failed_to_communicate_with_the_privilege_server,
 	};
 }

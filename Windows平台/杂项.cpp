@@ -44,7 +44,7 @@ Mex工具API(LnkShortcut)
 	外壳链接->QueryInterface(IID_IPersistFile, (void**)持久文件.GetAddressOf());
 	const HRESULT 结果 = 持久文件->Save((LPCOLESTR)目标路径.c_str(), TRUE);
 	if (FAILED(结果))[[unlikely]]
-		CheckLastError(MATLAB::Exception::Failed_to_save_the_shortcut);
+		ThrowLastError(MATLAB::Exception::Failed_to_save_the_shortcut);
 }
 [[noreturn]] Mex工具API(Crash)
 {
@@ -72,17 +72,17 @@ Mex工具API(WebpRead)
 	const String 路径 = 万能转码<String>(std::move(输入[1]));
 	HANDLE 句柄 = CreateFileW((LPCWSTR)路径.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (句柄 == INVALID_HANDLE_VALUE)[[unlikely]]
-		CheckLastError(MATLAB::Exception::Failed_to_open_the_file);
+		ThrowLastError(MATLAB::Exception::Failed_to_open_the_file);
 	const std::unique_ptr<void, decltype(&CloseHandle)>文件句柄(句柄, CloseHandle);
 	LARGE_INTEGER 文件大小;
 	GetFileSizeEx(句柄, &文件大小);
 	句柄 = CreateFileMapping(句柄, NULL, PAGE_READONLY, 0, 0, nullptr);
 	if (!句柄)[[unlikely]]
-		CheckLastError(MATLAB::Exception::Failed_to_open_the_file);
+		ThrowLastError(MATLAB::Exception::Failed_to_open_the_file);
 	const std::unique_ptr<void, decltype(&CloseHandle)>映射句柄(句柄, CloseHandle);
 	句柄 = MapViewOfFile(句柄, FILE_MAP_READ, 0, 0, 0);
 	if (!句柄)[[unlikely]]
-		CheckLastError(MATLAB::Exception::Failed_to_open_the_file);
+		ThrowLastError(MATLAB::Exception::Failed_to_open_the_file);
 	const std::unique_ptr<uint8_t, decltype(&UnmapViewOfFile)>映射指针((uint8_t*)句柄, UnmapViewOfFile);
 	WebPBitstreamFeatures 元数据;
 	const VP8StatusCode 结果 = WebPGetFeatures(映射指针.get(), 文件大小.QuadPart, &元数据);

@@ -85,7 +85,8 @@ static void 特权调用(const std::string& 参数)
 	static DWORD NumberOfBytes;
 	WriteFile(特权服务器, 参数.data(), 参数.size(), &NumberOfBytes, NULL);
 	MATLAB::Exception 结果;
-	ReadFile(特权服务器, &结果, sizeof(结果), &NumberOfBytes, NULL);
+	if (!ReadFile(特权服务器, &结果, sizeof(结果), &NumberOfBytes, NULL))
+		ThrowLastError(MATLAB::Exception::Failed_to_communicate_with_the_privilege_server);
 	if (结果 != MATLAB::Exception::Successful)
 		EnumThrow(结果);
 }
@@ -132,7 +133,7 @@ Mex工具API(Remove_shared_path)
 }
 Mex工具API(Builtin_bug_fix)
 {
-	TypedArray<int8_t>Command(输入[1]);
+	TypedArray<int8_t>Command(std::move(输入[1]));
 	std::ostringstream 参数(MatlabRoot参数头());
 	constexpr 提权操作函数 函数 = 提权操作函数::Builtin_bug_fix;
 	参数.write((char*)&函数, sizeof(函数));
