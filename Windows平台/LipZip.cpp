@@ -173,7 +173,7 @@ Mex工具API(ZipGetSize)
 		case ArrayType::CHAR:
 		case ArrayType::MATLAB_STRING:
 		{
-			std::unique_ptr<std::string[]>文件名 = 万能转码<std::unique_ptr<std::string[]>>(文件参数);
+			std::unique_ptr<std::string[]>文件名 = 万能转码<std::unique_ptr<std::string[]>>(std::move(文件参数));
 			for (size_t a = 0; a < 文件数目; ++a)
 			{
 				if (zip_stat(Zip, 文件名[a].c_str(), 0, &Stat) == -1) [[unlikely]]
@@ -245,5 +245,5 @@ Mex工具API(ZipGetName)
 }
 Mex工具API(ZipGetNumEntries)
 {
-	输出[0] = 万能转码(取文件数目(万能转码<zip_t*>(输入[1])));
+	输出[0] = 万能转码(取文件数目(万能转码<zip_t*>(std::move(输入[1]))));
 }

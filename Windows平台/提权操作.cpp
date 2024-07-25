@@ -8,10 +8,12 @@
 #pragma comment(lib,"Rpcrt4.lib")
 #include<objbase.h>
 #pragma comment(lib,"Ole32.lib")
+#include<filesystem>
 static HANDLE 特权服务器 = nullptr;
 static bool 已连接 = false;
 extern HMODULE Module;
-extern std::shared_ptr<matlab::engine::MATLABEngine> Engine;
+using namespace matlab::data;
+using namespace Mex工具;
 static void WriteString(std::ostringstream& 参数流, const String& 字符串)noexcept
 {
 	const size_t Size = 字符串.size();
@@ -23,12 +25,12 @@ static 懒加载 MatlabRoot参数头([]()noexcept
 		std::ostringstream 返回值;
 		constexpr 提权操作函数 函数 = 提权操作函数::Shutdown_server;
 		返回值.write((char*)&函数, sizeof(函数));
-		WriteString(返回值, CharArray(Engine->feval("matlabroot", std::vector<Array>())).toUTF16());
+		WriteString(返回值, CharArray(MATLAB引擎->feval("matlabroot", std::vector<Array>())).toUTF16());
 		return 返回值.str();
 	});
 static 懒加载 MatlabVersion([]()
 	{
-		return Mex工具::万能转码<String>(StructArray(Engine->feval("ver", Mex工具::万能转码<CharArray>(L"MATLAB")))[0]["Version"]);
+		return Mex工具::万能转码<String>(MATLAB引擎->feval("ver", 数组工厂.createScalar(u"MATLAB"))[0]["Version"].operator Array());
 	});
 static 懒加载 RootVersion参数头([]()noexcept
 	{
@@ -74,7 +76,7 @@ static void 特权调用(const std::string& 参数)
 	if (!已连接)
 	{
 		if ((INT_PTR)ShellExecuteW(NULL, L"runas", (std::filesystem::path(Filename.get()).parent_path().parent_path() / L"提权操作C.exe").c_str(), (LPCWSTR)Parameters, NULL, 0) == SE_ERR_ACCESSDENIED)
-			throw MATLAB异常(MATLAB异常类型::User_denied_access);
+			EnumThrow(MATLAB::Exception::User_denied_access);
 		RpcStringFreeW(&Parameters);
 		CoUninitialize();
 		ConnectNamedPipe(特权服务器, NULL);
@@ -82,10 +84,10 @@ static void 特权调用(const std::string& 参数)
 	}
 	static DWORD NumberOfBytes;
 	WriteFile(特权服务器, 参数.data(), 参数.size(), &NumberOfBytes, NULL);
-	MATLAB异常类型 结果;
+	MATLAB::Exception 结果;
 	ReadFile(特权服务器, &结果, sizeof(结果), &NumberOfBytes, NULL);
-	if (结果 != MATLAB异常类型::成功)
-		throw MATLAB异常(结果);
+	if (结果 != MATLAB::Exception::Successful)
+		EnumThrow(结果);
 }
 Mex工具API(Install_path_manager)
 {
@@ -109,11 +111,11 @@ Mex工具API(Uninstall_path_manager)
 		}();
 		特权调用(参数);
 }
-static void SAR_shared_path(ArgumentList& 输入, 提权操作函数 SAR)
+static void SAR_shared_path(matlab::mex::ArgumentList& 输入, 提权操作函数 SAR)
 {
 	std::ostringstream 参数;
 	参数.write((char*)&SAR, sizeof(SAR));
-	WriteString(参数, Mex工具::万能转码<String>(输入[1]));
+	WriteString(参数, Mex工具::万能转码<String>(std::move(输入[1])));
 	特权调用(参数.str());
 }
 Mex工具API(Set_shared_path)
@@ -162,7 +164,7 @@ Mex工具API(Get_pathdef_permission)
 			std::ostringstream 返回值;
 			constexpr 提权操作函数 函数 = 提权操作函数::Get_pathdef_permission;
 			返回值.write((char*)&函数, sizeof(函数));
-			WriteString(返回值, CharArray(Engine->feval("which", Mex工具::万能转码<CharArray>(L"pathdef"))).toUTF16());
+			WriteString(返回值, CharArray(MATLAB引擎->feval("which", Mex工具::万能转码<CharArray>(L"pathdef"))).toUTF16());
 			return 返回值.str();
 		}();
 		特权调用(参数);
@@ -175,7 +177,7 @@ Mex工具API(Serialport_snatch)
 		DWORD CurrentProcessId = GetCurrentProcessId();
 	}固定参数头;
 	参数.write((char*)&固定参数头, sizeof(固定参数头));
-	WriteString(参数, Mex工具::万能转码<String>(输入[1]));
+	WriteString(参数, Mex工具::万能转码<String>(std::move(输入[1])));
 	特权调用(参数.str());
 	uint64_t PID;
 	DWORD NumberOfBytesRead;

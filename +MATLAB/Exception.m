@@ -40,5 +40,9 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Error_copying_file
 		Error_deleting_file
 		Error_moving_file
+		WindowsAPI_cannot_reshape
+		WindowsAPI_cannot_vertcat
+		WindowsAPI_cannot_end
+		WindowsAPI_cannot_horzcat
 	end
 end

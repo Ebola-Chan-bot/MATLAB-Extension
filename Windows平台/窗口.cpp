@@ -6,7 +6,6 @@
 #include<winrt/windows.system.h>
 #include<DispatcherQueue.h>
 #include<d3d11_4.h>
-import std;
 #pragma comment(lib,"windowsapp.lib")
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"d2d1.lib")

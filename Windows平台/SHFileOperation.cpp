@@ -29,7 +29,7 @@ static TypedArray<bool> 执行操作(SHFILEOPSTRUCTW& 操作结构)
 {
 	const int 异常 = SHFileOperationW(&操作结构);
 	if (异常 && 异常 != ERROR_CANCELLED)
-		CheckLastError(MATLAB::Exception::File_operation_failed);
+		ThrowLastError(MATLAB::Exception::File_operation_failed);
 	else
 		return 数组工厂.createScalar<bool>(操作结构.fAnyOperationsAborted);
 }

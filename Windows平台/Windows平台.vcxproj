@@ -133,11 +133,11 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
-      <EnableModules>true</EnableModules>
       <ExceptionHandling>Async</ExceptionHandling>
-      <BuildStlModules>true</BuildStlModules>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,12 +159,12 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
-      <EnableModules>true</EnableModules>
       <ExceptionHandling>Async</ExceptionHandling>
-      <BuildStlModules>true</BuildStlModules>
       <AdditionalBMIDirectories>C:\Users\vhtmf\Documents\MATLAB\MATLAB-Extension\packages\MATLAB.MexTools.6.2.0\build\native\Debug;%(AdditionalBMIDirectories)</AdditionalBMIDirectories>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -194,15 +194,9 @@
     </ClCompile>
     <ClCompile Include="Pointer.cpp" />
     <ClCompile Include="SHFileOperation.cpp" />
-    <ClCompile Include="Window.cpp">
-      <EnableModules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</EnableModules>
-      <EnableModules Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</EnableModules>
-    </ClCompile>
+    <ClCompile Include="Window.cpp" />
     <ClCompile Include="实用工具.cpp" />
-    <ClCompile Include="提权操作.cpp">
-      <EnableModules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</EnableModules>
-      <EnableModules Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</EnableModules>
-    </ClCompile>
+    <ClCompile Include="提权操作.cpp" />
     <ClCompile Include="杂项.cpp" />
     <ClCompile Include="窗口.cpp" />
   </ItemGroup>

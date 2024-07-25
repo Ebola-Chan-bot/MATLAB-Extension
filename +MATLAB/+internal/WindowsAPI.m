@@ -1,4 +1,4 @@
-classdef WindowsAPI<uint8
+classdef WindowsAPI<uint64
 	enumeration
 		SHFile_Copy(0)
 		SHFile_Delete(1)
@@ -54,43 +54,7 @@ classdef WindowsAPI<uint8
 	end
 	methods
 		function varargout=Call(obj,varargin)
-			import MATLAB.internal.InnerException
-			import MATLAB.Lang.*
-			varargout=cell(1,nargout);
-			[Error,varargout{:}]=WindowsCall(uint8(obj),varargin{:});
-			ExceptionType=MATLAB.Exception(Error.ExceptionType);
-			if ExceptionType~=MATLAB.Exceptions.Success
-				switch InnerException(Error.InnerException)
-					case InnerException.None
-						ExceptionType.Throw;
-					case InnerException.Win32Exception
-						Detail.InnerException=WindowsErrorCode(typecast(Error.ErrorCode,'uint32'));
-					case InnerException.LibzipException
-						Detail.InnerException=MATLAB.IO.LibzipException(Error.ErrorCode);
-					case InnerException.MexException
-						Detail.InnerException=MexException(Error.ErrorCode);
-					case InnerException.ComException
-						ErrorCode=typecast(Error.ErrorCode,'uint32');
-						try
-							ErrorCode=WindowsErrorCode(ErrorCode);
-						catch ME
-							if ME.identifier=="MATLAB:class:InvalidEnum"
-								ErrorCode=WindowsErrorCode(bitand(ErrorCode,0x0000ffff));
-							else
-								ME.rethrow;
-							end
-						end
-						Detail.InnerException=ErrorCode;
-					case InnerException.LibWebpException
-						Detail.InnerException=MATLAB.ImageSci.VP8StatusCode(Error.ErrorCode);
-				end
-				if Error.Index
-					Detail.Index=Error.Index;
-					ExceptionType.Throw(sprintf('%s 错误发生在第%u个元素',Detail.InnerException,Detail.Index),Detail=Detail);
-				else
-					ExceptionType.Throw(Detail.InnerException,Detail=Detail);
-				end
-			end
+			[varargout{1:nargout}]=WindowsCall(uint64(obj),varargin{:});
 		end
 	end
 end

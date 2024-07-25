@@ -2,7 +2,6 @@
 #include"实用工具.h"
 #include<MATLAB异常.h>
 #include <Mex工具.hpp>
-import std;
 using namespace Mex工具;
 using namespace matlab::data;
 #undef min
@@ -96,7 +95,7 @@ Mex工具API(File_Write)
 		for (Array a : 所有输入)
 			万能转码(std::move(a), 写出头);
 	}
-	catch (const std::exception& e)
+	catch (const std::exception&)
 	{
 		throw;
 	}

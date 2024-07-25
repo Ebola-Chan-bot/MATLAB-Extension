@@ -139,5 +139,4 @@ Mex工具API(Mex工具::执行)
 };
 void Mex工具::清理()noexcept
 {
-	窗口::销毁所有();
 }

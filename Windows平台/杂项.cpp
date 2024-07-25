@@ -4,7 +4,7 @@
 #include<ShlObj.h>
 #include<wrl/client.h>
 #include<webp/decode.h>
-import std;
+#include<filesystem>
 using namespace Mex工具;
 using namespace matlab::data;
 Mex工具API(TypeCast)
@@ -54,7 +54,7 @@ Mex工具API(Pause)
 {
 	if (输入.size() > 1)
 	{
-		double 秒数 = 万能转码<double>(输入[1]);
+		double 秒数 = 万能转码<double>(std::move(输入[1]));
 		if (秒数 < std::numeric_limits<double>::infinity())
 			std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)(秒数 * 1000)));
 		return;
