@@ -3795,6 +3795,15 @@
 			}
 		]
 	},
+	"MATLAB.Ops.Pipeline": {
+		"inputs": [
+			{
+				"name": "Value",
+				"kind": "ordered",
+				"purpose": "管线起始值"
+			}
+		]
+	},
 	"MATLAB.Ops.SetDiffN": {
 		"inputs": [
 			{

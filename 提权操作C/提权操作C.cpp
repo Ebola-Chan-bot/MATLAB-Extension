@@ -165,7 +165,7 @@ static 懒加载 所有版本([](DWORD 版本值)noexcept
 		return 返回值;
 	});
 static 懒加载 当前VersionMS(计算VersionMS);
-API(Install_path_manager)noexcept
+API(Install_path_manager)
 {
 	const path MatlabRoot(读入UTF16字符串());
 	const std::wstring MatlabVersion = 读入UTF16字符串();
@@ -211,7 +211,7 @@ API(Install_path_manager)noexcept
 	static wchar_t TrusteeName[] = L"Users";
 	设置文件权限(路径缓冲.get(), TrusteeName, GENERIC_READ);
 }
-API(Uninstall_path_manager)noexcept
+API(Uninstall_path_manager)
 {
 	path MatlabRoot(读入UTF16字符串());
 	static const path& MSP = MatlabSavepath(MatlabRoot);
@@ -289,7 +289,7 @@ API(Add_shared_path)
 	开放新路径权限(新路径集合);
 	写出路径(输出路径集合);
 }
-API(Remove_shared_path)noexcept
+API(Remove_shared_path)
 {
 	std::unordered_set<std::string>路径集合;
 	std::ifstream 旧路径(共享路径());
@@ -311,6 +311,12 @@ API(Builtin_bug_fix)
 	};
 	const path MatlabRoot(读入UTF16字符串());
 	const std::wstring MatlabVersion = 读入UTF16字符串();
+	size_t 命令数;
+	DWORD NumberOfBytes;
+	ReadFile(File, &命令数, sizeof(命令数), &NumberOfBytes, NULL);
+	std::unique_ptr<std::int8_t[]>所有命令 = std::make_unique_for_overwrite<int8_t[]>(命令数);
+	ReadFile(File, 所有命令.get(), 命令数, &NumberOfBytes, NULL);
+	//必须先读完所有参数。如果参数没读完就退出函数，剩余的无效参数会进入下一轮命令循环，导致不可预测的情况
 	static const std::vector<补丁位置>& 版本命令集 = [&MatlabVersion]()
 		{
 			static const std::unordered_map<std::wstring, std::vector<补丁位置>>补丁信息
@@ -360,6 +366,23 @@ API(Builtin_bug_fix)
 							L"toolbox\\matlab\\toolbox_packaging\\+matlab\\+internal\\+addons\\+metadata",
 						}
 					}}
+				},
+				{
+					L"24.2",
+					{{
+						{
+							L"CshDocPageHandler.m",
+							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+ui\\@CshDocPageHandler",
+						},
+						{
+							L"Document.m",
+							L"toolbox\\matlab\\codetools\\+matlab\\+desktop\\+editor\\@Document",
+						},
+						{
+							L"ToolboxConfigurationReader.m",
+							L"toolbox\\matlab\\toolbox_packaging\\+matlab\\+internal\\+addons\\+metadata",
+						}
+					}}
 				}
 			};
 			const auto 返回值 = 补丁信息.find(MatlabVersion);
@@ -367,11 +390,6 @@ API(Builtin_bug_fix)
 				throw MATLAB::Exception::Current_MATLAB_version_not_supported;
 			return 返回值->second;
 		}();
-	size_t 命令数;
-	DWORD NumberOfBytes;
-	ReadFile(File, &命令数, sizeof(命令数), &NumberOfBytes, NULL);
-	std::unique_ptr<std::int8_t[]>所有命令 = std::make_unique_for_overwrite<int8_t[]>(命令数);
-	ReadFile(File, 所有命令.get(), 命令数, &NumberOfBytes, NULL);
 	static const path 版本原文件目录 = 原文件目录() / MatlabVersion;
 	create_directories(版本原文件目录);
 	for (size_t C = 0; C < 命令数; ++C)
@@ -406,7 +424,7 @@ API(Builtin_bug_fix)
 			throw MATLAB::Exception::Builtin_bug_fix_command_is_0;
 	}
 }
-API(Associate_prj_extension)noexcept
+API(Associate_prj_extension)
 {
 	const path MatlabRoot(读入UTF16字符串());
 	const std::wstring MATLAB版本 = 读入UTF16字符串() + L".0";
@@ -445,7 +463,7 @@ API(Associate_prj_extension)noexcept
 	constexpr wchar_t system[] = L"system";
 	RegSetKeyValueW(键A, L"topic", NULL, REG_SZ, system, sizeof(system));
 }
-API(Get_pathdef_permission)noexcept
+API(Get_pathdef_permission)
 {
 	const std::wstring PathDef = 读入UTF16字符串();
 	static const std::unique_ptr<wchar_t[]>ObjectName = [&PathDef]()
@@ -659,6 +677,23 @@ API(Serialport_snatch)
 	}
 	throw MATLAB::Exception::COM_number_not_found;
 }
+struct SEH异常
+{
+	const MATLAB::Exception 标识符 = MATLAB::Exception::SEH_exception;
+	decltype(GetExceptionCode())异常码;
+	constexpr SEH异常(decltype(异常码)异常码)noexcept :异常码(异常码) {}
+};
+static void SEH安全(const std::move_only_function<void()const>& 函数)
+{
+	__try
+	{
+		函数();
+	}
+	__except (GetExceptionCode() != 0xE06D7363)//魔数，表示标准C++异常，不在此处理
+	{
+		throw SEH异常(GetExceptionCode());
+	}
+}
 int wmain(int argc, wchar_t* argv[])
 {
 	EXE目录 = path(argv[0]).parent_path();
@@ -680,14 +715,25 @@ int wmain(int argc, wchar_t* argv[])
 		输出.seekp(sizeof(MATLAB::Exception), std::ios_base::beg);
 		try
 		{
-			操作列表[(size_t)函数序号](输出);
+			SEH安全([操作 = 操作列表[(size_t)函数序号], &输出]()
+				{
+					操作(输出);
+				});
+			const std::string 输出缓冲 = 输出.str();
+			WriteFile(File, 输出缓冲.data(), 输出缓冲.size(), &NumberOfBytesWritten, NULL);
 		}
 		catch (MATLAB::Exception ex)
 		{
 			WriteFile(File, &ex, sizeof(ex), &NumberOfBytesWritten, NULL);
-			continue;
 		}
-		const std::string 输出缓冲 = 输出.str();
-		WriteFile(File, 输出缓冲.data(), 输出缓冲.size(), &NumberOfBytesWritten, NULL);
+		catch (const SEH异常& ex)
+		{
+			WriteFile(File, &ex, sizeof(ex), &NumberOfBytesWritten, NULL);
+		}
+		catch (...)
+		{
+			constexpr MATLAB::Exception 未知异常 = MATLAB::Exception::Unknown_exception;
+			WriteFile(File, &未知异常, sizeof(未知异常), &NumberOfBytesWritten, NULL);
+		}
 	}
 }

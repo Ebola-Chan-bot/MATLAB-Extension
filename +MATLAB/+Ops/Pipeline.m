@@ -3,15 +3,21 @@ classdef Pipeline
 	%此类型是一个包装值类型，包装后可以支持or（|）运算符作为管线运算符，以对特定数据依次调用一连串函数
 	%% 语法
 	% ```
+	% %先构造管线对象，然后不断连接各种操作
 	% PipeEnd=MATLAB.Ops.Pipeline(Value)|Operation1|Operation2|Operation3|…
+	%
+	% %可以直接用管线运算符将任意对象包入管线对象
+	% PipeEnd=Value|MATLAB.Ops.Pipeline|Operation1|Operation2|Operation3|…
 	% ```
 	%% 示例
 	% ```
+	% import MATLAB.Ops.Pipeline
+	%
 	% RandSum=MATLAB.Ops.Pipeline(4)|@rand|{@sum,'all'};
 	% RandSum.Value
 	% %求随机4阶方阵的总和
 	%
-	% MATLAB.Ops.Pipeline(4)|@rand|{@sum,'all'}|@disp
+	% 4|MATLAB.Ops.Pipeline|@rand|{@sum,'all'}|@disp
 	% %求随机4阶方阵的总和并显示在命令行窗口中
 	% ```
 	%% 输入参数
@@ -29,26 +35,32 @@ classdef Pipeline
 	methods
 		function obj = Pipeline(Value)
 			%将一个值包装起来作为管线起始，以支持后续管线运算。
-			obj.Value=Value;
+			if nargin
+				obj.Value=Value;
+			end
 		end
 		function varargout=or(obj,Operation)
 			%管线运算符实现
 			import MATLAB.Ops.Pipeline
-			try
-				if iscell(Operation)
-					varargout={MATLAB.Ops.Pipeline(Operation{1}(obj.Value,Operation{2:end}))};
-				else
-					varargout={MATLAB.Ops.Pipeline(Operation(obj.Value))};
-				end
-			catch ME
-				if ME.identifier=="MATLAB:maxlhs"&&~nargout
+			if isa(Operation,'MATLAB.Ops.Pipeline')
+				varargout={Pipeline(obj)};
+			else
+				try
 					if iscell(Operation)
-						Operation{1}(obj.Value,Operation{2:end});
+						varargout={Pipeline(Operation{1}(obj.Value,Operation{2:end}))};
 					else
-						Operation(obj.Value)
+						varargout={Pipeline(Operation(obj.Value))};
 					end
-				else
-					ME.rethrow;
+				catch ME
+					if ME.identifier=="MATLAB:maxlhs"&&~nargout
+						if iscell(Operation)
+							Operation{1}(obj.Value,Operation{2:end});
+						else
+							Operation(obj.Value)
+						end
+					else
+						ME.rethrow;
+					end
 				end
 			end
 		end

@@ -292,6 +292,7 @@ classdef Referable
 end
 ```
 ## +Ops
+函数
 ```MATLAB
 %内置ismember的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [IsIn,Location] = IsMemberN(Target,Source,Dimension)
@@ -303,6 +304,12 @@ function [Diff,IA] = SetDiffN(SetA,SetB,Dimension)
 function USet = UnionN(Dimension,varargin)
 %内置unique的升级版，支持任意数组和表格类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [Set,InputIndex,UniqueIndex] = UniqueN(Set,varargin)
+```
+类
+```MATLAB
+classdef Pipeline
+	%实现管线|运算符
+end
 ```
 ## Project
 ```MATLAB

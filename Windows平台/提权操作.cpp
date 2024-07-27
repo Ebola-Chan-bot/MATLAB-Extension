@@ -87,8 +87,22 @@ static void 特权调用(const std::string& 参数)
 	MATLAB::Exception 结果;
 	if (!ReadFile(特权服务器, &结果, sizeof(结果), &NumberOfBytes, NULL))
 		ThrowLastError(MATLAB::Exception::Failed_to_communicate_with_the_privilege_server);
-	if (结果 != MATLAB::Exception::Successful)
+	switch (结果)
+	{
+	case MATLAB::Exception::Successful:
+		break;
+	case MATLAB::Exception::SEH_exception:
+	{
+		decltype(GetExceptionCode())异常码;
+		ReadFile(特权服务器, &异常码, sizeof(异常码), &NumberOfBytes, NULL);
+		char16_t* 错误消息;
+		FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, 异常码, MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED), (LPWSTR)&错误消息, 1, NULL);
+		std::unique_ptr<char16_t[], decltype(LocalFree)*>自动释放(错误消息, LocalFree);
+		EnumThrow(MATLAB::Exception::SEH_exception, 错误消息);
+	}
+	default:
 		EnumThrow(结果);
+	}
 }
 Mex工具API(Install_path_manager)
 {

@@ -53,5 +53,7 @@ namespace MATLAB
 		Unexpected_error_in_DuplicateHandle,
 		Unexpected_error_in_OpenProcess,
 		Failed_to_communicate_with_the_privilege_server,
+		Unknown_CPP_exception,
+		SEH_exception,
 	};
 }
