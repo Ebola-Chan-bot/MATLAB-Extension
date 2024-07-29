@@ -547,8 +547,7 @@ API(Serialport_snatch)
 		{
 			static const HMODULE Ntdll = GetModuleHandleA("ntdll.dll");
 			static decltype(NtQuerySystemInformation)* const 查询系统信息 = (decltype(NtQuerySystemInformation)*)GetProcAddress(Ntdll, "NtQuerySystemInformation");
-			static ULONG SystemInformationLength = sizeof(SYSTEM_HANDLE_INFORMATION_EX);
-			static std::unique_ptr<char[]>SystemInformation = std::make_unique_for_overwrite<char[]>(SystemInformationLength);
+			static std::vector<char>SystemInformation(sizeof(SYSTEM_HANDLE_INFORMATION_EX));
 			ULONG ReturnLength;
 			static bool 未获取特权 = true;
 			if (未获取特权)
@@ -568,9 +567,9 @@ API(Serialport_snatch)
 				CloseHandle(TokenHandle);
 				未获取特权 = false;
 			}
-			while (查询系统信息(SystemExtendedHandleInformation, SystemInformation.get(), SystemInformationLength, &ReturnLength))
-				SystemInformation = std::make_unique_for_overwrite<char[]>(SystemInformationLength = ReturnLength);
-			const SYSTEM_HANDLE_INFORMATION_EX* const 系统句柄信息 = (SYSTEM_HANDLE_INFORMATION_EX*)SystemInformation.get();
+			while (查询系统信息(SystemExtendedHandleInformation, SystemInformation.data(), SystemInformation.size(), &ReturnLength))
+				SystemInformation.resize(ReturnLength);
+			const SYSTEM_HANDLE_INFORMATION_EX* const 系统句柄信息 = (SYSTEM_HANDLE_INFORMATION_EX*)SystemInformation.data();
 			const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* 系统句柄表条目信息头 = 系统句柄信息->Handles;
 			const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* const 系统句柄表条目信息尾 = 系统句柄表条目信息头 + 系统句柄信息->NumberOfHandles;
 			系统指针<HANDLE, decltype(CloseHandle)*>TargetHandle(CloseHandle);
@@ -607,15 +606,16 @@ API(Serialport_snatch)
 #pragma pack(pop)
 				if (!TargetHandle)
 					for (; 系统句柄表条目信息头->ObjectTypeIndex != OB_TYPE_FILE || 句柄不可用(系统句柄表条目信息头, SourceProcessHandle, TargetHandle); 系统句柄表条目信息头++);
+				struct ProcExp_OutBuffer
+				{
+					ULONG ShareAccess;
+					wchar_t* 文件名()const noexcept { return (wchar_t*)(this + 1); }
+				};
+				static std::vector<char> OutBuffer(32);//初始大小不能太小，否则DeviceIoControl会报ERROR_MORE_DATA以外的错
 				for (;;)
 				{
 					InBuffer.Object = 系统句柄表条目信息头->Object;
 					InBuffer.DuplicatedHandle = TargetHandle;
-					struct ProcExp_OutBuffer
-					{
-						ULONG ShareAccess;
-						wchar_t* 文件名()const noexcept { return (wchar_t*)(this + 1); }
-					};
 					static const HANDLE ProExp152 = []()
 						{
 							HANDLE 返回值 = CreateFileW(L"\\\\.\\PROCEXP152", GENERIC_READ | GENERIC_WRITE, NULL, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -640,16 +640,14 @@ API(Serialport_snatch)
 							}
 							return 返回值;
 						}();
-					static DWORD OutBufferSize = 32;//初始大小不能太小，否则DeviceIoControl会报ERROR_MORE_DATA以外的错
 
-					static ProcExp_OutBuffer* OutBuffer = (ProcExp_OutBuffer*)std::malloc(OutBufferSize);
 					for (;;)
 					{
-						if (DeviceIoControl(ProExp152, 0x83350048, &InBuffer, sizeof(InBuffer), OutBuffer, OutBufferSize, nullptr, nullptr))
+						if (DeviceIoControl(ProExp152, 0x83350048, &InBuffer, sizeof(InBuffer), OutBuffer.data(), OutBuffer.size(), nullptr, nullptr))
 						{
 							if (系统句柄表条目信息头->UniqueProcessId == 调用进程ID)
 								int a = 1;
-							if (!wcscmp(ValueName.get(), OutBuffer->文件名()))
+							if (!wcscmp(ValueName.get(), ((ProcExp_OutBuffer*)OutBuffer.data())->文件名()))
 							{
 								if (系统句柄表条目信息头->UniqueProcessId == 调用进程ID)
 									throw MATLAB::Exception::Attempt_to_snatch_the_serialport_occupied_by_yourself;
@@ -661,9 +659,8 @@ API(Serialport_snatch)
 						}
 						else if (GetLastError() != ERROR_MORE_DATA)
 							break;
-						OutBuffer = (ProcExp_OutBuffer*)std::realloc(OutBuffer, OutBufferSize *= 2);
+						OutBuffer.resize(OutBuffer.size() * 2);
 					}
-					std::free(OutBuffer);
 					do
 						if (++系统句柄表条目信息头 >= 系统句柄表条目信息尾)
 						{

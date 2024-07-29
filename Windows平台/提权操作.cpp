@@ -41,13 +41,22 @@ static 懒加载 RootVersion参数头([]()noexcept
 	});
 static void 特权调用(const std::string& 参数)
 {
-	static RPC_WSTR Parameters;
+	static RPC_WSTR Parameters = []() 
+		{
+			RPC_WSTR 返回值;
+			UUID Uuid;
+			UuidCreate(&Uuid);
+			UuidToStringW(&Uuid, &返回值);
+			自动析构(返回值, [](void* 指针)
+				{
+					RpcStringFreeW((RPC_WSTR*)&指针);
+					CoUninitialize();
+				});
+			return 返回值;
+		}();
 	static std::unique_ptr<wchar_t[]>Filename;
 	if (!特权服务器)
 	{
-		UUID Uuid;
-		UuidCreate(&Uuid);
-		UuidToStringW(&Uuid, &Parameters);
 		const std::filesystem::path Name = std::filesystem::path(L"\\\\.\\pipe") / (wchar_t*)Parameters;
 		DWORD BufferSize = 128;
 		特权服务器 = CreateNamedPipeW(Name.c_str(), PIPE_ACCESS_DUPLEX, 0, 1, BufferSize, BufferSize, 0, NULL);
@@ -77,8 +86,6 @@ static void 特权调用(const std::string& 参数)
 	{
 		if ((INT_PTR)ShellExecuteW(NULL, L"runas", (std::filesystem::path(Filename.get()).parent_path().parent_path() / L"提权操作C.exe").c_str(), (LPCWSTR)Parameters, NULL, 0) == SE_ERR_ACCESSDENIED)
 			EnumThrow(MATLAB::Exception::User_denied_access);
-		RpcStringFreeW(&Parameters);
-		CoUninitialize();
 		ConnectNamedPipe(特权服务器, NULL);
 		已连接 = true;
 	}
@@ -86,7 +93,15 @@ static void 特权调用(const std::string& 参数)
 	WriteFile(特权服务器, 参数.data(), 参数.size(), &NumberOfBytes, NULL);
 	MATLAB::Exception 结果;
 	if (!ReadFile(特权服务器, &结果, sizeof(结果), &NumberOfBytes, NULL))
-		ThrowLastError(MATLAB::Exception::Failed_to_communicate_with_the_privilege_server);
+	{
+		const DWORD 错误码 = GetLastError();
+		if (错误码 == ERROR_BROKEN_PIPE)
+		{
+			DisconnectNamedPipe(特权服务器);//不先断连就不能连新的
+			已连接 = false;
+		}
+		EnumThrow(MATLAB::Exception::Failed_to_communicate_with_the_privilege_server, WindowsErrorMessage(错误码).get());
+	}
 	switch (结果)
 	{
 	case MATLAB::Exception::Successful:
