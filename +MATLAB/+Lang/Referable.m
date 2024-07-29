@@ -68,7 +68,7 @@ classdef Referable<handle
 			if isa(Value,class(obj.rValue))
 				obj.rValue=Value;
 			else
-				MATLAB.Exceptions.Cannot_change_type_of_Referable_value.Throw;
+				MATLAB.Exception.Cannot_change_type_of_Referable_value.Throw;
 			end
 		end
 		function obj = Referable(Value)
