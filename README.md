@@ -193,10 +193,8 @@ function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,varargin)
 function Arrows = LineFollowingArrow(XYCoordinates,options)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
-%统一各个坐标区的C轴范围
-function UnifyCLims(Axes)
-%统一各个坐标区的Y轴范围
-function UnifyYLims(Axes)
+%统一各坐标区的XYZC轴范围
+function UnifyAxesLims(Axes,varargin)
 %列出内置作图函数允许使用的Marker字符
 function VMC = ValidMarkerChars(Index)
 ```
