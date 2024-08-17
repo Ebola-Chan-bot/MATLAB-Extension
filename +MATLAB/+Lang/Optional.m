@@ -36,7 +36,7 @@ classdef Optional<handle
 			if obj.HasValue
 				V=obj.rValue;
 			else
-				MATLAB.Exceptions.Optional_value_not_set.Throw;
+				MATLAB.Exception.Optional_value_not_set.Throw;
 			end
 		end
 		function set.Value(obj,V)

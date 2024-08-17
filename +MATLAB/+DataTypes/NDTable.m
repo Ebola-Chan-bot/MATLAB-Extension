@@ -208,7 +208,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 						if all(Index)
 							Indices{I}=Index;
 						else
-							MATLAB.Exceptions.Index_name_not_found.Throw(join(IndexNames(~Exist),' '));
+							MATLAB.Exception.Index_name_not_found.Throw(join(IndexNames(~Exist),' '));
 						end
 					end
 					if height(obj.Dimensions)>=I&&~islogical(Index)
@@ -241,7 +241,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 					[~,Index]=ismember(IndexNames,obj.Dimensions.IndexNames{I});
 					IndexNames=IndexNames(~Index);
 					if ~isempty(IndexNames)
-						MATLAB.Exceptions.Index_name_not_found.Throw(join(IndexNames,' '));
+						MATLAB.Exception.Index_name_not_found.Throw(join(IndexNames,' '));
 					end
 				end
 				Indices{I}=Index;
@@ -268,7 +268,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				end
 			end
 			if NoSuchName
-				MATLAB.Exceptions.NDTable_does_not_contain_these_IndexNames.Throw(join(Names,' '));
+				MATLAB.Exception.NDTable_does_not_contain_these_IndexNames.Throw(join(Names,' '));
 			end
 			obj=obj.Data(Indices{:});
 			if isscalar(indexOp)
@@ -408,7 +408,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 					if isequaln(obj1.Dimensions,obj2.Dimensions)
 						obj1.Data=Operator(obj1.Data,obj2.Data);
 					else
-						MATLAB.Exceptions.Cannot_operate_on_NDTables_with_different_Dimensions.Throw;
+						MATLAB.Exception.Cannot_operate_on_NDTables_with_different_Dimensions.Throw;
 					end
 				else
 					obj1=RepeatDimension(obj1,Operator(obj1.Data,obj2));

@@ -76,7 +76,7 @@ classdef Vector<handle
 			if obj.Size
 				Value=obj.Container(1);
 			else
-				MATLAB.Exceptions.Vector_is_empty.Throw;
+				MATLAB.Exception.Vector_is_empty.Throw;
 			end
 		end
 		function set.Front(obj,Value)

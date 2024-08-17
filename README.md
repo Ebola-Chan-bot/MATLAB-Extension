@@ -2,7 +2,7 @@
 
 [![View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://ww2.mathworks.cn/matlabcentral/fileexchange/96344-matlab-extension)
 # 目录
-本包中所有函数均在MATLAB命名空间下，使用前需import。
+本工具箱中所有函数均在MATLAB命名空间下，使用前需import。
 - [+MATLAB](#matlab)
 	- [+Containers](#containers) 实现多种STL容器
 	- [+DataFun](#datafun) 数值统计操作
@@ -204,7 +204,7 @@ classdef Window<handle
 	%创建一个全透明Windows窗口，可以在其上显示图像
 end
 ```
-## ImageSci
+## +ImageSci
 ```MATLAB
 %内置imread的升级版，额外支持WebP格式图像
 function varargout = ImRead(varargin)
@@ -309,7 +309,7 @@ classdef Pipeline
 	%实现管线|运算符
 end
 ```
-## Project
+## +Project
 ```MATLAB
 %为Windows添加.prj文件扩展名关联
 function AssociatePrjExtension

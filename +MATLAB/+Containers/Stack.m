@@ -15,7 +15,7 @@ classdef Stack<handle
 		function Pop(obj)
 			%将栈顶对象弹出栈。如果栈为空，将发生错误
 			if isempty(obj.iTop)
-				MATLAB.Exceptions.Stack_is_empty.Throw;
+				MATLAB.Exception.Stack_is_empty.Throw;
 			else
 				obj.iTop=obj.iTop.Link;
 				obj.Size=obj.Size-1;
@@ -28,14 +28,14 @@ classdef Stack<handle
 		end
 		function Value=get.Top(obj)
 			if isempty(obj.iTop)
-				MATLAB.Exceptions.Stack_is_empty.Throw;
+				MATLAB.Exception.Stack_is_empty.Throw;
 			else
 				Value=obj.iTop.Value;
 			end
 		end
 		function set.Top(obj,Value)
 			if isempty(obj.iTop)
-				MATLAB.Exceptions.Stack_is_empty.Throw;
+				MATLAB.Exception.Stack_is_empty.Throw;
 			else
 				obj.iTop.Value=Value;
 			end
