@@ -1,7 +1,7 @@
 ﻿#include<共享头.h>
 #include<MATLAB异常.h>
 #include<phnt_windows.h>
-#define PHNT_VERSION 114
+#define PHNT_VERSION PHNT_WIN11_24H2
 #include<phnt.h>
 #include<AclAPI.h>
 import std;
