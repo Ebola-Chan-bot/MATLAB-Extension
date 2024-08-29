@@ -87,9 +87,6 @@ end
 classdef ArrayType
 	%枚举MATLAB所有基本数据类型
 end
-classdef CatMode
-	%此类用于MATLAB.DataTypes.ArrayFun的参数枚举
-end
 classdef EventLogger
 	%事件记录器，类似于秒表
 end
