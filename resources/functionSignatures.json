@@ -308,6 +308,378 @@
 			}
 		]
 	},
+	"MATLAB.Database.DatetimeToTimestamp": {
+		"inputs": [
+			{
+				"name": "Datetime",
+				"kind": "required",
+				"type": "datetime"
+			}
+		]
+	},
+	"MATLAB.Database.MariaDB": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "ConnectString",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"scalar"
+								],
+								[
+									"char",
+									"row"
+								]
+							],
+							"purpose": "连接字符串"
+						}
+					],
+					[
+						{
+							"name": "Server",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"scalar"
+								],
+								[
+									"char",
+									"row"
+								]
+							],
+							"purpose": "服务器名称"
+						},
+						{
+							"name": "DatabaseName",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"scalar"
+								],
+								[
+									"char",
+									"row"
+								]
+							],
+							"purpose": "数据库名称"
+						},
+						{
+							"name": "Username",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"scalar"
+								],
+								[
+									"char",
+									"row"
+								]
+							],
+							"purpose": "用户名"
+						},
+						{
+							"name": "Password",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"scalar"
+								],
+								[
+									"char",
+									"row"
+								]
+							],
+							"purpose": "密码"
+						}
+					],
+					[
+						{
+							"name": "Server",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"scalar"
+								],
+								[
+									"char",
+									"row"
+								]
+							],
+							"purpose": "服务器名称"
+						},
+						{
+							"name": "Port",
+							"kind": "required",
+							"type": [
+								"scalar",
+								"real"
+							],
+							"purpose": "端口号"
+						},
+						{
+							"name": "DatabaseName",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"scalar"
+								],
+								[
+									"char",
+									"row"
+								]
+							],
+							"purpose": "数据库名称"
+						},
+						{
+							"name": "Username",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"scalar"
+								],
+								[
+									"char",
+									"row"
+								]
+							],
+							"purpose": "用户名"
+						},
+						{
+							"name": "Password",
+							"kind": "required",
+							"type": [
+								[
+									"string",
+									"scalar"
+								],
+								[
+									"char",
+									"row"
+								]
+							],
+							"purpose": "密码"
+						}
+					]
+				]
+			}
+		]
+	},
+	"MATLAB.Database.RelationGraph": {
+		"inputs": [
+			{
+				"name": "Connection",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"java.sql.Connection"
+				],
+				"purpose": "JDBC数据库连接对象"
+			},
+			{
+				"name": "Tables",
+				"kind": "namevalue",
+				"type": [
+					[
+						"string"
+					],
+					[
+						"cell"
+					],
+					[
+						"char",
+						"row"
+					],
+					[
+						"categorical"
+					]
+				],
+				"purpose": "仅包含指定的表名"
+			},
+			{
+				"name": "Columns",
+				"kind": "namevalue",
+				"type": [
+					[
+						"string"
+					],
+					[
+						"cell"
+					],
+					[
+						"char",
+						"row"
+					],
+					[
+						"categorical"
+					]
+				],
+				"purpose": "包含指定的列名"
+			}
+		]
+	},
+	"MATLAB.Database.ResultSetToTable": {
+		"inputs": [
+			{
+				"name": "ResultSet",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"java.sql.ResultSet"
+				],
+				"purpose": "SQL查询结果"
+			},
+			{
+				"name": "ColumnsOfInterest",
+				"kind": "ordered",
+				"type": [
+					[
+						"string"
+					],
+					[
+						"cell"
+					]
+				],
+				"purpose": "要转换的列名"
+			}
+		]
+	},
+	"MATLAB.Database.Select": {
+		"inputs": [
+			{
+				"name": "Connection",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"java.sql.Connection"
+				],
+				"purpose": "JDBC数据库连接对象"
+			},
+			{
+				"name": "Columns",
+				"kind": "required",
+				"type": "string",
+				"purpose": "要查询的列名"
+			},
+			{
+				"name": "From",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "要查询的表名"
+			},
+			{
+				"name": "InnerJoin",
+				"kind": "namevalue",
+				"type": [
+					"tabular",
+					"size=:,3"
+				],
+				"purpose": "指定要用于内联表的外键约束关系"
+			},
+			{
+				"name": "WhereIn",
+				"kind": "namevalue",
+				"type": "tabular",
+				"purpose": "指定某些列的取值范围条件"
+			}
+		]
+	},
+	"MATLAB.Database.UpdateByPrimary": {
+		"inputs": [
+			{
+				"name": "Connection",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"java.sql.Connection"
+				],
+				"purpose": "数据库连接对象"
+			},
+			{
+				"name": "TableName",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "要更新的表名"
+			},
+			{
+				"name": "UpdateTable",
+				"kind": "required",
+				"type": "table",
+				"purpose": "要更新的数据表"
+			}
+		]
+	},
+	"MATLAB.Database.VarcharToEnum": {
+		"inputs": [
+			{
+				"name": "Connection",
+				"kind": "required",
+				"type": [
+					"java.sql.Connection",
+					"scalar"
+				],
+				"purpose": "JDBC数据库连接对象"
+			},
+			{
+				"name": "TableName",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "表名"
+			},
+			{
+				"name": "ColumnName",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "列名"
+			}
+		]
+	},
 	"MATLAB.DataFun.FindGroupsN": {
 		"inputs": [
 			{
