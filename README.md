@@ -212,6 +212,8 @@ function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,varargin)
 function Arrows = LineFollowingArrow(XYCoordinates,options)
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
+%创建带有可自定义文本的嵌套饼状图
+function fig = NestedPie(C, options)
 %统一各坐标区的XYZC轴范围
 function UnifyAxesLims(Axes,varargin)
 %列出内置作图函数允许使用的Marker字符
