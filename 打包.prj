@@ -4,16 +4,15 @@
     <param.authnamewatermark>埃博拉酱</param.authnamewatermark>
     <param.email>vhtmfu@outlook.com</param.email>
     <param.company>一致行动党</param.company>
-    <param.summary>提供许多内置函数的bug修复（是的，我们有在替官方修bug）、功能升级版，以及一系列内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，统一各坐标区的XYZC轴范围、斐波那契差值、全局键值对、统一Y轴范围、管线运算、串口抢夺、定点有位数字符串……</param.summary>
+    <param.summary>提供许多内置函数的bug修复（是的，我们有在替官方修bug）、功能升级版，以及一系列内置函数所欠缺，但却常用的增强功能（部分功能仅支持Windows系统）。例如，MariaDB数据库相关操作、序列化字节和反序列化、统一各坐标区的XYZC轴范围、斐波那契差值、全局键值对……</param.summary>
     <param.description>埃博拉酱的MATLAB扩展工具箱，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。还替官方修复了许多内置函数的bug。
 
-View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange
-
 目录
-本包中所有函数均在MATLAB命名空间下，使用前需import。
+本工具箱中所有函数均在MATLAB命名空间下，使用前需import。
 
 +MATLAB
 +Containers 实现多种STL容器
++Database MariaDB JDBC 数据库相关操作
 +DataFun 数值统计操作
 +DataTypes 元胞、表格、结构等特殊容器类型的复杂操作
 +ElFun 数值变换
@@ -30,10 +29,9 @@ View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange
 +SpecFun 穷举、椭圆周长
 +SupportPkg 一键获取MATLAB硬件支持包
 +UITools 文件打开和保存对话框
-还有一些尚未归类的工具函数直接放在MATLAB包下
-每个代码文件内部都有详细文档，可以用doc命令查看，此处仅列出函数签名和类功能简介。</param.description>
+还有一些尚未归类的工具函数直接放在MATLAB包下</param.description>
     <param.screenshot>${PROJECT_ROOT}\工具箱图像.png</param.screenshot>
-    <param.version>19.1.0</param.version>
+    <param.version>19.2.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />

@@ -5,6 +5,7 @@
 本工具箱中所有函数均在MATLAB命名空间下，使用前需import。
 - [+MATLAB](#matlab)
 	- [+Containers](#containers) 实现多种STL容器
+	- [+Database](#database) MariaDB JDBC 数据库相关操作
 	- [+DataFun](#datafun) 数值统计操作
 	- [+DataTypes](#datatypes) 元胞、表格、结构等特殊容器类型的复杂操作
 	- [+ElFun](#elfun) 数值变换
@@ -63,6 +64,23 @@ classdef Vector
 	%STL风格的向量实现
 end
 ```
+## +Database
+```MATLAB
+%将 MATLAB datetime 转换为java.sql.Timestamp
+function Timestamp = DatetimeToTimestamp(Datetime)
+%建立一个MariaDB数据库的连接
+function Connection=MariaDB(varargin)
+%数据库的关系图
+function RG = RelationGraph(Connection,options)
+%将java.sql.ResultSet转换为 MATLAB table
+function Table = ResultSetToTable(ResultSet,ColumnsOfInterest)
+%构造 SQL SELECT 语句并查询
+function Result = Select(Connection,Columns,From,options)
+%根据主键更新或插入数据
+function UpdateByPrimary(Connection,TableName,UpdateTable)
+%将数据库表某一VARCHAR列转换为ENUM类型
+function VarcharToEnum(Connection,TableName,ColumnName)
+```
 ## +DataFun
 ```MATLAB
 %内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
@@ -100,6 +118,8 @@ end
 function varargout=ArrayFun(Function,Arguments,options)
 %cell2mat的升级版，强力拼接任意数据类型
 function Cells = Cell2Mat(Cells)
+%将MATLAB.DataTypes.Serialize序列化的字节反序列化回MATLAB数据类型
+function Data = Deserialize(Bytes)
 %取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数
 function varargout = FolderFun(Function,Directory,options)
 %检查表中所有全等的列，将它们合并成一列
@@ -114,6 +134,8 @@ function varargout = RepeatingFun(Function,Arguments)
 function [OptimizedTables,TableGraph] = OptimizeQueryGraph(Tables,ColumnsOfInterest,Flags)
 %对多张表格实施类似于 SQL SELECT 的查询操作
 function ResultTable = Select(varargin)
+%将任意MATLAB类型数据序列化为int8列向量
+function Bytes = Serialize(Data)
 %内置typecast的升级版，支持多维数组，需指定转换维度
 function Y = TypeCast(X,Type,Dimension)
 ```

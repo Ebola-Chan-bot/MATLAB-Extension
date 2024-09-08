@@ -1036,6 +1036,16 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.Deserialize": {
+		"inputs": [
+			{
+				"name": "Bytes",
+				"kind": "required",
+				"type": "real",
+				"purpose": "使用MATLAB.DataTypes.Serialize序列化的字节"
+			}
+		]
+	},
 	"MATLAB.DataTypes.EventLogger.LogEvent": {
 		"inputs": [
 			{
@@ -1311,6 +1321,15 @@
 					"scalar"
 				],
 				"purpose": "指定额外功能旗帜"
+			}
+		]
+	},
+	"MATLAB.DataTypes.Serialize": {
+		"inputs": [
+			{
+				"name": "Data",
+				"kind": "required",
+				"purpose": "任意MATLAB数据类型"
 			}
 		]
 	},
@@ -2385,6 +2404,173 @@
 					"matlab.graphics.axis.Axes"
 				],
 				"purpose": "作为绘图目标的坐标区"
+			}
+		]
+	},
+	"MATLAB.Graphics.NestedPie": {
+		"inputs": [
+			{
+				"name": "C",
+				"kind": "required",
+				"type": "cell",
+				"purpose": "用于绘制嵌套饼状图的数据点"
+			},
+			{
+				"name": "RhoLower",
+				"kind": "namevalue",
+				"type": "positive",
+				"purpose": "用于指定最内层嵌套饼状图的起始半径"
+			},
+			{
+				"name": "EdgeColor",
+				"kind": "namevalue",
+				"purpose": "用于指定楔形的边缘颜色"
+			},
+			{
+				"name": "LineWidth",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "用于指定楔形的边缘线宽度"
+			},
+			{
+				"name": "LineStyle",
+				"kind": "namevalue",
+				"purpose": "用于指定楔形的边缘线样式"
+			},
+			{
+				"name": "WedgeColors",
+				"kind": "namevalue",
+				"type": "cell",
+				"purpose": "用于指定各个楔形的颜色"
+			},
+			{
+				"name": "PercentStatus",
+				"kind": "namevalue",
+				"purpose": "用于指定每个楔形是否显示百分比文本"
+			},
+			{
+				"name": "PercentPrecision",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "用于指定百分比的文本小数位数"
+			},
+			{
+				"name": "PercentFontColor",
+				"kind": "namevalue",
+				"purpose": "用于指定百分比的文本字体颜色"
+			},
+			{
+				"name": "PercentFontSize",
+				"kind": "namevalue",
+				"type": "positive",
+				"purpose": "用于指定百分比的文本字体大小"
+			},
+			{
+				"name": "PercentFontWeight",
+				"kind": "namevalue",
+				"purpose": "用于指定百分比的文本字体粗细"
+			},
+			{
+				"name": "PercentEdgeColor",
+				"kind": "namevalue",
+				"purpose": "用于指定百分比的文本框边缘颜色"
+			},
+			{
+				"name": "PercentBackgroundColor",
+				"kind": "namevalue",
+				"purpose": "用于指定百分比的文本框背景颜色"
+			},
+			{
+				"name": "LabelText",
+				"kind": "namevalue",
+				"type": [
+					[
+						"string"
+					],
+					[
+						"cell"
+					]
+				],
+				"purpose": "用于指定每个最外层的标签"
+			},
+			{
+				"name": "LabelFontSize",
+				"kind": "namevalue",
+				"type": "positive",
+				"purpose": "用于指定标签的字体大小"
+			},
+			{
+				"name": "LabelFontColor",
+				"kind": "namevalue",
+				"purpose": "用于指定标签的字体颜色"
+			},
+			{
+				"name": "LabelFontWeight",
+				"kind": "namevalue",
+				"purpose": "用于指定标签的字体粗细"
+			},
+			{
+				"name": "LabelEdgeColor",
+				"kind": "namevalue",
+				"purpose": "用于指定标签的边缘颜色"
+			},
+			{
+				"name": "LabelBackgroundColor",
+				"kind": "namevalue",
+				"purpose": "用于指定标签的背景颜色"
+			},
+			{
+				"name": "LabelRotation",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "用于指定标签的旋转"
+			},
+			{
+				"name": "LabelOffset",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "用于指定标签的径向偏移量"
+			},
+			{
+				"name": "LabelInterpreter",
+				"kind": "namevalue",
+				"purpose": "用于指定标签的解释器"
+			},
+			{
+				"name": "FillTransparency",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "用于指定楔形的填充透明度"
+			},
+			{
+				"name": "IgnorePercent",
+				"kind": "namevalue",
+				"type": [
+					"real",
+					"scalar"
+				],
+				"purpose": "用于忽略低于一定百分比的标签"
+			},
+			{
+				"name": "LegendOrder",
+				"kind": "namevalue",
+				"type": "real",
+				"purpose": "用于更改饼层在图例中首先显示的顺序"
 			}
 		]
 	},
