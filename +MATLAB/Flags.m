@@ -209,6 +209,12 @@ classdef Flags<uint32
 		CanCat(20)
 		%不符合上述任何条件，或返回值为函数句柄
 		DontCat(21)
+
+        %% Database.SetupMatlab
+
+        Install(22)
+		Fix(23)
+		Uninstall(24)
 	end
 	methods
 		function Combination=or(Flag1,Flag2)
