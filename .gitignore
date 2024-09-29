@@ -1,6 +1,6 @@
 # List of untracked files to ignore
 .vs
-packages
+package*
 **/*.mltbx
 **/*.asv
 **/*.exp
@@ -13,3 +13,4 @@ packages
 **/obj
 **/*.deps.json
 /+MATLAB/+internal/private/libwebp_debug.dll
+node_modules

@@ -55,5 +55,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Unexpected_distance
 		Invalid_column_name
 		Invalid_Operation
+		Unsupported_column_type
 	end
 end

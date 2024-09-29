@@ -135,7 +135,7 @@ function [OptimizedTables,TableGraph] = OptimizeQueryGraph(Tables,ColumnsOfInter
 %对多张表格实施类似于 SQL SELECT 的查询操作
 function ResultTable = Select(varargin)
 %将任意MATLAB类型数据序列化为int8列向量
-function Bytes = Serialize(Data)
+function Bytes = Serialize(Data,Dimensions)
 %内置typecast的升级版，支持多维数组，需指定转换维度
 function Y = TypeCast(X,Type,Dimension)
 ```

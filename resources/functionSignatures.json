@@ -1330,6 +1330,12 @@
 				"name": "Data",
 				"kind": "required",
 				"purpose": "任意MATLAB数据类型"
+			},
+			{
+				"name": "Dimensions",
+				"kind": "ordered",
+				"type": "real",
+				"purpose": "仅序列化某些维度"
 			}
 		]
 	},
