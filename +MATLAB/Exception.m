@@ -56,5 +56,9 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Invalid_column_name
 		Invalid_Operation
 		Unsupported_column_type
+		Update_data_too_large
+		Data_does_not_support_typecast
+		No_dimensions_found_concatenatable
+		No_need_to_concatenate_scalars
 	end
 end

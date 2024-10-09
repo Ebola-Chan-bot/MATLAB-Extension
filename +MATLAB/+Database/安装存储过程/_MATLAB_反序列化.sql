@@ -14,7 +14,7 @@ DECLARE 序列 LONGBLOB;
 
 DECLARE `字节数` TINYINT UNSIGNED;
 
-DECLARE 终点 INT UNSIGNED;
+DECLARE 终点 INT;
 
 DECLARE 转码语句 TINYTEXT CHARSET utf16 COLLATE utf16_bin;
 
@@ -134,7 +134,7 @@ WHERE
 
 SET
 	@语句文本 = CONCAT(
-		'ALTER TABLE _MATLAB_反序列化_输出 ADD IF NOT EXISTS ',
+		'ALTER TABLE _MATLAB_反序列化_输出 ADD ',
 		名称,
 		' ',
 		完全类型,
@@ -239,7 +239,7 @@ SELECT
 		'ALTER TABLE ',
 		`输出表名`,
 		' ADD IF NOT EXISTS(',
-		GROUP_CONCAT(CONCAT(名称, ' ', 类型, ' NULL') SEPARATOR ','),
+		GROUP_CONCAT(CONCAT(_MATLAB_反序列化_输入.名称, ' ', 类型, ' NULL') SEPARATOR ','),
 		')'
 	) INTO @语句文本
 FROM
@@ -248,7 +248,7 @@ FROM
 ELSE
 SET
 	@语句文本 = CONCAT(
-		'CREATE TABLE IF NOT EXISTS ',
+		'CREATE TEMPORARY TABLE ',
 		`输出表名`,
 		' LIKE _MATLAB_反序列化_输出'
 	);
