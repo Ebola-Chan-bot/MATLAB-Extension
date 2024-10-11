@@ -308,6 +308,64 @@
 			}
 		]
 	},
+	"MATLAB.Database.AlterCollate": {
+		"inputs": [
+			{
+				"name": "Connection",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"java.sql.Connection"
+				],
+				"purpose": "JDBC数据库连接对象"
+			},
+			{
+				"name": "Collate",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "排序规则"
+			},
+			{
+				"name": "TableName",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "表名"
+			},
+			{
+				"name": "ColumnName",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "列名"
+			}
+		]
+	},
 	"MATLAB.Database.DatetimeToTimestamp": {
 		"inputs": [
 			{
