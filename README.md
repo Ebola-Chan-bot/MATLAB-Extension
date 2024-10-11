@@ -66,8 +66,12 @@ end
 ```
 ## +Database
 ```MATLAB
+%修改表列排序规则
+function AlterCollate(Connection,Collate,TableName,ColumnName)
 %将 MATLAB datetime 转换为java.sql.Timestamp
 function Timestamp = DatetimeToTimestamp(Datetime)
+%将指定数据库整个下载导出到.mat文件
+function Dump(Connection,FilePath)
 %建立一个MariaDB数据库的连接
 function Connection=MariaDB(varargin)
 %数据库的关系图
@@ -76,6 +80,8 @@ function RG = RelationGraph(Connection,options)
 function Table = ResultSetToTable(ResultSet,ColumnsOfInterest)
 %构造 SQL SELECT 语句并查询
 function Result = Select(Connection,Columns,From,options)
+%为指定数据库安装MATLAB扩展
+function SetupMatlab(Connection,Operation)
 %根据主键更新或插入数据
 function UpdateByPrimary(Connection,TableName,UpdateTable)
 %将数据库表某一VARCHAR列转换为ENUM类型

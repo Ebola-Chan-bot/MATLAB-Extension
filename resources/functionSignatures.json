@@ -351,7 +351,7 @@
 			},
 			{
 				"name": "ColumnName",
-				"kind": "required",
+				"kind": "ordered",
 				"type": [
 					[
 						"string",
@@ -372,6 +372,48 @@
 				"name": "Datetime",
 				"kind": "required",
 				"type": "datetime"
+			}
+		]
+	},
+	"MATLAB.Database.Dump": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Connection",
+							"kind": "required",
+							"type": [
+								"scalar",
+								"java.sql.Connection"
+							],
+							"purpose": "JDBC数据库连接对象"
+						}
+					],
+					[
+						{
+							"name": "ConnectionGetter",
+							"kind": "required",
+							"type": "function_handle",
+							"purpose": "返回数据库连接对象的函数句柄"
+						}
+					]
+				]
+			},
+			{
+				"name": "FilePath",
+				"kind": "required",
+				"type": [
+					[
+						"char",
+						"row"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
+				"purpose": "导出文件路径"
 			}
 		]
 	},
