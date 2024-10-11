@@ -1,5 +1,7 @@
 埃博拉酱的MATLAB扩展工具箱，提供一系列MATLAB内置函数所欠缺，但却常用的增强功能。还替官方修复了许多内置函数的bug。
 
+个别功能最高要求 MATLAB R2024b 版本才能正常工作，但低版本一般可以运行大部分功能。
+
 [![View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://ww2.mathworks.cn/matlabcentral/fileexchange/96344-matlab-extension)
 # 目录
 本工具箱中所有函数均在MATLAB命名空间下，使用前需import。
