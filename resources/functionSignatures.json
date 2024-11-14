@@ -3583,14 +3583,21 @@
 			}
 		]
 	},
-	"MATLAB.IOFun.DelimitedStrings2Table": {
+	"MATLAB.IOFun.DelimitedStringsToTable": {
 		"inputs": [
 			{
 				"name": "Strings",
 				"kind": "required",
 				"type": [
-					"column",
-					"string"
+					[
+						"char"
+					],
+					[
+						"cell"
+					],
+					[
+						"string"
+					]
 				],
 				"purpose": "分隔符字符串列"
 			},
@@ -3598,8 +3605,15 @@
 				"name": "FieldNames",
 				"kind": "required",
 				"type": [
-					"row",
-					"string"
+					[
+						"char"
+					],
+					[
+						"cell"
+					],
+					[
+						"string"
+					]
 				],
 				"purpose": "从头开始按顺序排列每个字段的名称。"
 			},
@@ -3607,8 +3621,18 @@
 				"name": "Delimiter",
 				"kind": "required",
 				"type": [
-					"scalar",
-					"string"
+					[
+						"char",
+						"scalar"
+					],
+					[
+						"cell",
+						"scalar"
+					],
+					[
+						"string",
+						"scalar"
+					]
 				],
 				"purpose": "分隔符，将传递给split用于分隔"
 			},
@@ -3623,26 +3647,35 @@
 				"name": "DatetimeFormat",
 				"kind": "namevalue",
 				"type": [
-					"row",
-					"char"
+					[
+						"char"
+					],
+					[
+						"cell",
+						"scalar"
+					],
+					[
+						"string",
+						"scalar"
+					]
 				],
-				"purpose": "日期时间格式",
-				"default": "'yyyyMMddHHmmss'"
+				"purpose": "日期时间格式"
 			},
 			{
 				"name": "IgnoreKeywords",
 				"kind": "namevalue",
 				"type": [
-					"vector",
-					"string"
+					[
+						"char"
+					],
+					[
+						"cell"
+					],
+					[
+						"string"
+					]
 				],
 				"purpose": "如果分隔出的字段正好是某些关键词，忽略它们"
-			}
-		],
-		"outputs": [
-			{
-				"name": "Table",
-				"type": "tabular"
 			}
 		]
 	},

@@ -60,5 +60,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Data_does_not_support_typecast
 		No_dimensions_found_concatenatable
 		No_need_to_concatenate_scalars
+		Deprecated
 	end
 end

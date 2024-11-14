@@ -263,7 +263,7 @@ end
 函数
 ```MATLAB
 %将一列分隔符字符串的前几个字段读出为表格或时间表
-function Table = DelimitedStrings2Table(Strings,FieldNames,Delimiter,options)
+function Table = DelimitedStringsToTable(Strings,FieldNames,Delimiter,options)
 %批量重命名.mat文件中的变量
 function MatVariableRename(OldNames,NewNames,MatPaths)
 %发送喵提醒
