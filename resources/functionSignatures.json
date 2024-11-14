@@ -3952,50 +3952,6 @@
 			}
 		]
 	},
-	"MATLAB.IOFun.XmlDom2String": {
-		"inputs": [
-			{
-				"name": "XmlDom",
-				"kind": "required",
-				"type": [
-					"scalar",
-					"org.w3c.dom.Document"
-				],
-				"purpose": "XML文档对象模型"
-			}
-		],
-		"outputs": [
-			{
-				"name": "XmlString",
-				"type": [
-					"scalar",
-					"java.lang.String"
-				]
-			}
-		]
-	},
-	"MATLAB.IOFun.XmlString2Dom": {
-		"inputs": [
-			{
-				"name": "XmlString",
-				"kind": "required",
-				"type": [
-					"scalar",
-					"string"
-				],
-				"purpose": "XML文本"
-			}
-		],
-		"outputs": [
-			{
-				"name": "XmlDom",
-				"type": [
-					"scalar",
-					"org.w3c.dom.Document"
-				]
-			}
-		]
-	},
 	"MATLAB.Lang.BuiltinBugFix": {
 		"inputs": [
 			{

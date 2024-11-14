@@ -268,10 +268,6 @@ function Table = DelimitedStrings2Table(Strings,FieldNames,Delimiter,options)
 function MatVariableRename(OldNames,NewNames,MatPaths)
 %发送喵提醒
 function SendMeowAlert(MeowCode)
-%将org.w3c.dom.Document导出为XML文本
-function XmlString = XmlDom2String(XmlDom)
-%将XML字符串解析为org.w3c.dom.Document类型
-function XmlDom = XmlString2Dom(XmlString)
 ```
 类
 ```MATLAB
