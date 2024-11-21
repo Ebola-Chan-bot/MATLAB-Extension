@@ -61,5 +61,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		No_dimensions_found_concatenatable
 		No_need_to_concatenate_scalars
 		Deprecated
+		A_minimum_of_2_Axes_is_required
 	end
 end
