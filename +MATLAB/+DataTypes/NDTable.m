@@ -479,7 +479,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 				CatDimensions.DimensionName(end+1:ArgHeight)=Arg.Dimensions.DimensionName(CatHeight+1:end);
 				CatDimensions.IndexNames(end+1:ArgHeight)=Arg.Dimensions.IndexNames(CatHeight+1:end);
 				if ArgHeight>=dim
-					CatDim{V}=reshape(string(Arg.Dimensions{dim}),1,[]);
+					CatDim{V}=reshape(string(Arg.Dimensions.IndexNames{dim}),1,[]);
 					CatDim{V}(end+1:size(Arg.Data,dim))=missing;
 				end
 				CatData{V}=Arg.Data;
