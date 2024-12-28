@@ -4354,6 +4354,54 @@
 			}
 		]
 	},
+	"MATLAB.MixIn.BraceReference": {
+		"inputs": [
+			{
+				"name": "Object",
+				"kind": "required",
+				"purpose": "要引用的对象"
+			},
+			{
+				"name": "Index",
+				"kind": "required",
+				"purpose": "要引用的索引",
+				"repeating": true
+			}
+		]
+	},
+	"MATLAB.MixIn.DotAssign": {
+		"inputs": [
+			{
+				"name": "Object",
+				"kind": "required",
+				"purpose": "要赋值的对象"
+			},
+			{
+				"name": "Index",
+				"kind": "required",
+				"purpose": "要赋值的索引"
+			},
+			{
+				"name": "Value",
+				"kind": "required",
+				"purpose": "要赋的值"
+			}
+		]
+	},
+	"MATLAB.MixIn.DotReference": {
+		"inputs": [
+			{
+				"name": "Object",
+				"kind": "required",
+				"purpose": "要引用的对象"
+			},
+			{
+				"name": "Index",
+				"kind": "required",
+				"purpose": "要引用的索引"
+			}
+		]
+	},
 	"MATLAB.Ops.IntersectN": {
 		"inputs": [
 			{

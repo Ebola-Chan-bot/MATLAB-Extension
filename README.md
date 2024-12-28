@@ -18,6 +18,7 @@
 	- [+IO](#io) 文件和ZIP档案操作
 	- [+IOFun](#iofun) 文件、网络、内存读写相关
 	- [+Lang](#lang) 函数使用、定义、异常工具、语言功能
+	- [+MixIn](#mixin) 索引相关功能
 	- [+Ops](#ops) 逻辑和集合操作
 	- [+Project](#project) 工程相关
 	- [+RandFun](#randfun) 随机概率分布洗牌
@@ -313,6 +314,13 @@ end
 classdef Referable
 	%为值创建引用源，然后可以创建同步更改的引用
 end
+```
+## +MixIn
+```MATLAB
+%在不方便使用点索引赋值的语境下通过函数调用实现点索引赋值
+function Object = DotAssign(Object,Index,Value)
+%在不方便使用点索引的语境下通过函数调用实现点索引
+function Value = DotReference(Object,Index)
 ```
 ## +Ops
 函数
