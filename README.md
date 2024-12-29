@@ -317,6 +317,8 @@ end
 ```
 ## +MixIn
 ```MATLAB
+%在不方便使用花括号索引的语境下通过函数调用实现花括号索引
+function varargout = BraceReference(Object,varargin)
 %在不方便使用点索引赋值的语境下通过函数调用实现点索引赋值
 function Object = DotAssign(Object,Index,Value)
 %在不方便使用点索引的语境下通过函数调用实现点索引

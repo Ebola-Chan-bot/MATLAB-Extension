@@ -2,7 +2,7 @@
 #include<MATLAB异常.h>
 #include<Mex工具.hpp>
 #include<mariadb/conncpp.hpp>
-#include<variant>
+#include<numeric>
 using namespace Mex工具;
 Mex工具API(Database_MariaDB)
 {
@@ -26,148 +26,64 @@ Mex工具API(Database_MariaDB)
 	输出[0] = 万能转码(连接);
 }
 using namespace matlab::data;
-struct 通用赋值器
+struct 通用列适配器
 {
-	static std::unique_ptr<通用赋值器>创建(const Array& 数组);
-	virtual void 赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号) = 0;
-	virtual ~通用赋值器() {}
+	std::string MariaDB类型;
+	virtual void 插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号) = 0;
+	virtual ~通用列适配器() {}
 };
 template<typename T>
-struct 迭代赋值器 :通用赋值器
+struct 特殊列适配器 :通用列适配器
 {
+	TypedArray<T> MATLAB数组;
 	TypedArray<T>::const_iterator 迭代器;
-	static std::string 类型名称;
-	void 赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)override;
-	迭代赋值器(const TypedArray<T>& 数组);
+	void 插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)override;
+	特殊列适配器(TypedArray<T>&& MATLAB数组);
 };
-
-template<>
-void 迭代赋值器<bool>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setByte(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<int8_t>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setByte(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<uint8_t>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setShort(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<int16_t>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setShort(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<uint16_t>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setInt(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<int32_t>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setInt(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<uint32_t>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setUInt(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<int64_t>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setLong(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<uint64_t>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setUInt64(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<float>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setFloat(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<double>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setDouble(参数序号, *迭代器++);
-}
-template<>
-void 迭代赋值器<MATLABString>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setString(参数序号, 万能转码<std::string>(*迭代器++));
-}
-template<>
-void 迭代赋值器<Array>::赋值(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
-{
-	准备好的语句->setString(参数序号, 万能转码<std::string>(*迭代器++));
-}
 constexpr struct
 {
 	template<typename T>
-	迭代赋值器<T>*operator()(const TypedArray<T>&数组)const
+	通用列适配器* operator()(TypedArray<T>&& MATLAB数组);
+	通用列适配器* operator()(CellArray&& MATLAB数组)
 	{
-		return new 迭代赋值器<T>(数组);
-	};
-}通用访问器;
-std::unique_ptr<通用赋值器> 通用赋值器::创建(const Array& 数组)
-{
-	return std::unique_ptr<通用赋值器>{ apply_visitor(数组, 通用访问器)};
-}
+
+	}
+}访问构造器;
 Mex工具API(Database_UpdateByPrimary)
 {
 	sql::Connection* const 连接 = 万能转码<sql::Connection*>(std::move(输入[0]));
 	const std::string 表名 = 万能转码<std::string>(std::move(输入[1]));
-	const Array& 更新表 = 输入[2];
+	Array& 更新表 = 输入[2];
 	const ArrayDimensions 行列数 = 更新表.getDimensions();
-	const std::unique_ptr<std::string[]>所有列名C = std::make_unique_for_overwrite<std::string[]>(行列数[1]);
-	const StringArray 所有列名M = 万能转码<StringArray>(MATLAB引擎->feval<Array>("MATLAB.MixIn.DotReference", MATLAB引擎->feval<Array>("MATLAB.MixIn.DotReference", 更新表, "Properties"), "VariableNames"));
-	struct 类型擦除
-	{
-		void(*转换方法)(Array&& 列M, 通用类型::数组& 列C, 通用类型::迭代器&迭代器);
-		void(*赋值方法)(sql::PreparedStatement* 准备好的语句, int32_t 参数序号, 通用类型::迭代器& 迭代器);
-	};
-	//这个顺序不是任意的，必须与ArrayType枚举顺序一致
-	constexpr 类型擦除 方法集合[] =
-	{
-		{
-			//LOGICAL
-			[](Array&& 列M, 通用列类型& 列C, const void*& 头指针)
-			{
-				buffer_ptr_t<bool>缓冲 = TypedArray<bool>(std::move(列M)).release();
-				头指针 = 缓冲.get();
-				列C = std::move(缓冲);
-			},
-			[](sql::PreparedStatement* 准备好的语句,int32_t 参数序号, const void*& 头指针)
-			{
-				准备好的语句->setByte(参数序号, *reinterpret_cast<const bool*&>(头指针)++);
-			}
-		},
-		{
-			//CHAR
-		},
-		{
-			//MATLAB_STRING
-			[](Array&& 列M, 通用列类型& 列C, const void*& 头指针)
-			{
-				buffer_ptr_t<bool>缓冲 = TypedArray<bool>(std::move(列M)).release();
-				头指针 = 缓冲.get();
-				列C = std::move(缓冲);
-			},
-			[](sql::PreparedStatement* 准备好的语句,int32_t 参数序号, const void*& 头指针)
-			{
-				准备好的语句->setByte(参数序号, *reinterpret_cast<const bool*&>(头指针)++);
-			}
-		},
-	};
+	const CellArray 所有MATLAB列名 = MATLAB引擎->feval<CellArray>("MATLAB.MixIn.DotReference", MATLAB引擎->feval<Array>("MATLAB.MixIn.DotReference", 更新表, "Properties"), "VariableNames");
+	const std::unique_ptr<std::unique_ptr<通用列适配器>[]>所有列 = std::make_unique_for_overwrite<std::unique_ptr<通用列适配器>[]>(行列数[1]);
 	for (uint8_t 列 = 0; 列 < 行列数[1]; ++列)
 	{
-		所有列名C[列] = 万能转码<std::string>(所有列名M[列]);
-
+		Array 列内容 = MATLAB引擎->feval<Array>("MATLAB.MixIn.BraceReference", 更新表, ":", 列);
+		const ArrayDimensions 列内容尺寸 = 列内容.getDimensions();
+		if (列内容尺寸.size() > 2 || 列内容尺寸[1] > 1)
+		{
+			const size_t 参数长度 = 列内容尺寸.size() - 1;
+			buffer_ptr_t<uint8_t>维度参数 = 数组工厂.createBuffer<uint8_t>(参数长度);
+			std::iota(维度参数.get(), 维度参数.get() + 参数长度, 2);
+			try
+			{
+				列内容 = MATLAB引擎->feval<Array>("MATLAB.DataTypes.Serialize", std::move(列内容), 数组工厂.createArrayFromBuffer({ 参数长度 }, std::move(维度参数)));
+			}
+			catch (const matlab::engine::MATLABException& 异常)
+			{
+				if (异常.getMessageID() == "MATLAB:Exception:Data_does_not_support_typecast")
+				{
+					列内容[1];
+				}
+		}
+		if (MATLAB引擎->feval<bool>("iscellstr", 列内容))
+		{
+			StringArray&& 字符串列内容 = 万能转码<StringArray>(std::move(列内容));
+			更新表 = MATLAB引擎->feval<Array>("MATLAB.MixIn.DotAssign", 更新表, 所有MATLAB列名[列], 字符串列内容);
+			所有列[列] = std::make_unique<特殊列适配器<MATLABString>>(std::move(字符串列内容));
+			continue;
+		}
 	}
 	const std::unique_ptr<sql::Statement>语句{ 连接->createStatement() };
 	const std::unique_ptr<sql::ResultSet>结果集{ 语句->executeQuery((std::ostringstream("SELECT COUNT(*) FROM ") << 表名 << " LIMIT 1").str()) };
