@@ -51,6 +51,7 @@ classdef WindowsAPI<uint64
 		Associate_prj_extension(48)
 		Get_pathdef_permission(49)
 		Serialport_snatch(50)
+		Database_UpdateByPrimary(51)
 	end
 	methods
 		function varargout=Call(obj,varargin)

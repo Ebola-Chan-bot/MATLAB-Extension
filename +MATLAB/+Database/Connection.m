@@ -1,5 +1,5 @@
-classdef untitled
-	%UNTITLED 此处显示有关此类的摘要
+classdef Connection
+	%CONNECTION 此处显示有关此类的摘要
 	%   此处显示详细说明
 	
 	properties
@@ -7,8 +7,8 @@ classdef untitled
 	end
 	
 	methods
-		function obj = untitled(inputArg1,inputArg2)
-			%UNTITLED 构造此类的实例
+		function obj = Connection(inputArg1,inputArg2)
+			%CONNECTION 构造此类的实例
 			%   此处显示详细说明
 			obj.Property1 = inputArg1 + inputArg2;
 		end
