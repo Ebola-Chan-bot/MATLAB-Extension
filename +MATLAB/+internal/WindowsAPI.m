@@ -51,7 +51,9 @@ classdef WindowsAPI<uint64
 		Associate_prj_extension(48)
 		Get_pathdef_permission(49)
 		Serialport_snatch(50)
-		Database_UpdateByPrimary(51)
+		Database_MariaDB(51)
+		Database_DeleteMariaDB(52)
+		Database_UpdateByPrimary(53)
 	end
 	methods
 		function varargout=Call(obj,varargin)

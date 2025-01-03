@@ -55,6 +55,6 @@ namespace MATLAB
 		Failed_to_communicate_with_the_privilege_server,
 		Unknown_CPP_exception,
 		SEH_exception,
-		Unsupported_column_type,
+		Unexpected_column_type,
 	};
 }

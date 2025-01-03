@@ -77,6 +77,12 @@ Mex工具API(Associate_prj_extension);
 Mex工具API(Get_pathdef_permission);
 Mex工具API(Serialport_snatch);
 
+//Database
+
+Mex工具API(Database_MariaDB);
+Mex工具API(Database_DeleteMariaDB);
+Mex工具API(Database_UpdateByPrimary);
+
 using namespace Mex工具;
 void Mex工具::初始化()noexcept {}
 Mex工具API(Mex工具::执行)
@@ -134,6 +140,9 @@ Mex工具API(Mex工具::执行)
 		Associate_prj_extension,
 		Get_pathdef_permission,
 		Serialport_snatch,
+		Database_MariaDB,
+		Database_DeleteMariaDB,
+		Database_UpdateByPrimary
 	};
 	跳转表[万能转码<size_t>(std::move(输入[0]))](输出, 输入);
 };

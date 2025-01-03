@@ -1,8 +1,8 @@
 #include"pch.h"
 #include<MATLAB异常.h>
 #include<Mex工具.hpp>
-#define MAYBE_IN_NEXT_VERSION
 #include<mariadb/conncpp.hpp>
+#pragma comment(lib,"mariadbcpp.lib")
 #include<numeric>
 using namespace Mex工具;
 Mex工具API(Database_MariaDB)
@@ -26,6 +26,12 @@ Mex工具API(Database_MariaDB)
 	自动析构(连接);
 	输出[0] = 万能转码(连接);
 }
+Mex工具API(Database_DeleteMariaDB)
+{
+	sql::Connection* const 连接 = 万能转码<sql::Connection*>(std::move(输入[1]));
+	if (手动析构(连接))
+		delete 连接;
+}
 using namespace matlab::data;
 struct 通用列适配器
 {
@@ -36,42 +42,124 @@ template<typename T>
 struct 特殊列适配器 :通用列适配器
 {
 	TypedArray<T>::const_iterator 迭代器;
-	void 插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)override;
+	void 插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)override
+	{
+		EnumThrow(MATLAB::Exception::Unexpected_column_type);
+	}
 	特殊列适配器(const TypedArray<T>& MATLAB数组) :迭代器(MATLAB数组.cbegin()) {}
 };
+template<>
+void 特殊列适配器<bool>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setByte(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<int8_t>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setByte(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<uint8_t>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setShort(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<int16_t>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setShort(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<uint16_t>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setInt(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<int32_t>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setInt(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<uint32_t>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setUInt(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<int64_t>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setInt64(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<uint64_t>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setUInt64(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<float>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setFloat(参数序号, *迭代器++);
+}
+template<>
+void 特殊列适配器<double>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	准备好的语句->setDouble(参数序号, *迭代器++);
+}
+template<>
+struct 特殊列适配器<MATLABString> :通用列适配器
+{
+	const std::unique_ptr<std::string[]>容器;
+	const std::string* 迭代器;
+	特殊列适配器(StringArray&& MATLAB数组) :容器(std::make_unique_for_overwrite<std::string[]>(MATLAB数组.getNumberOfElements())), 迭代器(容器.get())
+	{
+		万能转码(std::move(MATLAB数组), 容器.get());
+	}
+	void 插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)override
+	{
+		准备好的语句->setString(参数序号, *迭代器++);
+	}
+};
+template<>
+void 特殊列适配器<Array>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
+{
+	TypedArray<int8_t>数组 = *迭代器++;
+	const size_t 字节数 = 数组.getNumberOfElements();
+	sql::bytes SQL缓冲{ reinterpret_cast<char*>(数组.release().get()), 字节数 };
+	准备好的语句->setBytes(参数序号, &SQL缓冲);
+}
+struct
+{
+	template<typename T>
+	通用列适配器* operator()(TypedArray<T>&& MATLAB数组)const
+	{
+		return new 特殊列适配器<T>(std::move(MATLAB数组));
+	}
+	template<typename T>
+	通用列适配器* operator()(T&& MATLAB数组)const
+	{
+		EnumThrow(MATLAB::Exception::Unexpected_column_type);
+	}
+}适配访问器;
 Mex工具API(Database_UpdateByPrimary)
 {
 	sql::Connection* const 连接 = 万能转码<sql::Connection*>(std::move(输入[1]));
 	const std::string 表名 = 万能转码<std::string>(std::move(输入[2]));
 	const Reference<Struct>更新表 = StructArray{ std::move(输入[3]) } [0] ;
-	const StringArray 所有列名{ 更新表["ColumnName"] };
-	const StringArray 所有列类型{ 更新表["ColumnType"] };
 	const CellArray 所有列值{ 更新表["ColumnValue"] };
-	static const std::unordered_map<String, 通用列适配器* (*)(const Array&)> 适配器表
-	{
-		{
-			u"BIT(1)",[](const Array& 数组)->通用列适配器* {return new 特殊列适配器<bool>(数组); }
-		},
-	};
-	const size_t 列数 = 所有列名.getNumberOfElements();
+	const size_t 列数 = 所有列值.getNumberOfElements();
+	const std::unique_ptr<std::string[]>所有列名 = std::make_unique_for_overwrite<std::string[]>(列数);
+	万能转码(std::move(更新表["ColumnName"]), 所有列名.get());
+	const std::unique_ptr<std::string[]>所有列类型 = std::make_unique_for_overwrite<std::string[]>(列数);
+	万能转码(std::move(更新表["ColumnType"]), 所有列类型.get());
 	std::unique_ptr<std::unique_ptr<通用列适配器>[]> 适配器数组 = std::make_unique_for_overwrite<std::unique_ptr<通用列适配器>[]>(列数);
 	size_t 列;
 	for (列 = 0; 列 < 列数; ++列)
 	{
-		String 列类型 = 所有列类型[列];
-		if (列类型.starts_with(u"ENUM"))
-			列类型 = u"ENUM";
-		const auto 适配器查找 = 适配器表.find(列类型);
-		if (适配器查找 == 适配器表.end())
-			EnumThrow(MATLAB::Exception::Unsupported_column_type);
-		适配器数组[列] = std::unique_ptr<通用列适配器>{ 适配器查找->second(所有列值[列]) };
+		适配器数组[列] = std::unique_ptr<通用列适配器>{ apply_visitor(std::move(所有列值[列]),适配访问器) };
 	}
 	const std::unique_ptr<sql::Statement> 语句(连接->createStatement());
 	std::ostringstream 语句文本("SELECT COUNT(*)FROM ");
 	语句文本 << 表名 << " LIMIT 1";
 	const std::unique_ptr<sql::ResultSet> 结果集(语句->executeQuery(语句文本.str()));
 	结果集->next();
-	const std::unique_ptr<std::string[]>UTF8列名 = std::make_unique_for_overwrite<std::string[]>(列数);
 	if (结果集->getInt(1))
 	{
 		语句文本.str("ALTER TABLE ");
@@ -80,8 +168,7 @@ Mex工具API(Database_UpdateByPrimary)
 		if (列数)
 			for (列 = 0;;)
 			{
-				UTF8列名[列] = 万能转码<std::string>(String{ 所有列名[列] });
-				列定义流 << UTF8列名[列] << ' ' << 万能转码<std::string>(所有列类型[列]) << " NULL";
+				列定义流 << 所有列名[列] << ' ' << 所有列类型[列] << " NULL";
 				if (++列 >= 列数)
 					break;
 				列定义流 << ',';
@@ -90,7 +177,7 @@ Mex工具API(Database_UpdateByPrimary)
 		std::string 列定义文本 = 列定义流.str();
 		语句文本 << 列定义文本;
 		语句->addBatch(语句文本.str());
-		语句文本.str("CREATE TEMPORARY TABLE _MATLAB_临时表");
+		语句文本.str("CREATE OR REPLACE TEMPORARY TABLE _MATLAB_临时表");
 		语句文本 << 列定义文本;
 		语句->addBatch(语句文本.str());
 		语句->executeBatch();
@@ -99,7 +186,7 @@ Mex工具API(Database_UpdateByPrimary)
 		if (列数)
 			for (列 = 0;;)
 			{
-				列定义流 << UTF8列名[列];
+				列定义流 << 所有列名[列];
 				if (++列 >= 列数)
 					break;
 				列定义流 << ',';
@@ -138,7 +225,7 @@ Mex工具API(Database_UpdateByPrimary)
 		if (列数)
 			for (列 = 0;;)
 			{
-				语句文本 << 表名 << '.' << UTF8列名[列] << "=_MATLAB_临时表." << UTF8列名[列];
+				语句文本 << 表名 << '.' << 所有列名[列] << "=_MATLAB_临时表." << 所有列名[列];
 				if (++列 >= 列数)
 					break;
 				语句文本 << ',';
@@ -152,8 +239,7 @@ Mex工具API(Database_UpdateByPrimary)
 		if (列数)
 			for (列 = 0;;)
 			{
-				UTF8列名[列] = 万能转码<std::string>(所有列名[列]);
-				语句文本 << UTF8列名[列] << ' ' << 万能转码<std::string>(所有列类型[列]) << " NULL";
+				语句文本 << 所有列名[列] << ' ' << 所有列类型[列] << " NULL";
 				if (++列 >= 列数)
 					break;
 				语句文本 << ',';
@@ -165,7 +251,7 @@ Mex工具API(Database_UpdateByPrimary)
 		if (列数)
 			for (列 = 0;;)
 			{
-				语句文本 << UTF8列名[列];
+				语句文本 << 所有列名[列];
 				if (++列 >= 列数)
 					break;
 				语句文本 << ',';

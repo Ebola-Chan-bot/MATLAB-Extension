@@ -76,18 +76,16 @@
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
-    <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-    <ExternalIncludePath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit\include;$(ExternalIncludePath)</ExternalIncludePath>
     <IncludePath>$(SolutionDir)共享头文件;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <ExternalIncludePath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit\include;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
-    <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-    <ExternalIncludePath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit\include;$(ExternalIncludePath)</ExternalIncludePath>
     <IncludePath>$(SolutionDir)共享头文件;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <ExternalIncludePath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit\include;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -128,7 +126,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;WINDOWS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MARIADB_STATIC_LINK;_DEBUG;WINDOWS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -165,8 +163,6 @@
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <ExceptionHandling>Async</ExceptionHandling>
-      <AdditionalBMIDirectories>C:\Users\vhtmf\Documents\MATLAB\MATLAB-Extension\packages\MATLAB.MexTools.6.2.0\build\native\Debug;%(AdditionalBMIDirectories)</AdditionalBMIDirectories>
-      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
