@@ -1,8 +1,7 @@
 #include"pch.h"
 #include<MATLAB异常.h>
 #include<Mex工具.hpp>
-#include<mariadb/conncpp.hpp>
-#pragma comment(lib,"mariadbcpp.lib")
+#include<conncpp.hpp>
 #include<numeric>
 using namespace Mex工具;
 Mex工具API(Database_MariaDB)

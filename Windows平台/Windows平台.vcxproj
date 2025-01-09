@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.WindowsAppSDK.1.7.241114004-experimental1\build\native\Microsoft.WindowsAppSDK.props" Condition="Exists('..\packages\Microsoft.WindowsAppSDK.1.7.241114004-experimental1\build\native\Microsoft.WindowsAppSDK.props')" />
+  <Import Project="..\packages\Microsoft.WindowsAppSDK.1.6.241114003\build\native\Microsoft.WindowsAppSDK.props" Condition="Exists('..\packages\Microsoft.WindowsAppSDK.1.6.241114003\build\native\Microsoft.WindowsAppSDK.props')" />
   <Import Project="..\packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.props" Condition="Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -77,16 +77,16 @@
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
     <IncludePath>$(SolutionDir)共享头文件;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <ExternalIncludePath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit\include;$(ExternalIncludePath)</ExternalIncludePath>
-    <LibraryPath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit;$(LibraryPath)</LibraryPath>
+    <ExternalIncludePath>C:\Users\vhtmf\source\repos\mariadb-connector-cpp\NuGet\build\native;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>C:\Users\vhtmf\source\repos\mariadb-connector-cpp\NuGet\build\native;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)+MATLAB\+internal\private\</OutDir>
     <TargetExt>.mexw64</TargetExt>
     <TargetName>WindowsCall</TargetName>
     <IncludePath>$(SolutionDir)共享头文件;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <ExternalIncludePath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit\include;$(ExternalIncludePath)</ExternalIncludePath>
-    <LibraryPath>C:\Program Files\MariaDB\MariaDB C++ Connector 64-bit;$(LibraryPath)</LibraryPath>
+    <ExternalIncludePath>C:\Users\vhtmf\source\repos\mariadb-connector-cpp\NuGet\build\native;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>C:\Users\vhtmf\source\repos\mariadb-connector-cpp\NuGet\build\native;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -146,6 +146,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>MariaDB_Connector.$(Configuration).lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -175,6 +176,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>MariaDB_Connector.$(Configuration).lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -221,7 +223,7 @@
     <Import Project="..\packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.targets')" />
     <Import Project="..\packages\MATLAB.MexTools.7.0.2\build\native\MATLAB.MexTools.targets" Condition="Exists('..\packages\MATLAB.MexTools.7.0.2\build\native\MATLAB.MexTools.targets')" />
     <Import Project="..\packages\Microsoft.Web.WebView2.1.0.2950-prerelease\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.2950-prerelease\build\native\Microsoft.Web.WebView2.targets')" />
-    <Import Project="..\packages\Microsoft.WindowsAppSDK.1.7.241114004-experimental1\build\native\Microsoft.WindowsAppSDK.targets" Condition="Exists('..\packages\Microsoft.WindowsAppSDK.1.7.241114004-experimental1\build\native\Microsoft.WindowsAppSDK.targets')" />
+    <Import Project="..\packages\Microsoft.WindowsAppSDK.1.6.241114003\build\native\Microsoft.WindowsAppSDK.targets" Condition="Exists('..\packages\Microsoft.WindowsAppSDK.1.6.241114003\build\native\Microsoft.WindowsAppSDK.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -235,7 +237,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.targets'))" />
     <Error Condition="!Exists('..\packages\MATLAB.MexTools.7.0.2\build\native\MATLAB.MexTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MATLAB.MexTools.7.0.2\build\native\MATLAB.MexTools.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Web.WebView2.1.0.2950-prerelease\build\native\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.WebView2.1.0.2950-prerelease\build\native\Microsoft.Web.WebView2.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.7.241114004-experimental1\build\native\Microsoft.WindowsAppSDK.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.7.241114004-experimental1\build\native\Microsoft.WindowsAppSDK.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.7.241114004-experimental1\build\native\Microsoft.WindowsAppSDK.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.7.241114004-experimental1\build\native\Microsoft.WindowsAppSDK.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.6.241114003\build\native\Microsoft.WindowsAppSDK.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.6.241114003\build\native\Microsoft.WindowsAppSDK.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.6.241114003\build\native\Microsoft.WindowsAppSDK.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.6.241114003\build\native\Microsoft.WindowsAppSDK.targets'))" />
   </Target>
 </Project>
