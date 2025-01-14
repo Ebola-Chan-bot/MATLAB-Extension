@@ -31,7 +31,7 @@
 +UITools 文件打开和保存对话框
 还有一些尚未归类的工具函数直接放在MATLAB包下</param.description>
     <param.screenshot>${PROJECT_ROOT}\工具箱图像.png</param.screenshot>
-    <param.version>19.3.0</param.version>
+    <param.version>19.4.0</param.version>
     <param.output>${PROJECT_ROOT}\埃博拉酱 的 MATLAB 扩展 Extension.mltbx</param.output>
     <param.products.name />
     <param.products.id />
