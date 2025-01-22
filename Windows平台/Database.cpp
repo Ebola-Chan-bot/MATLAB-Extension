@@ -1,8 +1,7 @@
 #include"pch.h"
 #include<MATLAB异常.h>
 #include<Mex工具.hpp>
-#include<mariadb/conncpp.hpp>
-#pragma comment(lib,"mariadbcpp.lib")
+#include<conncpp.hpp>
 #include<numeric>
 using namespace Mex工具;
 Mex工具API(Database_MariaDB)
@@ -138,7 +137,7 @@ struct
 		EnumThrow(MATLAB::Exception::Unexpected_column_type);
 	}
 }适配访问器;
-static void SQL捕获(const std::move_only_function<void()const>& 尝试)
+static inline void SQL捕获(const std::move_only_function<void()const>& 尝试)
 {
 	try
 	{
@@ -221,60 +220,75 @@ static void SQL捕获(const std::move_only_function<void()const>& 尝试)
 		throw;
 	}
 }
-static std::string 合成列定义文本(uint32_t 列数, std::ostringstream& 列定义流, const std::string* 所有列名, const std::string* 所有列类型)
+static std::string 合成列定义文本(uint8_t 列数, std::ostringstream& 列定义流, const std::string* 所有列名, const std::string* 所有列类型)
 {
 	列定义流 << '(';
-	if (列数)
-		for (uint32_t 列 = 0;;)
-		{
-			列定义流 << 所有列名[列] << ' ' << 所有列类型[列] << " NULL";
-			if (++列 >= 列数)
-				break;
-			列定义流 << ',';
-		}
+	for (uint8_t 列 = 0;;)
+	{
+		列定义流 << 所有列名[列] << ' ' << 所有列类型[列] << " NULL";
+		if (++列 >= 列数)
+			break;
+		列定义流 << ',';
+	}
 	列定义流 << ')';
 	return 列定义流.str();
 }
-static void 合成列引用文本(uint32_t 列数, std::ostringstream& 列引用流, const std::string* 所有列名)
+static void 合成列引用文本(uint8_t 列数, std::ostringstream& 列引用流, const std::string* 所有列名)
 {
-	if (列数)
-		for (uint32_t 列 = 0;;)
-		{
-			列引用流 << 所有列名[列];
-			if (++列 >= 列数)
-				break;
-			列引用流 << ',';
-		}
+	for (uint8_t 列 = 0;;)
+	{
+		列引用流 << 所有列名[列];
+		if (++列 >= 列数)
+			break;
+		列引用流 << ',';
+	}
 }
-static void 插入语句合成执行(uint32_t 列数, std::ostringstream& 语句文本, CellArray::const_iterator 所有列值, sql::Connection* 连接, const std::unique_ptr<通用列适配器>* 适配器数组)
+static void 合成插入参数文本(std::ostringstream& 语句文本, const std::string& 行文本, uint32_t 行数)
+{
+	for (uint32_t 行 = 0;;)
+	{
+		语句文本 << 行文本;
+		if (++行 >= 行数)
+			break;
+		语句文本 << ',';
+	}
+}
+static void 插入语句合成执行(uint32_t 行数, uint8_t 列数, std::ostringstream& 语句文本, CellArray::const_iterator 所有列值, sql::Connection* 连接, const std::unique_ptr<通用列适配器>* 适配器数组)
 {
 	语句文本 << ")VALUES";
-	const uint32_t 行数 = 所有列值[0].getNumberOfElements();
-	if (行数 && 列数)
-		for (uint32_t 行 = 0;;)
-		{
-			语句文本 << '(';
-			for (uint32_t 列 = 0;;)
-			{
-				语句文本 << '?';
-				if (++列 >= 列数)
-					break;
-				语句文本 << ',';
-			}
-			语句文本 << ')';
-			if (++行 >= 行数)
-				break;
-			语句文本 << ',';
-		}
-	const std::unique_ptr<sql::PreparedStatement> 准备好的语句{ 连接->prepareStatement(语句文本.str()) };
-	int32_t 参数序号 = 1;
-	if (行数 && 列数)
+	const std::string 公共前缀 = 语句文本.str();
+	std::ostringstream 行流("(", std::ios::app);
+	for (uint8_t 列 = 0;;)
 	{
-		for (uint32_t 行 = 0; 行 < 行数; ++行)
-			for (uint32_t 列 = 0; 列 < 列数; ++列)
-				适配器数组[列]->插入语句(准备好的语句.get(), 参数序号++);
-		准备好的语句->execute();
+		行流 << '?';
+		if (++列 >= 列数)
+			break;
+		行流 << ',';
 	}
+	行流 << ')';
+	const std::string 行文本 = 行流.str();
+	const uint8_t 分块数 = 行数 * (列数 * 2 + 2) >> 21;
+	const uint32_t 分块行数 = 行数 / 分块数;
+	const uint8_t 余数 = 行数 % 分块数;
+	合成插入参数文本(语句文本, 行文本, 分块行数);
+	std::unique_ptr<sql::PreparedStatement> 准备好的语句{ 连接->prepareStatement(语句文本.str()) };
+	for (uint8_t 块 = 0; 块 < 分块数; ++块)
+	{
+		uint32_t 参数序号 = 0;
+		for (uint32_t 行 = 0; 行 < 分块行数; ++行)
+			for (uint8_t 列 = 0; 列 < 列数; ++列)
+				适配器数组[列]->插入语句(准备好的语句.get(), ++参数序号);
+		准备好的语句->addBatch();
+	}
+	准备好的语句->executeBatch();
+	语句文本.str(公共前缀);
+	合成插入参数文本(语句文本, 行文本, 余数);
+	准备好的语句.reset(连接->prepareStatement(语句文本.str()));
+	uint32_t 参数序号 = 0;
+	for (uint32_t 行 = 0; 行 < 行数; ++行)
+		for (uint8_t 列 = 0; 列 < 列数; ++列)
+			适配器数组[列]->插入语句(准备好的语句.get(), ++参数序号);
+	准备好的语句->execute();
 }
 Mex工具API(Database_UpdateByPrimary)
 {
@@ -283,17 +297,19 @@ Mex工具API(Database_UpdateByPrimary)
 	const StructArray 结构体数组{ std::move(输入[3]) };//必须保留此对象，否则Struct会失效
 	const Struct 更新表 = 结构体数组[0];
 	const CellArray 所有列值{ 更新表["ColumnValue"] };
-	const uint32_t 列数 = 所有列值.getNumberOfElements();
+	const uint8_t 列数 = 所有列值.getNumberOfElements();
+	if (!列数)
+		return;
+	const uint32_t 行数 = 所有列值[0].getNumberOfElements();
+	if (!行数)
+		return;
 	const std::unique_ptr<std::string[]>所有列名 = std::make_unique_for_overwrite<std::string[]>(列数);
 	万能转码(std::move(更新表["ColumnName"]), 所有列名.get());
 	const std::unique_ptr<std::string[]>所有列类型 = std::make_unique_for_overwrite<std::string[]>(列数);
 	万能转码(std::move(更新表["ColumnType"]), 所有列类型.get());
 	std::unique_ptr<std::unique_ptr<通用列适配器>[]> 适配器数组 = std::make_unique_for_overwrite<std::unique_ptr<通用列适配器>[]>(列数);
-	uint32_t 列;
-	for (列 = 0; 列 < 列数; ++列)
-	{
+	for (uint8_t 列 = 0; 列 < 列数; ++列)
 		适配器数组[列] = std::unique_ptr<通用列适配器>{ apply_visitor(std::move(所有列值[列]),适配访问器) };
-	}
 	const std::unique_ptr<sql::Statement> 语句(连接->createStatement());
 	std::ostringstream 语句文本("SELECT COUNT(*)FROM ", std::ios::app);
 	语句文本 << 表名 << " LIMIT 1";
@@ -309,7 +325,7 @@ Mex工具API(Database_UpdateByPrimary)
 		语句文本.str("INSERT ");
 		语句文本 << 表名 << '(';
 		合成列引用文本(列数, 语句文本, 所有列名.get());
-		插入语句合成执行(列数, 语句文本, 所有列值.cbegin(), 连接, 适配器数组.get());
+		插入语句合成执行(行数, 列数, 语句文本, 所有列值.cbegin(), 连接, 适配器数组.get());
 		return;
 	}
 	语句文本.str("ALTER TABLE ");
@@ -327,16 +343,15 @@ Mex工具API(Database_UpdateByPrimary)
 	合成列引用文本(列数, 列定义流, 所有列名.get());
 	列定义文本 = 列定义流.str();
 	语句文本 << 列定义文本;
-	插入语句合成执行(列数, 语句文本, 所有列值.cbegin(), 连接, 适配器数组.get());
+	插入语句合成执行(行数, 列数, 语句文本, 所有列值.cbegin(), 连接, 适配器数组.get());
 	语句文本.str("INSERT ");
 	语句文本 << 表名 << '(' << 列定义文本 << ")SELECT " << 列定义文本 << " FROM _MATLAB_临时表 ON DUPLICATE KEY UPDATE ";
-	if (列数)
-		for (列 = 0;;)
-		{
-			语句文本 << 表名 << '.' << 所有列名[列] << "=_MATLAB_临时表." << 所有列名[列];
-			if (++列 >= 列数)
-				break;
-			语句文本 << ',';
-		}
+	for (uint8_t 列 = 0;;)
+	{
+		语句文本 << 表名 << '.' << 所有列名[列] << "=_MATLAB_临时表." << 所有列名[列];
+		if (++列 >= 列数)
+			break;
+		语句文本 << ',';
+	}
 	语句->execute(语句文本.str());
 }
