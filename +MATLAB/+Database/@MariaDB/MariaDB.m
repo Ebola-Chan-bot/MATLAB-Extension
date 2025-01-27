@@ -25,7 +25,10 @@ classdef MariaDB<handle
 			obj.Pointer=MATLAB.internal.WindowsAPI.Database_MariaDB.Call(varargin{:});
 		end
 		function delete(obj)
-			MATLAB.internal.WindowsAPI.Database_DeleteMariaDB.Call(obj.Pointer);
+			%如果构造失败，Pointer可能是空的
+			if ~isempty(obj.Pointer)
+				MATLAB.internal.WindowsAPI.Database_DeleteMariaDB.Call(obj.Pointer);
+			end
 		end
 	end
 end
