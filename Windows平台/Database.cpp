@@ -119,9 +119,9 @@ struct 特殊列适配器<MATLABString> :通用列适配器
 template<>
 void 特殊列适配器<Array>::插入语句(sql::PreparedStatement* 准备好的语句, int32_t 参数序号)
 {
-	TypedArray<int8_t>数组 = *迭代器++;
-	const size_t 字节数 = 数组.getNumberOfElements();
-	sql::bytes SQL缓冲{ reinterpret_cast<char*>(数组.release().get()), 字节数 };
+	const TypedArray<int8_t>数组 = *迭代器++;
+	sql::bytes SQL缓冲(数组.getNumberOfElements());//不能在构造时提供指针，因为会启动不拷贝的重载，然后变成悬空指针
+	std::copy(数组.cbegin(), 数组.cend(), SQL缓冲.begin());
 	准备好的语句->setBytes(参数序号, &SQL缓冲);
 }
 struct
