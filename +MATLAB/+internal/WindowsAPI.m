@@ -54,6 +54,7 @@ classdef WindowsAPI<uint64
 		Database_MariaDB(51)
 		Database_DeleteMariaDB(52)
 		Database_UpdateByPrimary(53)
+		Database_Dump(54)
 	end
 	methods
 		function varargout=Call(obj,varargin)

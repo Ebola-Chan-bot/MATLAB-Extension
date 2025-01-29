@@ -355,3 +355,294 @@ Mex工具API(Database_UpdateByPrimary)
 	}
 	语句->execute(语句文本.str());
 }
+struct 通用列提取器
+{
+	sql::ResultSet* const 结果集;
+	const int32_t 列;
+	通用列提取器(sql::ResultSet* 结果集,int32_t 列) :结果集(结果集),列(列) {}
+	virtual void 取单元格() = 0;
+	virtual Array 取全列()const = 0;
+	virtual ~通用列提取器() {}
+};
+template<typename T,bool 有Null>
+struct 特殊列提取器 :通用列提取器
+{
+	std::vector<T>全列;
+	特殊列提取器(sql::ResultSet* 结果集,int32_t 列) :通用列提取器(结果集,列) {}
+	void 取单元格()override;
+	Array 取全列()const override;
+};
+struct 日期时间;
+struct 持续时间;
+struct 分类;
+struct 缺失;
+static const MATLABString 空字符串;
+template<typename T, bool 有Null>
+void 特殊列提取器<T, 有Null>::取单元格()
+{
+	全列.push_back(有Null && 结果集->isNull(列) ? 空字符串 : 万能转码<MATLABString>(结果集->getString(列).c_str()));
+}
+template<typename T, bool 有Null>
+Array 特殊列提取器<T, 有Null>::取全列()const
+{
+	return 万能转码(全列.cbegin(), { 全列.size() });
+}
+template<>
+void 特殊列提取器<bool, false>::取单元格()
+{
+	全列.push_back(结果集->getBoolean(列));
+}
+template<>
+void 特殊列提取器<int8_t, false>::取单元格()
+{
+	全列.push_back(结果集->getByte(列));
+}
+template<>
+void 特殊列提取器<uint8_t, false>::取单元格()
+{
+	全列.push_back(结果集->getShort(列));
+}
+template<>
+void 特殊列提取器<int16_t, false>::取单元格()
+{
+	全列.push_back(结果集->getShort(列));
+}
+template<>
+void 特殊列提取器<uint16_t, false>::取单元格()
+{
+	全列.push_back(结果集->getInt(列));
+}
+template<>
+void 特殊列提取器<int32_t, false>::取单元格()
+{
+	全列.push_back(结果集->getInt(列));
+}
+template<>
+void 特殊列提取器<uint32_t, false>::取单元格()
+{
+	全列.push_back(结果集->getUInt(列));
+}
+template<>
+void 特殊列提取器<int64_t, false>::取单元格()
+{
+	全列.push_back(结果集->getInt64(列));
+}
+#undef min
+template<>
+void 特殊列提取器<int64_t, true>::取单元格()
+{
+	全列.push_back(结果集->isNull(列) ? std::numeric_limits<int64_t>::min() : 结果集->getInt64(列));
+}
+template<>
+void 特殊列提取器<uint64_t, false>::取单元格()
+{
+	全列.push_back(结果集->getUInt64(列));
+}
+#undef max
+template<>
+void 特殊列提取器<uint64_t, true>::取单元格()
+{
+	全列.push_back(结果集->isNull(列) ? std::numeric_limits<uint64_t>::max() : 结果集->getUInt64(列));
+}
+template<>
+void 特殊列提取器<float, false>::取单元格()
+{
+	全列.push_back(结果集->getFloat(列));
+}
+template<>
+void 特殊列提取器<float, true>::取单元格()
+{
+	全列.push_back(结果集->isNull(列) ? std::numeric_limits<float>::quiet_NaN() : 结果集->getFloat(列));
+}
+template<>
+void 特殊列提取器<double, false>::取单元格()
+{
+	全列.push_back(结果集->getDouble(列));
+}
+template<>
+void 特殊列提取器<double, true>::取单元格()
+{
+	全列.push_back(结果集->isNull(列) ? std::numeric_limits<double>::quiet_NaN() : 结果集->getDouble(列));
+}
+void 特殊列提取器<Array, false>::取单元格()
+{
+	const std::unique_ptr<sql::Blob>二进制{ 结果集->getBlob(列) };
+	二进制->seekg(0, std::ios::end);
+	const size_t 字节数 = 二进制->tellg();
+	buffer_ptr_t<int8_t>缓冲 = 数组工厂.createBuffer<int8_t>(字节数);
+	二进制->seekg(0, std::ios::beg);
+	二进制->read(reinterpret_cast<char*>(缓冲.get()), 字节数);
+	全列.push_back(数组工厂.createArrayFromBuffer({ 字节数 }, std::move(缓冲)));
+}
+template<bool 有Null>
+struct 特殊列提取器<日期时间, 有Null> :特殊列提取器<MATLABString, 有Null>
+{
+	特殊列提取器(sql::ResultSet* 结果集,int32_t 列) :特殊列提取器<MATLABString, 有Null>(结果集,列) {}
+	Array 取全列()const override
+	{
+		return MATLAB引擎->feval(u"datetime", 万能转码(特殊列提取器<MATLABString, 有Null>::全列.cbegin(), { 特殊列提取器<MATLABString, 有Null>::全列.size() }));
+	}
+};
+template<bool 有Null>
+struct 特殊列提取器<持续时间, 有Null> :特殊列提取器<MATLABString, 有Null>
+{
+	特殊列提取器(sql::ResultSet* 结果集, int32_t 列) :特殊列提取器<MATLABString, 有Null>(结果集, 列) {}
+	Array 取全列()const override
+	{
+		return MATLAB引擎->feval(u"duration", 万能转码(特殊列提取器<MATLABString, 有Null>::全列.cbegin(), { 特殊列提取器<MATLABString, 有Null>::全列.size() }));
+	}
+};
+template<bool 有Null>
+struct 特殊列提取器<分类, 有Null> :特殊列提取器<MATLABString, 有Null>
+{
+	特殊列提取器(sql::ResultSet* 结果集, int32_t 列) :特殊列提取器<MATLABString, 有Null>(结果集, 列) {}
+	Array 取全列()const override
+	{
+		return MATLAB引擎->feval(u"categorical", 万能转码(特殊列提取器<MATLABString, 有Null>::全列.cbegin(), { 特殊列提取器<MATLABString, 有Null>::全列.size() }));
+	}
+};
+template<>
+struct 特殊列提取器<缺失, true> :通用列提取器
+{
+	size_t 行数 = 0;
+	特殊列提取器(sql::ResultSet* 结果集, int32_t 列) :通用列提取器(结果集,列) {}
+	void 取单元格()override
+	{
+		++行数;
+	}
+	Array 取全列()const override
+	{
+		static std::vector<Array>参数列表{ MATLAB引擎->feval<Array>(u"missing"),数组工厂.createEmptyArray(),数组工厂.createScalar(1) };
+		参数列表[1] = 数组工厂.createScalar(行数);
+		return MATLAB引擎->feval(u"missing", 参数列表);
+	}
+};
+template<typename T,bool 有Null>
+static std::unique_ptr<通用列提取器>创建特殊列提取器(sql::ResultSet* 结果集, int32_t 列)
+{
+	return std::make_unique<特殊列提取器<T, 有Null>>(结果集, 列);
+}
+static void 结果集转表(sql::ResultSet* 结果集, StringArray& 表列名, CellArray& 表列)
+{
+	std::unique_ptr<sql::ResultSetMetaData>结果集元数据{ 结果集->getMetaData() };
+	const uint8_t 列数 = 结果集元数据->getColumnCount();
+	表列名 = 数组工厂.createArray<MATLABString>({ 1,列数 });
+	std::unique_ptr<std::unique_ptr<通用列提取器>[]> 提取器数组 = std::make_unique_for_overwrite<std::unique_ptr<通用列提取器>[]>(列数);
+	for (uint8_t 列 = 0; 列 < 列数; ++列)
+	{
+		uint8_t MariaDB列 = 列 + 1;
+		const sql::SQLString 列名 = 结果集元数据->getColumnLabel(MariaDB列);
+		表列名[列] = 万能转码<MATLABString>(列名.c_str());
+		static const std::unordered_map<std::string, std::unique_ptr<通用列提取器>(*)(sql::ResultSet*, int32_t)>无Null构造器
+		{
+			{"BOOLEAN",创建特殊列提取器<bool,false>},
+			{"TINYINT",创建特殊列提取器<int8_t,false>},
+			{"BIT",创建特殊列提取器<uint8_t,false>},
+			{"TINYINT UNSIGNED",创建特殊列提取器<uint8_t,false>},
+			{"SMALLINT",创建特殊列提取器<int16_t,false>},
+			{"YEAR",创建特殊列提取器<uint16_t,false>},
+			{"SMALLINT UNSIGNED",创建特殊列提取器<uint16_t,false>},
+			{"MEDIUMINT",创建特殊列提取器<int32_t,false>},
+			{"MEDIUMINT UNSIGNED",创建特殊列提取器<uint32_t,false>},
+			{"INT",创建特殊列提取器<int32_t,false>},
+			{"INT UNSIGNED",创建特殊列提取器<uint32_t,false>},
+			{"BIGINT",创建特殊列提取器<int64_t,false>},
+			{"BIGINT UNSIGNED",创建特殊列提取器<uint64_t,false>},
+			{"FLOAT",创建特殊列提取器<float,false>},
+			{"DOUBLE",创建特殊列提取器<double,false>},
+			{"DATE",创建特殊列提取器<日期时间,false>},
+			{"DATETIME",创建特殊列提取器<日期时间,false>},
+			{"TIMESTAMP",创建特殊列提取器<日期时间,false>},
+			{"TIME",创建特殊列提取器<持续时间,false>},
+			{"CHAR",创建特殊列提取器<分类,false>},
+			{"VARCHAR",创建特殊列提取器<分类,false>},
+			{"ENUM",创建特殊列提取器<分类,false>},
+			{"TINYTEXT",创建特殊列提取器<MATLABString,false>},
+			{"TEXT",创建特殊列提取器<MATLABString,false>},
+			{"MEDIUMTEXT",创建特殊列提取器<MATLABString,false>},
+			{"LONGTEXT",创建特殊列提取器 < MATLABString,false>},
+			{"JSON",创建特殊列提取器<MATLABString,false>},
+			{"DECIMAL",创建特殊列提取器<MATLABString,false>},
+			{"BINARY",创建特殊列提取器<Array,false>},
+			{"VARBINARY",创建特殊列提取器<Array,false>},
+			{"TINYBLOB",创建特殊列提取器<Array,false>},
+			{"BLOB",创建特殊列提取器<Array,false>},
+			{"MEDIUMBLOB",创建特殊列提取器<Array,false>},
+			{"LONGBLOB",创建特殊列提取器<Array,false>}
+		};
+		static const std::unordered_map<std::string, std::unique_ptr<通用列提取器>(*)(sql::ResultSet*, int32_t)>有Null构造器
+		{
+			{"BOOLEAN",创建特殊列提取器<float,true>},
+			{"TINYINT",创建特殊列提取器<float,true>},
+			{"BIT",创建特殊列提取器<float,true>},
+			{"TINYINT UNSIGNED",创建特殊列提取器<float,true>},
+			{"SMALLINT",创建特殊列提取器<float,true>},
+			{"YEAR",创建特殊列提取器<float,true>},
+			{"SMALLINT UNSIGNED",创建特殊列提取器<float,true>},
+			{"MEDIUMINT",创建特殊列提取器<double,true>},
+			{"MEDIUMINT UNSIGNED",创建特殊列提取器<double,true>},
+			{"INT",创建特殊列提取器<double,true>},
+			{"INT UNSIGNED",创建特殊列提取器<double,true>},
+			{"BIGINT",创建特殊列提取器<int64_t,true>},
+			{"BIGINT UNSIGNED",创建特殊列提取器<uint64_t,true>},
+			{"FLOAT",创建特殊列提取器<float,true>},
+			{"DOUBLE",创建特殊列提取器<double,true>},
+			{"DATE",创建特殊列提取器<日期时间,true>},
+			{"DATETIME",创建特殊列提取器<日期时间,true>},
+			{"TIMESTAMP",创建特殊列提取器<日期时间,true>},
+			{"TIME",创建特殊列提取器<持续时间,true>},
+			{"CHAR",创建特殊列提取器<分类,true>},
+			{"VARCHAR",创建特殊列提取器<分类,true>},
+			{"ENUM",创建特殊列提取器<分类,true>},
+			{"TINYTEXT",创建特殊列提取器<MATLABString,true>},
+			{"TEXT",创建特殊列提取器<MATLABString,true>},
+			{"MEDIUMTEXT",创建特殊列提取器<MATLABString,true>},
+			{"LONGTEXT",创建特殊列提取器<MATLABString,true>},
+			{"JSON",创建特殊列提取器 < MATLABString,true>},
+			{"DECIMAL",创建特殊列提取器<MATLABString,true>},
+			//未定义<Array,true>的情形，一律用false
+			{"BINARY",创建特殊列提取器<Array,false>},
+			{"VARBINARY",创建特殊列提取器<Array,false>},
+			{"TINYBLOB",创建特殊列提取器<Array,false>},
+			{"BLOB",创建特殊列提取器<Array,false>},
+			{"MEDIUMBLOB",创建特殊列提取器<Array,false>},
+			{"LONGBLOB",创建特殊列提取器<Array,false>},
+			{"NULL",创建特殊列提取器<缺失,true>}
+		};
+		提取器数组[列] = (结果集元数据->isNullable(MariaDB列) ? 有Null构造器 : 无Null构造器).at(结果集元数据->getColumnTypeName(MariaDB列).c_str())(结果集, MariaDB列);
+	}
+	while (结果集->next())
+		for (uint8_t 列 = 0; 列 < 列数; ++列)
+			提取器数组[列]->取单元格();
+	表列 = 数组工厂.createCellArray({ 1,列数 });
+	for (uint8_t 列 = 0; 列 < 列数; ++列)
+		表列[列] = 提取器数组[列]->取全列();
+}
+Mex工具API(Database_Dump)
+{
+	sql::Connection* const 连接 = 万能转码<sql::Connection*>(std::move(输入[1]));
+	std::list<sql::SQLString>类型 { "TABLE" };
+	const std::unique_ptr<sql::ResultSet>所有表结果集{ 连接->getMetaData()->getTables(连接->getCatalog(), sql::SQLString{}, "%", 类型) };
+	std::unique_ptr<sql::ResultSetMetaData>结果集元数据{ 所有表结果集->getMetaData() };
+	uint8_t 表名列 = 0;
+	while (结果集元数据->getColumnName(++表名列) != "TABLE_NAME");
+	std::vector<MATLABString>所有表名;
+	std::vector<Array>所有表列名;
+	std::vector<Array>所有表列;
+	while (所有表结果集->next())
+	{
+		static sql::Statement* const 语句 = 连接->createStatement();
+		static const sql::SQLString 语句前缀{ "SELECT * FROM " };
+		const sql::SQLString 表名 = 所有表结果集->getString(表名列);
+		const std::unique_ptr<sql::ResultSet>单表结果集{ 语句->executeQuery(语句前缀 + 表名) };
+		所有表名.push_back(万能转码<MATLABString>(表名.c_str()));
+		static StringArray 空表列名 = 数组工厂.createArray<MATLABString>({ 0,1 });
+		static CellArray 空表列 = 数组工厂.createArray<Array>({ 0,1 });
+		结果集转表(单表结果集.get(), 空表列名, 空表列);
+		所有表列名.push_back(std::move(空表列名));
+		所有表列.push_back(std::move(空表列));
+	}
+	输出[0] = 万能转码(所有表名.cbegin(), { 所有表名.size(),1 });
+	输出[1] = 万能转码(所有表列名.cbegin(), { 所有表列名.size(),1 });
+	输出[2] = 万能转码(所有表列.cbegin(), { 所有表列.size(),1 });
+}
