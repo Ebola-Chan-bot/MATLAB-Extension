@@ -137,7 +137,6 @@ struct
 		EnumThrow(MATLAB::Exception::Unexpected_column_type);
 	}
 }适配访问器;
-//配
 static inline void SQL捕获(const std::move_only_function<void()const>& 尝试)
 {
 	try
@@ -268,9 +267,9 @@ static void 插入语句合成执行(uint32_t 行数, uint8_t 列数, std::ostri
 	}
 	行流 << ')';
 	const std::string 行文本 = 行流.str();
-	const uint8_t 分块数 = 行数 * (列数 * 2 + 2) >> 21;
-	const uint8_t 余数 = 行数 % 分块数;
-	const uint32_t 分块行数 = 行数 / 分块数;
+	const uint8_t 分块数 = 行数 * (列数 * 2 + 2) >> 21;//不含余数
+	const uint32_t 分块行数 = 行数 / (分块数 + 1) + 1;
+	const uint8_t 余数 = 行数 % 分块行数;
 	合成插入参数文本(语句文本, 行文本, 分块行数);
 	std::unique_ptr<sql::PreparedStatement> 准备好的语句{ 连接->prepareStatement(语句文本.str()) };
 	for (uint8_t 块 = 0; 块 < 分块数; ++块)
@@ -286,7 +285,7 @@ static void 插入语句合成执行(uint32_t 行数, uint8_t 列数, std::ostri
 	合成插入参数文本(语句文本, 行文本, 余数);
 	准备好的语句.reset(连接->prepareStatement(语句文本.str()));
 	uint32_t 参数序号 = 0;
-	for (uint32_t 行 = 0; 行 < 行数; ++行)
+	for (uint32_t 行 = 0; 行 < 余数; ++行)
 		for (uint8_t 列 = 0; 列 < 列数; ++列)
 			适配器数组[列]->插入语句(准备好的语句.get(), ++参数序号);
 	准备好的语句->execute();
