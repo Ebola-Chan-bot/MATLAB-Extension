@@ -83,6 +83,8 @@ Mex工具API(Database_MariaDB);
 Mex工具API(Database_DeleteMariaDB);
 Mex工具API(Database_UpdateByPrimary);
 Mex工具API(Database_Dump);
+Mex工具API(Database_ExecuteStatement);
+Mex工具API(Database_ExecuteQuery);
 
 using namespace Mex工具;
 void Mex工具::初始化()noexcept {}
@@ -144,7 +146,9 @@ Mex工具API(Mex工具::执行)
 		Database_MariaDB,
 		Database_DeleteMariaDB,
 		Database_UpdateByPrimary,
-		Database_Dump
+		Database_Dump,
+		Database_ExecuteStatement,
+		Database_ExecuteQuery,
 	};
 	跳转表[万能转码<size_t>(std::move(输入[0]))](输出, 输入);
 };

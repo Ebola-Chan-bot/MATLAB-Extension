@@ -137,7 +137,7 @@ struct
 		EnumThrow(MATLAB::Exception::Unexpected_column_type);
 	}
 }适配访问器;
-static inline void SQL捕获(const std::move_only_function<void()const>& 尝试)
+static void SQL捕获(const std::move_only_function<void()const>& 尝试)
 {
 	try
 	{
@@ -474,6 +474,24 @@ void 特殊列提取器<Array, false>::取单元格()
 	二进制->read(reinterpret_cast<char*>(缓冲.get()), 字节数);
 	全列.push_back(数组工厂.createArrayFromBuffer({ 字节数 }, std::move(缓冲)));
 }
+template<typename T>
+const TypedArray<T>& 空数组()
+{
+	static const TypedArray<T>常量 = 数组工厂.createArray<T>({ 0 });
+	return 常量;
+}
+template<>
+struct 特殊列提取器<Array, true> :特殊列提取器<Array, false>
+{
+	特殊列提取器(sql::ResultSet* 结果集, int32_t 列) :特殊列提取器<Array, false>(结果集, 列) {}
+	void 取单元格()override
+	{
+		if (结果集->isNull(列))//有Null的情况不能强行读取，会返回损坏的数据导致崩溃
+			特殊列提取器<Array, false>::全列.push_back(空数组<int8_t>());
+		else
+			特殊列提取器<Array, false>::取单元格();
+	}
+};
 template<bool 有Null>
 struct 特殊列提取器<日期时间, 有Null> :特殊列提取器<MATLABString, 有Null>
 {
@@ -512,9 +530,9 @@ struct 特殊列提取器<缺失, true> :通用列提取器
 	}
 	Array 取全列()const override
 	{
-		static std::vector<Array>参数列表{ MATLAB引擎->feval<Array>(u"missing"),数组工厂.createEmptyArray(),数组工厂.createScalar(1) };
+		static std::vector<Array>参数列表{ MATLAB引擎->feval<Array>(u"missing"),空数组<uint8_t>(),数组工厂.createScalar(1) };
 		参数列表[1] = 数组工厂.createScalar(行数);
-		return MATLAB引擎->feval(u"missing", 参数列表);
+		return MATLAB引擎->feval(u"repmat", 参数列表);
 	}
 };
 template<typename T,bool 有Null>
@@ -548,7 +566,7 @@ static void 结果集转表(sql::ResultSet* 结果集, StringArray& 表列名, C
 			{"INT UNSIGNED",创建特殊列提取器<uint32_t,false>},
 			{"BIGINT",创建特殊列提取器<int64_t,false>},
 			{"BIGINT UNSIGNED",创建特殊列提取器<uint64_t,false>},
-			{"FLOAT",创建特殊列提取器<float,false>},
+			{"REAL",创建特殊列提取器<float,false>},
 			{"DOUBLE",创建特殊列提取器<double,false>},
 			{"DATE",创建特殊列提取器<日期时间,false>},
 			{"DATETIME",创建特殊列提取器<日期时间,false>},
@@ -568,7 +586,8 @@ static void 结果集转表(sql::ResultSet* 结果集, StringArray& 表列名, C
 			{"TINYBLOB",创建特殊列提取器<Array,false>},
 			{"BLOB",创建特殊列提取器<Array,false>},
 			{"MEDIUMBLOB",创建特殊列提取器<Array,false>},
-			{"LONGBLOB",创建特殊列提取器<Array,false>}
+			{"LONGBLOB",创建特殊列提取器<Array,false>},
+			{"NULL",创建特殊列提取器<缺失,true>}
 		};
 		static const std::unordered_map<std::string, std::unique_ptr<通用列提取器>(*)(sql::ResultSet*, int32_t)>有Null构造器
 		{
@@ -585,7 +604,7 @@ static void 结果集转表(sql::ResultSet* 结果集, StringArray& 表列名, C
 			{"INT UNSIGNED",创建特殊列提取器<double,true>},
 			{"BIGINT",创建特殊列提取器<int64_t,true>},
 			{"BIGINT UNSIGNED",创建特殊列提取器<uint64_t,true>},
-			{"FLOAT",创建特殊列提取器<float,true>},
+			{"REAL",创建特殊列提取器<float,true>},
 			{"DOUBLE",创建特殊列提取器<double,true>},
 			{"DATE",创建特殊列提取器<日期时间,true>},
 			{"DATETIME",创建特殊列提取器<日期时间,true>},
@@ -600,16 +619,20 @@ static void 结果集转表(sql::ResultSet* 结果集, StringArray& 表列名, C
 			{"LONGTEXT",创建特殊列提取器<MATLABString,true>},
 			{"JSON",创建特殊列提取器 < MATLABString,true>},
 			{"DECIMAL",创建特殊列提取器<MATLABString,true>},
-			//未定义<Array,true>的情形，一律用false
-			{"BINARY",创建特殊列提取器<Array,false>},
-			{"VARBINARY",创建特殊列提取器<Array,false>},
-			{"TINYBLOB",创建特殊列提取器<Array,false>},
-			{"BLOB",创建特殊列提取器<Array,false>},
-			{"MEDIUMBLOB",创建特殊列提取器<Array,false>},
-			{"LONGBLOB",创建特殊列提取器<Array,false>},
+			{"BINARY",创建特殊列提取器<Array,true>},
+			{"VARBINARY",创建特殊列提取器<Array,true>},
+			{"TINYBLOB",创建特殊列提取器<Array,true>},
+			{"BLOB",创建特殊列提取器<Array,true>},
+			{"MEDIUMBLOB",创建特殊列提取器<Array,true>},
+			{"LONGBLOB",创建特殊列提取器<Array,true>},
 			{"NULL",创建特殊列提取器<缺失,true>}
 		};
-		提取器数组[列] = (结果集元数据->isNullable(MariaDB列) ? 有Null构造器 : 无Null构造器).at(结果集元数据->getColumnTypeName(MariaDB列).c_str())(结果集, MariaDB列);
+		const auto& 选取构造器 = (结果集元数据->isNullable(MariaDB列) ? 有Null构造器 : 无Null构造器);
+		const sql::SQLString 列类型 = 结果集元数据->getColumnTypeName(MariaDB列);
+		const auto 键值对 = 选取构造器.find(列类型.c_str());
+		if (键值对 == 选取构造器.end())
+			EnumThrow(MATLAB::Exception::Unexpected_column_type, 列类型.c_str());
+		提取器数组[列] = 键值对->second(结果集, MariaDB列);
 	}
 	while (结果集->next())
 		for (uint8_t 列 = 0; 列 < 列数; ++列)
@@ -621,23 +644,24 @@ static void 结果集转表(sql::ResultSet* 结果集, StringArray& 表列名, C
 Mex工具API(Database_Dump)
 {
 	sql::Connection* const 连接 = 万能转码<sql::Connection*>(std::move(输入[1]));
-	std::list<sql::SQLString>类型 { "TABLE" };
-	const std::unique_ptr<sql::ResultSet>所有表结果集{ 连接->getMetaData()->getTables(连接->getCatalog(), sql::SQLString{}, "%", 类型) };
+	static std::list<sql::SQLString>类型{ "TABLE" };
+	static const sql::SQLString 百分号{ "%" };
+	const std::unique_ptr<sql::ResultSet>所有表结果集{ 连接->getMetaData()->getTables(连接->getCatalog(),连接->getSchema(),百分号,类型) };
 	std::unique_ptr<sql::ResultSetMetaData>结果集元数据{ 所有表结果集->getMetaData() };
 	uint8_t 表名列 = 0;
 	while (结果集元数据->getColumnName(++表名列) != "TABLE_NAME");
 	std::vector<MATLABString>所有表名;
 	std::vector<Array>所有表列名;
 	std::vector<Array>所有表列;
+	std::unique_ptr<sql::Statement>const 语句{ 连接->createStatement() };//此语句随连接失效，因此不能static
 	while (所有表结果集->next())
 	{
-		static sql::Statement* const 语句 = 连接->createStatement();
 		static const sql::SQLString 语句前缀{ "SELECT * FROM " };
 		const sql::SQLString 表名 = 所有表结果集->getString(表名列);
 		const std::unique_ptr<sql::ResultSet>单表结果集{ 语句->executeQuery(语句前缀 + 表名) };
 		所有表名.push_back(万能转码<MATLABString>(表名.c_str()));
-		static StringArray 空表列名 = 数组工厂.createArray<MATLABString>({ 0,1 });
-		static CellArray 空表列 = 数组工厂.createArray<Array>({ 0,1 });
+		static StringArray 空表列名 = 空数组<MATLABString>();
+		static CellArray 空表列 = 空数组<Array>();
 		结果集转表(单表结果集.get(), 空表列名, 空表列);
 		所有表列名.push_back(std::move(空表列名));
 		所有表列.push_back(std::move(空表列));
@@ -646,3 +670,17 @@ Mex工具API(Database_Dump)
 	输出[1] = 万能转码(所有表列名.cbegin(), { 所有表列名.size(),1 });
 	输出[2] = 万能转码(所有表列.cbegin(), { 所有表列.size(),1 });
 }
+Mex工具API(Database_ExecuteStatement)
+{
+	sql::Connection* const 连接 = 万能转码<sql::Connection*>(std::move(输入[1]));
+	std::string const 语句 = 万能转码<std::string>(std::move(输入[2]));
+	std::unique_ptr<sql::PreparedStatement>const 准备好的语句{ 连接->prepareStatement(语句) };
+	const size_t 参数数 = 输入.size() - 3;
+	if (参数数)
+	{
+		std::unique_ptr<std::unique_ptr<通用列适配器>[]> 适配器数组 = std::make_unique_for_overwrite<std::unique_ptr<通用列适配器>[]>(参数数);
+		for (size_t 参数 = 0; 参数 < 参数数; ++参数)
+			适配器数组[参数] = std::unique_ptr<通用列适配器>{ apply_visitor(std::move(输入[参数 + 3]),适配访问器) };
+	}
+}
+Mex工具API(Database_ExecuteQuery);
