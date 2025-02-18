@@ -120,7 +120,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>MARIADB_STATIC_LINK;_DEBUG;WINDOWS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WINDOWS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -148,7 +148,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>MARIADB_STATIC_LINK;NDEBUG;WINDOWS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WINDOWS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -213,7 +213,7 @@
     <Import Project="..\packages\EbolaChan.LibZip.1.10.1\build\native\EbolaChan.LibZip.targets" Condition="Exists('..\packages\EbolaChan.LibZip.1.10.1\build\native\EbolaChan.LibZip.targets')" />
     <Import Project="..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets" Condition="Exists('..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets')" />
     <Import Project="..\packages\MATLAB.MexTools.7.0.2\build\native\MATLAB.MexTools.targets" Condition="Exists('..\packages\MATLAB.MexTools.7.0.2\build\native\MATLAB.MexTools.targets')" />
-    <Import Project="..\packages\MariaDB_Connector.1.1.5.2\build\native\MariaDB_Connector.targets" Condition="Exists('..\packages\MariaDB_Connector.1.1.5.2\build\native\MariaDB_Connector.targets')" />
+    <Import Project="..\packages\MariaDB_Connector.1.1.5.3\build\native\MariaDB_Connector.targets" Condition="Exists('..\packages\MariaDB_Connector.1.1.5.3\build\native\MariaDB_Connector.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -224,6 +224,6 @@
     <Error Condition="!Exists('..\packages\EbolaChan.LibZip.1.10.1\build\native\EbolaChan.LibZip.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EbolaChan.LibZip.1.10.1\build\native\EbolaChan.LibZip.targets'))" />
     <Error Condition="!Exists('..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets'))" />
     <Error Condition="!Exists('..\packages\MATLAB.MexTools.7.0.2\build\native\MATLAB.MexTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MATLAB.MexTools.7.0.2\build\native\MATLAB.MexTools.targets'))" />
-    <Error Condition="!Exists('..\packages\MariaDB_Connector.1.1.5.2\build\native\MariaDB_Connector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MariaDB_Connector.1.1.5.2\build\native\MariaDB_Connector.targets'))" />
+    <Error Condition="!Exists('..\packages\MariaDB_Connector.1.1.5.3\build\native\MariaDB_Connector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MariaDB_Connector.1.1.5.3\build\native\MariaDB_Connector.targets'))" />
   </Target>
 </Project>
