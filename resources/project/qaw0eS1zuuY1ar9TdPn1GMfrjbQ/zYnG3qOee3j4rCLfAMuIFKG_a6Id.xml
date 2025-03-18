@@ -3,4 +3,7 @@
     <Category UUID="Deployment_Category_938e8308-6190-45c6-bbe3-e650af41f093">
         <Label UUID="Deployment_ToolboxImageFile_938e8308-6190-45c6-bbe3-e650af41f093"/>
     </Category>
+    <Category UUID="Deployment_Category_f615531a-5e2a-4e3c-8c16-f56da93b5f57">
+        <Label UUID="Deployment_ToolboxImageFile_f615531a-5e2a-4e3c-8c16-f56da93b5f57"/>
+    </Category>
 </Info>

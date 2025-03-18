@@ -22,10 +22,9 @@
 % Exclude all top level files and folders beginning with the character "%":
 % \%example/%file.svn
 %
-**/resources/project/**/*
-resources/*
+resources/project
+resources/4*
 **/*.prj
-**/.git/**/*
 **/.svn/**/*
 **/.buildtool/**/*
 **/*.asv
@@ -36,3 +35,10 @@ Windows平台
 *.mltbx
 *.sln
 .vs
+.git*
+% 工具箱图像.png不能忽略，因为在GettingStarted.mlx里用到
+README.md
+**/*.pdb
+**/*.exp
+**/*.lib
+deploymentLog.html
