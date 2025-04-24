@@ -5018,6 +5018,32 @@
 			}
 		]
 	},
+	"MATLAB.PolyFit": {
+		"inputs": [
+			{
+				"name": "X",
+				"kind": "required",
+				"purpose": "查询点"
+			},
+			{
+				"name": "Y",
+				"kind": "required",
+				"purpose": "查询点位置的拟合值"
+			},
+			{
+				"name": "Dimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要计算多项式系数的维度"
+			},
+			{
+				"name": "NumTimes",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "多项式拟合的次数"
+			}
+		]
+	},
 	"MATLAB.Rgb2Gray": {
 		"inputs": [
 			{

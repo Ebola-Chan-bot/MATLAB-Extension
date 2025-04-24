@@ -33,16 +33,25 @@
 ```MATLAB
 %在系统浏览器中打开附加功能资源管理器
 function BrowseAddonsExplorer
+
 %斐波那契插值
 function QueryValues = FibonacciInterp(QueryIndices,ReferenceValues,ReferenceIndices)
+
+%内置polyfit的魔改版，支持任意维度张量
+function Coefficients = PolyFit(X,Y,Dimension,NumTimes)
+
 %暂停执行MATLAB，不可中止
 function Pause(varargin)
+
 %将任意维度的RGB图像转换为灰度图
 function Image = Rgb2Gray(Image,Dimension)
+
 %将数值转换为具有指定有效位数的定点计数法字符串
 function Fixedpoints = SignificantFixedpoint(Numbers,Significance)
+
 %抢夺被占用的串口
 function [SP,PID] = SnatchSerialport(Port,Baudrate,NameValues)
+
 %在不破坏图连通性的前提下尝试移除节点（Try to remove the node without breaking graph connectivity）
 function Graph = TtrtnWbgc(Graph,ToRemove)
 ```
