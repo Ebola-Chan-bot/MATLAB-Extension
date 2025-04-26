@@ -1,7 +1,8 @@
-classdef (Sealed) Missing < matlab.mixin.internal.MatrixDisplay & matlab.mixin.CustomCompactDisplayProvider
-	%内置missing类型的升级版，支持整数类型
+classdef Missing < matlab.mixin.internal.MatrixDisplay & matlab.mixin.CustomCompactDisplayProvider
+	%内置missing类型的升级版，支持整数和元胞类型
 	%此类型可以转换为整数类型。对于无符号整数，将转换为最大值；对于有符号整数，将转换为最小值。
-    methods (Hidden)
+	%对于元胞，将转换为包含一个Missing对象的元胞
+    methods
         function disp(m)
             disp(string(m)); % converts missing to the missing string, not to "<missing>"
         end
@@ -86,6 +87,10 @@ classdef (Sealed) Missing < matlab.mixin.internal.MatrixDisplay & matlab.mixin.C
             end
         end
         
+        function c = cell(m)
+            c = repmat({MATLAB.DataTypes.Missing},size(m));
+        end
+        
         function o = horzcat(varargin)
             o = deferCall('horzcat', varargin{:});
         end
@@ -139,7 +144,7 @@ classdef (Sealed) Missing < matlab.mixin.internal.MatrixDisplay & matlab.mixin.C
         end
     end
     
-    methods (Hidden, Access=protected)
+    methods (Access=protected)
         function displayImpl(m, ~, ~)
             disp(m);
             if isscalar(m) && (matlab.internal.display.formatSpacing == "loose")
