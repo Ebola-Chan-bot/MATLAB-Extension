@@ -89,7 +89,11 @@ classdef Missing < matlab.mixin.internal.MatrixDisplay & matlab.mixin.CustomComp
         
         function c = cell(m)
             c = repmat({MATLAB.DataTypes.Missing},size(m));
-        end
+		end
+
+		function c = categorical(m)
+			c = repmat(categorical(missing),size(m));
+		end
         
         function o = horzcat(varargin)
             o = deferCall('horzcat', varargin{:});
