@@ -880,6 +880,35 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.MergeDuplicateKeys": {
+		"inputs": [
+			{
+				"name": "Table",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "要操作的表"
+			},
+			{
+				"name": "KeyColumns",
+				"kind": "required",
+				"type": [
+					"string",
+					[
+						"char",
+						"row"
+					],
+					"cell"
+				],
+				"purpose": "表的键列名"
+			},
+			{
+				"name": "MergeMethod",
+				"kind": "ordered",
+				"type": "function_handle",
+				"purpose": "自定义的合并方法"
+			}
+		]
+	},
 	"MATLAB.DataFun.MinSubs": {
 		"inputs": [
 			{

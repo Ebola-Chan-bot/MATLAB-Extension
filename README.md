@@ -80,22 +80,31 @@ end
 ```MATLAB
 %修改表列排序规则
 function AlterCollate(Connection,Collate,TableName,ColumnName)
+
 %将 MATLAB datetime 转换为java.sql.Timestamp
 function Timestamp = DatetimeToTimestamp(Datetime)
+
 %将指定数据库整个下载导出到.mat文件
 function Dump(Connection,FilePath)
+
 %建立一个MariaDB数据库的连接
 function Connection=MariaDB(varargin)
+
 %数据库的关系图
 function RG = RelationGraph(Connection,options)
+
 %将java.sql.ResultSet转换为 MATLAB table
 function Table = ResultSetToTable(ResultSet,ColumnsOfInterest)
+
 %构造 SQL SELECT 语句并查询
 function Result = Select(Connection,Columns,From,options)
+
 %为指定数据库安装MATLAB扩展
 function SetupMatlab(Connection,Operation)
+
 %根据主键更新或插入数据
 function UpdateByPrimary(Connection,TableName,UpdateTable)
+
 %将数据库表某一VARCHAR列转换为ENUM类型
 function VarcharToEnum(Connection,TableName,ColumnName)
 ```
@@ -103,14 +112,22 @@ function VarcharToEnum(Connection,TableName,ColumnName)
 ```MATLAB
 %内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [G,ID] = FindGroupsN(Collection,Dimension)
+
 %返回数组的最大值以及所在的坐标。
 function [Value,varargout] = MaxSubs(Data,Dimensions,K)
+
 %一次性高效算出数据沿维度的平均值和标准误
 function [Mean,SEM]=MeanSem(Data,Dimensions)
+
+%合并表中具有重复键值的列
+function Table = MergeDuplicateKeys(Table,KeyColumns,MergeMethod)
+
 %返回数组的最小值以及所在的坐标。
 function [Value,varargout] = MinSubs(Data,Dimensions,K)
+
 %数组元素沿指定维度的缩放范围
 function Array = Rescale(Array,LowerBound,UpperBound,Dimensions)
+
 %在任意维度上计算互相关
 function [C,Lag] = XCorr(X,Y,Dimensions)
 ```
@@ -134,26 +151,37 @@ end
 ```MATLAB
 %内置arrayfun的升级版，支持指定维度、单一维度隐式扩展和返回数组自动拼接
 function varargout=ArrayFun(Function,Arguments,options)
+
 %cell2mat的升级版，强力拼接任意数据类型
 function Cells = Cell2Mat(Cells)
+
 %将MATLAB.DataTypes.Serialize序列化的字节反序列化回MATLAB数据类型
 function Data = Deserialize(Bytes)
+
 %取对一个文件夹下所有满足给定文件名模式的文件的绝对路径，对它们执行函数
 function varargout = FolderFun(Function,Directory,options)
+
 %检查表中所有全等的列，将它们合并成一列
 function Table = MergeCongruentColumns(Table)
+
 %将多个结构体标量按字段合并，重复的字段将取第一个值
 function Merged = MergeStructs(varargin)
+
 %按照键列合并表
 function Merged = MergeTables(KeyColumns,varargin)
+
 %重复多次调用函数，为每个重复参数生成一个返回值
 function varargout = RepeatingFun(Function,Arguments)
+
 %对内联表查询进行图论优化
 function [OptimizedTables,TableGraph] = OptimizeQueryGraph(Tables,ColumnsOfInterest,Flags)
+
 %对多张表格实施类似于 SQL SELECT 的查询操作
 function ResultTable = Select(varargin)
+
 %将任意MATLAB类型数据序列化为int8列向量
 function Bytes = Serialize(Data,Dimensions)
+
 %内置typecast的升级版，支持多维数组，需指定转换维度
 function Y = TypeCast(X,Type,Dimension)
 ```
@@ -161,6 +189,7 @@ function Y = TypeCast(X,Type,Dimension)
 ```MATLAB
 %计算两个N维空间向量的夹角弧度
 function A=AngleND(varargin)
+
 %将有限的整数资源按照权重尽可能公平分配
 function Allocation = IntegerAllocate(Resources,Weights)
 ```
@@ -168,22 +197,31 @@ function Allocation = IntegerAllocate(Resources,Weights)
 ```MATLAB
 %内置cat函数的魔改版，可以给不兼容数组自动剪除尾数
 function Array = CutCat(Dimension,varargin)
+
 %内置flip函数的升级版，支持同时翻转多个维度
 function A = Flip(A,Dimensions)
+
 %内置isequaln的升级版，支持任意数组类型，并可以指定比较维度，返回逻辑数组
 function Equal = IsEqualN(A,B,Dimensions)
+
 %支持任意维度数组的linspace
 function Sequence = LinSpace(Start,End,Number,Dimension)
+
 %根据维度顺序和尺寸，生成自定义的下标转线性索引数组
 function ActualIndexArrayByArbitrarySubs = OrderedDimensionSize2IndexArray(DimensionSize,DSOrderArbitrary,options)
+
 %根据维度顺序和尺寸，生成自定义的线性索引转下标向量
 function varargout = OrderedDimensionSize2SubsVectors(DimensionSize,DSOrderArbitrary,options)
+
 %内置cat函数的魔改版，可以给不兼容数组自动补全空值
 function Array = PadCat(Dimension,Arrays,options)
+
 %内置rot90函数的升级版，支持指定任意两个维度组成的旋转平面
 function A = Rot90(A,varargin)
+
 %内置transpose函数的升级版，支持转置任意两个维度
 function A = Transpose(A,DimPair)
+
 %通过重复维度来统一数组的尺寸
 function varargout = UniformSize(varargin)
 ```
@@ -192,20 +230,28 @@ function varargout = UniformSize(varargin)
 ```MATLAB
 %列出所有MATLAB官方API的搜索路径
 function Paths = BuiltinPaths
+
 %内置cd函数的升级版，支持打开目录选择对话框要求用户手动选择当前目录
 function OldDirectory = CD(NewDirectory)
+
 %内置javaaddpath的升级版，自动添加目录下的所有jar
 function JavaAddPath(Paths)
+
 %内置load函数的魔改版，取消适用场合限制，支持直接输出变量
 function varargout = Load(Path,VariableName)
+
 %重启MATLAB
 function Restart
+
 %内置save函数的魔改版，采用名称值参数保存变量，可以在parfor循环中使用。
 function Save(MatPath,Variable)
+
 %在工作区或复合变量中搜索变量名、结构体字段、表格列或对象属性
 function Paths = SearchNames(Names,Parent)
+
 %确认Java路径已添加到静态路径列表
 function Exist=StaticJavaPath(Path,Reset)
+
 %解决内置which找不到包内类下成员方法的问题
 function Path = Which(varargin)
 ```
@@ -226,14 +272,19 @@ end
 ```MATLAB
 %设置当前图窗的纵横比
 function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,varargin)
+
 %绘制跟随曲线方向的箭头
 function Arrows = LineFollowingArrow(XYCoordinates,options)
+
 %绘制多条误差阴影线图
 function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
+
 %创建带有可自定义文本的嵌套饼状图
 function fig = NestedPie(C, options)
+
 %统一各坐标区的XYZC轴范围
 function UnifyAxesLims(Axes,varargin)
+
 %列出内置作图函数允许使用的Marker字符
 function VMC = ValidMarkerChars(Index)
 ```
@@ -253,10 +304,13 @@ function varargout = ImRead(varargin)
 ```MATLAB
 %调用 Win32 ShellAPI 执行可撤销的批量文件复制
 function AnyOperationCanceled = CopyFile(Source,Destination)
+
 %调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
 function AnyOperationCanceled=Delete(Paths,Flags)
+
 %创建 Windows lnk 快捷方式
 function LnkShortcut(varargin)
+
 %调用 Win32 ShellAPI 执行可撤销的批量文件移动
 function AnyOperationCanceled = MoveFile(Source,Destination)
 ```
@@ -274,8 +328,10 @@ end
 ```MATLAB
 %将一列分隔符字符串的前几个字段读出为表格或时间表
 function Table = DelimitedStringsToTable(Strings,FieldNames,Delimiter,options)
+
 %批量重命名.mat文件中的变量
 function MatVariableRename(OldNames,NewNames,MatPaths)
+
 %发送喵提醒
 function SendMeowAlert(MeowCode)
 ```
@@ -293,16 +349,22 @@ end
 ```MATLAB
 %为MATLAB安装补丁，修复已知bug
 function BugList = BuiltinBugFix(Command,RestartDisposition)
+
 %收集无法返回的过程值
 function Value = Capture(Value,Receiver,Property)
+
 %使得当前MATLAB进程崩溃
 function Crash
+
 %根据验证函数将输入的Varargin分发到输出变量
 function varargout = DistributeVararginByValidation(Varargin,ValidationFun,DefaultFun)
+
 %获取函数的第N个输出
 function varargout = GetNthOutputs(Function,OutputIndices)
+
 %设置或查询全局缓存键值对
 function Value = GlobalCache(Key,Value)
+
 %内置input函数的增强版，取消适用场合限制
 function X = Input(varargin)
 ```
@@ -328,8 +390,10 @@ end
 ```MATLAB
 %在不方便使用花括号索引的语境下通过函数调用实现花括号索引
 function varargout = BraceReference(Object,varargin)
+
 %在不方便使用点索引赋值的语境下通过函数调用实现点索引赋值
 function Object = DotAssign(Object,Index,Value)
+
 %在不方便使用点索引的语境下通过函数调用实现点索引
 function Value = DotReference(Object,Index)
 ```
@@ -338,12 +402,16 @@ function Value = DotReference(Object,Index)
 ```MATLAB
 %内置ismember的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [IsIn,Location] = IsMemberN(Target,Source,Dimension)
+
 %维度化的逻辑赋值
 function Array = LogicalAssign(Array,Logical,Value)
+
 %内置setdiff的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [Diff,IA] = SetDiffN(SetA,SetB,Dimension)
+
 %内置union的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据，还能同时合并多个集合
 function USet = UnionN(Dimension,varargin)
+
 %内置unique的升级版，支持任意数组和表格类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [Set,InputIndex,UniqueIndex] = UniqueN(Set,varargin)
 ```
@@ -357,6 +425,7 @@ end
 ```MATLAB
 %为Windows添加.prj文件扩展名关联
 function AssociatePrjExtension
+
 %列出指定工程所添加的搜索路径
 function ProjectPaths = ListAllProjectPaths(Project)
 ```
@@ -364,8 +433,10 @@ function ProjectPaths = ListAllProjectPaths(Project)
 ```MATLAB
 %生成任意概率分布密度的随机数
 function varargout = RandAnyDist(PDF,Size,Range)
+
 %生成单位球面上均匀分布的随机点
 function [X,Y,Z] = RandOnSphere(varargin)
+
 %洗牌算法，支持设定最大连续重复数
 function [Array,CountCache] = Shuffle(Array,options)
 ```
@@ -373,8 +444,10 @@ function [Array,CountCache] = Shuffle(Array,options)
 ```MATLAB
 %计算椭圆周长
 function P = EllipticPerimeter(a,b)
+
 %穷举一定长度的所有可能的逻辑向量
 function Exhaustion = LogicalExhaustion(Length)
+
 %列出集合的所有子集
 function SS = Subsets(Set)
 ```
@@ -382,8 +455,10 @@ function SS = Subsets(Set)
 ```MATLAB
 %示例脚本
 Demo
+
 %安装下载好的支持包
 function InstallSupportPackages(ArchivesDirectory,options)
+
 %下载支持包下载器。
 function SupportPackageDownloader(CacheDirectory,options)
 ```
@@ -391,6 +466,7 @@ function SupportPackageDownloader(CacheDirectory,options)
 ```MATLAB
 %可以设置初始目录，以及保存上次所在目录的文件打开对话框
 function FilePaths = OpenFileDialog(options)
+
 %可以设置初始目录，以及保存上次所在目录的文件保存对话框
 function FilePath = SaveFileDialog(options)
 ```
