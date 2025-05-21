@@ -42,3 +42,4 @@ README.md
 **/*.exp
 **/*.lib
 deploymentLog.html
+toolbox.ignore

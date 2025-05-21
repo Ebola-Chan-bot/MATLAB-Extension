@@ -14,3 +14,5 @@ package*
 **/*.deps.json
 /+MATLAB/+internal/private/libwebp_debug.dll
 node_modules
+deploymentLog.html
+resources/4*

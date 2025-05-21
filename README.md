@@ -25,7 +25,7 @@
 	- [+SpecFun](#specfun) 穷举、椭圆周长
 	- [+SupportPkg](#supportpkg) 一键获取MATLAB硬件支持包
 	- [+UITools](#uitools) 文件打开和保存对话框
-	- 还有一些尚未归类的工具函数直接放在MATLAB包下
+	- 还有一些尚未归类的工具函数直接放在MATLAB命名空间下
 
 每个代码文件内部都有详细文档，可以用doc命令查看，此处仅列出函数签名和类功能简介。
 # +MATLAB
