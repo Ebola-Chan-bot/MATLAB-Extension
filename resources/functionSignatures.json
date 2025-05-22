@@ -2709,6 +2709,15 @@
 			}
 		]
 	},
+	"MATLAB.Graphics.OptimizedLegendLocation": {
+		"inputs": [
+			{
+				"name": "GObjects",
+				"kind": "required",
+				"purpose": "作图函数返回的图形对象"
+			}
+		]
+	},
 	"MATLAB.Graphics.UnifyAxesLims": {
 		"inputs": [
 			{
