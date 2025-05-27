@@ -286,7 +286,7 @@ function fig = NestedPie(C, options)
 function Location=OptimizedLegendLocation(GObjects)
 
 %统一各坐标区的XYZC轴范围
-function UnifyAxesLims(Axes,varargin)
+function varargout=UnifyAxesLims(Axes,varargin)
 
 %列出内置作图函数允许使用的Marker字符
 function VMC = ValidMarkerChars(Index)
