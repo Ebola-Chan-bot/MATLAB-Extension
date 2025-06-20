@@ -184,6 +184,9 @@ function Bytes = Serialize(Data,Dimensions)
 
 %内置typecast的升级版，支持多维数组，需指定转换维度
 function Y = TypeCast(X,Type,Dimension)
+
+%内置varfun的魔改版，支持多个输入输出
+function varargout = VarFun(Function,varargin)
 ```
 ## +ElFun
 ```MATLAB
@@ -197,6 +200,9 @@ function Allocation = IntegerAllocate(Resources,Weights)
 ```MATLAB
 %内置cat函数的魔改版，可以给不兼容数组自动剪除尾数
 function Array = CutCat(Dimension,varargin)
+
+%内置find的魔改版，支持在多维数组上的任意维度查找非零值所在的位置，在其它维度上独立执行。
+function [Index,NonZeros] = Find(Array,NumToFind,Dimensions,Last)
 
 %内置flip函数的升级版，支持同时翻转多个维度
 function A = Flip(A,Dimensions)

@@ -1503,6 +1503,21 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.VarFun": {
+		"inputs": [
+			{
+				"name": "Function",
+				"kind": "required",
+				"purpose": "可调用对象"
+			},
+			{
+				"name": "InTable",
+				"kind": "required",
+				"repeating": true,
+				"purpose": "包含输入参数的表"
+			}
+		]
+	},
 	"MATLAB.ElFun.AngleND": {
 		"inputs": [
 			{
@@ -1592,6 +1607,39 @@
 				"kind": "required",
 				"repeating": true,
 				"purpose": "要拼接的数组"
+			}
+		]
+	},
+	"MATLAB.ElMat.Find": {
+		"inputs": [
+			{
+				"name": "Array",
+				"kind": "required",
+				"purpose": "任意维度数组"
+			},
+			{
+				"name": "NumToFind",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "最多要找出的个数"
+			},
+			{
+				"name": "Dimensions",
+				"kind": "required",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "要查找的维度"
+			},
+			{
+				"name": "Last",
+				"kind": "ordered",
+				"type": [
+					"logical",
+					"scalar"
+				],
+				"purpose": "是否从后向前查找"
 			}
 		]
 	},
