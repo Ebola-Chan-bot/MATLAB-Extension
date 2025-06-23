@@ -856,7 +856,6 @@
 			{
 				"name": "Data",
 				"kind": "required",
-				"type": "numeric",
 				"purpose": "数据数组"
 			},
 			{
@@ -867,16 +866,6 @@
 					"numeric"
 				],
 				"purpose": "聚合维度"
-			}
-		],
-		"outputs": [
-			{
-				"name": "Mean",
-				"type": "double"
-			},
-			{
-				"name": "SEM",
-				"type": "double"
 			}
 		]
 	},
