@@ -43,3 +43,4 @@ README.md
 **/*.lib
 deploymentLog.html
 toolbox.ignore
+*.db
