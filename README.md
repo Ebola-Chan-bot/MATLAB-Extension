@@ -184,6 +184,9 @@ function Bytes = Serialize(Data,Dimensions)
 
 %内置typecast的升级版，支持多维数组，需指定转换维度
 function Y = TypeCast(X,Type,Dimension)
+
+%内置varfun的魔改版，支持多个输入输出
+function varargout = VarFun(Function,varargin)
 ```
 ## +ElFun
 ```MATLAB
@@ -197,6 +200,9 @@ function Allocation = IntegerAllocate(Resources,Weights)
 ```MATLAB
 %内置cat函数的魔改版，可以给不兼容数组自动剪除尾数
 function Array = CutCat(Dimension,varargin)
+
+%内置find的魔改版，支持在多维数组上的任意维度查找非零值所在的位置，在其它维度上独立执行。
+function [Index,NonZeros] = Find(Array,NumToFind,Dimensions,Last)
 
 %内置flip函数的升级版，支持同时翻转多个维度
 function A = Flip(A,Dimensions)
@@ -282,8 +288,11 @@ function Patches=MultiShadowedLines(Y,ShadowHeights,FaceAlpha,options)
 %创建带有可自定义文本的嵌套饼状图
 function fig = NestedPie(C, options)
 
+%根据输入的图形对象，返回一个尽可能不遮挡图形的图例位置
+function Location=OptimizedLegendLocation(GObjects)
+
 %统一各坐标区的XYZC轴范围
-function UnifyAxesLims(Axes,varargin)
+function varargout=UnifyAxesLims(Axes,varargin)
 
 %列出内置作图函数允许使用的Marker字符
 function VMC = ValidMarkerChars(Index)
