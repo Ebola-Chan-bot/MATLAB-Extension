@@ -63,5 +63,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Deprecated
 		A_minimum_of_2_Axes_is_required
 		Current_MATLAB_version_not_supported
+		Invalid_Descriptor
 	end
 end

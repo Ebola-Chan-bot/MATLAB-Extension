@@ -1,0 +1,146 @@
+%[text] 为条形图、误差条或线图之间添加统计显著性标识
+%[text] ## 语法
+%[text] ```matlabCodeExample
+%[text] [Lines,Texts]=MATLAB.Graphics.PLine(Descriptors);
+%[text] ```
+%[text] ## 输入参数
+%[text] Descriptors tabular，一行一个标识，包含以下列：
+%[text] - ObjectA(:,1)matlab.graphics.primitive.Line|matlab.graphics.chart.primitive.Bar|matlab.graphics.chart.primitive.ErrorBar，必需，参与显著性比较的其中一个图形对象
+%[text] - IndexA(:,1)，可选，指示要取ObjectA中的第几个点。一个图形对象中可能有多个点，用此参数指示要取哪个参与比较。如果不指定此列或指定为0，将自动赋予默认值。
+%[text] - ObjectB(:,1)，可选，参与显著性比较的另一个图形对象，必须与ObjectA是同一类型。如果不指定此列或指定为matlab.graphics.GraphicsPlaceholder，默认与ObjectA相同。
+%[text] - IndexB(:,1)，可选，指示要取ObjectB中的第几个点。一个图形对象中可能有多个点，用此参数指示要取哪个参与比较。如果不指定此列或指定为0，将自动赋予默认值。
+%[text] - Text(:,1)string，必需，要标识的文本 \
+%[text] #### 对IndexA和IndexB赋予默认值的规则
+%[text] 如果ObjectA和ObjectB相同：
+%[text] - 如果IndexA和IndexB均未指定，取第一和最后一点
+%[text] - 如果IndexA和IndexB指定其一，报错 \
+%[text] 如果ObjectA和ObjectB不同：
+%[text] - 如果IndexA和IndexB均未指定：如果ObjectA是matlab.graphics.primitive.Line，取两条线对应位置YData差异最大的点；否则报错。
+%[text] - 如果IndexA和IndexB指定其一，则另一个默认与指定值相同 \
+%[text] ## 返回值
+%[text] Lines(:,1)matlab.graphics.primitive.Line，标识线
+function [Lines,Texts]=PLine(Descriptors)
+HasColumns=ismember(["ObjectB", "IndexA", "IndexB"], Descriptors.Properties.VariableNames);
+if HasColumns(1)
+	Logical=arrayfun(@(x)isa(x, 'matlab.graphics.GraphicsPlaceholder'), Descriptors.ObjectB);
+	Descriptors.ObjectB(Logical)=Descriptors.ObjectA(Logical);
+else
+	Descriptors.ObjectB=Descriptors.ObjectA;
+end
+if ~HasColumns(2)
+	Descriptors.IndexA(:)=0;
+end
+if ~HasColumns(3)
+	Descriptors.IndexB(:)=0;
+end
+NumPLines=height(Descriptors);
+[Lines,Texts]=deal(gobjects(NumPLines,1));
+for D=1:NumPLines
+	ObjectA=Descriptors.ObjectA(D);
+	ObjectB=Descriptors.ObjectB(D);
+	IndexA=Descriptors.IndexA(D);
+	IndexB=Descriptors.IndexB(D);
+	VerticalPLine=false;
+	if ObjectA==ObjectB
+		if isa(ObjectA,'matlab.graphics.chart.primitive.Bar')
+			XData=ObjectA.XEndPoints;
+			YData=ObjectA.YEndPoints;
+		else
+			XData=ObjectA.XData;
+			YData=ObjectA.YData;
+		end
+		if IndexA==0
+			if IndexB==0
+				Index=[1,numel(XData)];
+			else
+				MATLAB.Exception.Invalid_Descriptor.Throw({'不允许为相同对象指定单一索引';Descriptors(D,:)});
+			end
+		else
+			if IndexB==0
+				MATLAB.Exception.Invalid_Descriptor.Throw({'不允许为相同对象指定单一索引';Descriptors(D,:)});
+			else
+				Index=[IndexA, IndexB];
+			end
+		end
+		XData=XData(Index);
+		YData=YData(Index);
+		if isa(ObjectA,'matlab.graphics.chart.primitive.ErrorBar')
+			YPNData=[-ObjectA.YNegativeDelta(Index);ObjectA.YPositiveDelta(Index)];
+			YData=YData+YPNData([2,4]-(YData<0));
+		end
+	else
+		if isa(ObjectA,'matlab.graphics.chart.primitive.Bar')
+			XData={ObjectA.XEndPoints, ObjectB.XEndPoints};
+			YData={ObjectA.YEndPoints, ObjectB.YEndPoints};
+		else
+			XData={ObjectA.XData, ObjectB.XData};
+			YData={ObjectA.YData, ObjectB.YData};
+		end
+		%误差棒区可能会重叠，所以不能给YData加上误差范围
+
+		VerticalPLine=isa(ObjectA, 'matlab.graphics.primitive.Line');
+		if IndexA==0
+			if IndexB==0
+				if VerticalPLine
+					Length=min(cellfun(@numel,YData));
+					[~,IndexA]=max(abs(YData{1}(1:Length)-YData{2}(1:Length)));
+					IndexB=IndexA;
+				else
+					MATLAB.Exception.Invalid_Descriptor.Throw({'不同的非Line对象至少需要指定一个索引';Descriptors(D,:)});
+				end
+			else
+				IndexA=IndexB;
+			end
+		else
+			if IndexB==0
+				IndexB=IndexA;
+			end
+		end
+		XData=[XData{1}(IndexA), XData{2}(IndexB)];
+		YData=[YData{1}(IndexA), YData{2}(IndexB)];
+		if isa(ObjectA,'matlab.graphics.chart.primitive.ErrorBar')
+			if XData(1)==XData(2)
+				if YData(1)==YData(2)
+					MATLAB.Exception.Invalid_Descriptor.Throw({'重合的点';Descriptors(D,:)});
+				else
+					YData=AddErrorBar(YData, ObjectA, ObjectB, IndexA, IndexB);
+					VerticalPLine=true;
+				end
+			else
+				if ObjectA.LineStyle=="none"
+					YPNData=[-ObjectA.YNegativeDelta(IndexA),-ObjectB.YNegativeDelta(IndexB);ObjectA.YPositiveDelta(IndexA),ObjectB.YPositiveDelta(IndexB)];
+					YData=YData+YPNData([2,4]-(YData<0));
+				else
+					YData=AddErrorBar(YData, ObjectA, ObjectB, IndexA, IndexB);
+					VerticalPLine=true;
+				end
+			end
+		end
+	end
+	if VerticalPLine
+		YData=YData/2+sum(YData)/4;
+		Lines(D)=plot(XData,YData,'k');
+		hold on;
+		T=text(mean(XData),mean(YData),Descriptors.Text(D),HorizontalAlignment='left',VerticalAlignment='middle');
+		if(YData(1)~=YData(2))
+			
+		end
+	end
+end
+end
+function YData=AddErrorBar(YData, ObjectA, ObjectB, IndexA, IndexB)
+if YData(1)<YData(2)
+	CandidateYData=YData+[ObjectA.YPositiveDelta(IndexA), -ObjectB.YNegativeDelta(IndexB)];
+	if CandidateYData(1)<CandidateYData(2)
+		YData=CandidateYData;
+	end
+else
+	CandidateYData=YData+[-ObjectA.YNegativeDelta(IndexA), ObjectB.YPositiveDelta(IndexB)];
+	if CandidateYData(1)>CandidateYData(2)
+		YData=CandidateYData;
+	end
+end
+end
+
+%[appendix]{"version":"1.0"}
+%---
