@@ -122,9 +122,112 @@ for D=1:NumPLines
 		Lines(D)=plot(XData,YData,'k');
 		hold on;
 		T=text(mean(XData),mean(YData),Descriptors.Text(D),HorizontalAlignment='left',VerticalAlignment='middle');
-		if(YData(1)~=YData(2))
-			
+		if(XData(1)~=XData(2))
+			TextY(2)=T.Extent(2);
+			TextY(1)=TextY(2)+T.Extent(4);
+			T.Position(1)=max((TextY-YData(1))/(YData(2)-YData(1))*(XData(2)-XData(1))+XData(1));
 		end
+		Texts(D)=T;
+	else
+		[~,Index]=min(YData,[],ComparisonMethod='abs');
+		if YData(Index)<0
+			YData=min(YData);
+		else
+			YData=max(YData);
+		end
+		YData=YData*1.1;
+		Lines(D)=plot(XData,[YData,YData],'k');
+		hold on;
+		XData=mean(XData);
+		if YData<0
+			T=text(XData,YData,Descriptors.Text(D),HorizontalAlignment='center',VerticalAlignment='bottom',AffectAutoLimits=true);
+			if isduration(YData)
+				YData=seconds(YData);
+			end
+			while true
+				YLim=ylim;
+				YLim=YLim(2)-YLim(1);
+				if T.Extent(2)+T.Extent(4)<=YData||T.Extent(4)>=YLim
+					break;
+				end
+				T.Position(2)=YData-T.Extent(4)*1.1;
+			end
+		else
+			T=text(XData,YData,Descriptors.Text(D),HorizontalAlignment='center',VerticalAlignment='top',AffectAutoLimits=true);
+			if isduration(YData)
+				YData=seconds(YData);
+			end
+			while true
+				YLim=ylim;
+				YLim=YLim(2)-YLim(1);
+				if T.Extent(2)>=YData||T.Extent(4)>=YLim
+					break;
+				end
+				T.Position(2)=YData+T.Extent(4)*1.1;
+			end
+		end
+		Texts(D)=T;
+	end
+end
+if ~VerticalPLine
+	AllExtent=vertcat(Texts.Extent);
+	RedundantDistances=AllExtent(:,4)/10;
+	NegativeLogical=AllExtent(:,2)<0;
+	AllXData=vertcat(Lines.XData);
+	while true
+		AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
+		RangeTable=sortrows(table(AllYData(:),repelem([true;false],NumPLines,1),'VariableNames',["Position","IsBottom"]),"Position");
+		NumLayers=0;
+		ExtentSum=0;
+		for P=1:height(RangeTable)
+			if RangeTable.IsBottom(P)
+				if ~NumLayers
+					RangeStart=RangeTable.Position(P);
+				end
+				NumLayers=NumLayers+1;
+			else
+				NumLayers=NumLayers-1;
+				if ~NumLayers
+					ExtentSum=ExtentSum+RangeTable.Position(P)-RangeStart;
+				end
+			end
+		end
+		YLim=ylim;
+		YLim=YLim(2)-YLim(1);
+		if ExtentSum*1.1>YLim
+			break;
+		end
+		NoChange=true;
+		for D1=1:NumPLines-1
+			XData1=AllXData(D1,:).';
+			YData1=AllYData(D1,:).';
+			Negative=NegativeLogical(D1);
+			for D2=D1+1:NumPLines
+				if any(XData1>=AllXData(D2,:),'all')&&any(XData1<=AllXData(D2,:),'all')&&any(YData1>AllYData(D2,:),'all')&&any(YData1<AllYData(D2,:),'all')
+					NoChange=false;
+					if Negative
+						AllYData(D2,2)=AllYData(D1,1)-RedundantDistances(D1);
+						AllYData(D2,1)=AllYData(D2,2)-AllExtent(D2,4);
+					else
+						AllYData(D2,1)=AllYData(D1,2)+RedundantDistances(D1);
+						AllYData(D2,2)=AllYData(D2,1)+AllExtent(D2,4);
+					end
+				end
+			end
+		end
+		if NoChange
+			break;
+		end
+		for D=1:NumPLines
+			if NegativeLogical(D)
+				Lines(D).YData(:)=AllYData(D,2);
+				Texts(D).Position(2)=AllYData(D,1);
+			else
+				Lines(D).YData(:)=AllYData(D,1);
+				Texts(D).Position(2)=AllYData(D,2);
+			end
+		end
+		AllExtent=vertcat(Texts.Extent);
 	end
 end
 end
