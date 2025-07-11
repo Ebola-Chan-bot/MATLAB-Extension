@@ -65,7 +65,13 @@ for D=1:NumPLines
 		XData=XData(Index);
 		YData=YData(Index);
 		if isa(ObjectA,'matlab.graphics.chart.primitive.ErrorBar')
-			YPNData=[-ObjectA.YNegativeDelta(Index);ObjectA.YPositiveDelta(Index)];
+			YPNData=zeros(2);
+			if ~isempty(ObjectA.YNegativeDelta)
+				YPNData(1,:)=-ObjectA.YNegativeDelta(Index);
+			end
+			if ~isempty(ObjectA.YPositiveDelta)
+				YPNData(2,:)=ObjectA.YPositiveDelta(Index);
+			end
 			YData=YData+YPNData([2,4]-(YData<0));
 		end
 	else
@@ -108,7 +114,19 @@ for D=1:NumPLines
 				end
 			else
 				if ObjectA.LineStyle=="none"
-					YPNData=[-ObjectA.YNegativeDelta(IndexA),-ObjectB.YNegativeDelta(IndexB);ObjectA.YPositiveDelta(IndexA),ObjectB.YPositiveDelta(IndexB)];
+					YPNData=zeros(2);
+					if ~isempty(ObjectA.YNegativeDelta)
+						YPNData(1,1)=-ObjectA.YNegativeDelta(IndexA);
+					end
+					if ~isempty(ObjectB.YNegativeDelta)
+						YPNData(1,2)=-ObjectB.YNegativeDelta(IndexB);
+					end
+					if ~isempty(ObjectA.YPositiveDelta)
+						YPNData(2,1)=ObjectA.YPositiveDelta(IndexA);
+					end
+					if ~isempty(ObjectB.YPositiveDelta)
+						YPNData(2,2)=ObjectB.YPositiveDelta(IndexB);
+					end
 					YData=YData+YPNData([2,4]-(YData<0));
 				else
 					YData=AddErrorBar(YData, ObjectA, ObjectB, IndexA, IndexB);
@@ -233,12 +251,24 @@ end
 end
 function YData=AddErrorBar(YData, ObjectA, ObjectB, IndexA, IndexB)
 if YData(1)<YData(2)
-	CandidateYData=YData+[ObjectA.YPositiveDelta(IndexA), -ObjectB.YNegativeDelta(IndexB)];
+	CandidateYData=YData;
+	if ~isempty(ObjectA.YPositiveDelta)
+		CandidateYData(1)=YData(1)+ObjectA.YPositiveDelta(IndexA);
+	end
+	if ~isempty(ObjectB.YNegativeDelta)
+		CandidateYData(2)=YData(2)-ObjectB.YNegativeDelta(IndexB);
+	end
 	if CandidateYData(1)<CandidateYData(2)
 		YData=CandidateYData;
 	end
 else
-	CandidateYData=YData+[-ObjectA.YNegativeDelta(IndexA), ObjectB.YPositiveDelta(IndexB)];
+	CandidateYData=YData;
+	if ~isempty(ObjectA.YNegativeDelta)
+		CandidateYData(1)=YData(1)-ObjectA.YNegativeDelta(IndexA);
+	end
+	if ~isempty(ObjectB.YPositiveDelta)
+		CandidateYData(2)=YData(2)+ObjectB.YPositiveDelta(IndexB);
+	end
 	if CandidateYData(1)>CandidateYData(2)
 		YData=CandidateYData;
 	end
