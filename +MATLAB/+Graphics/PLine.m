@@ -65,7 +65,6 @@ for D=1:NumPLines
 		XData=XData(Index);
 		YData=YData(Index);
 		if isa(ObjectA,'matlab.graphics.chart.primitive.ErrorBar')
-			YPNData=zeros(2);
 			if ~isempty(ObjectA.YNegativeDelta)
 				YPNData(1,:)=-ObjectA.YNegativeDelta(Index);
 			end
@@ -114,7 +113,6 @@ for D=1:NumPLines
 				end
 			else
 				if ObjectA.LineStyle=="none"
-					YPNData=zeros(2);
 					if ~isempty(ObjectA.YNegativeDelta)
 						YPNData(1,1)=-ObjectA.YNegativeDelta(IndexA);
 					end
@@ -135,53 +133,50 @@ for D=1:NumPLines
 			end
 		end
 	end
+	Ax=ObjectA.Parent;
 	if VerticalPLine
 		YData=YData/2+sum(YData)/4;
-		Lines(D)=plot(XData,YData,'k');
+		Lines(D)=plot(Ax,XData,YData,'k');
 		hold on;
-		T=text(mean(XData),mean(YData),Descriptors.Text(D),HorizontalAlignment='left',VerticalAlignment='middle');
-		if(XData(1)~=XData(2))
+		T=text(Ax,mean(XData),mean(YData),Descriptors.Text(D),HorizontalAlignment='left',VerticalAlignment='middle');
+		if XData(1)~=XData(2)
 			TextY(2)=T.Extent(2);
 			TextY(1)=TextY(2)+T.Extent(4);
-			T.Position(1)=max((TextY-YData(1))/(YData(2)-YData(1))*(XData(2)-XData(1))+XData(1));
+			T.Position(1)=ruler2num(max((num2ruler(TextY,Ax.YAxis)-YData(1))/(YData(2)-YData(1))*(XData(2)-XData(1))+XData(1)),Ax.XAxis);
 		end
 		Texts(D)=T;
 	else
-		[~,Index]=min(YData,[],ComparisonMethod='abs');
+		[~,Index]=min(abs(YData));%不用ComparisonMethod，因为不支持duration
 		if YData(Index)<0
 			YData=min(YData);
 		else
 			YData=max(YData);
 		end
 		YData=YData*1.1;
-		Lines(D)=plot(XData,[YData,YData],'k');
+		Lines(D)=plot(Ax,XData,[YData,YData],'k');
 		hold on;
 		XData=mean(XData);
 		if YData<0
-			T=text(XData,YData,Descriptors.Text(D),HorizontalAlignment='center',VerticalAlignment='bottom',AffectAutoLimits=true);
-			if isduration(YData)
-				YData=seconds(YData);
-			end
+			T=text(Ax,XData,YData,Descriptors.Text(D),HorizontalAlignment='center',VerticalAlignment='bottom',AffectAutoLimits=true);
 			while true
 				YLim=ylim;
 				YLim=YLim(2)-YLim(1);
-				if T.Extent(2)+T.Extent(4)<=YData||T.Extent(4)>=YLim
+				Extent=num2ruler(T.Extent([2,4]),Ax.YAxis);
+				if Extent(1)+Extent(2)<=YData||Extent(2)>=YLim
 					break;
 				end
-				T.Position(2)=YData-T.Extent(4)*1.1;
+				T.Position(2)=ruler2num(YData-Extent(4)*1.1,Ax.YAxis);
 			end
 		else
-			T=text(XData,YData,Descriptors.Text(D),HorizontalAlignment='center',VerticalAlignment='top',AffectAutoLimits=true);
-			if isduration(YData)
-				YData=seconds(YData);
-			end
+			T=text(Ax,XData,YData,Descriptors.Text(D),HorizontalAlignment='center',VerticalAlignment='top',AffectAutoLimits=true);
 			while true
 				YLim=ylim;
 				YLim=YLim(2)-YLim(1);
-				if T.Extent(2)>=YData||T.Extent(4)>=YLim
+				Extent=num2ruler(T.Extent([2,4]),Ax.YAxis);
+				if Extent(1)>=YData||Extent(2)>=YLim
 					break;
 				end
-				T.Position(2)=YData+T.Extent(4)*1.1;
+				T.Position(2)=ruler2num(YData+Extent(2)*1.1,Ax.YAxis);
 			end
 		end
 		Texts(D)=T;
@@ -238,10 +233,10 @@ if ~VerticalPLine
 		end
 		for D=1:NumPLines
 			if NegativeLogical(D)
-				Lines(D).YData(:)=AllYData(D,2);
+				Lines(D).YData(:)=num2ruler(AllYData(D,2),Lines(D).Parent.YAxis);
 				Texts(D).Position(2)=AllYData(D,1);
 			else
-				Lines(D).YData(:)=AllYData(D,1);
+				Lines(D).YData(:)=num2ruler(AllYData(D,1),Lines(D).Parent.YAxis);
 				Texts(D).Position(2)=AllYData(D,2);
 			end
 		end
