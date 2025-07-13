@@ -183,10 +183,14 @@ for D=1:NumPLines
 	end
 end
 if ~VerticalPLine
+	Ax=gca;
 	AllExtent=vertcat(Texts.Extent);
-	RedundantDistances=AllExtent(:,4)/10;
+	RedundantDistances=AllExtent(:,4)/2;
 	NegativeLogical=AllExtent(:,2)<0;
-	AllXData=vertcat(Lines.XData);
+	AllXData=num2ruler(AllExtent(:,[1,3]),Ax.XAxis);
+	AllXData(:,2)=AllXData(:,1)+AllXData(:,2);
+	[MinX,MaxX]=bounds([vertcat(Lines.XData),AllXData],2);
+	AllXData=[MinX,MaxX];
 	while true
 		AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
 		RangeTable=sortrows(table(AllYData(:),repelem([true;false],NumPLines,1),'VariableNames',["Position","IsBottom"]),"Position");
@@ -207,7 +211,7 @@ if ~VerticalPLine
 		end
 		YLim=ylim;
 		YLim=YLim(2)-YLim(1);
-		if ExtentSum*1.1>YLim
+		if num2ruler(ExtentSum*3/2,Ax.YAxis)>YLim
 			break;
 		end
 		NoChange=true;
