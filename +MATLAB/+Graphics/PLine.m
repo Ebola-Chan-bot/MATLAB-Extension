@@ -5,9 +5,9 @@
 %[text] ```
 %[text] ## 输入参数
 %[text] Descriptors tabular，一行一个标识，包含以下列：
-%[text] - ObjectA(:,1)matlab.graphics.primitive.Line|matlab.graphics.chart.primitive.Bar|matlab.graphics.chart.primitive.ErrorBar，必需，参与显著性比较的其中一个图形对象
+%[text] - ObjectA(:,1)matlab.graphics.primitive.Line|matlab.graphics.chart.primitive.Bar|matlab.graphics.chart.primitive.ErrorBar，必需，参与显著性比较的其中一个图形对象。所有图形对象必须隶属于同一个坐标区。
 %[text] - IndexA(:,1)，可选，指示要取ObjectA中的第几个点。一个图形对象中可能有多个点，用此参数指示要取哪个参与比较。如果不指定此列或指定为0，将自动赋予默认值。
-%[text] - ObjectB(:,1)，可选，参与显著性比较的另一个图形对象，必须与ObjectA是同一类型。如果不指定此列或指定为matlab.graphics.GraphicsPlaceholder，默认与ObjectA相同。
+%[text] - ObjectB(:,1)，可选，参与显著性比较的另一个图形对象，必须与ObjectA是同一类型，且在同一个坐标区。如果不指定此列或指定为matlab.graphics.GraphicsPlaceholder，默认与ObjectA相同。
 %[text] - IndexB(:,1)，可选，指示要取ObjectB中的第几个点。一个图形对象中可能有多个点，用此参数指示要取哪个参与比较。如果不指定此列或指定为0，将自动赋予默认值。
 %[text] - Text(:,1)string，必需，要标识的文本 \
 %[text] #### 对IndexA和IndexB赋予默认值的规则
@@ -146,47 +146,49 @@ for D=1:NumPLines
 		end
 		Texts(D)=T;
 	else
-		[~,Index]=min(abs(YData));%不用ComparisonMethod，因为不支持duration
-		if YData(Index)<0
-			YData=min(YData);
-		else
-			YData=max(YData);
-		end
-		YData=YData*1.1;
-		Lines(D)=plot(Ax,XData,[YData,YData],'k');
-		hold on;
-		XData=mean(XData);
-		if YData<0
-			T=text(Ax,XData,YData,Descriptors.Text(D),HorizontalAlignment='center',VerticalAlignment='bottom',AffectAutoLimits=true);
-			while true
-				YLim=ylim;
-				YLim=YLim(2)-YLim(1);
-				Extent=num2ruler(T.Extent([2,4]),Ax.YAxis);
-				if Extent(1)+Extent(2)<=YData||Extent(2)>=YLim
-					break;
-				end
-				T.Position(2)=ruler2num(YData-Extent(4)*1.1,Ax.YAxis);
-			end
-		else
-			T=text(Ax,XData,YData,Descriptors.Text(D),HorizontalAlignment='center',VerticalAlignment='top',AffectAutoLimits=true);
-			while true
-				YLim=ylim;
-				YLim=YLim(2)-YLim(1);
-				Extent=num2ruler(T.Extent([2,4]),Ax.YAxis);
-				if Extent(1)>=YData||Extent(2)>=YLim
-					break;
-				end
-				T.Position(2)=ruler2num(YData+Extent(2)*1.1,Ax.YAxis);
-			end
-		end
-		Texts(D)=T;
+		Descriptors.XData(D,:)=XData;
+		Descriptors.YData(D,:)=YData;
 	end
 end
 if ~VerticalPLine
-	Ax=gca;
+	Logical=permute(Descriptors.XData,[3,4,1,2]);
+	Logical=isbetween(Descriptors.XData,Logical(:,:,:,1),Logical(:,:,:,2));
+	PNType=sum(Descriptors.YData<0,2);
+	for D=1:NumPLines
+		switch PNType(D)
+			case 0
+				MMFun=@max;
+			case 1
+				if min(ruler2num(Descriptors.YData(D,:),Descriptors.ObjectA.Parent.YAxis),[],2,ComparisonMethod='abs')<0
+					MMFun=@min;
+				else
+					MMFun=@max;
+				end
+			case 2
+				MMFun=@min;
+		end
+		Descriptors.FinalYData(D)=MMFun(Descriptors.YData(Logical(:,:,D)));
+	end
+	FinalYData=ylim;
+	FinalYData=Descriptors.FinalYData+(FinalYData(2)-FinalYData(1))/10;
+	Lines=plot(Descriptors.XData.',[FinalYData,FinalYData].','k');
+	Logical=Descriptors.FinalYData<0;
+	Texts(Logical)=text(mean(Descriptors.XData(Logical,:),2),FinalYData(Logical),Descriptors.Text(Logical),HorizontalAlignment='center',VerticalAlignment='bottom',AffectAutoLimits=true);
+	Logical=~Logical;
+	Texts(Logical)=text(mean(Descriptors.XData(Logical,:),2),FinalYData(Logical),Descriptors.Text(Logical),HorizontalAlignment='center',VerticalAlignment='top',AffectAutoLimits=true);
+	Logical=Logical*2-1;
+	while true
+		YLimA=ylim;
+		for D=1:NumPLines
+			Texts(D).Position(2)=ruler2num(Lines(D).YData(1),Lines(D).Parent.YAxis)+Texts(D).Extent(4)*Logical(D);
+		end
+		YLimB=ylim;
+		if isequal(YLimA,YLimB)
+			break;
+		end
+	end
 	AllExtent=vertcat(Texts.Extent);
-	RedundantDistances=AllExtent(:,4)/2;
-	NegativeLogical=AllExtent(:,2)<0;
+	Logical=AllExtent(:,2)<0;
 	AllXData=num2ruler(AllExtent(:,[1,3]),Ax.XAxis);
 	AllXData(:,2)=AllXData(:,1)+AllXData(:,2);
 	[MinX,MaxX]=bounds([vertcat(Lines.XData),AllXData],2);
@@ -214,19 +216,20 @@ if ~VerticalPLine
 		if num2ruler(ExtentSum*3/2,Ax.YAxis)>YLim
 			break;
 		end
+		RedundantDistances=ruler2num(YLim/10,Ax.YAxis);
 		NoChange=true;
 		for D1=1:NumPLines-1
 			XData1=AllXData(D1,:).';
 			YData1=AllYData(D1,:).';
-			Negative=NegativeLogical(D1);
+			Negative=Logical(D1);
 			for D2=D1+1:NumPLines
 				if any(XData1>=AllXData(D2,:),'all')&&any(XData1<=AllXData(D2,:),'all')&&any(YData1>AllYData(D2,:),'all')&&any(YData1<AllYData(D2,:),'all')
 					NoChange=false;
 					if Negative
-						AllYData(D2,2)=AllYData(D1,1)-RedundantDistances(D1);
+						AllYData(D2,2)=AllYData(D1,1)-RedundantDistances;
 						AllYData(D2,1)=AllYData(D2,2)-AllExtent(D2,4);
 					else
-						AllYData(D2,1)=AllYData(D1,2)+RedundantDistances(D1);
+						AllYData(D2,1)=AllYData(D1,2)+RedundantDistances;
 						AllYData(D2,2)=AllYData(D2,1)+AllExtent(D2,4);
 					end
 				end
@@ -236,7 +239,7 @@ if ~VerticalPLine
 			break;
 		end
 		for D=1:NumPLines
-			if NegativeLogical(D)
+			if Logical(D)
 				Lines(D).YData(:)=num2ruler(AllYData(D,2),Lines(D).Parent.YAxis);
 				Texts(D).Position(2)=AllYData(D,1);
 			else
