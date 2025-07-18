@@ -5,20 +5,26 @@
 %[text] ```
 %[text] ## 输入参数
 %[text] Descriptors tabular，一行一个标识，包含以下列：
-%[text] - ObjectA(:,1)matlab.graphics.primitive.Line|matlab.graphics.chart.primitive.Bar|matlab.graphics.chart.primitive.ErrorBar，必需，参与显著性比较的其中一个图形对象。所有图形对象必须隶属于同一个坐标区。
+%[text] - ObjectA(:,1)matlab.graphics.chart.primitive.Bar|matlab.graphics.chart.primitive.ErrorBar|matlab.graphics.primitive.Line|matlab.graphics.chart.primitive.Scatter，必需，参与显著性比较的其中一个图形对象。所有图形对象必须隶属于同一个坐标区，且坐标区的YAxis标尺数据类型必须支持算术运算（如数值类型、duration等）。
 %[text] - IndexA(:,1)，可选，指示要取ObjectA中的第几个点。一个图形对象中可能有多个点，用此参数指示要取哪个参与比较。如果不指定此列或指定为0，将自动赋予默认值。
 %[text] - ObjectB(:,1)，可选，参与显著性比较的另一个图形对象，必须与ObjectA是同一类型，且在同一个坐标区。如果不指定此列或指定为matlab.graphics.GraphicsPlaceholder，默认与ObjectA相同。
 %[text] - IndexB(:,1)，可选，指示要取ObjectB中的第几个点。一个图形对象中可能有多个点，用此参数指示要取哪个参与比较。如果不指定此列或指定为0，将自动赋予默认值。
 %[text] - Text(:,1)string，必需，要标识的文本 \
-%[text] #### 对IndexA和IndexB赋予默认值的规则
-%[text] 如果ObjectA和ObjectB相同：
-%[text] - 如果IndexA和IndexB均未指定，取第一和最后一点
-%[text] - 如果IndexA和IndexB指定其一，报错 \
+%[text] 根据图形对象类型不同，对IndexA和IndexB赋予默认值的规则如下：
+%[text] ### matlab.graphics.chart.primitive.Bar|matlab.graphics.chart.primitive.ErrorBar
+%[text] 如果ObjectA和ObjectB相同：如果IndexA和IndexB均未指定，取第一和最后一点；否则报错。
+%[text] 如果ObjectA和ObjectB不同：如果IndexA和IndexB指定其一，则另一个默认与指定值相同；否则报错。
+%[text] ### matlab.graphics.primitive.Line
+%[text] 如果ObjectA和ObjectB相同：如果IndexA和IndexB均未指定，取第一和最后一点；否则报错。
 %[text] 如果ObjectA和ObjectB不同：
-%[text] - 如果IndexA和IndexB均未指定：如果ObjectA是matlab.graphics.primitive.Line，取两条线对应位置YData差异最大的点；否则报错。
+%[text] - 如果IndexA和IndexB均未指定，且YData是可求差的类型，则取两条线对应位置YData差异最大的点；否则报错。
 %[text] - 如果IndexA和IndexB指定其一，则另一个默认与指定值相同 \
+%[text] ### matlab.graphics.chart.primitive.Scatter
+%[text] 如果ObjectA和ObjectB相同：如果IndexA和IndexB均未指定，XData只有2种不同的值，且YData是可以比较大小的类型，则取两种不同XData确定的子点集内，各自YData最大的点；否则报错。
+%[text] 如果ObjectA和ObjectB不同：如果IndexA和IndexB指定其一，则另一个默认与指定值相同；否则报错。
 %[text] ## 返回值
 %[text] Lines(:,1)matlab.graphics.primitive.Line，标识线
+%[text] Texts(:,1)matlab.graphics.primitive.Text，标识文本对象
 function [Lines,Texts]=PLine(Descriptors)
 HasColumns=ismember(["ObjectB", "IndexA", "IndexB"], Descriptors.Properties.VariableNames);
 if HasColumns(1)
@@ -51,7 +57,25 @@ for D=1:NumPLines
 		end
 		if IndexA==0
 			if IndexB==0
-				Index=[1,numel(XData)];
+				if isa(ObjectA,'matlab.graphics.chart.primitive.Scatter')
+					[Group,XData]=findgroups(XData);
+					if numel(XData)==2
+						[MinKey,MaxKey]=bounds(YData);
+						KeyPoints=[MinKey,MaxKey];
+						[~,Index]=min(abs(KeyPoints));
+						if KeyPoints(Index)<0
+							MinMaxFun=@min;
+						else
+							MinMaxFun=@max;
+						end
+						YData=splitapply(MinMaxFun, YData, Group);
+						Index=[];
+					else
+						MATLAB.Exception.Invalid_Descriptor.Throw({'无法确认单一Scatter集内的关键点';Descriptors(D,:)});
+					end
+				else
+					Index=[1,numel(XData)];
+				end
 			else
 				MATLAB.Exception.Invalid_Descriptor.Throw({'不允许为相同对象指定单一索引';Descriptors(D,:)});
 			end
@@ -62,8 +86,10 @@ for D=1:NumPLines
 				Index=[IndexA, IndexB];
 			end
 		end
-		XData=XData(Index);
-		YData=YData(Index);
+		if ~isempty(Index)
+			XData=XData(Index);
+			YData=YData(Index);
+		end
 		if isa(ObjectA,'matlab.graphics.chart.primitive.ErrorBar')
 			if ~isempty(ObjectA.YNegativeDelta)
 				YPNData(1,:)=-ObjectA.YNegativeDelta(Index);
@@ -134,15 +160,16 @@ for D=1:NumPLines
 		end
 	end
 	Ax=ObjectA.Parent;
+	XRuler=Ax.XAxis;
 	if VerticalPLine
 		YData=YData/2+sum(YData)/4;
+		hold(Ax,'on');
 		Lines(D)=plot(Ax,XData,YData,'k');
-		hold on;
 		T=text(Ax,mean(XData),mean(YData),Descriptors.Text(D),HorizontalAlignment='left',VerticalAlignment='middle');
 		if XData(1)~=XData(2)
 			TextY(2)=T.Extent(2);
 			TextY(1)=TextY(2)+T.Extent(4);
-			T.Position(1)=ruler2num(max((num2ruler(TextY,Ax.YAxis)-YData(1))/(YData(2)-YData(1))*(XData(2)-XData(1))+XData(1)),Ax.XAxis);
+			T.Position(1)=ruler2num(max((num2ruler(TextY,Ax.YAxis)-YData(1))/(YData(2)-YData(1))*(XData(2)-XData(1))+XData(1)),XRuler);
 		end
 		Texts(D)=T;
 	else
@@ -151,8 +178,9 @@ for D=1:NumPLines
 	end
 end
 if ~VerticalPLine
-	Logical=permute(Descriptors.XData,[3,4,1,2]);
-	Logical=isbetween(Descriptors.XData,Logical(:,:,:,1),Logical(:,:,:,2));
+	XData=ruler2num(Descriptors.XData,XRuler);
+	Logical=permute(XData,[3,4,1,2]);
+	Logical=isbetween(XData,Logical(:,:,:,1),Logical(:,:,:,2));
 	PNType=sum(Descriptors.YData<0,2);
 	for D=1:NumPLines
 		switch PNType(D)
@@ -171,11 +199,12 @@ if ~VerticalPLine
 	end
 	FinalYData=ylim;
 	FinalYData=Descriptors.FinalYData+(FinalYData(2)-FinalYData(1))/10;
-	Lines=plot(Descriptors.XData.',[FinalYData,FinalYData].','k');
+	hold(Ax,'on');
+	Lines=plot(Ax,Descriptors.XData.',[FinalYData,FinalYData].','k');
 	Logical=Descriptors.FinalYData<0;
-	Texts(Logical)=text(mean(Descriptors.XData(Logical,:),2),FinalYData(Logical),Descriptors.Text(Logical),HorizontalAlignment='center',VerticalAlignment='bottom',AffectAutoLimits=true);
+	Texts(Logical)=text(Ax,mean(XData(Logical,:),2),FinalYData(Logical),Descriptors.Text(Logical),HorizontalAlignment='center',VerticalAlignment='bottom',AffectAutoLimits=true);
 	Logical=~Logical;
-	Texts(Logical)=text(mean(Descriptors.XData(Logical,:),2),FinalYData(Logical),Descriptors.Text(Logical),HorizontalAlignment='center',VerticalAlignment='top',AffectAutoLimits=true);
+	Texts(Logical)=text(Ax,mean(XData(Logical,:),2),FinalYData(Logical),Descriptors.Text(Logical),HorizontalAlignment='center',VerticalAlignment='top',AffectAutoLimits=true);
 	Logical=Logical*2-1;
 	while true
 		YLimA=ylim;
@@ -189,9 +218,9 @@ if ~VerticalPLine
 	end
 	AllExtent=vertcat(Texts.Extent);
 	Logical=AllExtent(:,2)<0;
-	AllXData=num2ruler(AllExtent(:,[1,3]),Ax.XAxis);
+	AllXData=AllExtent(:,[1,3]);
 	AllXData(:,2)=AllXData(:,1)+AllXData(:,2);
-	[MinX,MaxX]=bounds([vertcat(Lines.XData),AllXData],2);
+	[MinX,MaxX]=bounds([vertcat(ruler2num(Lines.XData,XRuler)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
 	AllXData=[MinX,MaxX];
 	while true
 		AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
