@@ -296,6 +296,9 @@ function varargout=UnifyAxesLims(Axes,varargin)
 
 %列出内置作图函数允许使用的Marker字符
 function VMC = ValidMarkerChars(Index)
+
+%Venn图，支持双圈或三圈
+function [Circles,Texts]=Venn(Tensor,varargin)
 ```
 类
 ```MATLAB
