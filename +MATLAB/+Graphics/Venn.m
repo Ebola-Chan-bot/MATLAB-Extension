@@ -72,27 +72,38 @@
 %[text] - Center(:,2)，该圈的中心点建议坐标。对于双圈图，一定会严格遵照建议作图；对于三圈图，三个圈都会尽可能绘制在建议点附近。
 %[text] - 其它polyshape.plot函数接受的名称值参数，每行指定该参数对于对应该圈的值。 \
 %[text] Tags string，每个分量的标签，必须与输入的Matrix或Tensor尺寸相同，将在每个分量对应的分区上标注文本。
-%[text] TagStyles(1,:)cell，为所有文本应用的样式参数，可以是任何text函数接受的名称值参数对组。
+%[text] TagStyles(1,1)struct，为所有文本应用的样式参数，可以是任何text函数接受的名称值参数对组作为结构体的字段和值。
 %[text] ## 返回值
 %[text] Circles(1,2:3)matlab.graphics.primitive.Polygon，绘制的两个或三个圈，允许进行后续操作
 %[text] Texts matlab.graphics.Graphics，标签文本对象，允许进行后续操作，与Tags一一对应。
 %[text] **See also** [polyshape.plot](<matlab:doc polyshape.plot>) [text](<matlab:doc text>)
 function [Circles,Texts]=Venn(Tensor,varargin)
+persistent DefaultCS2 DefaultCS3
+if isempty(DefaultCS2)
+	DefaultCS2=table([1,0,1;0,1,0],[0.5;0.5],'VariableNames',["FaceColor","FaceAlpha"]);
+	DefaultCS3=table([0,0.5,1;0,1,0;1,0,1],[1/3;1/3;1/3],'VariableNames',["FaceColor","FaceAlpha"]);
+end
 HasTags=false;
-CircleStyles=table;
-TagStyles={};
+Tensor2D=ismatrix(Tensor);
+if Tensor2D
+	CircleStyles=DefaultCS2;
+else
+	CircleStyles=DefaultCS3;
+end
+TagStyles=struct;
 for V=1:numel(varargin)
 	Arg=varargin{V};
-	if iscell(Arg)
-		TagStyles=Arg;
+	if isstruct(Arg)
+		MATLAB.DataTypes.MergeStructs(Arg,TagStyles);
 	elseif istabular(Arg)
-		CircleStyles=Arg;
+		CircleStyles(:,Arg.Properties.VariableNames)=Arg;
 	else
 		HasTags=true;
 		Tags=Arg;
 	end
 end
-if ismatrix(Tensor)
+TagStyles=[fieldnames(TagStyles),struct2cell(TagStyles)].';
+if Tensor2D
 	Areas=[sum(Tensor(2,:));sum(Tensor(:,2))];
 	Radius=sqrt(Areas);
 	DefaultDistance=abs(Radius(1)-Radius(2));
