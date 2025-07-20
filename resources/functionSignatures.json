@@ -2781,6 +2781,73 @@
 			}
 		]
 	},
+	"MATLAB.Graphics.Venn": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Matrix",
+							"kind": "required",
+							"type": [
+								"2d",
+								"real"
+							],
+							"purpose": "两个圈外/内的分量"
+						}
+					],
+					[
+						{
+							"name": "Tensor",
+							"kind": "required",
+							"type": [
+								"3d",
+								"real"
+							],
+							"purpose": "三个圈外/内的分量"
+						}
+					]
+				]
+			},
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "CircleStyles",
+							"kind": "required",
+							"type": "tabular",
+							"purpose": "每个圈的样式"
+						}
+					],
+					[]
+				]
+			},
+			{
+				"name": "Tags",
+				"kind": "ordered",
+				"type": [
+					[
+						"string",
+						"3d"
+					],
+					[
+						"cell",
+						"3d"
+					]
+				],
+				"purpose": "每个分量的标签"
+			},
+			{
+				"name": "TagStyles",
+				"kind": "ordered",
+				"type": [
+					"struct",
+					"scalar"
+				],
+				"purpose": "为所有文本应用的样式参数"
+			}
+		]
+	},
 	"MATLAB.Graphics.Window.Create": {
 		"inputs": [
 			{
