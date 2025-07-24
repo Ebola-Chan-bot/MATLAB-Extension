@@ -3,6 +3,8 @@
 %[text] ```matlabCodeExample
 %[text] [Lines,Texts]=MATLAB.Graphics.PLine(Descriptors);
 %[text] ```
+%[text] ## 示例
+%[text] 
 %[text] ## 输入参数
 %[text] Descriptors tabular，一行一个标识，包含以下列：
 %[text] - ObjectA(:,1)matlab.graphics.chart.primitive.Bar|matlab.graphics.chart.primitive.ErrorBar|matlab.graphics.primitive.Line|matlab.graphics.chart.primitive.Scatter，必需，参与显著性比较的其中一个图形对象。所有图形对象必须隶属于同一个坐标区，且坐标区的YAxis标尺数据类型必须支持算术运算（如数值类型、duration等）。

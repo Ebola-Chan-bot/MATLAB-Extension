@@ -1387,6 +1387,50 @@
 			}
 		]
 	},
+	"MATLAB.DataTypes.Object2Table": {
+		"inputs": [
+			{
+				"name": "Objects",
+				"kind": "required",
+				"purpose": "要列出属性的对象数组"
+			},
+			{
+				"name": "Name",
+				"kind": "namevalue",
+				"type": [
+					[
+						"string"
+					],
+					[
+						"cell"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "属性名称"
+			},
+			{
+				"name": "Dependent",
+				"kind": "namevalue",
+				"type": "logical",
+				"purpose": "是否包含依赖属性"
+			},
+			{
+				"name": "Hidden",
+				"kind": "namevalue",
+				"type": "logical",
+				"purpose": "是否包含隐藏属性"
+			},
+			{
+				"name": "HasDefault",
+				"kind": "namevalue",
+				"type": "logical",
+				"purpose": "是否包含有默认值的属性"
+			}
+		]
+	},
 	"MATLAB.DataTypes.RepeatingFun": {
 		"inputs": [
 			{

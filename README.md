@@ -173,6 +173,9 @@ function Merged = MergeTables(KeyColumns,varargin)
 %重复多次调用函数，为每个重复参数生成一个返回值
 function varargout = RepeatingFun(Function,Arguments)
 
+%将对象数组转换为表，一个属性一列
+function Table = Object2Table(Objects,varargin)
+
 %对内联表查询进行图论优化
 function [OptimizedTables,TableGraph] = OptimizeQueryGraph(Tables,ColumnsOfInterest,Flags)
 
