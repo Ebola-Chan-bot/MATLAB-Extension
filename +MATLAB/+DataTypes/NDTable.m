@@ -282,6 +282,9 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			if isa(obj,'MATLAB.DataTypes.NDTable')
 				[obj,Indices]=obj.IndexToAssign(indexOp);
 				NewObj=varargin{1};
+				if ~isa(NewObj,'MATLAB.DataTypes.NDTable')
+					MATLAB.Exception.Parentheses_and_rvalues_do_not_match.Throw('非NDTable类型的右值必须用花括号索引');
+				end
 				obj.Data(Indices{:})=NewObj.Data;
 				obj.Dimensions.DimensionName(1:height(NewObj.Dimensions))=NewObj.Dimensions.DimensionName;
 			else
@@ -291,6 +294,10 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 		end
 		function obj = braceAssign(obj,indexOp,varargin)
 			[obj,Indices]=obj.IndexToAssign(indexOp(1));
+			if isempty(obj.Data)
+				%必要的空数据类型转换
+				obj.Data=varargin{1}([]);
+			end
 			if isscalar(indexOp)
 				obj.Data(Indices{:})=varargin{1};
 			else

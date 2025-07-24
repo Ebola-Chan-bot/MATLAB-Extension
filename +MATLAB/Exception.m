@@ -64,5 +64,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		A_minimum_of_2_Axes_is_required
 		Current_MATLAB_version_not_supported
 		Invalid_Descriptor
+		Parentheses_and_rvalues_do_not_match
 	end
 end
