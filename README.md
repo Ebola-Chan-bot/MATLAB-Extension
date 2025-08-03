@@ -282,6 +282,9 @@ end
 %设置当前图窗的纵横比
 function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,varargin)
 
+%获取图形对象隶属的Y轴
+function YAxis=GetYAxis(GObject)
+
 %绘制跟随曲线方向的箭头
 function Arrows = LineFollowingArrow(XYCoordinates,options)
 

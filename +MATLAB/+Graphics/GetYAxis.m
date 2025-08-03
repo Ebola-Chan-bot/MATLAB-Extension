@@ -9,8 +9,33 @@
 %[text] ## 返回值
 %[text] YAxis(1,1)matlab.graphics.Graphics，输入对象所属的Y轴
 function YAxis=GetYAxis(GObject)
-Ax=GObject.Parent; % 获取图形对象的坐标区
-Ax.
+Ax=GObject.Parent;
+if isscalar(Ax.YAxis)
+	YAxis=Ax.YAxis;
+	return;
+end
+YData=GObject.YData(1);
+for A=1:2
+	YAxis=Ax.YAxis(A);
+	LimitsMode=YAxis.LimitsMode;
+	Limits=YAxis.Limits;
+	if isnumeric(YData)
+		GObject.YData(1)=ruler2num(Limits(2),YAxis)+1;
+	elseif iscategorical(YData)
+		GObject.YData(1)=matlab.lang.internal.uuid;
+	else
+		GObject.YData(1)=Limits(2)-Limits(1)+Limits(2);
+	end
+	YAxis.LimitsMode='auto';
+	if isequal(Limits,YAxis.Limits)
+		YAxis.LimitsMode=LimitsMode;
+	else
+		break;
+	end
+end
+GObject.YData(1)=YData;
+YAxis.Limits=Limits;
+YAxis.LimitsMode=LimitsMode;
 end
 
 %[appendix]{"version":"1.0"}

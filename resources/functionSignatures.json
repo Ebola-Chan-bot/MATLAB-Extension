@@ -2483,6 +2483,19 @@
 			}
 		]
 	},
+	"MATLAB.Graphics.GetYAxis": {
+		"inputs": [
+			{
+				"name": "GObject",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"matlab.graphics.Graphics"
+				],
+				"purpose": "要获取Y轴的图形对象"
+			}
+		]
+	},
 	"MATLAB.Graphics.LineFollowingArrow": {
 		"inputs": [
 			{

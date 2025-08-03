@@ -20,22 +20,31 @@ persistent GroupLocation
 if isempty(GroupLocation)
 	GroupLocation=["southwest","northwest","southeast","northeast"];
 end
-Location=GObjects(1).Parent;
-
-if isa(GObjects,'matlab.graphics.primitive.Polygon')
-	GObjects=[GObjects.Shape];
-	GObjects=vertcat(GObjects.Vertices);
-	XData=GObjects(:,1);
-	YData=GObjects(:,2);
-else
-	%这些对象的XY张量尺寸可能不一样，不能直接拼
-	XData=arrayfun(@(G)G.XData(:),GObjects,UniformOutput=false);
-	XData=vertcat(XData{:});
-	YData=arrayfun(@(G)G.YData(:),GObjects,UniformOutput=false);
-	YData=vertcat(YData{:});	
+NumObjects=numel(GObjects);
+Positions=cell(NumObjects,1);
+for O=1:NumObjects
+	GO=GObjects(O);
+	if isa(GO,'matlab.graphics.primitive.Polygon')
+		XData=GO.Shape.Vertices(:,1);
+		YData=GO.Shape.Vertices(:,2);
+	else
+		XData=GO.XData(:);
+		YData=GO.YData(:);
+	end
+	Positions{O}=[RescaleToLimits(XData,GO.Parent.XAxis), RescaleToLimits(YData,MATLAB.Graphics.GetYAxis(GO))];
 end
-[~,Location]=min(accumarray(((ruler2num(XData(:),Location.XAxis)>mean(ruler2num(xlim(Location),Location.XAxis)))*2+(ruler2num(YData(:),Location.YAxis)>mean(ruler2num(ylim(Location),Location.YAxis)))+1),1,[4,1]));
+Positions=vertcat(Positions{:});
+[~,Location]=min(accumarray(((Positions(:,1)>0.5)*2+(Positions(:,2)>0.5)+1),1,[4,1]));
 Location=GroupLocation(Location);
+end
+function Data=RescaleToLimits(Data,Axis)
+Limits=Axis.Limits;
+if iscategorical(Data)
+	Limits=ruler2num(Limits,Axis)+[-0.5,0.5];
+	Data=ruler2num(Data,Axis);
+end
+Data=(Data-Limits(1))/(Limits(2)-Limits(1));
+end
 
 %[appendix]{"version":"1.0"}
 %---
