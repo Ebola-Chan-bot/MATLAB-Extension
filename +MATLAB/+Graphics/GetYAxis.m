@@ -13,8 +13,10 @@ Ax=GObject.Parent;
 if isscalar(Ax.YAxis)
 	YAxis=Ax.YAxis;
 else
+	Location=Ax.YAxisLocation;
 	yyaxis(Ax,'right');
 	YAxis=Ax.YAxis(1+any(Ax.Children==GObject));
+	yyaxis(Ax,Location);
 end
 end
 
