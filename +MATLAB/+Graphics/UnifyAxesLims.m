@@ -3,7 +3,7 @@
 %[text] ```matlabCodeExample
 %[text] MATLAB.Graphics.UnifyAxesLims(Axes);
 %[text] %统一所有输入坐标区的ACXYZ轴范围
-%[text] 
+%[text]
 %[text] [Lim1,Lim2,…]=MATLAB.Graphics.UnifyAxesLims(Axes,Lim1,Lim2,…);
 %[text] %仅统一坐标区的指定轴范围，返回最终统一到的范围
 %[text] ```
@@ -27,8 +27,16 @@ end
 varargout=cell(1,NumLims);
 for L=1:NumLims
 	LimFun=varargin{L};
-	if LimFun==@ylim
-		Limits=[Axes.YAxis];
+	if isequal(LimFun,@ylim)
+		try
+			Limits=[Axes.YAxis];
+		catch ME
+			if ME.identifier=="MATLAB:catenate:dimensionMismatch"
+				MATLAB.Exception.Axes_have_different_YAxis.Throw;
+			else
+				ME.rethrow;
+			end
+		end
 		Limits=reshape(vertcat(Limits.Limits),[],NumAxes,2);
 		Limits=[min(Limits(:,:,1),[],2),max(Limits(:,:,2),[],2)];
 		for A=1:NumAxes

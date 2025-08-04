@@ -65,5 +65,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Current_MATLAB_version_not_supported
 		Invalid_Descriptor
 		Parentheses_and_rvalues_do_not_match
+		Axes_have_different_YAxis
 	end
 end
