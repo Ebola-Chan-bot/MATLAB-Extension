@@ -10,8 +10,12 @@
 %[text] YAxis(1,1)matlab.graphics.Graphics，输入对象所属的Y轴
 function YAxis=GetYAxis(GObject)
 Ax=GObject.Parent;
-yyaxis(Ax,'right');
-YAxis=Ax.YAxis(1+any(Ax.Children==GObject));
+if isscalar(Ax.YAxis)
+	YAxis=Ax.YAxis;
+else
+	yyaxis(Ax,'right');
+	YAxis=Ax.YAxis(1+any(Ax.Children==GObject));
+end
 end
 
 %[appendix]{"version":"1.0"}
