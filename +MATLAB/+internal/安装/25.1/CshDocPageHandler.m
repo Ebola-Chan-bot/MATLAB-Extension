@@ -78,10 +78,12 @@ classdef CshDocPageHandler < matlab.internal.doc.ui.DocPageHandler
             winIdName = 'winid';
             winIdValue = 'cshww';
             url = matlab.internal.doc.ui.CshDocPageHandler.getUrl(help_path, winIdName, winIdValue);
-			%埃博拉酱修复版
+			
+			%埃博拉酱修复开始
 			cefWindow = matlab.internal.webwindow(url, matlab.internal.getDebugPort());
 			cefWindow.Position = obj.Position;
 			cefWindow.show;
+			%埃博拉酱修复结束
 
             if ~isempty(obj.Title)
                 cefWindow.Title = char(obj.Title);

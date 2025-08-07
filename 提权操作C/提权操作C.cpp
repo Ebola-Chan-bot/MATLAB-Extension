@@ -122,16 +122,16 @@ static 懒加载 MatlabRc([](const path& MatlabRoot)noexcept
 	{
 		return MatlabRoot / L"toolbox\\local\\matlabrc.m";
 	});
-bool 文件未修复(const path& Matlab文件路径)noexcept
+static bool 文件未修复(const path& Matlab文件路径)noexcept
 {
 	std::string 行;
 	std::ifstream 输入流(Matlab文件路径);
 	while (std::getline(输入流, 行))
-		if (行.contains("埃博拉酱修复版"))
+		if (行.contains("埃博拉酱修复"))
 			return false;
 	return true;
 }
-DWORD 计算VersionMS(const std::wstring& MATLAB版本)noexcept
+static DWORD 计算VersionMS(const std::wstring& MATLAB版本)noexcept
 {
 	std::wistringstream 版本号拆分(MATLAB版本);
 	std::wstring 号;
@@ -394,6 +394,10 @@ API(Builtin_bug_fix)
 						{
 							L"ToolboxConfigurationReader.m",
 							L"toolbox\\matlab\\toolbox_packaging\\+matlab\\+internal\\+addons\\+metadata",
+						},
+						{
+							L"BuildRunner.m",
+							L"toolbox\\matlab\\buildtool\\core\\+matlab\\+buildtool"
 						}
 					}}
 				}
