@@ -394,6 +394,9 @@ end
 classdef MException
 	%内置MException的扩展，支持更灵活的构造和额外的Detail属性
 end
+classdef Mutex
+	%互斥锁，防止资源被重复访问
+end
 classdef Optional
 	%一个值的句柄容器，可选为空。
 end
