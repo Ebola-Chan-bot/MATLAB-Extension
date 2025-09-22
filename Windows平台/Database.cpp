@@ -143,79 +143,79 @@ static void SQL捕获(const std::move_only_function<void()const>& 尝试)
 	{
 		尝试();
 	}
-	catch(const sql::BatchUpdateException&异常)
+	catch(const sql::BatchUpdateException&)
 	{
 		throw;
 	}
-	catch (const sql::IllegalArgumentException& 异常)
+	catch (const sql::IllegalArgumentException& )
 	{
 		throw;
 	}
-	catch (const sql::MaxAllowedPacketException& 异常)
+	catch (const sql::MaxAllowedPacketException& )
 	{
 		throw;
 	}
-	catch (const sql::ParseException& 异常)
+	catch (const sql::ParseException& )
 	{
 		throw;
 	}
-	catch (const sql::SQLDataException& 异常)
+	catch (const sql::SQLDataException& )
 	{
 		throw;
 	}
-	catch (const sql::SQLFeatureNotImplementedException& 异常)
+	catch (const sql::SQLFeatureNotImplementedException& )
 	{
 		throw;
 	}
-	catch (const sql::SQLFeatureNotSupportedException& 异常)
+	catch (const sql::SQLFeatureNotSupportedException& )
 	{
 		throw;
 	}
-	catch (const sql::SQLIntegrityConstraintViolationException& 异常)
+	catch (const sql::SQLIntegrityConstraintViolationException&)
 	{
 		throw;
 	}
-	catch (const sql::SQLInvalidAuthorizationSpecException& 异常)
+	catch (const sql::SQLInvalidAuthorizationSpecException&)
 	{
 		throw;
 	}
-	catch (const sql::SQLNonTransientConnectionException& 异常)
+	catch (const sql::SQLNonTransientConnectionException& )
 	{
 		throw;
 	}
-	catch (const sql::SQLSyntaxErrorException& 异常)
+	catch (const sql::SQLSyntaxErrorException& )
 	{
 		throw;
 	}
-	catch (const sql::SQLTimeoutException& 异常)
+	catch (const sql::SQLTimeoutException& )
 	{
 		throw;
 	}
-	catch (const sql::SQLTransactionRollbackException& 异常)
+	catch (const sql::SQLTransactionRollbackException& )
 	{
 		throw;
 	}
-	catch (const sql::SQLTransientConnectionException& 异常)
+	catch (const sql::SQLTransientConnectionException& )
 	{
 		throw;
 	}
-	catch (const sql::SQLTransientException& 异常)
+	catch (const sql::SQLTransientException&)
 	{
 		throw;
 	}
-	catch (const sql::SQLException& 异常)
+	catch (const sql::SQLException& )
 	{
 		throw;
 	}
-	catch (const std::invalid_argument& 异常)
+	catch (const std::invalid_argument& )
 	{
 		throw;
 	}
-	catch (const std::out_of_range& 异常)
+	catch (const std::out_of_range& )
 	{
 		throw;
 	}
-	catch (const std::runtime_error& 异常)
+	catch (const std::runtime_error& )
 	{
 		throw;
 	}
