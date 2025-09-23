@@ -513,6 +513,9 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			end
 			obj.Dimensions(1:NDims,:)=obj.Dimensions(DimensionOrder,:);
 		end
+		function obj=sqrt(obj)
+			obj.Data=sqrt(obj.Data);
+		end
 		%% 二元运算
 		function obj=plus(obj1,obj2)
 			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@plus);
