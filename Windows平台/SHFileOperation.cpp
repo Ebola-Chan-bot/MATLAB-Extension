@@ -27,16 +27,11 @@ static String 字符串转换(Array&& 输入)
 }
 static TypedArray<bool> 执行操作(SHFILEOPSTRUCTW& 操作结构)
 {
-	switch (SHFileOperationW(&操作结构))
-	{
-	case ERROR_SUCCESS:
-	case ERROR_CANCELLED:
+	int const 异常 = SHFileOperationW(&操作结构);
+	if (异常 == ERROR_SUCCESS || 异常 == ERROR_CANCELLED)//取消操作也算成功
 		return 数组工厂.createScalar<bool>(操作结构.fAnyOperationsAborted);
-	case ERROR_FILE_NOT_FOUND:
-		EnumThrow(MATLAB::Exception::File_not_found);
-	default:
-		ThrowLastError(MATLAB::Exception::File_operation_failed);
-	}
+	else
+		EnumThrow(MATLAB::Exception::File_operation_failed, WindowsErrorMessage(异常));
 }
 static TypedArray<bool> CopyMove(matlab::mex::ArgumentList& 输入, UINT wFunc)
 {
