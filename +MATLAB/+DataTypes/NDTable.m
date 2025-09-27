@@ -412,6 +412,11 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			%  扩展。
 			if isa(obj1,'MATLAB.DataTypes.NDTable')
 				if isa(obj2,'MATLAB.DataTypes.NDTable')
+
+					%使所有空索引视为相等
+					obj1.Dimensions.IndexNames(cellfun(@isempty,obj1.Dimensions.IndexNames))={strings(1,0)};
+					obj2.Dimensions.IndexNames(cellfun(@isempty,obj2.Dimensions.IndexNames))={strings(1,0)};
+					
 					if isequaln(obj1.Dimensions,obj2.Dimensions)
 						obj1.Data=Operator(obj1.Data,obj2.Data);
 					else
@@ -575,7 +580,7 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
 			if nargout
 				Sizes=size(obj.Data);
 				[varargout{1:nargout}]=Reducer(obj.Data,varargin{:});
-				obj.Dimensions.IndexNames(size(obj.Data,1:numel(Sizes))<Sizes)={strings(1,0)};
+				obj.Dimensions.IndexNames(size(varargout{1},1:numel(Sizes))<Sizes)={strings(1,0)};
 				varargout=cellfun(@(Data)MATLAB.DataTypes.NDTable(Data,obj.Dimensions),varargout,UniformOutput=false);
 			end
 		end
