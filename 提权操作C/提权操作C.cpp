@@ -400,6 +400,23 @@ API(Builtin_bug_fix)
 							L"toolbox\\matlab\\buildtool\\core\\+matlab\\+buildtool"
 						}
 					}}
+				},
+				{
+					L"25.2",
+					{{
+						{
+							L"CshDocPageHandler.m",
+							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+ui\\@CshDocPageHandler",
+						},
+						{
+							L"ToolboxConfigurationReader.m",
+							L"toolbox\\matlab\\toolbox_packaging\\+matlab\\+internal\\+addons\\+metadata",
+						},
+						{
+							L"BuildRunner.m",
+							L"toolbox\\matlab\\buildtool\\core\\+matlab\\+buildtool"
+						}
+					}}
 				}
 			};
 			const auto 返回值 = 补丁信息.find(MatlabVersion);

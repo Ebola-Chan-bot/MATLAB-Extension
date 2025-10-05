@@ -1,4 +1,3 @@
-%埃博拉酱修复版
 classdef ToolboxConfigurationReader < matlab.internal.addons.metadata.AddonMetadataReader
     
     properties
@@ -205,6 +204,8 @@ classdef ToolboxConfigurationReader < matlab.internal.addons.metadata.AddonMetad
             else
                 filename = tempname;
                 try
+
+                    %埃博拉酱修复开始
 					try
 						fileFromURL = websave(filename,url);
 					catch ME
@@ -214,6 +215,8 @@ classdef ToolboxConfigurationReader < matlab.internal.addons.metadata.AddonMetad
 							ME.rethrow;
 						end
 					end
+                    %埃博拉酱修复结束
+
 				catch ME
                     if (ME.identifier == "MATLAB:webservices:ExpectedProtocol")
                           error(message('MATLAB:toolbox_packaging:packaging:WrongProtocol', url));
