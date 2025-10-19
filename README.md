@@ -37,6 +37,9 @@ function BrowseAddonsExplorer
 %斐波那契插值
 function QueryValues = FibonacciInterp(QueryIndices,ReferenceValues,ReferenceIndices)
 
+%猜密码游戏
+function Guesses = GuessPassword(Conditions)
+
 %内置polyfit的魔改版，支持任意维度张量
 function Coefficients = PolyFit(X,Y,Dimension,NumTimes)
 

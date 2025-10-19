@@ -2996,6 +2996,30 @@
 			}
 		]
 	},
+	"MATLAB.GuessPassword": {
+		"inputs": [
+			{
+				"mutuallyExclusiveGroup": [
+					[
+						{
+							"name": "Digits",
+							"kind": "ordered",
+							"type": "positive",
+							"purpose": "密码位数"
+						}
+					],
+					[
+						{
+							"name": "Conditions",
+							"kind": "ordered",
+							"type": "table",
+							"purpose": "预先猜测的密码和猜测结果"
+						}
+					]
+				]
+			}
+		]
+	},
 	"MATLAB.ImageSci.ImRead": {
 		"inputs": [
 			{
