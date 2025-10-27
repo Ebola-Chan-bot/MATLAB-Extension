@@ -417,6 +417,15 @@ API(Builtin_bug_fix)
 							L"toolbox\\matlab\\buildtool\\core\\+matlab\\+buildtool"
 						}
 					}}
+				},
+				{
+					L"26.1",
+					{{
+						{
+							L"CshDocPageHandler.m",
+							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+ui\\@CshDocPageHandler",
+						}
+					}}
 				}
 			};
 			const auto 返回值 = 补丁信息.find(MatlabVersion);

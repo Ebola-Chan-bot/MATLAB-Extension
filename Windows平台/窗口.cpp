@@ -9,6 +9,7 @@
 #pragma comment(lib,"windowsapp.lib")
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"d2d1.lib")
+#pragma comment(lib,"User32.lib")
 namespace ABI
 {
 	using namespace ABI::Windows::UI::Composition;

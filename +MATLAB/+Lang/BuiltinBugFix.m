@@ -60,6 +60,10 @@ if isempty(BugListCache)
 				"打包为工具箱时访问美国服务器失败，也不尝试中国CDN"
 				"打包工具箱时，如果依赖其它 File Exchange 附加功能，将会失败"
 				];
+		case '26.1'
+			BugListCache=[
+				"doc无法打开多个帮助窗口"
+				];
 		otherwise
 			MATLAB.Exception.Current_MATLAB_version_not_supported.Throw;
 	end

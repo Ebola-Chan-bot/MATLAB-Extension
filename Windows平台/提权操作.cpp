@@ -20,7 +20,7 @@ static void WriteString(std::ostringstream& 参数流, const String& 字符串)n
 	参数流.write((char*)&Size, sizeof(Size));
 	参数流.write((char*)字符串.data(), Size * sizeof(std::remove_pointer_t<decltype(字符串.data())>));
 }
-static 懒加载 MatlabRoot参数头([]()noexcept
+static 懒加载 MatlabRoot参数头([]()
 	{
 		std::ostringstream 返回值;
 		constexpr 提权操作函数 函数 = 提权操作函数::Shutdown_server;
