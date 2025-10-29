@@ -415,6 +415,10 @@ API(Builtin_bug_fix)
 						{
 							L"BuildRunner.m",
 							L"toolbox\\matlab\\buildtool\\core\\+matlab\\+buildtool"
+						},
+						{
+							L"Completion.m",
+							L"toolbox\\matlab\\depfun\\+matlab\\+depfun\\+internal",
 						}
 					}}
 				},
@@ -424,6 +428,14 @@ API(Builtin_bug_fix)
 						{
 							L"CshDocPageHandler.m",
 							L"toolbox\\matlab\\helptools\\+matlab\\+internal\\+doc\\+ui\\@CshDocPageHandler",
+						},
+						{
+							L"Completion.m",
+							L"toolbox\\matlab\\depfun\\+matlab\\+depfun\\+internal",
+						},
+						{
+							L"BuildRunner.m",
+							L"toolbox\\matlab\\buildtool\\core\\+matlab\\+buildtool"
 						}
 					}}
 				}

@@ -183,10 +183,12 @@ classdef (Hidden, Sealed) BuildRunner < ...
 			%埃博拉酱修复开始
 			try
 				RequiredAddons=struct2table(plan('Toolbox:Package').AdditionalOptions.RequiredAddons);
-				InstalledAddons=matlab.addons.installedAddons;
-				[~,Index]=ismember(RequiredAddons.Name,InstalledAddons.Name);
-				RequiredAddons.Identifier=InstalledAddons.Identifier(Index);
-				plan('Toolbox:Package').AdditionalOptions.RequiredAddons=table2struct(RequiredAddons);
+				if~isempty(RequiredAddons)
+					InstalledAddons=matlab.addons.installedAddons;
+					[~,Index]=ismember(RequiredAddons.Name,InstalledAddons.Name);
+					RequiredAddons.Identifier=InstalledAddons.Identifier(Index);
+					plan('Toolbox:Package').AdditionalOptions.RequiredAddons=table2struct(RequiredAddons);
+				end
 			catch ME
 				if ME.identifier~="MATLAB:buildtool:TaskContainer:TaskNotFound"
 					ME.rethrow;
