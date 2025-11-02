@@ -526,7 +526,11 @@ classdef NDTable<matlab.mixin.indexing.RedefinesParen&matlab.mixin.indexing.Rede
         end
         function obj=uminus(obj)
             obj.Data=-obj.Data;
-        end
+		end
+		function [obj,SortIndex]=sort(obj,varargin)
+			SortIndex=obj;
+			[obj.Data,SortIndex.Data]=sort(obj.Data,varargin{:});
+		end
 		%% 二元运算
 		function obj=plus(obj1,obj2)
 			obj=MATLAB.DataTypes.NDTable.Operate(obj1,obj2,@plus);

@@ -24,12 +24,23 @@ NumObjects=numel(GObjects);
 Positions=cell(NumObjects,1);
 for O=1:NumObjects
 	GO=GObjects(O);
-	if isa(GO,'matlab.graphics.primitive.Polygon')
+	if isprop(GO,'Shape')
 		XData=GO.Shape.Vertices(:,1);
 		YData=GO.Shape.Vertices(:,2);
+	elseif isprop(GO,'Extent')
+		XData=GO.Extent(1)+GO.Extent(3)/2;
+		YData=GO.Extent(2)+GO.Extent(4)/2;
 	else
-		XData=GO.XData(:);
-		YData=GO.YData(:);
+		try
+			XData=GO.XData(:);
+			YData=GO.YData(:);
+		catch ME
+			if ME.identifier=="MATLAB:noSuchMethodOrField"
+				MATLAB.Exception.Unsupported_graphic_object_type.Throw(sprintf('%s，第%u个图形',class(GO),O));
+			else
+				ME.rethrow;
+			end
+		end
 	end
 	Positions{O}=[RescaleToLimits(XData,GO.Parent.XAxis), RescaleToLimits(YData,MATLAB.Graphics.GetYAxis(GO))];
 end

@@ -228,13 +228,17 @@ if ~VerticalPLine
 	Logical=~Logical;
 	Texts(Logical)=text(Ax,mean(XData(Logical,:),2),FinalYData(Logical),Descriptors.Text(Logical),HorizontalAlignment='center',VerticalAlignment='top',AffectAutoLimits=true);
 	Logical=Logical*2-1;
+	Error=Inf;
 	while true
 		YLimA=ylim;
 		for D=1:NumPLines
 			Texts(D).Position(2)=ruler2num(Lines(D).YData(1),Lines(D).Parent.YAxis)+Texts(D).Extent(4)*Logical(D);
 		end
 		YLimB=ylim;
-		if isequal(YLimA,YLimB)
+		NewError=max(abs(YLimA-YLimB));
+		if NewError<Error
+			Error=NewError;
+		else
 			break;
 		end
 	end

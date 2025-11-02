@@ -66,5 +66,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Invalid_Descriptor
 		Parentheses_and_rvalues_do_not_match
 		Axes_have_different_YAxis
+		Unsupported_graphic_object_type
 	end
 end
