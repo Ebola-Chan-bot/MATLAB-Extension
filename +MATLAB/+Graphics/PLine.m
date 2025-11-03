@@ -209,7 +209,7 @@ if ~VerticalPLine
 			case 0
 				MMFun=@max;
 			case 1
-				if min(ruler2num(Descriptors.YData(D,:),Descriptors.ObjectA.Parent.YAxis),[],2,ComparisonMethod='abs')<0
+				if min(ruler2num(Descriptors.YData(D,:),Descriptors.ObjectA(D).Parent.YAxis),[],2,ComparisonMethod='abs')<0
 					MMFun=@min;
 				else
 					MMFun=@max;
@@ -220,7 +220,7 @@ if ~VerticalPLine
 		Descriptors.FinalYData(D)=MMFun(Descriptors.YData(Logical(:,:,D)));
 	end
 	FinalYData=ylim;
-	FinalYData=Descriptors.FinalYData+(FinalYData(2)-FinalYData(1))/10;
+	FinalYData=Descriptors.FinalYData+(FinalYData(2)-FinalYData(1))/10.*sign(Descriptors.FinalYData);
 	hold(Ax,'on');
 	Lines=plot(Ax,Descriptors.XData.',[FinalYData,FinalYData].','k');
 	Logical=Descriptors.FinalYData<0;
@@ -246,7 +246,7 @@ if ~VerticalPLine
 	Logical=AllExtent(:,2)<0;
 	AllXData=AllExtent(:,[1,3]);
 	AllXData(:,2)=AllXData(:,1)+AllXData(:,2);
-	[MinX,MaxX]=bounds([vertcat(ruler2num(Lines.XData,XRuler)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
+	[MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),XRuler)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
 	AllXData=[MinX,MaxX];
 	while true
 		AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
