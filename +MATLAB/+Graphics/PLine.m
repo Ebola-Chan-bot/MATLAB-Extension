@@ -113,12 +113,18 @@ for D=1:NumPLines
 			YData=YData(Index);
 		end
 		if isa(ObjectA,'matlab.graphics.chart.primitive.ErrorBar')
-			if ~isempty(ObjectA.YNegativeDelta)
-				YPNData(1,:)=-ObjectA.YNegativeDelta(Index);
+
+			%无论有没有空，YPNData必须是(2,2)矩阵，且数据类型未必是数值，所以需要如下精心设计：
+			if isempty(ObjectA.YNegativeDelta)
+				YPNData(2,:)=ObjectA.YPositiveDelta(Index);
+			else
+				YPNData(2,:)=-ObjectA.YNegativeDelta(Index);
+				YPNData=flipud(YPNData);
 			end
-			if ~isempty(ObjectA.YPositiveDelta)
+			if~isempty(ObjectA.YPositiveDelta)
 				YPNData(2,:)=ObjectA.YPositiveDelta(Index);
 			end
+
 			YData=YData+YPNData([2,4]-(YData<0));
 		end
 	else
