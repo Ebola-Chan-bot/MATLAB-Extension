@@ -2812,6 +2812,32 @@
 			}
 		]
 	},
+	"MATLAB.Graphics.PLine": {
+		"inputs": [
+			{
+				"name": "Descriptors",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "要绘制的标识描述符"
+			}
+		]
+	},
+	"MATLAB.Graphics.PLineRetune": {
+		"inputs": [
+			{
+				"name": "Lines",
+				"kind": "required",
+				"type": "matlab.graphics.primitive.Line",
+				"purpose": "PLine返回的标识线对象"
+			},
+			{
+				"name": "Texts",
+				"kind": "required",
+				"type": "matlab.graphics.primitive.Text",
+				"purpose": "PLine返回的标识文本对象"
+			}
+		]
+	},
 	"MATLAB.Graphics.UnifyAxesLims": {
 		"inputs": [
 			{

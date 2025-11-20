@@ -300,6 +300,12 @@ function fig = NestedPie(C, options)
 %根据输入的图形对象，返回一个尽可能不遮挡图形的图例位置
 function Location=OptimizedLegendLocation(GObjects)
 
+%为条形图、误差条或线图之间添加统计显著性标识
+function [Lines,Texts]=PLine(Descriptors)
+
+%对PLine进行重新微调
+function PLineRetune(Lines,Texts)
+
 %统一各坐标区的XYZC轴范围
 function varargout=UnifyAxesLims(Axes,varargin)
 

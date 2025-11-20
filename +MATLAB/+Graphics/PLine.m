@@ -1,4 +1,5 @@
 %[text] 为条形图、误差条或线图之间添加统计显著性标识
+%[text] 此函数会自动优化线条和文本的位置。但是这种优化位置可能会因其它图形对象布局的更改而被破坏。如果遇到这种情况，可以使用PLineRetune重新优化位置。
 %[text] ## 语法
 %[text] ```matlabCodeExample
 %[text] [Lines,Texts]=MATLAB.Graphics.PLine(Descriptors);
@@ -30,7 +31,8 @@
 %[text] - IndexA(:,1)，可选，指示要取ObjectA中的第几个点。一个图形对象中可能有多个点，用此参数指示要取哪个参与比较。如果不指定此列或指定为0，将自动赋予默认值。
 %[text] - ObjectB(:,1)，可选，参与显著性比较的另一个图形对象，必须与ObjectA是同一类型，且在同一个坐标区。如果不指定此列或指定为matlab.graphics.GraphicsPlaceholder，默认与ObjectA相同。
 %[text] - IndexB(:,1)，可选，指示要取ObjectB中的第几个点。一个图形对象中可能有多个点，用此参数指示要取哪个参与比较。如果不指定此列或指定为0，将自动赋予默认值。
-%[text] - Text(:,1)string，必需，要标识的文本 \
+%[text] - Text(:,1)string，必需，要标识的文本
+%[text] - ExtraOffset(:,1)，可选，手动指定额外的偏移量，单位是坐标值 \
 %[text] 根据图形对象类型不同，对IndexA和IndexB赋予默认值的规则如下：
 %[text] ### matlab.graphics.chart.primitive.Bar|matlab.graphics.chart.primitive.ErrorBar
 %[text] 如果ObjectA和ObjectB相同：如果IndexA和IndexB均未指定，取第一和最后一点；否则报错。
@@ -44,9 +46,9 @@
 %[text] 如果ObjectA和ObjectB相同：如果IndexA和IndexB均未指定，XData只有2种不同的值，且YData是可以比较大小的类型，则取两种不同XData确定的子点集内，各自YData最大的点；否则报错。
 %[text] 如果ObjectA和ObjectB不同：如果IndexA和IndexB指定其一，则另一个默认与指定值相同；否则报错。
 %[text] ## 返回值
-%[text] Lines(:,1)matlab.graphics.primitive.Line，标识线
-%[text] Texts(:,1)matlab.graphics.primitive.Text，标识文本对象
-%[text] **See also** [matlab.graphics.chart.primitive.Bar](<matlab:doc matlab.graphics.chart.primitive.Bar>) [matlab.graphics.chart.primitive.ErrorBar](<matlab:doc matlab.graphics.chart.primitive.ErrorBar>) [matlab.graphics.primitive.Line](<matlab:doc matlab.graphics.primitive.Line>) [matlab.graphics.chart.primitive.Scatter](<matlab:doc matlab.graphics.chart.primitive.Scatter>) [matlab.graphics.primitive.Text](<matlab:doc matlab.graphics.primitive.Text>)
+%[text] Lines(:,1)matlab.graphics.primitive.Line，返回标识线以便后期手动修改属性
+%[text] Texts(:,1)matlab.graphics.primitive.Text，返回标识文本以便后期手动修改属性
+%[text] **See also** [matlab.graphics.chart.primitive.Bar](<matlab:doc matlab.graphics.chart.primitive.Bar>) [matlab.graphics.chart.primitive.ErrorBar](<matlab:doc matlab.graphics.chart.primitive.ErrorBar>) [matlab.graphics.primitive.Line](<matlab:doc matlab.graphics.primitive.Line>) [matlab.graphics.chart.primitive.Scatter](<matlab:doc matlab.graphics.chart.primitive.Scatter>) [matlab.graphics.primitive.Text](<matlab:doc matlab.graphics.primitive.Text>) [MATLAB.Graphics.PLineRetune](<matlab:doc MATLAB.Graphics.PLineRetune>)
 function [Lines,Texts]=PLine(Descriptors)
 HasColumns=ismember(["ObjectB", "IndexA", "IndexB"], Descriptors.Properties.VariableNames);
 if HasColumns(1)
@@ -248,68 +250,7 @@ if ~VerticalPLine
 			break;
 		end
 	end
-	AllExtent=vertcat(Texts.Extent);
-	Logical=AllExtent(:,2)<0;
-	AllXData=AllExtent(:,[1,3]);
-	AllXData(:,2)=AllXData(:,1)+AllXData(:,2);
-	[MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),XRuler)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
-	AllXData=[MinX,MaxX];
-	while true
-		AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
-		RangeTable=sortrows(table(AllYData(:),repelem([true;false],NumPLines,1),'VariableNames',["Position","IsBottom"]),"Position");
-		NumLayers=0;
-		ExtentSum=0;
-		for P=1:height(RangeTable)
-			if RangeTable.IsBottom(P)
-				if ~NumLayers
-					RangeStart=RangeTable.Position(P);
-				end
-				NumLayers=NumLayers+1;
-			else
-				NumLayers=NumLayers-1;
-				if ~NumLayers
-					ExtentSum=ExtentSum+RangeTable.Position(P)-RangeStart;
-				end
-			end
-		end
-		YLim=ylim;
-		YLim=YLim(2)-YLim(1);
-		if num2ruler(ExtentSum*3/2,Ax.YAxis)>YLim
-			break;
-		end
-		RedundantDistances=ruler2num(YLim/10,Ax.YAxis);
-		NoChange=true;
-		for D1=1:NumPLines-1
-			XData1=AllXData(D1,:).';
-			YData1=AllYData(D1,:).';
-			Negative=Logical(D1);
-			for D2=D1+1:NumPLines
-				if any(XData1>=AllXData(D2,:),'all')&&any(XData1<=AllXData(D2,:),'all')&&any(YData1>AllYData(D2,:),'all')&&any(YData1<AllYData(D2,:),'all')
-					NoChange=false;
-					if Negative
-						AllYData(D2,2)=AllYData(D1,1)-RedundantDistances;
-						AllYData(D2,1)=AllYData(D2,2)-AllExtent(D2,4);
-					else
-						AllYData(D2,1)=AllYData(D1,2)+RedundantDistances;
-						AllYData(D2,2)=AllYData(D2,1)+AllExtent(D2,4);
-					end
-				end
-			end
-		end
-		if NoChange
-			break;
-		end
-		for D=1:NumPLines
-			if Logical(D)
-				Lines(D).YData(:)=num2ruler(AllYData(D,2),Lines(D).Parent.YAxis);
-				Texts(D).Position(2)=AllYData(D,1);
-			else
-				Lines(D).YData(:)=num2ruler(AllYData(D,1),Lines(D).Parent.YAxis);
-				Texts(D).Position(2)=AllYData(D,2);
-			end
-		end
-		AllExtent=vertcat(Texts.Extent);
-	end
+	MATLAB.Graphics.PLineRetune(Lines,Texts);
 end
 end
 function YData=AddErrorBar(YData, ObjectA, ObjectB, IndexA, IndexB)
