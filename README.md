@@ -113,6 +113,9 @@ function VarcharToEnum(Connection,TableName,ColumnName)
 ```
 ## +DataFun
 ```MATLAB
+%张量协方差
+function Covariance=Cov(Tensor,SampleDimension,FeatureDimension)
+
 %内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [G,ID] = FindGroupsN(Collection,Dimension)
 

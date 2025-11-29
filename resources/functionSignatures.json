@@ -780,6 +780,27 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.Cov": {
+		"inputs": [
+			{
+				"name": "Tensor",
+				"kind": "required",
+				"purpose": "输入张量"
+			},
+			{
+				"name": "SampleDimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "采样维度"
+			},
+			{
+				"name": "FeatureDimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "特征维度"
+			}
+		]
+	},
 	"MATLAB.DataFun.FindGroupsN": {
 		"inputs": [
 			{
