@@ -14,7 +14,8 @@ AllExtent=vertcat(Texts.Extent);
 Logical=AllExtent(:,2)<0;
 AllXData=AllExtent(:,[1,3]);
 AllXData(:,2)=AllXData(:,1)+AllXData(:,2);
-[MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),XRuler)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
+Ax=Lines(1).Parent;
+[MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),Ax.XAxis)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
 AllXData=[MinX,MaxX];
 while true
 	AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
