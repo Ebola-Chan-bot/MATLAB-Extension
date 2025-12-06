@@ -209,8 +209,8 @@ for D=1:NumPLines
 end
 if ~VerticalPLine
 	XData=ruler2num(Descriptors.XData,XRuler);
-	Logical=permute(XData,[3,4,1,2]);
-	Logical=isbetween(XData,Logical(:,:,:,1),Logical(:,:,:,2));
+	[Lower,Higher]=bounds(permute(XData,[3,4,1,2]),4);
+	Logical=isbetween(XData,Lower,Higher);
 	PNType=sum(Descriptors.YData<0,2);
 	for D=1:NumPLines
 		switch PNType(D)

@@ -289,7 +289,7 @@ end
 function Fig=FigureAspectRatio(HorizontalProportion,VerticalProportion,varargin)
 
 %获取图形对象隶属的Y轴
-function YAxis=GetYAxis(GObject)
+function YAxis=GetYAxis(GObjects)
 
 %绘制跟随曲线方向的箭头
 function Arrows = LineFollowingArrow(XYCoordinates,options)

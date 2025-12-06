@@ -2507,12 +2507,9 @@
 	"MATLAB.Graphics.GetYAxis": {
 		"inputs": [
 			{
-				"name": "GObject",
+				"name": "GObjects",
 				"kind": "required",
-				"type": [
-					"scalar",
-					"matlab.graphics.Graphics"
-				],
+				"type": "matlab.graphics.Graphics",
 				"purpose": "要获取Y轴的图形对象"
 			}
 		]

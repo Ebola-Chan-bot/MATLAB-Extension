@@ -67,5 +67,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Parentheses_and_rvalues_do_not_match
 		Axes_have_different_YAxis
 		Unsupported_graphic_object_type
+		Ax_cannot_fit_so_many_PLines
 	end
 end
