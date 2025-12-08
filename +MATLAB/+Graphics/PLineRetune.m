@@ -20,7 +20,9 @@ AllXData(:,2)=AllXData(:,1)+AllXData(:,2);
 %有两个Y轴时，图形对象所在的Y轴可能不是当前Y轴，需要特殊方法确保获取图形对象所在的Y轴
 YAxis=MATLAB.Graphics.GetYAxis(Lines(1));
 
-[MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),Lines(1).Parent.XAxis)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
+Ax=Lines(1).Parent;
+
+[MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),Ax.XAxis)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
 AllXData=[MinX,MaxX];
 while true
 	%坐标尺度变换时，文本框可能低于基线，需要强制调整上去
@@ -49,7 +51,7 @@ while true
 			end
 		end
 	end
-	YLim=ylim;
+	YLim=ylim(Ax);
 	YLim=YLim(2)-YLim(1);
 	if num2ruler(ExtentSum*3/2,YAxis)>YLim
 		MATLAB.Exception.Ax_cannot_fit_so_many_PLines.Warn;
