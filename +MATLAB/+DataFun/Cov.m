@@ -11,8 +11,12 @@
 %[text] FeatureDimension，特征维度
 %[text] ## 返回值
 %[text] Covariance，协方差张量。此张量在采样维度上的长度和Tensor的特征维度长度相同，其它维度长度均与Tensor的对应维度长度相同。
-%[text] **See also** [cov](<matlab:doc cov>)
+%[text] **See also** [cov](<matlab:doc cov>) [MATLAB.DataFun.ShrinkageCov](<matlab:doc MATLAB.DataFun.ShrinkageCov>)
 function Covariance=Cov(Tensor,SampleDimension,FeatureDimension)
+AmbiguousDimensions=intersect(SampleDimension,FeatureDimension);
+if~isempty(AmbiguousDimensions)
+	MATLAB.Exception.Ambiguous_dimensions.Throw(AmbiguousDimensions);
+end
 OtherDimensions=setdiff(1:max([ndims(Tensor),SampleDimension,FeatureDimension]),[SampleDimension,FeatureDimension]);
 if anymissing(Tensor)
     Tensor=permute(Tensor,[FeatureDimension,OtherDimensions,SampleDimension]);
@@ -36,7 +40,7 @@ if anymissing(Tensor)
 else
     Permuter=[FeatureDimension,SampleDimension,OtherDimensions];
     Tensor=permute(Tensor - mean(Tensor,SampleDimension),Permuter);
-    Covariance = ipermute(Tensor*pagectranspose(Tensor)./ (size(Tensor,2)-1),Permuter);
+    Covariance = ipermute(pagemtimes(Tensor,'none',Tensor,'ctranspose')./ (size(Tensor,2)-1),Permuter);
 end
 end
 function c = localcov_elementwise(x,y)

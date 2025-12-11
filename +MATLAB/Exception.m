@@ -68,5 +68,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Axes_have_different_YAxis
 		Unsupported_graphic_object_type
 		Ax_cannot_fit_so_many_PLines
+		Ambiguous_dimensions
 	end
 end
