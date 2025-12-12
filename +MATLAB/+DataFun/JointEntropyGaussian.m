@@ -64,12 +64,16 @@ else
 end
 
 % 在 permuted 坐标下构造输出：特征维/采样维长度为 1，其它维度保持
-if OtherCount
-	Entropy=reshape(Entropy,OtherSizes);
+if OtherCount==0
+	EntropyOther=Entropy(1);
+elseif OtherCount==1
+	% reshape 的 size 向量必须至少包含两个元素
+	EntropyOther=reshape(Entropy,[OtherSizes,1]);
 else
-	Entropy=Entropy(1);
+	EntropyOther=reshape(Entropy,OtherSizes);
 end
-Entropy=ipermute(reshape(Entropy,[ones(1,FeatCount),OtherSizes,ones(1,numel(SampleDimensions))]),Permuter);
+
+Entropy=ipermute(reshape(EntropyOther,[ones(1,FeatCount),OtherSizes,ones(1,numel(SampleDimensions))]),Permuter);
 end
 
 function Ssub=local_largest_nonmissing_subcov(S)
