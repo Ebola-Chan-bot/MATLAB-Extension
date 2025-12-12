@@ -119,6 +119,9 @@ function Covariance=Cov(Tensor,SampleDimension,FeatureDimension)
 %内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [G,ID] = FindGroupsN(Collection,Dimension)
 
+%估计高斯采样张量的联合信息熵
+function Entropy = JointEntropyGaussian(Tensor,FeatureDimensions,SampleDimensions)
+
 %返回数组的最大值以及所在的坐标。
 function [Value,varargout] = MaxSubs(Data,Dimensions,K)
 
@@ -133,6 +136,9 @@ function [Value,varargout] = MinSubs(Data,Dimensions,K)
 
 %数组元素沿指定维度的缩放范围
 function Array = Rescale(Array,LowerBound,UpperBound,Dimensions)
+
+%Ledoit–Wolf shrinkage 协方差估计函数
+function Covariance=ShrinkageCov(Tensor,SampleDimension,FeatureDimension)
 
 %在任意维度上计算互相关
 function [C,Lag] = XCorr(X,Y,Dimensions)

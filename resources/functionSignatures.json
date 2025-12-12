@@ -830,6 +830,25 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.JointEntropyGaussian": {
+		"inputs": [
+			{
+				"name": "Tensor",
+				"kind": "required",
+				"purpose": "任意维度张量，包含采样值"
+			},
+			{
+				"name": "FeatureDimensions",
+				"kind": "required",
+				"purpose": "Tensor 的特征维度"
+			},
+			{
+				"name": "SampleDimensions",
+				"kind": "required",
+				"purpose": "Tensor 的采样维度"
+			}
+		]
+	},
 	"MATLAB.DataFun.MaxSubs": {
 		"inputs": [
 			{
