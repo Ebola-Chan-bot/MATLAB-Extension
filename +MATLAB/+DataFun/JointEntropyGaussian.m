@@ -74,7 +74,7 @@ else
 		end
 
 		diagR=diag(R);
-		diagR(diagR<=0)=realmin(class(diagR));
+		diagR(diagR<=0)=realmin(class(gather(diagR)));
 		hi=(Const+2*log(diagR))./Ln22;
 		FeatureEntropy(:,pg)=hi;
 		Entropy(pg)=sum(hi);

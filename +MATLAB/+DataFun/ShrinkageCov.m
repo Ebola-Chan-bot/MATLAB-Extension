@@ -115,7 +115,15 @@ else
 	
 	% 估计 phi（方差项）：1/n * sum ||x_i x_i^T - S||_F^2
 	xk=permute(Tensor,[1,4,3,2]);
-	phi_sum=sum((pagemtimes(xk,'none',xk,'ctranspose')-S).^2,4);
+	try
+		phi_sum=sum((pagemtimes(xk,'none',xk,'ctranspose')-S).^2,4);
+	catch ME
+		if ME.identifier=="parallel:gpu:array:pmaxsize"
+			xk=gather(xk);
+			S=gather(S);
+			phi_sum=sum((pagemtimes(xk,'none',xk,'ctranspose')-S).^2,4);
+		end
+	end
 	
 	phi_hat=squeeze(sum(phi_sum,[1,2]))./SampleSize; % [page,1]
 	
