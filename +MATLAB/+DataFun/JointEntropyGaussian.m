@@ -118,7 +118,7 @@ end
 
 function logdetPages=local_page_logdet_psd(S)
 % page-wise 计算 log(det(S(:,:,pg)))；假定最新版 MATLAB 支持 pageeig。
-logdetPages=pageeig(S);
+logdetPages=pageeig(gather(S));
 
 % 兼容不同输出形状：期望最终为 [FeatSize,OtherSize]
 if ndims(logdetPages)==3
