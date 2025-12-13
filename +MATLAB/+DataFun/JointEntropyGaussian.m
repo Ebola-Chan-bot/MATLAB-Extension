@@ -3,6 +3,7 @@
 %[text] ## 语法
 %[text] ```matlabCodeExample
 %[text] Entropy=MATLAB.DataFun.JointEntropyGaussian(Tensor,FeatureDimensions,SampleDimensions);
+%[text] [Entropy,FeatureEntropy]=MATLAB.DataFun.JointEntropyGaussian(Tensor,FeatureDimensions,SampleDimensions);
 %[text] ```
 %[text] ## 输入参数
 %[text] Tensor，任意维度张量，包含采样值
@@ -10,8 +11,9 @@
 %[text] SampleDimensions(1,:)，Tensor的采样维度
 %[text] ## 返回值
 %[text] Entropy，在FeatureDimensions和SampleDimensions上长度为1，在其它维度上长度和Tensor相同。单位比特。
+%[text] FeatureEntropy，每个特征的熵贡献（单位比特），在SampleDimensions上长度为1；在FeatureDimensions上长度与Tensor相同；在其它维度上长度与Tensor相同。其在FeatureDimensions上求和等于Entropy（按特征线性化顺序进行条件熵分解）。
 %[text] **See also** [MATLAB.DataFun.ShrinkageCov](<matlab:doc MATLAB.DataFun.ShrinkageCov>)
-function Entropy = JointEntropyGaussian(Tensor,FeatureDimensions,SampleDimensions)
+function [Entropy,FeatureEntropy] = JointEntropyGaussian(Tensor,FeatureDimensions,SampleDimensions)
 arguments
 	Tensor
 	FeatureDimensions(1,:)
@@ -33,57 +35,84 @@ OtherSize=prod(OtherSizes);
 Covariance=reshape(MATLAB.DataFun.ShrinkageCov(Tensor,SampleDimensions,FeatureDimensions),[FeatSize,FeatSize,OtherSize]);
 
 Entropy=nan(OtherSize,1);
+FeatureEntropy=nan(FeatSize,OtherSize);
 Const=log(2*pi*exp(1));
 Ln22=log(2)*2;
-
 
 if anymissing(Covariance)
 	for pg=1:OtherSize
 		S=Covariance(:,:,pg);
+		keep=1:FeatSize;
 
 		if any(isnan(S),'all')
-			S=local_largest_nonmissing_subcov(S);
+			[S,keep]=local_largest_nonmissing_subcov(S);
 			if isempty(S)
 				Entropy(pg)=nan;
 				continue;
 			end
 		end
 
-		S=(S+S')/2;
-		d=size(S,1);
-		if~d
+		[R,p]=chol((S+S')/2);
+		if p~=0
 			Entropy(pg)=nan;
 			continue;
 		end
 
-		Entropy(pg)=(d.*Const+local_logdet_psd(S))./Ln22;
+		diagR=diag(R);
+		diagR(diagR<=0)=realmin(class(diagR));
+		hi=(Const+2*log(diagR))./Ln22;
+		Entropy(pg)=sum(hi);
+		FeatureEntropy(keep,pg)=hi;
 	end
 else
-	% 快路径：无缺失值时尝试 page-wise 向量化计算 log(det(Sigma))
-	Entropy=(FeatSize.*Const+local_page_logdet_psd((Covariance+pagetranspose(Covariance))./2))./Ln22;
+	% 无缺失值快路径：用 page-wise Cholesky 得到每个特征的条件熵贡献（相加等于总熵）
+	[R,p]=chol((Covariance+pagetranspose(Covariance))./2);
+	if any(p~=0,'all')
+		error('JointEntropyGaussian:CholeskyFailed','Covariance is not positive definite.');
+	end
+
+	% 提取每个 page 的对角线元素：diagR 为 [FeatSize, OtherSize]
+	diagR=reshape(R((0:OtherSize-1)*FeatSize*FeatSize + (1:FeatSize+1:FeatSize*FeatSize).'),FeatSize,OtherSize);
+	diagR(diagR<=0)=realmin(class(diagR));
+
+	FeatureEntropy=(Const+2*log(diagR))./Ln22;
+	Entropy=sum(FeatureEntropy,1).';
 end
 
 % 在 permuted 坐标下构造输出：特征维/采样维长度为 1，其它维度保持
 if OtherCount==0
-	EntropyOther=Entropy(1);
+	Entropy=Entropy(1);
 elseif OtherCount==1
 	% reshape 的 size 向量必须至少包含两个元素
-	EntropyOther=reshape(Entropy,[OtherSizes,1]);
+	Entropy=reshape(Entropy,[OtherSizes,1]);
 else
-	EntropyOther=reshape(Entropy,OtherSizes);
+	Entropy=reshape(Entropy,OtherSizes);
 end
 
-Entropy=ipermute(reshape(EntropyOther,[ones(1,FeatCount),OtherSizes,ones(1,numel(SampleDimensions))]),Permuter);
+Entropy=ipermute(reshape(Entropy,[ones(1,FeatCount),OtherSizes,ones(1,numel(SampleDimensions))]),Permuter);
+
+% FeatureEntropy：在 permuted 坐标下形状为 [FeatureSizes, OtherSizes, ones(SampleDimensions)]
+FeatureSizes=SizesPerm(1:FeatCount);
+if OtherCount==0
+	FeatureEntropy=reshape(FeatureEntropy,[FeatureSizes,1]);
+elseif OtherCount==1
+	FeatureEntropy=reshape(FeatureEntropy,[FeatureSizes,OtherSizes,1]);
+else
+	FeatureEntropy=reshape(FeatureEntropy,[FeatureSizes,OtherSizes]);
+end
+FeatureEntropy=ipermute(reshape(FeatureEntropy,[FeatureSizes,OtherSizes,ones(1,numel(SampleDimensions))]),Permuter);
 end
 
-function Ssub=local_largest_nonmissing_subcov(S)
+function [Ssub,keep]=local_largest_nonmissing_subcov(S)
 % 尽可能从含 NaN 的协方差中取出一个没有 NaN 的子协方差矩阵。
 diagS=diag(S);
 keep=~isnan(diagS) & diagS>0;
 if ~any(keep)
 	Ssub=[];
+	keep=[];
 	return;
 end
+keep=find(keep);
 Ssub=S(keep,keep);
 
 while any(isnan(Ssub),'all')
@@ -94,41 +123,12 @@ while any(isnan(Ssub),'all')
 	keep2=~bad;
 	if ~any(keep2)
 		Ssub=[];
+		keep=[];
 		return;
 	end
+	keep=keep(keep2);
 	Ssub=Ssub(keep2,keep2);
 end
-end
-
-function logdet=local_logdet_psd(S)
-% 对称半正定矩阵的 log(det(S))，数值不稳定时回退到特征值法。
-S=(S+S')/2;
-[R,p]=chol(S);
-if p==0
-	logdet=diag(R);
-	logdet(logdet<=0)=realmin(class(logdet));
-	logdet=2*sum(log(logdet));
-else
-	logdet=eig(S);
-	logdet=real(logdet);
-	logdet(logdet<=0)=realmin(class(logdet));
-	logdet=sum(log(logdet));
-end
-end
-
-function logdetPages=local_page_logdet_psd(S)
-% page-wise 计算 log(det(S(:,:,pg)))；假定最新版 MATLAB 支持 pageeig。
-logdetPages=pageeig(gather(S));
-
-% 兼容不同输出形状：期望最终为 [FeatSize,OtherSize]
-if ndims(logdetPages)==3
-	logdetPages=reshape(logdetPages,size(logdetPages,1),[]);
-end
-if isvector(logdetPages) && size(S,3)>1
-	logdetPages=reshape(logdetPages,[],size(S,3));
-end
-logdetPages(logdetPages<=0)=realmin(class(logdetPages));
-logdetPages=sum(log(logdetPages),1).';
 end
 
 %[appendix]{"version":"1.0"}
