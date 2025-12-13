@@ -4,7 +4,7 @@
 
 [![View 埃博拉酱的 MATLAB 扩展 Extension on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://ww2.mathworks.cn/matlabcentral/fileexchange/96344-matlab-extension)
 # 目录
-本工具箱中所有函数均在MATLAB命名空间下，使用前需import。
+本工具箱中所有函数均在`MATLAB`命名空间下，使用前需`import`。
 - [+MATLAB](#matlab)
 	- [+Containers](#containers) 实现多种STL容器
 	- [+Database](#database) MariaDB JDBC 数据库相关操作
