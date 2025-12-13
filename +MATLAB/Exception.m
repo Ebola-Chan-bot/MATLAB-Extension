@@ -69,5 +69,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Unsupported_graphic_object_type
 		Ax_cannot_fit_so_many_PLines
 		Ambiguous_dimensions
+		PLine_bound_to_missing_value
 	end
 end

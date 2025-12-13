@@ -37,7 +37,7 @@
 %[text] ### matlab.graphics.chart.primitive.Bar|matlab.graphics.chart.primitive.ErrorBar
 %[text] 如果ObjectA和ObjectB相同：如果IndexA和IndexB均未指定，取第一和最后一点；否则报错。
 %[text] 如果ObjectA和ObjectB不同：如果IndexA和IndexB指定其一，则另一个默认与指定值相同；否则报错。
-%[text] ### matlab.graphics.primitive.Line
+%[text] ### matlab.graphics.primitive.Line|matlab.graphics.chart.primitive.Line
 %[text] 如果ObjectA和ObjectB相同：如果IndexA和IndexB均未指定，取第一和最后一点；否则报错。
 %[text] 如果ObjectA和ObjectB不同：
 %[text] - 如果IndexA和IndexB均未指定，且YData是可求差的类型，则取两条线对应位置YData差异最大的点；否则报错。
@@ -112,7 +112,17 @@ for D=1:NumPLines
 		end
 		if ~isempty(Index)
 			XData=XData(Index);
-			YData=YData(Index);
+			if isa(ObjectA,'matlab.graphics.primitive.Line')||isa(ObjectA,'matlab.graphics.chart.primitive.Line')
+				[Min,Max]=bounds(Index);
+				[Min,Max]=bounds(YData(Min:Max));
+				if Min<0&&(Max<0||abs(Min)<Max)
+					YData=[Min,Min];
+				else
+					YData=[Max,Max];
+				end
+			else
+				YData=YData(Index);
+			end
 		end
 		if isa(ObjectA,'matlab.graphics.chart.primitive.ErrorBar')
 
@@ -191,6 +201,9 @@ for D=1:NumPLines
 	end
 	Ax=ObjectA.Parent;
 	XRuler=Ax.XAxis;
+	if anymissing(YData)
+		MATLAB.Exception.PLine_bound_to_missing_value.Throw(Descriptors(D,:));
+	end
 	if VerticalPLine
 		YData=YData/2+sum(YData)/4;
 		hold(Ax,'on');
@@ -227,7 +240,7 @@ if ~VerticalPLine
 		end
 		Descriptors.FinalYData(D)=MMFun(Descriptors.YData(Logical(:,:,D)));
 	end
-	FinalYData=ylim;
+	FinalYData=ylim(Ax);
 	FinalYData=Descriptors.FinalYData+(FinalYData(2)-FinalYData(1))/10.*sign(Descriptors.FinalYData);
 	hold(Ax,'on');
 	Lines=plot(Ax,Descriptors.XData.',[FinalYData,FinalYData].','k');
