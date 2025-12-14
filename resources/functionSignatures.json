@@ -1040,6 +1040,33 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.ShrinkageCov": {
+		"inputs": [
+			{
+				"name": "Tensor",
+				"kind": "required",
+				"purpose": "输入张量，可以是任意维度"
+			},
+			{
+				"name": "FeatureDimension",
+				"kind": "required",
+				"type": "vector",
+				"purpose": "特征维度（可为多个维度）"
+			},
+			{
+				"name": "SampleDimension",
+				"kind": "required",
+				"type": "vector",
+				"purpose": "采样维度（可为多个维度）"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Covariance",
+				"purpose": "收缩后的协方差张量"
+			}
+		]
+	},
 	"MATLAB.DataFun.XCorr": {
 		"inputs": [
 			{
