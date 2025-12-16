@@ -2,8 +2,8 @@
 %[text] 此函数假定你输入的张量是多维高斯分布随机变量的采样值，返回估计的联合信息熵。缺失值会被忽略，尽可能仍计算出最终结果。
 %[text] ## 语法
 %[text] ```matlabCodeExample
-%[text] Entropy=MATLAB.DataFun.JointEntropyGaussian(Tensor,FeatureDimensions,SampleDimensions);
 %[text] [Entropy,FeatureEntropy]=MATLAB.DataFun.JointEntropyGaussian(Tensor,FeatureDimensions,SampleDimensions);
+%[text] %计算
 %[text] ```
 %[text] ## 输入参数
 %[text] Tensor，任意维度张量，包含采样值

@@ -20,6 +20,7 @@
 	- [+Lang](#lang) 函数使用、定义、异常工具、语言功能
 	- [+MixIn](#mixin) 索引相关功能
 	- [+Ops](#ops) 逻辑和集合操作
+	- [+PolyFun](#PolyFun) 插值与拟合
 	- [+Project](#project) 工程相关
 	- [+RandFun](#randfun) 随机概率分布洗牌
 	- [+SpecFun](#specfun) 穷举、椭圆周长
@@ -34,14 +35,8 @@
 %在系统浏览器中打开附加功能资源管理器
 function BrowseAddonsExplorer
 
-%斐波那契插值
-function QueryValues = FibonacciInterp(QueryIndices,ReferenceValues,ReferenceIndices)
-
 %猜密码游戏
 function Guesses = GuessPassword(Conditions)
-
-%内置polyfit的魔改版，支持任意维度张量
-function Coefficients = PolyFit(X,Y,Dimension,NumTimes)
 
 %暂停执行MATLAB，不可中止
 function Pause(varargin)
@@ -51,6 +46,9 @@ function Image = Rgb2Gray(Image,Dimension)
 
 %将数值转换为具有指定有效位数的定点计数法字符串
 function Fixedpoints = SignificantFixedpoint(Numbers,Significance)
+
+%求解最优单隐层
+function [HiddenInput,HiddenOutput] = SingleHiddenLayer(Input,Output,HiddenSize)
 
 %抢夺被占用的串口
 function [SP,PID] = SnatchSerialport(Port,Baudrate,NameValues)
@@ -116,6 +114,9 @@ function VarcharToEnum(Connection,TableName,ColumnName)
 %张量协方差
 function Covariance=Cov(Tensor,SampleDimension,FeatureDimension)
 
+%根据多元高斯分布的协方差计算联合和分摊信息熵（比特）
+function [JointEntropy,FeatureEntropy]=CovarianceToEntropy(Covariance,FeatureA,FeatureB)
+
 %内置findgroups的升级版，支持任意数组类型，并可以指定拆分维度，missing类值视为相等的有效数据
 function [G,ID] = FindGroupsN(Collection,Dimension)
 
@@ -133,6 +134,9 @@ function Table = MergeDuplicateKeys(Table,KeyColumns,MergeMethod)
 
 %返回数组的最小值以及所在的坐标。
 function [Value,varargout] = MinSubs(Data,Dimensions,K)
+
+%多元正态分布信息量
+function Information=MultivariateNormalInformation(Information)
 
 %数组元素沿指定维度的缩放范围
 function Array = Rescale(Array,LowerBound,UpperBound,Dimensions)
@@ -459,6 +463,14 @@ function [Set,InputIndex,UniqueIndex] = UniqueN(Set,varargin)
 classdef Pipeline
 	%实现管线|运算符
 end
+```
+## +PolyFun
+```MATLAB
+%斐波那契插值
+function QueryValues = FibonacciInterp(QueryIndices,ReferenceValues,ReferenceIndices)
+
+%内置polyfit的魔改版，支持任意维度张量
+function Coefficients = PolyFit(X,Y,Dimension,NumTimes)
 ```
 ## +Project
 ```MATLAB

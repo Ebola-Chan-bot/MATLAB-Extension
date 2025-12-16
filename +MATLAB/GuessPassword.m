@@ -4,10 +4,10 @@
 %[text] ```matlabCodeExample
 %[text] Guesses = MATLAB.GuessPassword;
 %[text] %完全交互式地进行猜密码游戏
-%[text]
+%[text] 
 %[text] Guesses = MATLAB.GuessPassword(Digits);
 %[text] %猜指定位数的密码
-%[text]
+%[text] 
 %[text] Guesses = MATLAB.GuessPassword(Conditions);
 %[text] %指定预先猜测的几个密码
 %[text] ```
@@ -20,6 +20,7 @@
 %[text] ## 返回值
 %[text] Guesses(:,:)char，所有可能正确的密码，一行一个密码。
 function Guesses = GuessPassword(Conditions)
+%命名空间：Symbolic
 if nargin
     if istable(Conditions)
         Digits=width(Conditions.Guess);
