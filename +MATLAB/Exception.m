@@ -71,5 +71,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Ambiguous_dimensions
 		PLine_bound_to_missing_value
 		Covariance_not_positive_definite
+		Y_Shadow_or_X_size_not_compatible
 	end
 end
