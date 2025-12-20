@@ -801,6 +801,28 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.CovarianceToEntropy": {
+		"inputs": [
+			{
+				"name": "Covariance",
+				"kind": "required",
+				"type": "real",
+				"purpose": "协方差张量"
+			},
+			{
+				"name": "FeatureA",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "第一个特征维度"
+			},
+			{
+				"name": "FeatureB",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "第二个特征维度"
+			}
+		]
+	},
 	"MATLAB.DataFun.FindGroupsN": {
 		"inputs": [
 			{
@@ -980,6 +1002,16 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.MultivariateNormalInformation": {
+		"inputs": [
+			{
+				"name": "ParametricSamples",
+				"kind": "required",
+				"type": "tabular",
+				"purpose": "参数表"
+			}
+		]
+	},
 	"MATLAB.DataFun.Rescale": {
 		"inputs": [
 			{
@@ -1037,6 +1069,33 @@
 			{
 				"name": "Array",
 				"type": "real"
+			}
+		]
+	},
+	"MATLAB.DataFun.ShrinkageCov": {
+		"inputs": [
+			{
+				"name": "Tensor",
+				"kind": "required",
+				"purpose": "输入张量，可以是任意维度"
+			},
+			{
+				"name": "FeatureDimension",
+				"kind": "required",
+				"type": "vector",
+				"purpose": "特征维度（可为多个维度）"
+			},
+			{
+				"name": "SampleDimension",
+				"kind": "required",
+				"type": "vector",
+				"purpose": "采样维度（可为多个维度）"
+			}
+		],
+		"outputs": [
+			{
+				"name": "Covariance",
+				"purpose": "收缩后的协方差张量"
 			}
 		]
 	},
@@ -3083,7 +3142,45 @@
 			}
 		]
 	},
-	"MATLAB.ImageSci.ImRead": {
+	"MATLAB.Images.Rgb2Gray": {
+		"inputs": [
+			{
+				"name": "RGB",
+				"kind": "required",
+				"type": "real",
+				"purpose": "具有RGB颜色通道的图像数组"
+			},
+			{
+				"name": "Dimension",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "要视为RGB维度的维度序号"
+			}
+		]
+	},
+	"MATLAB.Images.ProjectiveMap": {
+		"inputs": [
+			{
+				"name": "Input",
+				"kind": "required",
+				"type": [
+					"2d",
+					"real"
+				],
+				"purpose": "M 个 N 维点（每列一个点）"
+			},
+			{
+				"name": "Output",
+				"kind": "required",
+				"type": [
+					"2d",
+					"real"
+				],
+				"purpose": "与 Input 一一对应的目标点"
+			}
+		]
+	},
+	"MATLAB.ImRead": {
 		"inputs": [
 			{
 				"mutuallyExclusiveGroup": [
@@ -4888,6 +4985,53 @@
 			}
 		]
 	},
+	"MATLAB.PolyFun.FibonacciInterp": {
+		"inputs": [
+			{
+				"name": "QueryIndices",
+				"kind": "required",
+				"purpose": "斐波那契函数自变量值"
+			},
+			{
+				"name": "ReferenceValues",
+				"kind": "ordered",
+				"type": "numel=2",
+				"purpose": "指定两个参考值"
+			},
+			{
+				"name": "ReferenceIndex",
+				"kind": "ordered",
+				"type": "numel=2",
+				"purpose": "指定两个参考值的位置"
+			}
+		]
+	},
+	"MATLAB.PolyFun.PolyFit": {
+		"inputs": [
+			{
+				"name": "X",
+				"kind": "required",
+				"purpose": "查询点"
+			},
+			{
+				"name": "Y",
+				"kind": "required",
+				"purpose": "查询点位置的拟合值"
+			},
+			{
+				"name": "Dimension",
+				"kind": "required",
+				"type": "positive",
+				"purpose": "要计算多项式系数的维度"
+			},
+			{
+				"name": "NumTimes",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "多项式拟合的次数"
+			}
+		]
+	},
 	"MATLAB.Project.ListAllProjectPaths": {
 		"inputs": [
 			{
@@ -5020,6 +5164,34 @@
 				"kind": "namevalue",
 				"type": "positive",
 				"purpose": "最大连续重复数"
+			}
+		]
+	},
+	"MATLAB.SingleHiddenLayer": {
+		"inputs": [
+			{
+				"name": "Input",
+				"kind": "required",
+				"type": [
+					"real",
+					"2d"
+				],
+				"purpose": "输入矩阵"
+			},
+			{
+				"name": "Output",
+				"kind": "required",
+				"type": [
+					"real",
+					"2d"
+				],
+				"purpose": "输出矩阵"
+			},
+			{
+				"name": "HiddenSize",
+				"kind": "ordered",
+				"type": "positive",
+				"purpose": "隐藏层尺寸"
 			}
 		]
 	},
@@ -5273,27 +5445,6 @@
 		],
 		"platforms": "win64"
 	},
-	"MATLAB.FibonacciInterp": {
-		"inputs": [
-			{
-				"name": "QueryIndices",
-				"kind": "required",
-				"purpose": "斐波那契函数自变量值"
-			},
-			{
-				"name": "ReferenceValues",
-				"kind": "ordered",
-				"type": "numel=2",
-				"purpose": "指定两个参考值"
-			},
-			{
-				"name": "ReferenceIndex",
-				"kind": "ordered",
-				"type": "numel=2",
-				"purpose": "指定两个参考值的位置"
-			}
-		]
-	},
 	"MATLAB.Pause": {
 		"inputs": [
 			{
@@ -5301,48 +5452,6 @@
 				"kind": "ordered",
 				"type": "positive",
 				"purpose": "要挂起的秒数"
-			}
-		]
-	},
-	"MATLAB.PolyFit": {
-		"inputs": [
-			{
-				"name": "X",
-				"kind": "required",
-				"purpose": "查询点"
-			},
-			{
-				"name": "Y",
-				"kind": "required",
-				"purpose": "查询点位置的拟合值"
-			},
-			{
-				"name": "Dimension",
-				"kind": "required",
-				"type": "positive",
-				"purpose": "要计算多项式系数的维度"
-			},
-			{
-				"name": "NumTimes",
-				"kind": "ordered",
-				"type": "positive",
-				"purpose": "多项式拟合的次数"
-			}
-		]
-	},
-	"MATLAB.Rgb2Gray": {
-		"inputs": [
-			{
-				"name": "RGB",
-				"kind": "required",
-				"type": "real",
-				"purpose": "具有RGB颜色通道的图像数组"
-			},
-			{
-				"name": "Dimension",
-				"kind": "ordered",
-				"type": "positive",
-				"purpose": "要视为RGB维度的维度序号"
 			}
 		]
 	},

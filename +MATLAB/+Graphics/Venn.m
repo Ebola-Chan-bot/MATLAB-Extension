@@ -121,6 +121,8 @@ if Tensor2D
 		DefaultDistance=DefaultDistance/2;
 		Centers=[-DefaultDistance,0;DefaultDistance,0];
 	end
+	Centers=gather(Centers);
+	Radius=gather(Radius);
 	if isempty(CircleStyles)
 		Circles(1)=polybuffer(Centers(1,:),'points',Radius(1)).plot;
 		hold on;

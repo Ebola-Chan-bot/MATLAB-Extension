@@ -3,16 +3,16 @@
 %[text] 某些数据特征可能会导致特征维度之间的协方差矩阵只有对角线值，这是正常的。
 %[text] ## 语法
 %[text] ```matlabCodeExample
-%[text] Covariance=MATLAB.DataFun.ShrinkageCov(Tensor,SampleDimension,FeatureDimension);
+%[text] Covariance=MATLAB.DataFun.ShrinkageCov(Tensor,FeatureDimension,SampleDimension);
 %[text] ```
 %[text] ## 输入参数
 %[text] Tensor，输入张量，可以是任意维度
-%[text] SampleDimension，采样维度（可为多个维度）
 %[text] FeatureDimension，特征维度（可为多个维度）
+%[text] SampleDimension，采样维度（可为多个维度）
 %[text] ## 返回值
 %[text] Covariance，收缩后的协方差张量。维度顺序：\[FeatureDimension,FeatureDimension,其它维度（不含采样维度）\]，其余维度与输入对应。
 %[text] **See also** [MATLAB.DataFun.Cov](<matlab:doc MATLAB.DataFun.Cov>)
-function Covariance=ShrinkageCov(Tensor,SampleDimension,FeatureDimension)
+function Covariance=ShrinkageCov(Tensor,FeatureDimension,SampleDimension)
 % Ledoit–Wolf 收缩到缩放单位阵，支持多采样维/多特征维。
 
 AmbiguousDimensions=intersect(SampleDimension,FeatureDimension);
@@ -115,7 +115,15 @@ else
 	
 	% 估计 phi（方差项）：1/n * sum ||x_i x_i^T - S||_F^2
 	xk=permute(Tensor,[1,4,3,2]);
-	phi_sum=sum((pagemtimes(xk,'none',xk,'ctranspose')-S).^2,4);
+	try
+		phi_sum=sum((pagemtimes(xk,'none',xk,'ctranspose')-S).^2,4);
+	catch ME
+		if ME.identifier=="parallel:gpu:array:pmaxsize"
+			xk=gather(xk);
+			S=gather(S);
+			phi_sum=sum((pagemtimes(xk,'none',xk,'ctranspose')-S).^2,4);
+		end
+	end
 	
 	phi_hat=squeeze(sum(phi_sum,[1,2]))./SampleSize; % [page,1]
 	

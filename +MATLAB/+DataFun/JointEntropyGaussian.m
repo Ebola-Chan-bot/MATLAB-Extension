@@ -2,8 +2,8 @@
 %[text] 此函数假定你输入的张量是多维高斯分布随机变量的采样值，返回估计的联合信息熵。缺失值会被忽略，尽可能仍计算出最终结果。
 %[text] ## 语法
 %[text] ```matlabCodeExample
-%[text] Entropy=MATLAB.DataFun.JointEntropyGaussian(Tensor,FeatureDimensions,SampleDimensions);
 %[text] [Entropy,FeatureEntropy]=MATLAB.DataFun.JointEntropyGaussian(Tensor,FeatureDimensions,SampleDimensions);
+%[text] %计算
 %[text] ```
 %[text] ## 输入参数
 %[text] Tensor，任意维度张量，包含采样值
@@ -65,18 +65,20 @@ if anymissing(Covariance)
 		FeatureEntropy(keep,pg)=hi;
 	end
 else
-	% 无缺失值快路径：用 page-wise Cholesky 得到每个特征的条件熵贡献（相加等于总熵）
-	[R,p]=chol((Covariance+pagetranspose(Covariance))./2);
-	if any(p~=0,'all')
-		error('JointEntropyGaussian:CholeskyFailed','Covariance is not positive definite.');
+	% 无缺失值快路径：逐 page Cholesky（兼容 chol 仅支持二维矩阵的版本）
+	for pg=1:OtherSize
+		S=Covariance(:,:,pg);
+		[R,p]=chol((S+S')/2);
+		if p
+			MATLAB.Exception.Covariance_not_positive_definite.Throw("Page "+string(pg));
+		end
+
+		diagR=diag(R);
+		diagR(diagR<=0)=realmin(class(gather(diagR)));
+		hi=(Const+2*log(diagR))./Ln22;
+		FeatureEntropy(:,pg)=hi;
+		Entropy(pg)=sum(hi);
 	end
-
-	% 提取每个 page 的对角线元素：diagR 为 [FeatSize, OtherSize]
-	diagR=reshape(R((0:OtherSize-1)*FeatSize*FeatSize + (1:FeatSize+1:FeatSize*FeatSize).'),FeatSize,OtherSize);
-	diagR(diagR<=0)=realmin(class(diagR));
-
-	FeatureEntropy=(Const+2*log(diagR))./Ln22;
-	Entropy=sum(FeatureEntropy,1).';
 end
 
 % 在 permuted 坐标下构造输出：特征维/采样维长度为 1，其它维度保持

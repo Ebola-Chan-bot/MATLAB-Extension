@@ -13,6 +13,7 @@
 %[text] Identifier，特定附加功能的标识符。使用matlab.addons.installedAddons可以列出所有已安装附加功能的标识符。
 %[text] **See also** [matlab.addons.installedAddons](<matlab:doc matlab.addons.installedAddons>)
 function BrowseAddonsExplorer(Identifier)
+%命名空间：Addons
 matlab.internal.addons.Explorer.getInstance;
 clientType = com.mathworks.addons.ClientType.EXPLORER;
 addOnsCommunicator = com.mathworks.addons.AddonsCommunicator(clientType.getServerToClientChannel, clientType.getClientToServerChannel);
