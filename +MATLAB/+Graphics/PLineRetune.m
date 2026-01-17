@@ -24,7 +24,7 @@ Ax=Lines(1).Parent;
 
 [MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),Ax.XAxis)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
 AllXData=[MinX,MaxX];
-ylim(Ax,'auto');
+MinYLim=ylim(Ax);
 while true
 	%坐标尺度变换时，文本框可能低于基线，需要强制调整上去
 	Baseline=vertcat(Lines.YData);
@@ -34,7 +34,7 @@ while true
 	AllExtent(Positive,2)=max(AllExtent(Positive,2),Baseline(Positive));
 	NoChange=isequal(OldExtent,AllExtent(:,2));
 	AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
-
+	
 	%排除PLine太多，坐标区装不下的情形
 	RangeTable=sortrows(table(AllYData(:),repelem([true;false],NumPLines,1),'VariableNames',["Position","IsBottom"]),"Position");
 	NumLayers=0;
@@ -58,7 +58,7 @@ while true
 		MATLAB.Exception.Ax_cannot_fit_so_many_PLines.Warn;
 		return;
 	end
-
+	
 	%按照现有的尺度排开PLine分层
 	RedundantDistance=ruler2num(YLim/10,YAxis);
 	LineTextDistance=RedundantDistance/10;
@@ -81,7 +81,7 @@ while true
 	if NoChange
 		break;
 	end
-
+	
 	%将新的分层规划应用到图形对象。这一步可能会自动改变坐标尺度。
 	for D=1:NumPLines
 		if Negative(D)
@@ -91,7 +91,14 @@ while true
 			Lines(D).YData(:)=num2ruler(AllYData(D,1),YAxis);
 			Texts(D).Position(2)=AllYData(D,1)+Texts(D).Extent(4)+LineTextDistance;
 		end
-	end	
+	end
+
+	%确保ylim只增不减
+	ylim(Ax,'auto');
+	CurrentYLim=ylim(Ax);
+	if CurrentYLim(1)>MinYLim(1)||CurrentYLim(2)<MinYLim(2)
+		ylim(Ax,min(CurrentYLim(1),MinYLim(1)),max(CurrentYLim(2),MinYLim(2)));
+	end
 	AllExtent=vertcat(Texts.Extent);
 end
 end
