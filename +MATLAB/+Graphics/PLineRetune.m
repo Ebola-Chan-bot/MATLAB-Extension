@@ -24,6 +24,7 @@ Ax=Lines(1).Parent;
 
 [MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),Ax.XAxis)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
 AllXData=[MinX,MaxX];
+ylim(Ax,'auto');
 while true
 	%坐标尺度变换时，文本框可能低于基线，需要强制调整上去
 	Baseline=vertcat(Lines.YData);
