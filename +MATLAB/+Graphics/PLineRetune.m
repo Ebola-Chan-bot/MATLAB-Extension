@@ -11,6 +11,13 @@
 %[text] **See also** [MATLAB.Graphics.PLine](<matlab:doc MATLAB.Graphics.PLine>)
 function PLineRetune(Lines,Texts)
 NumPLines=numel(Lines);
+Ax=Lines(1).Parent;
+MinYLim=ylim(Ax);
+ylim(Ax,'auto');
+CurrentYLim=ylim(Ax);
+if CurrentYLim(1)>MinYLim(1)||CurrentYLim(2)<MinYLim(2)
+	ylim(Ax,min(CurrentYLim(1),MinYLim(1)),max(CurrentYLim(2),MinYLim(2)));
+end
 AllExtent=vertcat(Texts.Extent);
 Negative=AllExtent(:,2)<0;
 Positive=~Negative;
@@ -20,11 +27,9 @@ AllXData(:,2)=AllXData(:,1)+AllXData(:,2);
 %有两个Y轴时，图形对象所在的Y轴可能不是当前Y轴，需要特殊方法确保获取图形对象所在的Y轴
 YAxis=MATLAB.Graphics.GetYAxis(Lines(1));
 
-Ax=Lines(1).Parent;
 
 [MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),Ax.XAxis)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
 AllXData=[MinX,MaxX];
-MinYLim=ylim(Ax);
 while true
 	%坐标尺度变换时，文本框可能低于基线，需要强制调整上去
 	Baseline=vertcat(Lines.YData);
