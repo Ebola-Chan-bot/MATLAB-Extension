@@ -230,7 +230,7 @@ if ~VerticalPLine
 			case 0
 				MMFun=@max;
 			case 1
-				if min(ruler2num(Descriptors.YData(D,:),Descriptors.ObjectA(D).Parent.YAxis),[],2,ComparisonMethod='abs')<0
+				if min(ruler2num(Descriptors.YData(D,:),Descriptors.ObjectA(D).Parent.YAxis),[],2,ComparisonMethod='abs')<0||any(Descriptors.YData==0)
 					MMFun=@min;
 				else
 					MMFun=@max;

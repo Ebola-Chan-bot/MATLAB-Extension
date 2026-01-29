@@ -16,7 +16,7 @@ MinYLim=ylim(Ax);
 ylim(Ax,'auto');
 CurrentYLim=ylim(Ax);
 if CurrentYLim(1)>MinYLim(1)||CurrentYLim(2)<MinYLim(2)
-	ylim(Ax,min(CurrentYLim(1),MinYLim(1)),max(CurrentYLim(2),MinYLim(2)));
+	ylim(Ax,[min(CurrentYLim(1),MinYLim(1)), max(CurrentYLim(2),MinYLim(2))]);
 end
 AllExtent=vertcat(Texts.Extent);
 Negative=AllExtent(:,2)<0;
@@ -102,7 +102,7 @@ while true
 	ylim(Ax,'auto');
 	CurrentYLim=ylim(Ax);
 	if CurrentYLim(1)>MinYLim(1)||CurrentYLim(2)<MinYLim(2)
-		ylim(Ax,min(CurrentYLim(1),MinYLim(1)),max(CurrentYLim(2),MinYLim(2)));
+		ylim(Ax,[min(CurrentYLim(1),MinYLim(1)), max(CurrentYLim(2),MinYLim(2))]);
 	end
 	AllExtent=vertcat(Texts.Extent);
 end
