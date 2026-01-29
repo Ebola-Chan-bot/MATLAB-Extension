@@ -84,15 +84,7 @@ for D=1:NumPLines
 				if isa(ObjectA,'matlab.graphics.chart.primitive.Scatter')
 					[Group,XData]=findgroups(XData);
 					if numel(XData)==2
-						[MinKey,MaxKey]=bounds(YData);
-						KeyPoints=[MinKey,MaxKey];
-						[~,Index]=min(abs(KeyPoints));
-						if KeyPoints(Index)<0
-							MinMaxFun=@min;
-						else
-							MinMaxFun=@max;
-						end
-						YData=splitapply(MinMaxFun, YData, Group);
+						YData=splitapply(@max, YData, Group);
 						Index=[];
 					else
 						MATLAB.Exception.Invalid_Descriptor.Throw({'无法确认单一Scatter集内的关键点';Descriptors(D,:)});
