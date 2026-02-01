@@ -82,9 +82,10 @@ for D=1:NumPLines
 		if IndexA==0
 			if IndexB==0
 				if isa(ObjectA,'matlab.graphics.chart.primitive.Scatter')
-					[Group,XData]=findgroups(XData);
+					XData=unique(XData);
 					if numel(XData)==2
-						YData=splitapply(@max, YData, Group);
+						YData=max(YData);
+						YData=YData([1,1]);
 						Index=[];
 					else
 						MATLAB.Exception.Invalid_Descriptor.Throw({'无法确认单一Scatter集内的关键点';Descriptors(D,:)});
@@ -117,7 +118,7 @@ for D=1:NumPLines
 			end
 		end
 		if isa(ObjectA,'matlab.graphics.chart.primitive.ErrorBar')
-
+			
 			%无论有没有空，YPNData必须是(2,2)矩阵，且数据类型未必是数值，所以需要如下精心设计：
 			if isempty(ObjectA.YNegativeDelta)
 				YPNData(2,:)=ObjectA.YPositiveDelta(Index);
@@ -128,7 +129,7 @@ for D=1:NumPLines
 			if~isempty(ObjectA.YPositiveDelta)
 				YPNData(2,:)=ObjectA.YPositiveDelta(Index);
 			end
-
+			
 			YData=YData+YPNData([2,4]-(YData<0));
 		end
 	else
@@ -140,7 +141,7 @@ for D=1:NumPLines
 			YData={ObjectA.YData, ObjectB.YData};
 		end
 		%误差棒区可能会重叠，所以不能给YData加上误差范围
-
+		
 		VerticalPLine=isa(ObjectA, 'matlab.graphics.primitive.Line');
 		if IndexA==0
 			if IndexB==0
