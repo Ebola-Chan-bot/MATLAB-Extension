@@ -35,7 +35,9 @@ Windows平台
 *.mltbx
 *.sln
 .vs
-.git*
+.git
+.gitignore
+.gitattributes
 % 工具箱图像.png不能忽略，因为在GettingStarted.mlx里用到
 README.md
 **/*.pdb

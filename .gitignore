@@ -16,3 +16,4 @@ package*
 node_modules
 deploymentLog.html
 resources/4*
+/debug.log
