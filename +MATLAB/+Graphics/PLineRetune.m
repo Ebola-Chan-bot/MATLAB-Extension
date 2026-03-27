@@ -83,11 +83,8 @@ while true
 			end
 		end
 	end
-	if NoChange
-		break;
-	end
 	
-	%将新的分层规划应用到图形对象。这一步可能会自动改变坐标尺度。
+	%将新的分层规划应用到图形对象。这一步可能会自动改变坐标尺度。还负责缩短过大的P值线和文本的距离
 	for D=1:NumPLines
 		if Negative(D)
 			Lines(D).YData(:)=num2ruler(AllYData(D,2),YAxis);
@@ -96,6 +93,11 @@ while true
 			Lines(D).YData(:)=num2ruler(AllYData(D,1),YAxis);
 			Texts(D).Position(2)=AllYData(D,1)+Texts(D).Extent(4)+LineTextDistance;
 		end
+	end
+
+	%P值线位置不变，不代表文本和P值线距离不需要调整，因此调整后再返回
+	if NoChange
+		break;
 	end
 
 	%确保ylim只增不减
