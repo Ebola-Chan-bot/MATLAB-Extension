@@ -524,3 +524,8 @@ function FilePaths = OpenFileDialog(options)
 %可以设置初始目录，以及保存上次所在目录的文件保存对话框
 function FilePath = SaveFileDialog(options)
 ```
+# 贡献
+欢迎PR。打包工具箱可用命令：
+```MATLAB
+matlab.addons.toolbox.packageToolbox(matlab.addons.toolbox.ToolboxOptions("工程.prj"));
+```
