@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\StoneSteps.zLib.VS2022.Static.1.3.1.1\build\native\StoneSteps.zLib.VS2022.Static.props" Condition="Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.1.1\build\native\StoneSteps.zLib.VS2022.Static.props')" />
+  <Import Project="..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.props" Condition="Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -28,12 +28,14 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='调试NuGet|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -41,6 +43,7 @@
     <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <MSVCPreviewEnabled>true</MSVCPreviewEnabled>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -203,8 +206,9 @@
     <Import Project="..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets" Condition="Exists('..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets')" />
     <Import Project="..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets" Condition="Exists('..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets') And '$(Configuration)' != '调试NuGet'" />
     <Import Project="..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets" Condition="Exists('..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets')" />
-    <Import Project="..\packages\StoneSteps.zLib.VS2022.Static.1.3.1.1\build\native\StoneSteps.zLib.VS2022.Static.targets" Condition="Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.1.1\build\native\StoneSteps.zLib.VS2022.Static.targets') And '$(Configuration)' != '调试NuGet'" />
-    <Import Project="..\packages\MATLAB.MexTools.7.1.2\build\native\MATLAB.MexTools.targets" Condition="Exists('..\packages\MATLAB.MexTools.7.1.2\build\native\MATLAB.MexTools.targets')" />
+    <Import Project="..\packages\magic_enum.0.9.7\build\native\magic_enum.targets" Condition="Exists('..\packages\magic_enum.0.9.7\build\native\magic_enum.targets')" />
+    <Import Project="..\packages\MATLAB.MexTools.7.1.3\build\native\MATLAB.MexTools.targets" Condition="Exists('..\packages\MATLAB.MexTools.7.1.3\build\native\MATLAB.MexTools.targets')" />
+    <Import Project="..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.targets" Condition="Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -215,8 +219,9 @@
     <Error Condition="!Exists('..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets'))" />
     <Error Condition="!Exists('..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets'))" />
     <Error Condition="!Exists('..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets'))" />
-    <Error Condition="!Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.1.1\build\native\StoneSteps.zLib.VS2022.Static.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StoneSteps.zLib.VS2022.Static.1.3.1.1\build\native\StoneSteps.zLib.VS2022.Static.props'))" />
-    <Error Condition="!Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.1.1\build\native\StoneSteps.zLib.VS2022.Static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StoneSteps.zLib.VS2022.Static.1.3.1.1\build\native\StoneSteps.zLib.VS2022.Static.targets'))" />
-    <Error Condition="!Exists('..\packages\MATLAB.MexTools.7.1.2\build\native\MATLAB.MexTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MATLAB.MexTools.7.1.2\build\native\MATLAB.MexTools.targets'))" />
+    <Error Condition="!Exists('..\packages\magic_enum.0.9.7\build\native\magic_enum.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\magic_enum.0.9.7\build\native\magic_enum.targets'))" />
+    <Error Condition="!Exists('..\packages\MATLAB.MexTools.7.1.3\build\native\MATLAB.MexTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MATLAB.MexTools.7.1.3\build\native\MATLAB.MexTools.targets'))" />
+    <Error Condition="!Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.props'))" />
+    <Error Condition="!Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.targets'))" />
   </Target>
 </Project>
