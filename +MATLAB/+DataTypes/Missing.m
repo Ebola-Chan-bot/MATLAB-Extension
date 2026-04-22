@@ -29,7 +29,11 @@ classdef Missing < matlab.mixin.internal.MatrixDisplay & matlab.mixin.CustomComp
                 end
             end
             b = true(size(m));
-        end
+		end
+
+		function d=duration(m)
+			d=repmat(duration(missing),size(m));
+		end
         
         function d = double(m)
             d = nan(size(m));
