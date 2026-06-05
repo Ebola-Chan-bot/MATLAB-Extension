@@ -14,9 +14,9 @@ NumPLines=numel(Lines);
 Ax=Lines(1).Parent;
 MinYLim=ylim(Ax);
 ylim(Ax,'auto');
-CurrentYLim=ylim(Ax);
-if CurrentYLim(1)>MinYLim(1)||CurrentYLim(2)<MinYLim(2)
-	ylim(Ax,[min(CurrentYLim(1),MinYLim(1)), max(CurrentYLim(2),MinYLim(2))]);
+NewYLim=ylim(Ax);
+if NewYLim(1)>MinYLim(1)||NewYLim(2)<MinYLim(2)
+	ylim(Ax,[min(NewYLim(1),MinYLim(1)), max(NewYLim(2),MinYLim(2))]);
 end
 AllExtent=vertcat(Texts.Extent);
 Negative=AllExtent(:,2)<0;
@@ -27,18 +27,20 @@ AllXData(:,2)=AllXData(:,1)+AllXData(:,2);
 %有两个Y轴时，图形对象所在的Y轴可能不是当前Y轴，需要特殊方法确保获取图形对象所在的Y轴
 YAxis=MATLAB.Graphics.GetYAxis(Lines(1));
 
-
 [MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),Ax.XAxis)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
 AllXData=[MinX,MaxX];
+NoChange=false;
 while true
-	%坐标尺度变换时，文本框可能低于基线，需要强制调整上去
-	Baseline=vertcat(Lines.YData);
-	Baseline(:,2)=[];
-	OldExtent=AllExtent(:,2);
-	AllExtent(Negative,2)=min(AllExtent(Negative,2),Baseline(Negative)-AllExtent(Negative,4));
-	AllExtent(Positive,2)=max(AllExtent(Positive,2),Baseline(Positive));
-	NoChange=isequal(OldExtent,AllExtent(:,2));
-	AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
+	if~NoChange
+		%坐标尺度变换时，文本框可能低于基线，需要强制调整上去。但如果坐标尺度没变，必须跳过，否则可能因舍入误差导致无限循环。
+		Baseline=vertcat(Lines.YData);
+		Baseline(:,2)=[];
+		OldExtent=AllExtent(:,2);
+		AllExtent(Negative,2)=min(AllExtent(Negative,2),Baseline(Negative)-AllExtent(Negative,4));
+		AllExtent(Positive,2)=max(AllExtent(Positive,2),Baseline(Positive));
+		NoChange=isequal(OldExtent,AllExtent(:,2));
+		AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
+	end
 	
 	%排除PLine太多，坐标区装不下的情形
 	RangeTable=sortrows(table(AllYData(:),repelem([true;false],NumPLines,1),'VariableNames',["Position","IsBottom"]),"Position");
@@ -66,7 +68,6 @@ while true
 	
 	%按照现有的尺度排开PLine分层
 	RedundantDistance=ruler2num(YLim/10,YAxis);
-	LineTextDistance=RedundantDistance/10;
 	for D1=1:NumPLines-1
 		XData1=AllXData(D1,:).';
 		YData1=AllYData(D1,:).';
@@ -88,10 +89,10 @@ while true
 	for D=1:NumPLines
 		if Negative(D)
 			Lines(D).YData(:)=num2ruler(AllYData(D,2),YAxis);
-			Texts(D).Position(2)=AllYData(D,2)-Texts(D).Extent(4)-LineTextDistance;
+			Texts(D).Position(2)=AllYData(D,2)-Texts(D).Extent(4);
 		else
 			Lines(D).YData(:)=num2ruler(AllYData(D,1),YAxis);
-			Texts(D).Position(2)=AllYData(D,1)+Texts(D).Extent(4)+LineTextDistance;
+			Texts(D).Position(2)=AllYData(D,1)+Texts(D).Extent(4);
 		end
 	end
 
@@ -101,11 +102,14 @@ while true
 	end
 
 	%确保ylim只增不减
+	OldYLim=ylim(Ax);
 	ylim(Ax,'auto');
-	CurrentYLim=ylim(Ax);
-	if CurrentYLim(1)>MinYLim(1)||CurrentYLim(2)<MinYLim(2)
-		ylim(Ax,[min(CurrentYLim(1),MinYLim(1)), max(CurrentYLim(2),MinYLim(2))]);
+	NewYLim=ylim(Ax);
+	if NewYLim(1)>MinYLim(1)||NewYLim(2)<MinYLim(2)
+		ylim(Ax,[min(NewYLim(1),MinYLim(1)), max(NewYLim(2),MinYLim(2))]);
+		NewYLim=ylim(Ax);
 	end
+	NoChange=isequal(OldYLim,NewYLim);
 	AllExtent=vertcat(Texts.Extent);
 end
 end
