@@ -17,23 +17,26 @@ classdef EventLogger<handle
 			obj.NumEvents=0;
 			obj.StartTime=tic;
 		end
-		function LogEvent(obj,Event)
+		function Time=LogEvent(obj,Event)
 			%记录一个事件
 			%# 语法
 			% ```
-			% obj.LogEvent(Event);
+			% Time=obj.LogEvent(Event);
 			% ```
 			%# 输入参数
 			% Event(1,1)，可以允许任意标量数据类型作为事件记录
+			%# 返回值
+			% Time(1,1)duration，当前事件记录到的时间
+			Time=seconds(toc(obj.StartTime));
 			if isempty(obj.RawLog)
-				obj.RawLog=timetable(seconds(toc(obj.StartTime)),Event);
+				obj.RawLog=timetable(Time,Event);
 				obj.NumEvents=1;
 			else
 				NewSize=obj.NumEvents+1;
 				if NewSize>height(obj.RawLog)
 					obj.RawLog.Event(NewSize*2)=Event;
 				end
-				obj.RawLog.Time(NewSize)=seconds(toc(obj.StartTime));
+				obj.RawLog.Time(NewSize)=Time;
 				obj.RawLog.Event(NewSize)=Event;
 				obj.NumEvents=NewSize;
 			end
