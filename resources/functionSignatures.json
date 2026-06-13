@@ -1339,6 +1339,16 @@
 		],
 		"platforms": "win64"
 	},
+	"MATLAB.DataTypes.InsertiveTable": {
+		"inputs": [
+			{
+				"name": "RawTable",
+				"kind": "ordered",
+				"type": "tabular",
+				"purpose": "原始表格"
+			}
+		]
+	},
 	"MATLAB.DataTypes.MergeCongruentColumns": {
 		"inputs": [
 			{
