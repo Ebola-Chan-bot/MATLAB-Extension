@@ -2,9 +2,7 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 	%支持高效插入的表
 	%通过维护一个行数大于实际数据量的 RawTable，避免每次插入行时重新分配内存。
 	%当索引赋值的目标行超过当前 RawTable 行容量时，自动扩容至所需行数的 2 倍。
-	%ValidRows 记录有效行数，删除行时自动扣减。其它索引操作直接转发给 RawTable。
-	%
-	%See also MATLAB.DataTypes.InsertiveTable/InsertiveTable
+	%此类支持table的大多数普通语法，只有部分低性能写法故意被阻止。可以调用table方法将此类对象转换为普通table。
 
 	properties(Access=protected)
 		%实际存储数据的表。行数可能大于 ValidRows（包含预留行）
@@ -16,6 +14,7 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 
 	methods
 		function obj = InsertiveTable(RawTable)
+			%构造一个空表，或者包装一个已有table
 			arguments
 				RawTable = table
 			end
@@ -30,6 +29,9 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 
 		function out = cat(dim, varargin)
 			%串联多个 InsertiveTable 或 table
+			if dim==1&&numel(varargin)==2
+				MATLAB.Exception.Deliberately_not_supporting.Throw('InsertiveTable不支持vertcat方法拼入新行。请改用end+1:end+N索引方式。')
+			end
 			for i = 1:numel(varargin)
 				Arg = varargin{i};
 				if isa(Arg, 'MATLAB.DataTypes.InsertiveTable')
@@ -37,6 +39,11 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 				end
 			end
 			out = MATLAB.DataTypes.InsertiveTable(cat(dim, varargin{:}));
+		end
+
+		function T=table(obj)
+			%转换为普通table
+			T=obj.RawTable(1:obj.ValidRows,:);
 		end
 	end
 
@@ -48,6 +55,9 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 		end
 
 		function obj = parenAssign(obj, indexOp, varargin)
+			if isscalar(indexOp)&&height(varargin{1})==1&&istabular(varargin{1})
+				MATLAB.Exception.Deliberately_not_supporting.Throw('请勿向InsertiveTable插入单行表。改用花括号值列表。');
+			end
 			[obj, ~] = obj.ensureCapacity(indexOp(1).Indices);
 			obj.RawTable.(indexOp) = varargin{:};
 			obj = obj.updateValidRowsOnAssign(indexOp(1).Indices{1});
