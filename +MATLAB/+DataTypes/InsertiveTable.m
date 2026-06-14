@@ -45,6 +45,21 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 			%转换为普通table
 			T=obj.RawTable(1:obj.ValidRows,:);
 		end
+
+		function ind = end(obj, k, n)
+			%第1维 end 使用逻辑有效行数，避免 end+1 命中容量末尾。
+			if k == 1
+				ind = obj.ValidRows;
+				return;
+			end
+			sz = size(obj.RawTable);
+			if k <= numel(sz)
+				ind = sz(k);
+			else
+				ind = 1;
+			end
+		end
+
 	end
 
 	methods (Access = protected)
@@ -58,15 +73,17 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 			if isscalar(indexOp)&&height(varargin{1})==1&&istabular(varargin{1})
 				MATLAB.Exception.Deliberately_not_supporting.Throw('请勿向InsertiveTable插入单行表。改用花括号值列表。');
 			end
-			[obj, ~] = obj.ensureCapacity(indexOp(1).Indices);
-			obj.RawTable.(indexOp) = varargin{:};
-			obj = obj.updateValidRowsOnAssign(indexOp(1).Indices{1});
+			Indices = indexOp(1).Indices;
+
+			[obj, Indices] = obj.ensureCapacity(Indices);
+			obj.RawTable(Indices{:}) = varargin{:};
+			obj = obj.updateValidRowsOnAssign(Indices{1});
 		end
 
 		function obj = parenDelete(obj, indexOp)
 			Indices = indexOp(1).Indices;
 			RowIdx = Indices{1};
-			if isequal(RowIdx, ':')
+			if (ischar(RowIdx) || isstring(RowIdx)) && isscalar(RowIdx) && char(RowIdx) == ':'
 				DeletedCount = obj.ValidRows;
 			elseif islogical(RowIdx)
 				DeletedCount = sum(RowIdx);
@@ -88,9 +105,10 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 		end
 
 		function obj = braceAssign(obj, indexOp, varargin)
-			[obj, ~] = obj.ensureCapacity(indexOp(1).Indices);
-			obj.RawTable.(indexOp) = varargin{:};
-			obj = obj.updateValidRowsOnAssign(indexOp(1).Indices{1});
+			Indices = indexOp(1).Indices;
+			[obj, Indices] = obj.ensureCapacity(Indices);
+			obj.RawTable{Indices{:}} = varargin{:};
+			obj = obj.updateValidRowsOnAssign(Indices{1});
 		end
 
 		function n = braceListLength(obj, indexOp, Context)
@@ -114,9 +132,9 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 
 	methods (Access = private)
 		function [obj, Indices] = ensureCapacity(obj, Indices)
-			%确保 RawTable 行容量足够。若目标行索引超过当前行数，扩容至 2 倍
+			%确保 RawTable 行容量足够。若目标行索引超过当前行数，扩容至所需行数的 2 倍。
 			RowIdx = Indices{1};
-			if isequal(RowIdx, ':')
+			if (ischar(RowIdx) || isstring(RowIdx)) && isscalar(RowIdx) && char(RowIdx) == ':'
 				return
 			end
 			if islogical(RowIdx)
@@ -135,7 +153,7 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 
 		function obj = updateValidRowsOnAssign(obj, RowIdx)
 			%赋值后更新 ValidRows
-			if isequal(RowIdx, ':')
+			if (ischar(RowIdx) || isstring(RowIdx)) && isscalar(RowIdx) && char(RowIdx) == ':'
 				obj.ValidRows = height(obj.RawTable);
 			elseif islogical(RowIdx)
 				LastTrue = find(RowIdx, 1, 'last');
@@ -148,4 +166,5 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 		end
 
 	end
+
 end
