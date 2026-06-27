@@ -176,6 +176,30 @@
 			}
 		]
 	},
+	"MATLAB.Containers.Set.Erase":{		
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "Old",
+				"kind": "required",
+				"purpose": "要擦除的元素"
+			}
+		]
+	},
+	"MATLAB.Containers.Set.Insert":{
+		"inputs": [
+			{
+				"name": "obj"
+			},
+			{
+				"name": "New",
+				"kind": "required",
+				"purpose": "新元素"
+			}
+		]
+	},
 	"MATLAB.Containers.Stack.Push": {
 		"inputs": [
 			{

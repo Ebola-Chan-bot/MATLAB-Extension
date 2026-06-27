@@ -67,6 +67,9 @@ end
 classdef Queue
 	%MALTAB.Containers.IQueue的简单基本实现
 end
+classdef Set
+	%STL风格的集合实现
+end
 classdef Stack
 	%STL风格的先进后出栈实现，但不要求栈中对象具有相同的数据类型
 end
