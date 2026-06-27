@@ -1,10 +1,7 @@
 classdef Set<handle
 	%模拟 C++ std::set，一个句柄类型的无重复元素集合
 	properties(Access=protected)
-		Raw(1,:)
-		ValidCount
-		Capacity
-		Sorted=true
+		Raw=dictionary
 	end
 	properties(Dependent)
 		%返回集合中的所有无重复元素
@@ -12,11 +9,10 @@ classdef Set<handle
 	end
 	methods
 		function R=get.Range(obj)
-			R=obj.Raw(1:obj.ValidCount);
-			if~obj.Sorted
-				R=unique(R);
-				obj.ValidCount=numel(R);
-				obj.Raw(1:obj.ValidCount)=R;
+			if obj.Raw.isConfigured
+				R=obj.Raw.keys;
+			else
+				R=[];
 			end
 		end
 		function Insert(obj,New)
@@ -27,21 +23,7 @@ classdef Set<handle
 			% ```
 			%# 输入参数
 			% New(1,:)，新元素
-			NewCount=obj.ValidCount+numel(New);
-			obj.Sorted=NewCount>obj.Capacity;
-			if obj.Sorted
-				NewRaw=union(obj.Raw(1:obj.ValidCount),New);
-				obj.ValidCount=numel(NewRaw);
-				if obj.ValidCount>obj.Capacity
-					obj.Capacity=obj.ValidCount*2;
-					obj.Raw=[NewRaw,NewRaw];
-				else
-					obj.Raw(1:obj.ValidCount)=NewRaw;
-				end				
-			else
-				obj.Raw(obj.ValidCount+1:NewCount)=New;
-				obj.ValidCount=NewCount;
-			end
+			obj.Raw(New)=0x0;
 		end
 		function Erase(obj,Old)
 			%擦除已有元素
@@ -51,10 +33,7 @@ classdef Set<handle
 			% ```
 			%# 输入参数
 			% Old(1,:)，要擦除的元素
-			NewRaw=setdiff(obj.Raw(1:obj.ValidCount),Old);
-			obj.ValidCount=numel(NewRaw);
-			obj.Raw(1:obj.ValidCount)=NewRaw;
-			obj.Sorted=true;
+			obj.Raw(Old)=[];
 		end
 	end
 end
