@@ -147,8 +147,31 @@ classdef InsertiveTable < matlab.mixin.indexing.RedefinesParen & matlab.mixin.in
 			end
 			CurrentCapacity = height(obj.RawTable);
 			if RequiredRows > CurrentCapacity && CurrentCapacity
-				obj.RawTable{RequiredRows * 2,1}=obj.RawTable{1,1};
+				TargetCapacity = RequiredRows * 2;
+				try
+					obj.RawTable{TargetCapacity,1} = obj.RawTable{1,1};
+				catch ME
+					if any(strcmp(ME.identifier, {'MATLAB:minrhs', 'MATLAB:maxrhs'}))
+						% 备用方案A：使用原型行扩容，避免对象列默认构造失败。
+						obj = obj.expandByPrototypeRows(TargetCapacity);
+					else
+						rethrow(ME);
+					end
+				end
 			end
+		end
+
+		function obj = expandByPrototypeRows(obj, TargetCapacity)
+			CurrentCapacity = height(obj.RawTable);
+			if TargetCapacity <= CurrentCapacity
+				return
+			end
+			if CurrentCapacity == 0
+				return
+			end
+			AddRows = TargetCapacity - CurrentCapacity;
+			PrototypeRow = obj.RawTable(1, :);
+			obj.RawTable = [obj.RawTable; repmat(PrototypeRow, AddRows, 1)];
 		end
 
 		function obj = updateValidRowsOnAssign(obj, RowIdx)
