@@ -78,7 +78,7 @@ else
 	if any(Logical)
 		MATLAB.Exception.Unexpected_patch_number.Throw(Command(Logical));
 	end
-	MATLAB.internal.WindowsAPI.Builtin_bug_fix.Call(Command);
+	MATLAB.internal.WindowsAPI.Builtin_bug_fix(Command);
 	switch RestartDisposition
 		case MATLAB.Flags.Inquire
 			if questdlg('必须重启MATLAB才能应用更改','立即重启？','是','否','是')=="是"

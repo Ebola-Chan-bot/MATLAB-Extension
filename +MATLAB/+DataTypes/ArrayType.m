@@ -46,7 +46,7 @@ classdef ArrayType<int32
 			% Data，要取类型的数据
 			%# 返回值
 			% Type(1,1)MATLAB.DataTypes.ArrayType，数据类型枚举
-			obj=MATLAB.DataTypes.ArrayType(MATLAB.internal.WindowsAPI.ArrayType_FromData.Call(Data));
+			obj=MATLAB.DataTypes.ArrayType(MATLAB.internal.WindowsAPI.ArrayType_FromData(Data));
 		end
 	end
 	methods

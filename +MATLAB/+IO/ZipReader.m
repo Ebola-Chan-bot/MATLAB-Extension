@@ -13,7 +13,7 @@ classdef ZipReader<handle
 			% ```
 			%# 输入参数
 			% ZipPath(1,1)string，ZIP档案路径，不支持加密的ZIP
-            obj.Pointer=MATLAB.internal.WindowsAPI.ZipOpen.Call(ZipPath);
+            obj.Pointer=MATLAB.internal.WindowsAPI.ZipOpen(ZipPath);
 		end
 		function Locates=NameLocate(obj,Names)
 			%查找指定文件名在档案中的索引
@@ -26,7 +26,7 @@ classdef ZipReader<handle
 			%# 返回值
 			% Locates(:,1)int64，对应每个文件名的索引，从0开始。-1表示没找到。
 			%See also MATLAB.IO.ZipReader.GetName
-			Locates=MATLAB.internal.WindowsAPI.ZipNameLocate.Call(obj.Pointer,Names);
+			Locates=MATLAB.internal.WindowsAPI.ZipNameLocate(obj.Pointer,Names);
 		end
 		function FileReader=FOpen(obj,NameOrIndex)
 			%打开ZIP档案中的文件以供读入
@@ -51,9 +51,9 @@ classdef ZipReader<handle
 				if isreal(NameOrIndex)
 					NameOrIndex=uint64(NameOrIndex);
 				end
-				FileReader=MATLAB.internal.WindowsAPI.ZipFopen.Call(obj.Pointer,NameOrIndex);
+				FileReader=MATLAB.internal.WindowsAPI.ZipFopen(obj.Pointer,NameOrIndex);
 			else
-				FileReader=MATLAB.internal.WindowsAPI.ZipFopen.Call(obj.Pointer);
+				FileReader=MATLAB.internal.WindowsAPI.ZipFopen(obj.Pointer);
 			end
 			FileReader=arrayfun(@(Pointer)MATLAB.IO.ZipFileReader(Pointer,obj),FileReader);
 		end
@@ -79,9 +79,9 @@ classdef ZipReader<handle
 				if isreal(NameOrIndex)
 					NameOrIndex=uint64(NameOrIndex);
 				end
-				Sizes=MATLAB.internal.WindowsAPI.ZipGetSize.Call(obj.Pointer,NameOrIndex);
+				Sizes=MATLAB.internal.WindowsAPI.ZipGetSize(obj.Pointer,NameOrIndex);
 			else
-				Sizes=MATLAB.internal.WindowsAPI.ZipGetSize.Call(obj.Pointer);
+				Sizes=MATLAB.internal.WindowsAPI.ZipGetSize(obj.Pointer);
 			end
 		end
 		function Names=GetName(obj,Indices)
@@ -100,9 +100,9 @@ classdef ZipReader<handle
 			% Names(:,1)string，对应指定索引取得的文件名
 			%See also MATLAB.IO.ZipReader.NameLocate MATLAB.IO.ZipReader.GetNumEntries
 			if nargin>1
-				Names=MATLAB.internal.WindowsAPI.ZipGetName.Call(obj.Pointer,uint64(Indices));
+				Names=MATLAB.internal.WindowsAPI.ZipGetName(obj.Pointer,uint64(Indices));
 			else
-				Names=MATLAB.internal.WindowsAPI.ZipGetName.Call(obj.Pointer);
+				Names=MATLAB.internal.WindowsAPI.ZipGetName(obj.Pointer);
 			end
 		end
 		function NumEntries=GetNumEntries(obj)
@@ -114,10 +114,10 @@ classdef ZipReader<handle
 			%# 返回值
 			% NumEntries(1,1)int64，档案中的文件数目
 			%See also MATLAB.IO.ZipReader.GetName
-			NumEntries=MATLAB.internal.WindowsAPI.ZipGetNumEntries.Call(obj.Pointer);
+			NumEntries=MATLAB.internal.WindowsAPI.ZipGetNumEntries(obj.Pointer);
 		end
 		function delete(obj)
-			MATLAB.internal.WindowsAPI.ZipDiscard.Call(obj.Pointer);
+			MATLAB.internal.WindowsAPI.ZipDiscard(obj.Pointer);
 		end
     end
 end

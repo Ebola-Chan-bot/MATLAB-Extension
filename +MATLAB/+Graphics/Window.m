@@ -39,12 +39,12 @@ classdef Window<handle
 			% SizeWH(1,2)uint16，窗口的宽度和高度。如果不指定，窗口将一直扩张到屏幕右下角。
 			%# 返回值
 			% obj(1,1)MATLAB.Graphics.Window，创建的窗口对象
-			obj=MATLAB.Graphics.Window(MATLAB.internal.WindowsAPI.Window_Create.Call(varargin{:}));
+			obj=MATLAB.Graphics.Window(MATLAB.internal.WindowsAPI.Window_Create(varargin{:}));
 		end
 	end
 	methods
 		function delete(obj)
-			MATLAB.internal.WindowsAPI.Window_Destroy.Call(obj.Pointer);
+			MATLAB.internal.WindowsAPI.Window_Destroy(obj.Pointer);
 		end
 		function Visual=Image(obj,BGRAp,Rectangle)
 			%在窗口上显示图像
@@ -82,11 +82,11 @@ classdef Window<handle
 				BGRAp(4,:,:)uint8
 				Rectangle(1,4)single=single([0,0,size(BGRAp,2:3)]);
 			end
-			Visual=MATLAB.internal.WindowsAPI.Window_Image.Call(obj.Pointer,BGRAp,Rectangle);
+			Visual=MATLAB.internal.WindowsAPI.Window_Image(obj.Pointer,BGRAp,Rectangle);
 		end
 		function Clear(obj)
 			%清空窗口，变成完全透明。此窗口创建的所有视觉元素指针将变为无效。
-			MATLAB.internal.WindowsAPI.Window_Clear.Call(obj.Pointer);
+			MATLAB.internal.WindowsAPI.Window_Clear(obj.Pointer);
 		end
 		function Visual=Fill(obj,Color)
 			%用指定颜色填满整个窗口。
@@ -108,7 +108,7 @@ classdef Window<handle
 			%# 返回值
 			% Visual(1,1)uint64，指向新建的视觉元素的指针，将该指针传递给RemoveVisual方法可以定向移除此视觉元素。
 			%See also MATLAB.Graphics.Window.RemoveVisual
-			Visual=MATLAB.internal.WindowsAPI.Window_Fill.Call(obj.Pointer,Color);
+			Visual=MATLAB.internal.WindowsAPI.Window_Fill(obj.Pointer,Color);
 		end
 		function RemoveVisual(obj,Visual)
 			%移除指定的视觉元素
@@ -122,7 +122,7 @@ classdef Window<handle
 				obj
 				Visual uint64
 			end
-			MATLAB.internal.WindowsAPI.Window_RemoveVisual.Call(obj.Pointer,Visual);
+			MATLAB.internal.WindowsAPI.Window_RemoveVisual(obj.Pointer,Visual);
 		end
 	end
 end

@@ -21,7 +21,7 @@ try
 	[varargout{1:nargout}]=imread(varargin{:});
 catch ME
 	if ME.identifier=="MATLAB:imagesci:imread:fileFormat"
-		varargout{1}=permute(MATLAB.internal.WindowsAPI.WebpRead.Call(varargin{1}),[3,2,1]);
+		varargout{1}=permute(MATLAB.internal.WindowsAPI.WebpRead(varargin{1}),[3,2,1]);
 	else
 		ME.rethrow;
 	end

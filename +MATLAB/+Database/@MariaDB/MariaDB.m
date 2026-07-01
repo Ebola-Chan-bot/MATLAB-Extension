@@ -22,12 +22,12 @@ classdef MariaDB<handle
 			% Username(1,1)string，用户名
 			% Password(1,1)string，密码
 			% ConnectString(1,1)，MariaDB连接字符串，格式为jdbc:mariadb://Server:Port/DatabaseName?user=Username&password=Password
-			obj.Pointer=MATLAB.internal.WindowsAPI.Database_MariaDB.Call(varargin{:});
+			obj.Pointer=MATLAB.internal.WindowsAPI.Database_MariaDB(varargin{:});
 		end
 		function delete(obj)
 			%如果构造失败，Pointer可能是空的
 			if ~isempty(obj.Pointer)
-				MATLAB.internal.WindowsAPI.Database_DeleteMariaDB.Call(obj.Pointer);
+				MATLAB.internal.WindowsAPI.Database_DeleteMariaDB(obj.Pointer);
 			end
 		end
 	end

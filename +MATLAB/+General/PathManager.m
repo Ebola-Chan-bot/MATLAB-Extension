@@ -88,7 +88,7 @@ classdef(Abstract,Sealed)PathManager
 				SharedPath=fullfile(getenv('ProgramData'),'MathWorks\埃博拉酱\共享路径.txt');
 			end
 			if nargin
-				MATLAB.internal.WindowsAPI.Set_shared_path.Call(strip(join(SP,pathsep),pathsep));
+				MATLAB.internal.WindowsAPI.Set_shared_path(strip(join(SP,pathsep),pathsep));
 			else
 				SP=fileread(SharedPath);
 			end
@@ -105,7 +105,7 @@ classdef(Abstract,Sealed)PathManager
 			%# 输入参数
 			% SP string，要添加的搜索路径。可以是字符串数组或分号分隔路径的单个字符串。已存在的路径会自动排除，不会重复添加。
 			%See also MATLAB.General.PathManager.SharedPaths
-			MATLAB.internal.WindowsAPI.Add_shared_path.Call(strip(join(SP,pathsep),pathsep))
+			MATLAB.internal.WindowsAPI.Add_shared_path(strip(join(SP,pathsep),pathsep))
 		end
 		function RemoveSharedPaths(SP)
 			%移除共享搜索路径
@@ -117,7 +117,7 @@ classdef(Abstract,Sealed)PathManager
 			%输入参数
 			% SP string，要移除的搜索路径。可以是字符串数组或分号分隔路径的单个字符串。移除原本就不存在的搜索路径也不会报错。
 			%See also MATLAB.General.PathManager.SharedPaths
-			MATLAB.internal.WindowsAPI.Remove_shared_path.Call(strip(join(SP,pathsep),pathsep))
+			MATLAB.internal.WindowsAPI.Remove_shared_path(strip(join(SP,pathsep),pathsep))
 		end
 	end
 end

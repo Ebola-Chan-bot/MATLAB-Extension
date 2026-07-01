@@ -13,7 +13,8 @@
 %[text] **See also** [pause](<matlab:doc pause>) [Inf](<matlab:doc Inf>)
 function Pause(varargin)
 %命名空间：TimeFun
-MATLAB.internal.WindowsAPI.Pause.Call(varargin{:});
+MATLAB.internal.WindowsAPI.Pause(varargin{:});
+end
 
 %[appendix]{"version":"1.0"}
 %---

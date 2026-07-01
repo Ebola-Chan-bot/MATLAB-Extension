@@ -23,7 +23,7 @@ try
 	SP=serialport(Port,Baudrate,NameValues{:});
 catch ME
 	if ME.identifier=="serialport:serialport:ConnectionFailed"
-		PID=MATLAB.internal.WindowsAPI.Serialport_snatch.Call(Port);
+		PID=MATLAB.internal.WindowsAPI.Serialport_snatch(Port);
 		SP=serialport(Port,Baudrate,NameValues{:});
 		return;
 	end

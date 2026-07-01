@@ -55,10 +55,16 @@ classdef WindowsAPI<uint64
 		Database_DeleteMariaDB(52)
 		Database_UpdateByPrimary(53)
 		Database_Dump(54)
+		IO_FindLocking(55)
 	end
 	methods
-		function varargout=Call(obj,varargin)
-			[varargout{1:nargout}]=WindowsCall(uint64(obj),varargin{:});
+		function varargout=subsref(obj,s)
+			% 将 obj(...) 直接当作函数调用，替代 obj(...)
+			if strcmp(s(1).type,'()')
+				[varargout{1:nargout}]=WindowsCall(uint64(obj),s(1).subs{:});
+			else
+				[varargout{1:nargout}]=builtin('subsref',obj,s);
+			end
 		end
 	end
 end

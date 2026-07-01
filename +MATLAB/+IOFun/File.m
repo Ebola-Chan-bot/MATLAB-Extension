@@ -41,7 +41,7 @@ classdef File<handle
 				options.CreationDisposition=MATLAB.Flags.OPEN_EXISTING
 				options.FlagsAndAttributes=MATLAB.Flags.FILE_ATTRIBUTE_NORMAL
 			end
-			obj.Handle=MATLAB.internal.WindowsAPI.File_Create.Call(FileName,uint32(options.DesiredAccess),uint32(options.ShareMode),uint32(options.CreationDisposition),uint32(options.FlagsAndAttributes));
+			obj.Handle=MATLAB.internal.WindowsAPI.File_Create(FileName,uint32(options.DesiredAccess),uint32(options.ShareMode),uint32(options.CreationDisposition),uint32(options.FlagsAndAttributes));
 		end
 		function FileSize=GetSize(obj)
 			%检索指定文件的大小。
@@ -50,7 +50,7 @@ classdef File<handle
 			%# 返回值
 			% FileSize(1,1)uint64，文件大小（以字节为单位）
 			%See also <a href="https://learn.microsoft.com/zh-cn/windows/win32/api/fileapi/nf-fileapi-getfilesizeex">GetFileSizeEx</a>
-			FileSize=MATLAB.internal.WindowsAPI.File_GetSize.Call(obj.Handle);
+			FileSize=MATLAB.internal.WindowsAPI.File_GetSize(obj.Handle);
 		end
 		function Data=Read(obj,varargin)
 			%从指定的文件或输入/输出 (I/O) 设备读取数据。 如果设备支持，则读取发生在文件指针指定的位置。
@@ -84,13 +84,13 @@ classdef File<handle
 					Type=MATLAB.DataTypes.ArrayType(Arg);
 				end
 			end
-			Data=MATLAB.internal.WindowsAPI.File_Read.Call(obj.Handle,Number,int32(Type));
+			Data=MATLAB.internal.WindowsAPI.File_Read(obj.Handle,Number,int32(Type));
 		end
 		function SetEnd(obj)
 			%将指定文件的物理文件大小设置为文件指针的当前位置。
 			%物理文件大小也称为文件末尾。本函数可用于截断或扩展文件。本函数基于 Win32 API SetEndOfFile 实现，详情参阅微软文档。
 			%See also <a href="https://learn.microsoft.com/zh-cn/windows/win32/api/fileapi/nf-fileapi-setendoffile">SetEndOfFile</a>
-			MATLAB.internal.WindowsAPI.File_SetEnd.Call(obj.Handle);
+			MATLAB.internal.WindowsAPI.File_SetEnd(obj.Handle);
 		end
 		function NewFilePointer=SetPointer(obj,DistanceToMove,MoveMethod)
 			%移动指定文件的文件指针。
@@ -119,7 +119,7 @@ classdef File<handle
 				case 2
 					MoveMethod=MATLAB.Flags.FILE_BEGIN;
 			end
-			NewFilePointer=MATLAB.internal.WindowsAPI.File_SetPointer.Call(obj.Handle,DistanceToMove,uint32(MoveMethod));
+			NewFilePointer=MATLAB.internal.WindowsAPI.File_SetPointer(obj.Handle,DistanceToMove,uint32(MoveMethod));
 		end
 		function Write(obj,varargin)
 			%将数据写入指定的文件或输入/输出 (I/O) 设备。
@@ -130,10 +130,10 @@ classdef File<handle
 			% ```
 			%# 输入参数
 			% Data1,Data2,…，要写出的POD数组，将在文件中连续紧密排列。
-			MATLAB.internal.WindowsAPI.File_Write.Call(obj.Handle,varargin);
+			MATLAB.internal.WindowsAPI.File_Write(obj.Handle,varargin);
 		end
 		function delete(obj)
-			MATLAB.internal.WindowsAPI.File_Close.Call(obj.Handle);
+			MATLAB.internal.WindowsAPI.File_Close(obj.Handle);
 		end
 	end
 end

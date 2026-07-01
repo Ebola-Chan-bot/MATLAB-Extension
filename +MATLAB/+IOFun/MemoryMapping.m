@@ -73,10 +73,10 @@ classdef MemoryMapping<handle
 				Protect=MATLAB.Flags.PAGE_READONLY;
 			end
 			varargout=cell(1,nargout);
-			[varargout{:}]=MATLAB.internal.WindowsAPI.MemoryMapping_Create.Call(File,uint32(Protect),options.MaximumSize,options.Name,options.FillData);
+			[varargout{:}]=MATLAB.internal.WindowsAPI.MemoryMapping_Create(File,uint32(Protect),options.MaximumSize,options.Name,options.FillData);
 			varargout{1}=MATLAB.IOFun.MemoryMapping(varargout{1});
 			if nargout>1
-				varargout{2}=MATLAB.General.SharedPtr(varargout{2},@(Pointer)MATLAB.internal.WindowsAPI.MemoryMapping_Unview.Call(uint64(Pointer)));
+				varargout{2}=MATLAB.General.SharedPtr(varargout{2},@(Pointer)MATLAB.internal.WindowsAPI.MemoryMapping_Unview(uint64(Pointer)));
 			end
 		end
 		function varargout=Open(Name,DesiredAccess)
@@ -110,10 +110,10 @@ classdef MemoryMapping<handle
 				DesiredAccess=MATLAB.Flags.FILE_MAP_READ
 			end
 			varargout=cell(1,nargout);
-			[varargout{:}]=MATLAB.internal.WindowsAPI.MemoryMapping_Open.Call(uint32(DesiredAccess),Name);
+			[varargout{:}]=MATLAB.internal.WindowsAPI.MemoryMapping_Open(uint32(DesiredAccess),Name);
 			varargout{1}=MATLAB.IOFun.MemoryMapping(varargout{1});
 			if nargout>1
-				varargout{2}=MATLAB.General.SharedPtr(varargout{2},@(Pointer)MATLAB.internal.WindowsAPI.MemoryMapping_Unview.Call(uint64(Pointer)));
+				varargout{2}=MATLAB.General.SharedPtr(varargout{2},@(Pointer)MATLAB.internal.WindowsAPI.MemoryMapping_Unview(uint64(Pointer)));
 			end
 		end
 	end
@@ -139,10 +139,10 @@ classdef MemoryMapping<handle
 				options.FileOffset=0
 				options.NumberOfBytesToMap=0
 			end
-			Pointer=MATLAB.General.SharedPtr(MATLAB.internal.WindowsAPI.MemoryMapping_View.Call(obj.Handle,uint32(options.DesiredAccess),options.FileOffset,options.NumberOfBytesToMap),@(Pointer)MATLAB.internal.WindowsAPI.MemoryMapping_Unview.Call(uint64(Pointer)));
+			Pointer=MATLAB.General.SharedPtr(MATLAB.internal.WindowsAPI.MemoryMapping_View(obj.Handle,uint32(options.DesiredAccess),options.FileOffset,options.NumberOfBytesToMap),@(Pointer)MATLAB.internal.WindowsAPI.MemoryMapping_Unview(uint64(Pointer)));
 		end
 		function delete(obj)
-			MATLAB.internal.WindowsAPI.MemoryMapping_Close.Call(obj.Handle);
+			MATLAB.internal.WindowsAPI.MemoryMapping_Close(obj.Handle);
 		end
 	end
 end

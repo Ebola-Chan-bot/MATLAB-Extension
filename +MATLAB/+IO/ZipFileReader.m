@@ -33,10 +33,10 @@ classdef ZipFileReader<handle
 			% 使用typecast可以将字节转换为其它数据类型。
 			% 使用MATLAB.IO.ZipReader.GetSize获取文件压缩前大小。
 			%See also typecast MATLAB.IO.ZipReader.GetSize
-			[Data,BytesRead]=MATLAB.internal.WindowsAPI.ZipFread.Call([objs.Pointer],uint64(NumBytes));
+			[Data,BytesRead]=MATLAB.internal.WindowsAPI.ZipFread([objs.Pointer],uint64(NumBytes));
 		end
 		function delete(obj)
-			MATLAB.internal.WindowsAPI.ZipFclose.Call(obj.Pointer);
+			MATLAB.internal.WindowsAPI.ZipFclose(obj.Pointer);
 		end
 	end
 end

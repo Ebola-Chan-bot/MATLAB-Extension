@@ -26,7 +26,7 @@ classdef Pointer<uint64
 				options.NumBytes=0;
 				options.FillData={};
 			end
-			obj=MATLAB.General.Pointer(MATLAB.internal.WindowsAPI.Pointer_Allocate.Call(options.NumBytes,options.FillData));
+			obj=MATLAB.General.Pointer(MATLAB.internal.WindowsAPI.Pointer_Allocate(options.NumBytes,options.FillData));
 		end
 		function Copy(ToPointer,FromPointer,NumBytes)
 			%从一个指针向另一个指针拷贝数据
@@ -40,7 +40,7 @@ classdef Pointer<uint64
 			% FromPointer(1,1)MATLAB.General.Pointer，拷贝来源指针
 			% NumBytes(1,1)uint64，要拷贝的字节数
 			%See also MATLAB.General.Pointer
-			MATLAB.internal.WindowsAPI.Pointer_Copy.Call(uint64(ToPointer),uint64(FromPointer),NumBytes);
+			MATLAB.internal.WindowsAPI.Pointer_Copy(uint64(ToPointer),uint64(FromPointer),NumBytes);
 		end
 	end
 	methods
@@ -62,7 +62,7 @@ classdef Pointer<uint64
 				Number
 				Type MATLAB.DataTypes.ArrayType=MATLAB.DataTypes.ArrayType.UINT8
 			end
-			Data=MATLAB.internal.WindowsAPI.Pointer_Read.Call(uint64(obj),Number,int32(Type));
+			Data=MATLAB.internal.WindowsAPI.Pointer_Read(uint64(obj),Number,int32(Type));
 		end
 		function Write(obj,varargin)
 			%向指针写出POD数据。
@@ -74,7 +74,7 @@ classdef Pointer<uint64
 			%# 输入参数
 			% Data1,Data2,…，要写出的POD数组，将在内存中连续紧密排列。
 			%See also MATLAB.General.Pointer
-			MATLAB.internal.WindowsAPI.Pointer_Write.Call(uint64(obj),varargin);
+			MATLAB.internal.WindowsAPI.Pointer_Write(uint64(obj),varargin);
 		end
 		function Release(obj)
 			%释放内存指针
@@ -82,7 +82,7 @@ classdef Pointer<uint64
 			% 释放，产生内存泄漏。该段内存内其它指针（通常由起始指针加偏移得到）不拥有该段内存，不能用那些指针释放，否则将产生意外结果。释放只能执行一次，多次释
 			% 放将产生意外结果。从本类以外的方法得到的指针不能用此方法释放，那些指针应当由指针的提供方负责说明如何释放。
 			%See also MATLAB.General.Pointer.Allocate MATLAB.General.Pointer
-			MATLAB.internal.WindowsAPI.Pointer_Release.Call(uint64(obj));
+			MATLAB.internal.WindowsAPI.Pointer_Release(uint64(obj));
 		end
 		function obj=plus(obj,Offset)
 			%为指针增加一个偏移量
