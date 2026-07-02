@@ -76,6 +76,8 @@ Mex工具API(Builtin_bug_fix);
 Mex工具API(Associate_prj_extension);
 Mex工具API(Get_pathdef_permission);
 Mex工具API(Serialport_snatch);
+Mex工具API(IO_FindLocking);
+Mex工具API(IO_CloseHandle);
 
 //Database
 
@@ -91,6 +93,7 @@ Mex工具API(Mex工具::执行)
 {
 	constexpr Mex工具::API 跳转表[]=
 	{
+		//跳转表的顺序不是任意的，必须与MATLAB.internal.WindowsAPI一致
 		SHFile_Copy,
 		SHFile_Delete,
 		SHFile_Move,
@@ -147,6 +150,8 @@ Mex工具API(Mex工具::执行)
 		Database_UpdateByPrimary,
 		Database_Dump,
 		Database_ExecuteStatement,
+		IO_FindLocking,
+		IO_CloseHandle
 	};
 	跳转表[万能转码<size_t>(std::move(输入[0]))](输出, 输入);
 };

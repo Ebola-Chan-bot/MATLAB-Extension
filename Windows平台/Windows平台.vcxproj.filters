@@ -76,7 +76,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="$(ZLibDir)lib\$(Platform)\Debug\$(ZLibName).lib" />
     <Library Include="$(ZLibDir)lib\$(Platform)\Release\$(ZLibName).lib" />
+    <Library Include="$(ZLibDir)lib\$(Platform)\Debug\$(ZLibName)d.lib" />
   </ItemGroup>
 </Project>

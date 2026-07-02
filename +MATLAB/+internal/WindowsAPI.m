@@ -55,7 +55,9 @@ classdef WindowsAPI<uint64
 		Database_DeleteMariaDB(52)
 		Database_UpdateByPrimary(53)
 		Database_Dump(54)
-		IO_FindLocking(55)
+		Database_ExecuteStatement(55)
+		IO_FindLocking(56)
+		IO_CloseHandle(57)
 	end
 	methods
 		function varargout=subsref(obj,s)

@@ -56,5 +56,11 @@ namespace MATLAB
 		Unknown_CPP_exception,
 		SEH_exception,
 		Unexpected_column_type,
+		Win32_exception,
 	};
 }
+struct Win32异常
+{
+	MATLAB::Exception 表象;
+	DWORD 底层;
+};

@@ -20,25 +20,34 @@ static void WriteString(std::ostringstream& 参数流, const String& 字符串)n
 	参数流.write((char*)&Size, sizeof(Size));
 	参数流.write((char*)字符串.data(), Size * sizeof(std::remove_pointer_t<decltype(字符串.data())>));
 }
-static 懒加载 MatlabRoot参数头([]()
-	{
-		std::ostringstream 返回值;
-		constexpr 提权操作函数 函数 = 提权操作函数::Shutdown_server;
-		返回值.write((char*)&函数, sizeof(函数));
-		WriteString(返回值, CharArray(MATLAB引擎->feval("matlabroot", std::vector<Array>())).toUTF16());
-		return 返回值.str();
-	});
-static 懒加载 MatlabVersion([]()
-	{
-		return Mex工具::万能转码<String>(MATLAB引擎->feval("ver", 数组工厂.createScalar(u"MATLAB"))[0]["Version"].operator Array());
-	});
-static 懒加载 RootVersion参数头([]()noexcept
-	{
-		std::ostringstream 返回值(MatlabRoot参数头());
-		返回值.seekp(0, std::ios::end);
-		WriteString(返回值, MatlabVersion());
-		return 返回值.str();
-	});
+static const std::string& MatlabRoot参数头()
+{
+	static const std::string 返回值 = []()
+		{
+			std::ostringstream 参数流;
+			constexpr 提权操作函数 函数 = 提权操作函数::Shutdown_server;
+			参数流.write((char*)&函数, sizeof(函数));
+			WriteString(参数流, CharArray(MATLAB引擎->feval("matlabroot", std::vector<Array>())).toUTF16());
+			return 参数流.str();
+		}();
+	return 返回值;
+}
+static const String& MatlabVersion()
+{
+	static const String 返回值 = CharArray(MATLAB引擎->feval("version", std::vector<Array>())).toUTF16();
+	return 返回值;
+}
+static const std::string& RootVersion参数头()noexcept
+{
+	static const std::string 返回值 = []()noexcept
+		{
+			std::ostringstream 参数流(MatlabRoot参数头());
+			参数流.seekp(0, std::ios::end);
+			WriteString(参数流, MatlabVersion());
+			return 参数流.str();
+		}();
+	return 返回值;
+}
 static void 特权调用(const std::string& 参数)
 {
 	static RPC_WSTR Parameters = []() 
@@ -114,6 +123,12 @@ static void 特权调用(const std::string& 参数)
 		FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, 异常码, MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED), (LPWSTR)&错误消息, 1, NULL);
 		std::unique_ptr<char16_t[], decltype(LocalFree)*>自动释放(错误消息, LocalFree);
 		EnumThrow(MATLAB::Exception::SEH_exception, 错误消息);
+	}
+	case MATLAB::Exception::Win32_exception:
+	{
+		Win32异常 异常体;
+		ReadFile(特权服务器, &异常体, sizeof(异常体), &NumberOfBytes, NULL);
+		EnumThrow(异常体.表象, WindowsErrorMessage(异常体.底层).get());
 	}
 	default:
 		EnumThrow(结果);
@@ -199,6 +214,7 @@ Mex工具API(Get_pathdef_permission)
 		}();
 		特权调用(参数);
 }
+static DWORD NumberOfBytesRead;
 Mex工具API(Serialport_snatch)
 {
 	std::ostringstream 参数;
@@ -209,8 +225,41 @@ Mex工具API(Serialport_snatch)
 	参数.write((char*)&固定参数头, sizeof(固定参数头));
 	WriteString(参数, Mex工具::万能转码<String>(std::move(输入[1])));
 	特权调用(参数.str());
-	uint64_t PID;
-	DWORD NumberOfBytesRead;
+	uint32_t PID;
 	ReadFile(特权服务器, &PID, sizeof(PID), &NumberOfBytesRead, NULL);
 	输出[0] = Mex工具::万能转码(PID);
+}
+Mex工具API(IO_FindLocking)
+{
+	std::ostringstream 参数;
+	constexpr 提权操作函数 函数 = 提权操作函数::IO_FindLocking;
+	参数.write((char*)&函数, sizeof(函数));
+	WriteString(参数, Mex工具::万能转码<String>(std::move(输入[1])));
+	特权调用(参数.str());
+	size_t 记录数;
+	ReadFile(特权服务器, &记录数, sizeof(记录数), &NumberOfBytesRead, NULL);
+
+	buffer_ptr_t<uint64_t>句柄缓冲 = 数组工厂.createBuffer<uint64_t>(记录数);
+	buffer_ptr_t<uint32_t>进程缓冲 = 数组工厂.createBuffer<uint32_t>(记录数);
+	if (记录数)
+	{
+		ReadFile(特权服务器, 句柄缓冲.get(), 记录数 * sizeof(uint64_t), &NumberOfBytesRead, NULL);
+		ReadFile(特权服务器, 进程缓冲.get(), 记录数 * sizeof(uint32_t), &NumberOfBytesRead, NULL);
+	}
+	输出[0] = 数组工厂.createArrayFromBuffer({ 记录数 }, std::move(句柄缓冲));
+	输出[1] = 数组工厂.createArrayFromBuffer({ 记录数 }, std::move(进程缓冲));
+}
+Mex工具API(IO_CloseHandle)
+{
+	Array& 句柄向量 = 输入[1];
+	if (const size_t 记录数 = 句柄向量.getNumberOfElements())
+	{
+		std::ostringstream 参数;
+		constexpr 提权操作函数 函数 = 提权操作函数::IO_CloseHandle;
+		参数.write(reinterpret_cast<const char*>(&函数), sizeof(函数));
+		参数.write(reinterpret_cast<const char*>(&记录数), sizeof(记录数));
+		参数.write(reinterpret_cast<const char*>(TypedArray<uint64_t>{std::move(句柄向量)}.release().get()), 记录数 * sizeof(uint64_t));
+		参数.write(reinterpret_cast<const char*>(TypedArray<uint32_t>{std::move(输入[2])}.release().get()), 记录数 * sizeof(uint32_t));
+		特权调用(参数.str());
+	}
 }

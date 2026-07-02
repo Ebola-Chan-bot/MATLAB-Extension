@@ -176,7 +176,7 @@
 			}
 		]
 	},
-	"MATLAB.Containers.Set.Erase":{		
+	"MATLAB.Containers.Set.Erase": {
 		"inputs": [
 			{
 				"name": "obj"
@@ -188,7 +188,7 @@
 			}
 		]
 	},
-	"MATLAB.Containers.Set.Insert":{
+	"MATLAB.Containers.Set.Insert": {
 		"inputs": [
 			{
 				"name": "obj"
@@ -3663,6 +3663,22 @@
 			}
 		]
 	},
+	"MATLAB.IO.CloseHandle": {
+		"inputs": [
+			{
+				"name": "Handle",
+				"kind": "required",
+				"type": "real",
+				"purpose": "要关闭的句柄"
+			},
+			{
+				"name": "ProcessId",
+				"kind": "required",
+				"type": "real",
+				"purpose": "要关闭句柄的进程ID"
+			}
+		]
+	},
 	"MATLAB.IO.CopyFile": {
 		"inputs": [
 			{
@@ -3749,6 +3765,25 @@
 					"MATLAB.Flags"
 				],
 				"purpose": "额外指定的旗帜选项"
+			}
+		]
+	},
+	"MATLAB.IO.FindLocking": {
+		"inputs": [
+			{
+				"name": "FilePath",
+				"kind": "required",
+				"type": [
+					[
+						"string",
+						"scalar"
+					],
+					[
+						"char",
+						"row"
+					]
+				],
+				"purpose": "要查看占用的文件"
 			}
 		]
 	},

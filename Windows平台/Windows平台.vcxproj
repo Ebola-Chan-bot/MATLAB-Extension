@@ -203,7 +203,6 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets" Condition="Exists('..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets')" />
     <Import Project="..\packages\libwebp.v140.0.5.0.2\build\native\libwebp.v140.targets" Condition="Exists('..\packages\libwebp.v140.0.5.0.2\build\native\libwebp.v140.targets')" />
-    <Import Project="..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets" Condition="Exists('..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets')" />
     <Import Project="..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets" Condition="Exists('..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets') And '$(Configuration)' != '调试NuGet'" />
     <Import Project="..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets" Condition="Exists('..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets')" />
     <Import Project="..\packages\magic_enum.0.9.7\build\native\magic_enum.targets" Condition="Exists('..\packages\magic_enum.0.9.7\build\native\magic_enum.targets')" />
@@ -216,7 +215,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets'))" />
     <Error Condition="!Exists('..\packages\libwebp.v140.0.5.0.2\build\native\libwebp.v140.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libwebp.v140.0.5.0.2\build\native\libwebp.v140.targets'))" />
-    <Error Condition="!Exists('..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\native.magic_enum.0.9.5\build\native\native.magic_enum.targets'))" />
     <Error Condition="!Exists('..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets'))" />
     <Error Condition="!Exists('..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets'))" />
     <Error Condition="!Exists('..\packages\magic_enum.0.9.7\build\native\magic_enum.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\magic_enum.0.9.7\build\native\magic_enum.targets'))" />
