@@ -196,18 +196,18 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="调试" Condition="'$(Configuration)'=='调试NuGet'">
-    <Import Project="$(USERPROFILE)\source\repos\mariadb-connector-cpp\NuGet\build\native\MariaDB_Connector.targets" />
+    <!-- <Import Project="$(USERPROFILE)\source\repos\mariadb-connector-cpp\NuGet\build\native\MariaDB_Connector.targets" /> -->
     <Import Project="$(USERPROFILE)\source\repos\MexTools\nuget\build\native\MATLAB.MexTools.targets" />
     <!-- <Import Project="$(USERPROFILE)\source\repos\libzip-NuGet\NuGet\libzip\NuGetPack\build\native\nih_at.libzip.targets"/> -->
   </ImportGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets" Condition="Exists('..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets')" />
     <Import Project="..\packages\libwebp.v140.0.5.0.2\build\native\libwebp.v140.targets" Condition="Exists('..\packages\libwebp.v140.0.5.0.2\build\native\libwebp.v140.targets')" />
-    <Import Project="..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets" Condition="Exists('..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets') And '$(Configuration)' != '调试NuGet'" />
+    <Import Project="..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets" Condition="Exists('..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets')" />
     <Import Project="..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets" Condition="Exists('..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets')" />
     <Import Project="..\packages\magic_enum.0.9.7\build\native\magic_enum.targets" Condition="Exists('..\packages\magic_enum.0.9.7\build\native\magic_enum.targets')" />
-    <Import Project="..\packages\MATLAB.MexTools.7.1.3\build\native\MATLAB.MexTools.targets" Condition="Exists('..\packages\MATLAB.MexTools.7.1.3\build\native\MATLAB.MexTools.targets')" />
     <Import Project="..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.targets" Condition="Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.targets')" />
+    <Import Project="..\packages\MATLAB.MexTools.7.2.0\build\native\MATLAB.MexTools.targets" Condition="Exists('..\packages\MATLAB.MexTools.7.2.0\build\native\MATLAB.MexTools.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -218,8 +218,8 @@
     <Error Condition="!Exists('..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MariaDB_Connector.1.1.7.1\build\native\MariaDB_Connector.targets'))" />
     <Error Condition="!Exists('..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\nih_at.libzip.1.11.4.2\build\native\nih_at.libzip.targets'))" />
     <Error Condition="!Exists('..\packages\magic_enum.0.9.7\build\native\magic_enum.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\magic_enum.0.9.7\build\native\magic_enum.targets'))" />
-    <Error Condition="!Exists('..\packages\MATLAB.MexTools.7.1.3\build\native\MATLAB.MexTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MATLAB.MexTools.7.1.3\build\native\MATLAB.MexTools.targets'))" />
     <Error Condition="!Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.props'))" />
     <Error Condition="!Exists('..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StoneSteps.zLib.VS2022.Static.1.3.2.1\build\native\StoneSteps.zLib.VS2022.Static.targets'))" />
+    <Error Condition="!Exists('..\packages\MATLAB.MexTools.7.2.0\build\native\MATLAB.MexTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MATLAB.MexTools.7.2.0\build\native\MATLAB.MexTools.targets'))" />
   </Target>
 </Project>

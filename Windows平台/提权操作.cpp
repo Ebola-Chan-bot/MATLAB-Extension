@@ -119,10 +119,7 @@ static void 特权调用(const std::string& 参数)
 	{
 		decltype(GetExceptionCode())异常码;
 		ReadFile(特权服务器, &异常码, sizeof(异常码), &NumberOfBytes, NULL);
-		char16_t* 错误消息;
-		FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, 异常码, MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED), (LPWSTR)&错误消息, 1, NULL);
-		std::unique_ptr<char16_t[], decltype(LocalFree)*>自动释放(错误消息, LocalFree);
-		EnumThrow(MATLAB::Exception::SEH_exception, 错误消息);
+		EnumThrow(MATLAB::Exception::SEH_exception, WindowsErrorMessage(异常码).get());
 	}
 	case MATLAB::Exception::Win32_exception:
 	{
@@ -218,11 +215,13 @@ static DWORD NumberOfBytesRead;
 Mex工具API(Serialport_snatch)
 {
 	std::ostringstream 参数;
+#pragma pack(push,4)
 	static const struct {
 		提权操作函数 函数 = 提权操作函数::Serialport_snatch;
 		DWORD CurrentProcessId = GetCurrentProcessId();
 	}固定参数头;
-	参数.write((char*)&固定参数头, sizeof(固定参数头));
+#pragma pack(pop)
+	参数.write(reinterpret_cast<char const*>(&固定参数头), sizeof(固定参数头));
 	WriteString(参数, Mex工具::万能转码<String>(std::move(输入[1])));
 	特权调用(参数.str());
 	uint32_t PID;
@@ -233,8 +232,21 @@ Mex工具API(IO_FindLocking)
 {
 	std::ostringstream 参数;
 	constexpr 提权操作函数 函数 = 提权操作函数::IO_FindLocking;
-	参数.write((char*)&函数, sizeof(函数));
-	WriteString(参数, Mex工具::万能转码<String>(std::move(输入[1])));
+	参数.write(reinterpret_cast<char const*>(&函数), sizeof(函数));
+	String const 目标路径 = Mex工具::万能转码<String>(std::move(输入[1]));
+	if (目标路径 == u"")
+	{
+#pragma pack(push, 2)
+		constexpr struct
+		{
+			size_t 默认路径长度 = sizeof(u'.');
+			char16_t  默认路径 = u'.';
+		}默认路径参数;
+#pragma pack(pop)
+		参数.write(reinterpret_cast<char const*>(&默认路径参数), sizeof(默认路径参数));
+	}
+	else
+		WriteString(参数, 目标路径);
 	特权调用(参数.str());
 	size_t 记录数;
 	ReadFile(特权服务器, &记录数, sizeof(记录数), &NumberOfBytesRead, NULL);
