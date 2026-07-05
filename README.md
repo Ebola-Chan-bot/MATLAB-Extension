@@ -351,11 +351,17 @@ function Image = Rgb2Gray(Image,Dimension)
 ## +IO
 函数
 ```MATLAB
+%关闭指定进程ID的指定句柄
+function CloseHandle(Handle,ProcessId)
+
 %调用 Win32 ShellAPI 执行可撤销的批量文件复制
 function AnyOperationCanceled = CopyFile(Source,Destination)
 
 %调用 Win32 ShellAPI 执行可撤销的批量文件、目录删除
 function AnyOperationCanceled=Delete(Paths,Flags)
+
+%查找占用指定文件、目录或串口的进程和句柄。
+function [Handle,ProcessId]=FindLocking(FilePath)
 
 %创建 Windows lnk 快捷方式
 function LnkShortcut(varargin)
