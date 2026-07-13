@@ -79,6 +79,8 @@ while true
 		end
 	end
 	
+	OldYLim=ylim(Ax);
+	
 	%将新的分层规划应用到图形对象。这一步可能会自动改变坐标尺度。还负责缩短过大的P值线和文本的距离
 	for D=1:NumPLines
 		if Negative(D)
@@ -91,7 +93,6 @@ while true
 	end
 
 	%确保ylim只增不减
-	OldYLim=ylim(Ax);
 	ylim(Ax,'auto');
 	NewYLim=ylim(Ax);
 	if NewYLim(1)>MinYLim(1)||NewYLim(2)<MinYLim(2)
