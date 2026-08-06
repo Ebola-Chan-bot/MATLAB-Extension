@@ -29,18 +29,13 @@ YAxis=MATLAB.Graphics.GetYAxis(Lines(1));
 
 [MinX,MaxX]=bounds([vertcat(ruler2num(vertcat(Lines.XData),Ax.XAxis)),AllXData],2);%Lines.XData不一定是数值类型，因此必须转换成数值
 AllXData=[MinX,MaxX];
-NoChange=false;
 while true
-	if~NoChange
-		%坐标尺度变换时，文本框可能低于基线，需要强制调整上去。但如果坐标尺度没变，必须跳过，否则可能因舍入误差导致无限循环。
-		Baseline=vertcat(Lines.YData);
-		Baseline(:,2)=[];
-		OldExtent=AllExtent(:,2);
-		AllExtent(Negative,2)=min(AllExtent(Negative,2),Baseline(Negative)-AllExtent(Negative,4));
-		AllExtent(Positive,2)=max(AllExtent(Positive,2),Baseline(Positive));
-		NoChange=isequal(OldExtent,AllExtent(:,2));
-		AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
-	end
+	%坐标尺度变换时，文本框可能低于基线，需要强制调整上去。
+	Baseline=vertcat(Lines.YData);
+	Baseline(:,2)=[];
+	AllExtent(Negative,2)=min(AllExtent(Negative,2),Baseline(Negative)-AllExtent(Negative,4));
+	AllExtent(Positive,2)=max(AllExtent(Positive,2),Baseline(Positive));
+	AllYData=[AllExtent(:,2),AllExtent(:,4)+AllExtent(:,2)];
 	
 	%排除PLine太多，坐标区装不下的情形
 	RangeTable=sortrows(table(AllYData(:),repelem([true;false],NumPLines,1),'VariableNames',["Position","IsBottom"]),"Position");
@@ -73,7 +68,6 @@ while true
 		YData1=AllYData(D1,:).';
 		for D2=D1+1:NumPLines
 			if any(XData1>=AllXData(D2,:),'all')&&any(XData1<=AllXData(D2,:),'all')&&any(YData1>AllYData(D2,:),'all')&&any(YData1<AllYData(D2,:),'all')
-				NoChange=false;
 				if Negative(D1)
 					AllYData(D2,2)=AllYData(D1,1)-RedundantDistance;
 					AllYData(D2,1)=AllYData(D2,2)-AllExtent(D2,4);
@@ -84,6 +78,8 @@ while true
 			end
 		end
 	end
+	
+	OldYLim=ylim(Ax);
 	
 	%将新的分层规划应用到图形对象。这一步可能会自动改变坐标尺度。还负责缩短过大的P值线和文本的距离
 	for D=1:NumPLines
@@ -96,20 +92,18 @@ while true
 		end
 	end
 
-	%P值线位置不变，不代表文本和P值线距离不需要调整，因此调整后再返回
-	if NoChange
-		break;
-	end
-
 	%确保ylim只增不减
-	OldYLim=ylim(Ax);
 	ylim(Ax,'auto');
 	NewYLim=ylim(Ax);
 	if NewYLim(1)>MinYLim(1)||NewYLim(2)<MinYLim(2)
 		ylim(Ax,[min(NewYLim(1),MinYLim(1)), max(NewYLim(2),MinYLim(2))]);
 		NewYLim=ylim(Ax);
 	end
-	NoChange=isequal(OldYLim,NewYLim);
+
+	if isequal(OldYLim,NewYLim)
+		%坐标尺度不变，则之前的调整必然已经到位，不会再因坐标尺度变换而发生偏差
+		break;
+	end
 	AllExtent=vertcat(Texts.Extent);
 end
 end

@@ -184,7 +184,9 @@ for D=1:NumPLines
 					if ~isempty(ObjectB.YPositiveDelta)
 						YPNData(2,2)=ObjectB.YPositiveDelta(IndexB);
 					end
-					YData=YData+YPNData([2,4]-(YData<0));
+					YIndex=2-(YData<0);
+					%不能假定YPNData一定有4个元素，可能只有2个
+					YData=YData+[YPNData(YIndex(1),1),YPNData(YIndex(2),2)];
 				else
 					YData=AddErrorBar(YData, ObjectA, ObjectB, IndexA, IndexB);
 					VerticalPLine=true;
