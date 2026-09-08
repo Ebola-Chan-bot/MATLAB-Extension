@@ -34,7 +34,7 @@ static const std::string& MatlabRoot参数头()
 }
 static const String& MatlabVersion()
 {
-	static const String 返回值 = CharArray(MATLAB引擎->feval("version", std::vector<Array>())).toUTF16();
+	static const String 返回值 = CharArray(MATLAB引擎->feval("MATLAB.MatlabRegistryVersion", std::vector<Array>())).toUTF16();
 	return 返回值;
 }
 static const std::string& RootVersion参数头()noexcept

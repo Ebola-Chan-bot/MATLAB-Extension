@@ -41,6 +41,9 @@ function Guesses = GuessPassword(Conditions)
 %内置imread的升级版，额外支持WebP格式图像
 function varargout = ImRead(varargin)
 
+%返回当前MATLAB在Windows注册表中显示的版本。例如，R2026b返回26.2。
+function V = MatlabRegistryVersion
+
 %暂停执行MATLAB，不可中止
 function Pause(varargin)
 

@@ -35,15 +35,13 @@ Windows平台
 *.mltbx
 *.sln
 .vs
-.git
-.gitignore
-.gitattributes
+.git*
 % 工具箱图像.png不能忽略，因为在GettingStarted.mlx里用到
 README.md
 **/*.pdb
 **/*.exp
 **/*.lib
 deploymentLog.html
-toolbox.ignore
 *.db
 +MATLAB/PackToolbox.m
+debug.log

@@ -1,9 +1,8 @@
-﻿#include<共享头.h>
-#include<phnt_windows.h>
-#include<MATLAB异常.h>
-#define PHNT_VERSION PHNT_WIN11_24H2
+﻿#include<phnt_windows.h>
 #include<phnt.h>
 #include<AclAPI.h>
+#include<共享头.h>
+#include<MATLAB异常.h>
 import std;
 using namespace std::filesystem;
 static path EXE目录;
@@ -607,10 +606,10 @@ struct 有头Win32异常
 #pragma pack(pop)
 static bool 句柄不可用(const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* 系统句柄表条目信息头, UniqueHandle& SourceProcessHandle, UniqueHandle& TargetHandle)
 {
-	static std::unordered_set<ULONG_PTR>无效进程;
+	static std::unordered_set<HANDLE>无效进程;
 	if (无效进程.contains(系统句柄表条目信息头->UniqueProcessId))
 		return true;
-	if (!(SourceProcessHandle = OpenProcess(PROCESS_DUP_HANDLE, FALSE, 系统句柄表条目信息头->UniqueProcessId)))
+	if (!(SourceProcessHandle = OpenProcess(PROCESS_DUP_HANDLE, FALSE, HandleToUlong(系统句柄表条目信息头->UniqueProcessId))))
 	{
 		DWORD const LastError = GetLastError();
 		switch (LastError)
@@ -625,7 +624,7 @@ static bool 句柄不可用(const SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX* 系统句�
 		}
 		return true;
 	}
-	DuplicateHandle(SourceProcessHandle, (HANDLE)系统句柄表条目信息头->HandleValue, ProcessHandle, &TargetHandle, NULL, FALSE, DUPLICATE_SAME_ACCESS);
+	DuplicateHandle(SourceProcessHandle, 系统句柄表条目信息头->HandleValue, ProcessHandle, &TargetHandle, NULL, FALSE, DUPLICATE_SAME_ACCESS);
 	if (!TargetHandle)
 	{
 		DWORD const LastError = GetLastError();
@@ -788,7 +787,7 @@ API(Serialport_snatch)
 				{
 					if (wcscmp(串口设备路径, (reinterpret_cast<ProcExp_OutBuffer*>(OutBuffer.get()))->文件名()))
 						break;
-					DWORD const 当前进程ID = 系统句柄表条目信息头->UniqueProcessId;
+					DWORD const 当前进程ID = HandleToUlong(系统句柄表条目信息头->UniqueProcessId);
 					if (当前进程ID == 调用进程ID)
 						throw MATLAB::Exception::Attempt_to_snatch_the_serialport_occupied_by_yourself;
 					DuplicateHandle(SourceProcessHandle, reinterpret_cast<HANDLE>(系统句柄表条目信息头->HandleValue), NULL, &TargetHandle, NULL, FALSE, DUPLICATE_CLOSE_SOURCE);
@@ -877,8 +876,8 @@ API(IO_FindLocking)
 				}
 				if (匹配 || 串口设备路径 && !wcscmp(串口设备路径, 当前路径))//wcscmp不允许输入nullptr，因此必须先检查
 				{
-					锁定句柄.push_back(系统句柄表条目信息头->HandleValue);
-					锁定进程.push_back(系统句柄表条目信息头->UniqueProcessId);
+					锁定句柄.push_back(reinterpret_cast<ULONG_PTR>(系统句柄表条目信息头->HandleValue));
+					锁定进程.push_back(HandleToUlong(系统句柄表条目信息头->UniqueProcessId));
 				}
 				break;
 			}
