@@ -369,6 +369,9 @@ function [Handle,ProcessId]=FindLocking(FilePath)
 %创建 Windows lnk 快捷方式
 function LnkShortcut(varargin)
 
+%向文件ID输出一行日志。
+function LogF(FileID,Format,varargin)
+
 %调用 Win32 ShellAPI 执行可撤销的批量文件移动
 function AnyOperationCanceled = MoveFile(Source,Destination)
 ```
