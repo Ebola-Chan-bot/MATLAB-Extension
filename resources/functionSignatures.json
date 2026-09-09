@@ -3833,6 +3833,40 @@
 			}
 		]
 	},
+	"MATLAB.IO.LogF": {
+		"inputs": [
+			{
+				"name": "FileID",
+				"kind": "required",
+				"type": [
+					"scalar",
+					"dobule"
+				],
+				"purpose": "文件ID"
+			},
+			{
+				"name": "Format",
+				"kind": "required",
+				"type": [
+					[
+						"char",
+						"row"
+					],
+					[
+						"string",
+						"scalar"
+					]
+				],
+				"purpose": "格式字符串"
+			},
+			{
+				"name": "Argument",
+				"kind": "ordered",
+				"repeating": true,
+				"purpose": "格式参数"
+			}
+		]
+	},
 	"MATLAB.IO.MoveFile": {
 		"inputs": [
 			{
