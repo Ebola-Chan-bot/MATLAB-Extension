@@ -3839,8 +3839,7 @@
 				"name": "FileID",
 				"kind": "required",
 				"type": [
-					"scalar",
-					"dobule"
+					"scalar"
 				],
 				"purpose": "文件ID"
 			},
