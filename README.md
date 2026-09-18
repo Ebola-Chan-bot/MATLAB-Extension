@@ -150,6 +150,9 @@ function Array = Rescale(Array,LowerBound,UpperBound,Dimensions)
 %Ledoit–Wolf shrinkage 协方差估计函数
 function Covariance=ShrinkageCov(Tensor,SampleDimension,FeatureDimension)
 
+%搜索数值序列的拐点
+function [TurningPoints,DifferentiatedRank,SmoothLevel] = TurningPoint(Data,NumPoints)
+
 %在任意维度上计算互相关
 function [C,Lag] = XCorr(X,Y,Dimensions)
 ```

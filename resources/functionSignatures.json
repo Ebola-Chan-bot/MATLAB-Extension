@@ -1123,6 +1123,26 @@
 			}
 		]
 	},
+	"MATLAB.DataFun.TurningPoint": {
+		"inputs": [
+			{
+				"name": "Data",
+				"kind": "required",
+				"type": "real",
+				"purpose": "输入数据向量"
+			},
+			{
+				"name": "NumPoints",
+				"kind": "ordered",
+				"type": [
+					"real",
+					"vector"
+				],
+				"purpose": "期待找到的拐点个数",
+				"default": 1
+			}
+		]
+	},
 	"MATLAB.DataFun.XCorr": {
 		"inputs": [
 			{
