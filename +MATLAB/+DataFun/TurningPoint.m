@@ -13,7 +13,7 @@
 %[text] Data，数值向量
 %[text] NumPoints(1,1:2)=1，期待找到的拐点个数。可以指定单个值，表示拐点最多不超过这个数目；也可以指定两个值，表示拐点不少于第一个值，不多于第二个值。
 %[text] ## 返回值
-%[text] TurningPoint(:,1)，所有找到的拐点位置，可能是整数或半整数。如果找到，向量长度在NumPoints规定的范围内；如果没找到，返回空数组。
+%[text] TurningPoint(:,1)，所有找到的拐点位置，可能是整数或半整数。如果找到，向量长度在NumPoints规定的范围内；如果没找到，返回空数组，此时另外两个返回值无意义
 %[text] DifferentiatedRank(1,1)，表示这些拐点出现在第几级差分；至少1级
 %[text] SmoothLevel(1,1)，平滑等级，表示这些拐点出现在对数据做了多大窗口的滑动平均后；1级表示未做任何平滑。
 %[text] **See also** [diff](<matlab:doc diff>) [movmean](<matlab:doc movmean>)
@@ -26,6 +26,7 @@ if isscalar(NumPoints)
 	NumPoints=[1,NumPoints];
 end
 SmoothLevel=1;
+SmoothRange=[1,1];
 DiffData=Data;
 MaxDiff=numel(DiffData)-1;
 while true
@@ -44,9 +45,27 @@ while true
 		return;
 	end
 	if NumTurningPoints<NumPoints(1)
-		break;
+		SmoothRange(2)=SmoothLevel-1;
+		switch SmoothLevel-SmoothRange(1)
+			case 0
+				break;
+			case 1
+				SmoothLevel=SmoothRange(1);
+			otherwise
+				SmoothLevel=uint32((SmoothLevel+SmoothRange(1))/2);
+		end
+	else
+		SmoothRange(1)=SmoothLevel+1;
+		switch SmoothRange(2)-SmoothLevel
+			case 0
+				SmoothLevel=SmoothLevel*2;
+				SmoothRange(2)=SmoothLevel;
+			case 1
+				SmoothLevel=SmoothRange(2);
+			otherwise
+				SmoothLevel=uint32((SmoothLevel+SmoothRange(2))/2);
+		end
 	end
-	SmoothLevel=SmoothLevel+1;
 	DiffData=movmean(Data,SmoothLevel);
 end
 TurningPoints=[];
