@@ -2997,6 +2997,15 @@
 				"purpose": "所有要统一的坐标区"
 			},
 			{
+				"name": "BoundOrRange",
+				"kind": "ordered",
+				"type": [
+					"scalar",
+					"MATLAB.Flags"
+				],
+				"purpose": "要统一边界还是范围"
+			},
+			{
 				"name": "Lim",
 				"kind": "required",
 				"type": "function_handle",

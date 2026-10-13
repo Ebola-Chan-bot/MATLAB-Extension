@@ -61,7 +61,6 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		No_dimensions_found_concatenatable
 		No_need_to_concatenate_scalars
 		Deprecated
-		A_minimum_of_2_Axes_is_required
 		Current_MATLAB_version_not_supported
 		Invalid_Descriptor
 		Parentheses_and_rvalues_do_not_match
@@ -73,5 +72,7 @@ classdef Exception<MATLAB.Lang.IEnumerableException
 		Covariance_not_positive_definite
 		Y_Shadow_or_X_size_not_compatible
 		Deliberately_not_supporting
+		Unexpected_enumeration
+		Nonsense_to_unify_a_single_axe
 	end
 end

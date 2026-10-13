@@ -215,6 +215,11 @@ classdef Flags<uint32
         Install(22)
 		Fix(23)
 		Uninstall(24)
+
+		%% Graphics.UnifyAxesLims
+		
+		Bound(25)
+		Range(26)
 	end
 	methods
 		function Combination=or(Flag1,Flag2)
