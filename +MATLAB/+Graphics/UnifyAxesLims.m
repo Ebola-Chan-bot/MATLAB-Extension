@@ -92,7 +92,9 @@ Limits=vertcat(Limits{:});
 Center=mean(Limits,2);
 Radius=max(Limits(:,2)-Limits(:,1))/2;
 Limits=[Center-Radius,Center+Radius];
-LimFun(Axes,Limits);
+for A=1:numel(Axes)
+	LimFun(Axes(A),Limits(A,:));
+end
 end
 
 %[appendix]{"version":"1.0"}
